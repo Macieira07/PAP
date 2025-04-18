@@ -22,13 +22,12 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <!-- Substituição do ícone SVG pelo logotipo -->
-            <img src="../logotipos/logotipo1.png" width="170" height="170"  alt="Quinta Flores Logo" class="logo-img">
+            <img src="../logotipos/logotipo1.png" width="170" height="170" alt="Quinta Flores Logo" class="logo-img">
         </div>
         <nav class="sidebar-nav">
             <ul>
                 <li>
-                    <a href="admin_index.php" class="active">
+                    <a href="admin_index.php">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -37,7 +36,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     </a>
                 </li>
                 <li>
-                    <a href="admin_funcionarios.php" class="ajax-link" data-target="main-content">
+                    <a href="admin_funcionarios.php">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -48,7 +47,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     </a>
                 </li>
                 <li>
-                    <a href="admin_hospedes.php" class="ajax-link" data-target="main-content">
+                    <a href="admin_hospedes.php">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
@@ -57,7 +56,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     </a>
                 </li>
                 <li>
-                    <a href="admin_reservas.php" class="ajax-link" data-target="main-content">
+                    <a href="admin_reservas.php">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -105,7 +104,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 </svg>
                 <h3>Funcionários</h3>
                 <p>Gerencie sua equipe e atribua funções específicas para otimizar o trabalho.</p>
-                <a href="admin_funcionarios.php" class="link ajax-link" data-target="main-content">Acessar →</a>
+                <a href="admin_funcionarios.php" class="link">Acessar →</a>
             </div>
             
             <div class="dashboard-card">
@@ -115,7 +114,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 </svg>
                 <h3>Hóspedes</h3>
                 <p>Visualize informações detalhadas sobre seus clientes e histórico de estadias.</p>
-                <a href="admin_hospedes.php" class="link ajax-link" data-target="main-content">Acessar →</a>
+                <a href="admin_hospedes.php" class="link">Acessar →</a>
             </div>
             
             <div class="dashboard-card">
@@ -127,7 +126,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 </svg>
                 <h3>Reservas</h3>
                 <p>Controle todas as estadias agendadas e gerencie disponibilidade de quartos.</p>
-                <a href="admin_reservas.php" class="link ajax-link" data-target="main-content">Acessar →</a>
+                <a href="admin_reservas.php" class="link">Acessar →</a>
             </div>
         </div>
     </div>
@@ -143,18 +142,14 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 menuToggle.getAttribute('aria-expanded') === 'false' ? 'true' : 'false');
         });
         
-        // Ajax links functionality
-        document.querySelectorAll('.ajax-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.getAttribute('data-target');
-                const url = this.getAttribute('href');
-                
-                // Add your AJAX loading code here if needed
-                document.querySelectorAll('.sidebar-nav a').forEach(item => {
-                    item.classList.remove('active');
-                });
-                this.classList.add('active');
+        // Marcar item ativo no menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                const linkPage = link.getAttribute('href').split('/').pop();
+                if (linkPage === currentPage) {
+                    link.classList.add('active');
+                }
             });
         });
     </script>
