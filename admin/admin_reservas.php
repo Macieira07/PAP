@@ -6,7 +6,8 @@ $r = $conexao->query($sql);
 
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Admin - Reservas</title></head>
+<head><meta charset="UTF-8"><title>Admin - Reservas</title>
+<link rel="stylesheet" href="admin.css"></head>
 <body>
     <h2>Lista de Reservas</h2>
     <a href="editar_reserva.php">Nova Reserva</a><br><br>
