@@ -1,0 +1,46 @@
+[27-Mar-2025 10:47:42 Europe/Berlin] Nova reserva criada: ID=20 para davidfloresmacieira@gmail.com
+[27-Mar-2025 10:47:45 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[27-Mar-2025 10:49:11 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
+[27-Mar-2025 13:05:43 Europe/Berlin] Nova reserva criada: ID=22 para davidfloresmacieira@gmail.com
+[27-Mar-2025 13:05:48 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[27-Mar-2025 20:58:42 Europe/Berlin] Nova reserva criada: ID=24 para davidfloresmacieira@gmail.com
+[27-Mar-2025 20:58:45 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[28-Mar-2025 00:00:20 Europe/Berlin] Nova reserva criada: ID=26 para emavianaa8@gmail.com
+[28-Mar-2025 00:00:22 Europe/Berlin] E-mail enviado com sucesso para emavianaa8@gmail.com
+[28-Mar-2025 00:01:55 Europe/Berlin] Nova reserva criada: ID=28 para davidfloresmacieira@gmail.com
+[28-Mar-2025 00:01:57 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[28-Mar-2025 00:03:03 Europe/Berlin] Nova reserva criada: ID=30 para davidfloresmacieira@gmail.com
+[28-Mar-2025 00:03:05 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[28-Mar-2025 00:04:45 Europe/Berlin] Nova reserva criada: ID=32 para emavianaa8@gmail.com
+[28-Mar-2025 00:04:47 Europe/Berlin] E-mail enviado com sucesso para emavianaa8@gmail.com
+[28-Mar-2025 21:04:06 Europe/Berlin] Nova reserva criada: ID=34 para davidfloresmacieira@gmail.com
+[28-Mar-2025 21:04:09 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[05-Apr-2025 12:04:36 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown database 'pap' in C:\xampp\htdocs\PAP\pagamento\confirmacao.php:44
+Stack trace:
+#0 C:\xampp\htdocs\PAP\pagamento\confirmacao.php(44): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'pap')
+#1 {main}
+  thrown in C:\xampp\htdocs\PAP\pagamento\confirmacao.php on line 44
+[05-Apr-2025 12:07:35 Europe/Berlin] Nova reserva criada: ID=26 para davidfloresmacieira@gmail.com
+[05-Apr-2025 12:07:57 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:00:36 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'R_servicos' in 'field list' in C:\xampp\htdocs\PAP\pagamento\confirmacao.php:94
+Stack trace:
+#0 C:\xampp\htdocs\PAP\pagamento\confirmacao.php(94): mysqli->prepare('INSERT INTO res...')
+#1 {main}
+  thrown in C:\xampp\htdocs\PAP\pagamento\confirmacao.php on line 94
+[11-Apr-2025 23:01:22 Europe/Berlin] Nova reserva criada: ID=28 para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:01:26 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:41:59 Europe/Berlin] Nova reserva criada: ID=30 para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:44:50 Europe/Berlin] Nova reserva criada: ID=32 para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:48:23 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
+[11-Apr-2025 23:48:35 Europe/Berlin] Nova reserva criada: ID=33 para davidfloresmacieira@gmail.com
+[11-Apr-2025 23:49:00 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
+[12-Apr-2025 00:02:00 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
+[12-Apr-2025 00:02:11 Europe/Berlin] Nova reserva criada: ID=35 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:03:39 Europe/Berlin] Nova reserva criada: ID=36 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:03:40 Europe/Berlin] Nova reserva criada: ID=37 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:04:17 Europe/Berlin] Nova reserva criada: ID=38 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:10:22 Europe/Berlin] Nova reserva criada: ID=39 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:10:25 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:13:04 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
+[12-Apr-2025 00:14:32 Europe/Berlin] Nova reserva criada: ID=41 para davidfloresmacieira@gmail.com
+[12-Apr-2025 00:14:34 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com

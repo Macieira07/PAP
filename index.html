@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <!-- Inclusão de scripts e estilos externos -->
+    <!-- FontAwesome: Biblioteca de ícones -->
+    <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
+    <!-- Meta tags para configuração básica da página -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Alojamento local em Ponte de Lima - Aconchego, natureza e tradição minhota">  
+    <!-- Remixicon: Biblioteca de ícones -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"rel="stylesheet"/>
+        <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Garamond&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"> 
+    <!-- Arquivo CSS local para estilos personalizados -->
+    <link rel="stylesheet" href="index/index.css">
+    <!-- Pré-carregamentos -->
+    <link rel="preload" href="imagens/hero.webp" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Título da página exibido na aba do navegador -->
+    <title>QUINTA | FLORES</title>
+    <link rel="icon" type="image/x-icon" href="logotipos/logotipo2.png">
+  </head>
+  <body>  
+    <!-- Cabeçalho da página -->
+    <header class="header">
+      <nav>   
+        <!-- Barra de navegação com logo e botão de menu -->
+        <div class="nav__bar">
+          <!-- Logo da página -->
+          <div class="logo">
+            <a href="#"><img src="logotipos/logotipo1_SF.png" alt="logo"> </a>
+          </div>
+          <!-- Botão de menu para dispositivos móveis -->
+          <div class="nav__menu__btn" id="menu-btn">
+            <i class="ri-menu-line"></i>
+          </div>
+        </div>
+        <!-- Links de navegação para as seções da página -->
+        <ul class="nav__links" id="nav-links">
+          <li><a href="#home">Quinta</a></li>
+          <li><a href="#about">Sobre Nós</a></li>
+          <li><a href="#comodidades">Comodidades</a></li>
+          <li><a href="#contactos">Contactos</a></li>
+        </ul>
+        </div>
+      </div>
+        <!-- Botão de reserva que redireciona para a página de login -->
+        <a href="login/login_page.php" class="animated-button1">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Fazer Reserva
+        </a>
+      </nav>
+      <!-- Cabeçalho com texto de boas-vindas -->
+      <div class="section__container header__container" id="home">
+        <p>Aconchegante - Autentico - Sereno</p>
+        <h1>Sossego e beleza <br /><span>Ponte de Lima</span> com certeza!</h1>
+      </div>
+    </header>
+    <!-- Formulário de reserva -->
+    <section class="section__container booking__container">
+      <form action="/" class="booking__form">
+        <!-- Grupo de input para a data de check-in -->
+        <div class="input__group">
+          <span><i class="ri-calendar-2-fill"></i></span>
+          <div>
+            <label for="check-in">CHECK-IN</label>
+            <input type="text" placeholder="Check In" />
+          </div>
+        </div>
+        <!-- Grupo de input para a data de check-out -->
+        <div class="input__group">
+          <span><i class="ri-calendar-2-fill"></i></span>
+          <div>
+            <label for="check-out">CHECK-OUT</label>
+            <input type="text" placeholder="Check Out"/>
+          </div>
+        </div>
+        <!-- Grupo de input para o número de convidados -->
+        <div class="input__group">
+          <span><i class="ri-user-fill"></i></span>
+          <div>
+            <label for="guest">Convidados</label>
+            <input type="text" placeholder="Guest" />
+          </div>
+        </div>
+        <!-- Botão para confirmar a reserva -->
+        <div class="input__group input__btn">
+          <a href="index/confira.php" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Confira
+          </a>
+        </div>
+      </form>
+    </section>
+    <!-- Seção "Sobre Nós" -->
+    <section class="section__container about__container" id="about">
+      <!-- Imagem da entrada da quinta -->
+      <div class="about__image">
+        <img src="assets/entrada.jpg" alt="entrada" />
+      </div>
+      <!-- Conteúdo textual da seção "Sobre Nós" -->
+      <div class="about__content">
+        <p class="section__subheader">SOBRE NÓS</p>
+        <h2 class="section__header">O melhor sítio para relaxar e passar as férias é aqui!</h2>
+        <p class="section__description">
+          Se procura um local tranquilo, rodeado pela beleza natural e com muito espaço para descansar e recarregar energias, o nosso alojamento local é o lugar ideal para si. Situado em um ambiente sereno e relaxante, oferecemos o refúgio perfeito para famílias, amigos, casais e até para quem deseja celebrar momentos especiais.
+        </p>
+        <!-- Botão para ler mais informações -->
+        <div class="about__btn">
+          <a href="index/lermais.html">
+            <button class="btn">Ler mais</button>
+          </a>
+      </div>
+    </section>
+<!-- Seção de imagens (Carrossel) -->
+<section class="section__container room__container">
+  <p class="section__subheader">Fotos que vão despertar o seu interesse:</p>
+  <h2 class="section__header"></h2>
+  <div class="slider">
+    <div class="carousel-container">
+      <div class="carousel">
+        <div class="carousel-slide"><img src="assets/1.jpeg" alt="Slide 1"></div>
+        <div class="carousel-slide"><img src="assets/2.jpeg" alt="Slide 2"></div>
+        <div class="carousel-slide"><img src="assets/19.png" alt="Slide 3"></div>
+        <div class="carousel-slide"><img src="assets/4.png" alt="Slide 4"></div>
+        <div class="carousel-slide"><img src="assets/5.png" alt="Slide 5"></div>
+        <div class="carousel-slide"><img src="assets/6.png" alt="Slide 6"></div>
+        <div class="carousel-slide"><img src="assets/7.png" alt="Slide 7"></div>
+        <div class="carousel-slide"><img src="assets/8.png" alt="Slide 8"></div>
+        <div class="carousel-slide"><img src="assets/9.png" alt="Slide 9"></div>
+        <div class="carousel-slide"><img src="assets/10.png" alt="Slide 10"></div>
+        <div class="carousel-slide"><img src="assets/11.png" alt="Slide 11"></div>
+        <div class="carousel-slide"><img src="assets/12.png" alt="Slide 12"></div>
+        <div class="carousel-slide"><img src="assets/13.png" alt="Slide 13"></div>
+        <div class="carousel-slide"><img src="assets/14.png" alt="Slide 14"></div>
+        <div class="carousel-slide"><img src="assets/15.png" alt="Slide 15"></div>
+        <div class="carousel-slide"><img src="assets/16.png" alt="Slide 16"></div>
+        <div class="carousel-slide"><img src="assets/17.png" alt="Slide 17"></div>
+        <div class="carousel-slide"><img src="assets/18.png" alt="Slide 18"></div>
+      </div>
+      <!-- Botões de navegação -->
+      <div class="button prev">
+        <a href="#" onclick="moveSlide(event, -1)" class="custom-button" aria-label="Anterior">
+          &#10094;
+        </a>
+      </div>
+      <div class="button next">
+        <a href="#" onclick="moveSlide(event, 1)" class="custom-button" aria-label="Próximo">
+          &#10095;
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let index = 0;
+  function moveSlide(event, step) {
+    event.preventDefault(); // Evita que a página role para o topo
+    const carousel = document.querySelector('.carousel');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const slideWidth = document.querySelector('.carousel-container').offsetWidth;
+
+    index = (index + step + slides.length) % slides.length;
+    carousel.style.transform = `translateX(-${index * slideWidth}px)`;
+  }
+  // Ajuste automático ao redimensionar a tela
+  window.addEventListener('resize', () => {
+    const carousel = document.querySelector('.carousel');
+    const slideWidth = document.querySelector('.carousel-container').offsetWidth;
+    carousel.style.transform = `translateX(-${index * slideWidth}px)`;
+  });
+</script>
+
+<style>
+  html {
+  scroll-behavior: smooth;
+}
+
+  /* Estilo do carrossel */
+  .carousel-container {
+    max-width: 900px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  .carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  .carousel-slide {
+    flex: 0 0 100%;
+  }
+  .carousel-slide img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  /* Estilos dos botões personalizados */
+  .custom-button {
+    background-color: #6A0DAD;
+    color: #FFFFFF;
+    font-family: Open Sans, system-ui, sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: normal;
+    border: 1px solid #0e0b0d;
+    transition: all 0.3s ease;
+  }
+
+  .custom-button:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    filter: brightness(110%);
+    transform: scale(0.95);
+  }
+
+  /* Posicionamento dos botões */
+  .button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-block;
+    z-index: 10;
+  }
+
+  .prev {
+    left: 10px;
+  }
+
+  .next {
+    right: 10px;
+  }
+
+  /* Ajuste para telas menores */
+  @media (max-width: 768px) {
+    .custom-button {
+      font-size: 18px;
+      padding: 8px 12px;
+    }
+  }
+</style>
+    <!-- Seção de comodidades -->
+    <section class="comodidades" id="comodidades">
+      <div class="comodidades__container">
+        <p class="section__subheader">Comodidades</p>
+        <h2 class="section__header">Tudo o que precisa para uma estadia inesquecível</h2>
+        <!-- Lista de comodidades oferecidas -->
+        <ul class="comodidades__list">
+          <li>
+            <i class="ri-wifi-line"></i>
+            <span>Wi-Fi gratuito em todas as áreas</span>
+          </li>
+          <li>
+            <i class="ri-parking-box-line"></i>
+            <span>Estacionamento privado e gratuito</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-water-ladder"></i>
+            <span>Piscina ao ar livre com espreguiçadeiras</span>
+          </li>
+          <li>
+            <i class="ri-hand-heart-line"></i>
+            <span>Espaço acolhedor e adequado para famílias</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-fire"></i>
+            <span>Churrasqueira disponível</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Brinquedos e jogos para crianças</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-hiking"></i>
+            <span>Trilhos para caminhadas</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-campground"></i>
+            <span>Área para acampar</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <!-- Lightbox para visualização de imagens ampliadas -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img id="lightboxImage" class="lightbox__content" src="">
+        <!-- Setas de navegação para o lightbox -->
+        <span class="nav prev" onclick="navigate(-1)">&#10094;</span>
+        <span class="nav next" onclick="navigate(1)">&#10095;</span>
+      </div>
+        </div>
+        <div id="lightbox" onclick="closeLightbox()">
+          <span class="close">&times;</span>
+          <img id="lightboxImage" class="lightbox__content" src="">
+        </div>
+      </div>
+    </section>
+    <!-- Rodapé da página -->
+    <footer class="footer" id="contactos">
+      <div class="section__container footer__container">
+        <!-- Primeira coluna do rodapé: Logo e descrição -->
+        <div class="footer__col">
+          <div class="logo">
+            <a href="#contactos"><img src="logotipos/logotipo2.png" alt="logo" /></a>
+          </div>
+          <p class="section__description">
+            Viva uma experiência única de conforto e hospitalidade no nosso alojamento local, onde cada detalhe foi pensado para tornar a sua estadia inesquecível. Explore a tranquilidade, a beleza e a cultura da região enquanto desfruta de momentos de puro relaxamento.
+          </p>
+          <!-- Botão para reservar -->
+          <a href="login/login_page.php" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Fazer Reserva
+          </a>
+        </div>
+        <!-- Segunda coluna do rodapé: Links sobre Ponte de Lima -->
+        <div class="footer__col">
+          <h4>Descubra Ponte de Lima</h4>
+          <ul class="footer__links">
+            <li><a href="rodape/atracoes.html">Atrações e Atividades Locais</a></li>
+            <li><a href="rodape/gastronomia.html">Gastronomia e Restaurantes</a></li>
+            <li><a href="rodape/visitar.html">O que visitar no conselho de Ponte de Lima</a></li>
+            <li><a href="rodape/trilhos.html">Trilhos e Percursos</a></li>          
+          </ul>
+        </div>
+        <!-- Terceira coluna do rodapé: Serviços oferecidos -->
+        <div class="footer__col">
+          <h4>NOSSOS SERVIÇOS</h4>
+          <ul class="footer__links">
+            <li><a href="#">Atendimento Personalizado</a></li>
+            <li><a href="#">Opções de Reserva Flexíveis</a></li>
+            <li><a href="#">Transferes para o Aeroporto</a></li>
+            <li><a href="#">Experiências Locais & Lazer</a></li>
+            <li><a href="#">Serviço de Limpeza Diário</a></li>
+            <li><a href="#">Guias Locais e Dicas Personalizadas</a></li>
+          </ul>          
+        </div>
+        <!-- Quarta coluna do rodapé: Informações de contato -->
+        <div class="footer__col">
+          <h4>CONTACTOS</h4>
+          <ul class="footer__links">
+            <li>
+              <a href="mailto:quinta.flores19@gmail.com?subject=Tenho agumas duvidas sobre a quinta&body=Gostaria de mais informações">quinta.flores19@gmail.com</a>
+          </li>                    
+            <li>
+              <a href="https://wa.me/351912418976" target="_blank" rel="noopener noreferrer">+351 912 418 976</a>
+          </li>
+            <li><a href="https://www.instagram.com/quintaflores19?igsh=MTAzbXg0OXB3emducA==" target="_blank">@quintaflores19</a></li>
+          </ul>
+            </a>
+        </div>
+        </div>
+      </div>
+      <!-- Barra de direitos autorais no rodapé -->
+      <div class="footer__bar">
+        Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
+      </div>
+    </footer>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="../index/main.js"></script>
+  </body>
+</html>

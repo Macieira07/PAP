@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onde Comer em Ponte de Lima - Melhores Restaurantes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Garamond&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../index/index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Estilo para as imagens dos cartões de restaurantes */
+    .room__card__image img {
+      width: 100%; /* Largura fixa */
+      height: 200px; /* Altura fixa */
+      object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+      border-radius: 8px; /* Borda arredondada (opcional) */
+    }
+
+    /* Estilo para os cartões de restaurantes */
+    .room__card {
+      height: 400px; /* Altura fixa para o cartão */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #ddd; /* Borda opcional */
+      border-radius: 8px; /* Borda arredondada */
+      overflow: hidden; /* Garante que nada ultrapasse o cartão */
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Nav section -->
+  <header style="background-image: url('../fotosrodape/gastronomia.jpg'); background-size: cover; background-position: center; position: relative;" class="header">
+    <!-- Overlay escuro -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);"></div>
+    <nav>
+      <div class="nav__bar">
+        <a href="../index.html">
+          <img src="../logotipos/logotipo1_SF.png" alt="Logo" class="logo" />
+        </a>
+        <div class="nav__menu__btn" id="menu-btn">
+          <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav__links" id="nav-links">
+          <li><a href="../index.html">ínicio</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="gastronomia.html" class="active">Gastronomia</a></li>
+          <li><a href="contactos.html">Contactos</a></li>
+        </ul>
+        <div class="language-switcher">
+          <div class="flag-container">
+            <img src="pt.png" alt="Português" class="flag-icon active" data-lang="pt">
+            <img src="en.png" alt="English" class="flag-icon" data-lang="en">
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="header__container">
+      <p>Venha provar a verdadeira gastronomia minhota</p>
+      <h1>e deixe-se encantar por <span>Ponte de Lima!</span></h1>
+    </div>
+  </header>
+
+  <!-- Introdução -->
+  <section class="about__container section__container">
+    <div>
+      <h3 class="section__subheader">Gastronomia</h3>
+      <h2 class="section__header">Descubra os Sabores de Ponte de Lima</h2>
+      <p class="section__description">
+        Visitar Ponte de Lima não seria completo sem experimentar a deliciosa gastronomia local. 
+        A cidade oferece uma grande variedade de restaurantes, desde tradicionais até contemporâneos, 
+        com pratos que celebram a rica herança culinária da região.
+      </p>
+    </div>
+    <div class="about__image">
+      <img src="../fotosrodape/almoco.jpg" alt="Gastronomia de Ponte de Lima" />
+    </div>
+  </section>
+
+  <!-- Restaurantes -->
+  <section class="room section__container">
+    <h3 class="section__subheader">Onde Comer</h3>
+    <h2 class="section__header">Melhores Restaurantes em Ponte de Lima</h2>
+    <p class="section__description">
+      Veja alguns dos restaurantes mais recomendados para saborear o melhor de Ponte de Lima:
+    </p>
+
+    <div class="room__grid">
+      <!-- Restaurante 1 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/restauranteaçude.jpg" alt="Restaurante Açude" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-utensils"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>Restaurante Açude</h4>
+          <p>
+            Com vistas deslumbrantes para o Rio Lima, este restaurante oferece pratos tradicionais 
+            com um toque moderno. Destaque para o arroz de sarrabulho.
+          </p>
+          <h5>Preço médio: <span>25€</span></h5>
+          <a href="https://www.restauranteacude.com" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurante 2 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/taberna.jpg" alt="Taberna Cadeia Velha" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-utensils"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>Taberna Cadeia Velha</h4>
+          <p>
+            Situado em um edifício histórico, a Taberna Cadeia Velha é famosa pelo ambiente 
+            acolhedor e pratos como o bacalhau à moda da casa.
+          </p>
+          <h5>Preço médio: <span>12,50€</span></h5>
+          <a href="https://www.facebook.com/TabernaCadeiaVelha/?locale=pt_PT" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurante 3 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/pescador.jpg" alt="O Pescador" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-fish"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>O Pescador</h4>
+          <p>
+            Ideal para quem ama frutos do mar, com destaque para as lampreias e 
+            pratos frescos de peixe do rio.
+          </p>
+          <h5>Preço médio: <span>35€</span></h5>
+          <a href="https://opescadorviana.com/" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurante 4 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/mercearia.jpg" alt="Mercearia da Vila" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-utensils"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>Mercearia da Vila</h4>
+          <p>
+            Uma opção mais contemporânea, combinando pratos tradicionais com 
+            apresentações modernas e ingredientes locais.
+          </p>
+          <h5>Preço médio: <span>12€</span></h5>
+          <a href="https://www.merceariadavila.pt" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurante 5 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/brasao.jpg" alt="Restaurante Brasão" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-utensils"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>Brasão</h4>
+          <p>
+            Uma opção mais contemporânea, combinando pratos tradicionais com 
+            apresentações modernas e ingredientes locais.
+          </p>
+          <h5>Preço médio: <span>12€</span></h5>
+          <a href="https://m.facebook.com/restaurantebrasaopl" class="animated-button1" target="_blank"> 
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurante 6 -->
+      <div class="room__card">
+        <div class="room__card__image">
+          <img src="../fotosrodape/diamanteazul.jpg" alt="Restaurante Diamante Azul" />
+          <div class="room__card__icons">
+            <span><i class="fas fa-star"></i></span>
+            <span><i class="fas fa-utensils"></i></span>
+          </div>
+        </div>
+        <div style="padding: 1rem">
+          <h4>Restaurante Diamante Azul</h4>
+          <p>
+            Uma opção mais contemporânea, combinando pratos tradicionais com 
+            apresentações modernas e ingredientes locais.
+          </p>
+          <h5>Preço médio: <span>20€</span></h5>
+          <a href="#" class="animated-button1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Ver Mais
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gastronomia Típica -->
+  <section class="comodidades">
+    <div class="comodidades__container">
+      <h3 class="section__subheader">Sabores</h3>
+      <h2 class="section__header">Gastronomia Típica de Ponte de Lima</h2>
+      <p class="section__description">
+        A cozinha de Ponte de Lima é famosa por seus pratos ricos e saborosos. 
+        Experimente algumas das especialidades locais:
+      </p>
+
+      <ul class="comodidades__list">
+        <li>
+          <i class="fas fa-utensils"></i>
+          <span>Arroz de Sarrabulho</span>
+          <p>Arroz tradicional preparado com carnes de porco e caldo especial.</p>
+        </li>
+        <li>
+          <i class="fas fa-fish"></i>
+          <span>Bacalhau à Moda de Ponte de Lima</span>
+          <p>Bacalhau assado com batatas e cebolas, regado com azeite da região.</p>
+        </li>
+        <li>
+          <i class="fas fa-drumstick-bite"></i>
+          <span>Rojões</span>
+          <p>Cubos de carne de porco fritos com temperos tradicionais minhotos.</p>
+        </li>
+        <li>
+          <i class="fas fa-mortar-pestle"></i>
+          <span>Papas de Sarrabulho</span>
+          <p>Prato característico do Minho feito com carnes de porco e sangue.</p>
+        </li>
+        <li>
+          <i class="fas fa-wine-glass-alt"></i>
+          <span>Vinho Verde</span>
+          <p>Vinho leve e fresco, perfeito para acompanhar os pratos da região.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Banner de info gastronômica -->
+  <section class="banner__content section__container">
+    <div class="banner__card">
+      <h4>+50</h4>
+      <p>Restaurantes</p>
+    </div>
+    <div class="banner__card">
+      <h4>+20</h4>
+      <p>Pratos Típicos</p>
+    </div>
+    <div class="banner__card">
+      <h4>+300</h4>
+      <p>Anos de Tradição</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="contactos">
+    <div class="section__container footer__container">
+      <!-- Primeira coluna do rodapé: Logo e descrição -->
+      <div class="footer__col">
+        <div class="logo">
+          <a href="#contactos"><img src="logotipos/logotipo2.png" alt="logo" /></a>
+        </div>
+        <p class="section__description">
+          Viva uma experiência única de conforto e hospitalidade no nosso alojamento local, onde cada detalhe foi pensado para tornar a sua estadia inesquecível. Explore a tranquilidade, a beleza e a cultura da região enquanto desfruta de momentos de puro relaxamento.
+        </p>
+        <!-- Botão para reservar -->
+        <a href="login/login.html" class="animated-button1">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Fazer Reserva
+        </a>
+      </div>
+      <!-- Segunda coluna do rodapé: Links sobre Ponte de Lima -->
+      <div class="footer__col">
+        <h4>Descubra Ponte de Lima</h4>
+        <ul class="footer__links">
+          <li><a href="rodape/atracoes.html">Atrações e Atividades Locais</a></li>
+          <li><a href="rodape/gastronomia.html">Gastronomia e Restaurantes</a></li>
+          <li><a href="rodape/visitar.html">O que visitar no conselho de Ponte de Lima</a></li>
+          <li><a href="rodape/trilhos.html">Trilhos e Percursos</a></li>          
+        </ul>
+      </div>
+      <!-- Terceira coluna do rodapé: Serviços oferecidos -->
+      <div class="footer__col">
+        <h4>NOSSOS SERVIÇOS</h4>
+        <ul class="footer__links">
+          <li><a href="#">Atendimento Personalizado</a></li>
+          <li><a href="#">Opções de Reserva Flexíveis</a></li>
+          <li><a href="#">Transferes para o Aeroporto</a></li>
+          <li><a href="#">Experiências Locais & Lazer</a></li>
+          <li><a href="#">Serviço de Limpeza Diário</a></li>
+          <li><a href="#">Guias Locais e Dicas Personalizadas</a></li>
+        </ul>          
+      </div>
+      <!-- Quarta coluna do rodapé: Informações de contato -->
+      <div class="footer__col">
+        <h4>CONTACTOS</h4>
+        <ul class="footer__links">
+          <li>
+            <a href="mailto:quinta.flores19@gmail.com?subject=Olá&body=Gostaria de mais informações">quinta.flores19@gmail.com</a>
+        </li>                    
+          <li>
+            <a href="https://wa.me/351912418976" target="_blank" rel="noopener noreferrer">+351 912 418 976</a>
+        </li>
+          <li><a href="https://www.instagram.com/quintaflores19?igsh=MTAzbXg0OXB3emducA==" target="_blank">@quintaflores19</a></li>
+        </ul>
+          </a>
+      </div>
+      </div>
+    </div>
+    <!-- Barra de direitos autorais no rodapé -->
+    <div class="footer__bar">
+      Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <script>
+    // Menu toggle script
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    // Language switcher
+    document.querySelectorAll('.flag-icon').forEach(flag => {
+      flag.addEventListener('click', function() {
+        document.querySelectorAll('.flag-icon').forEach(f => f.classList.remove('active'));
+        this.classList.add('active');
+        // Add language switching functionality here if needed
+      });
+    });
+  </script>
+</body>
+</html>

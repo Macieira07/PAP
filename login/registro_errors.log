@@ -1,0 +1,16 @@
+[10-Apr-2025 16:24:45 Europe/Berlin] Início do processamento de registro
+[10-Apr-2025 16:24:45 Europe/Berlin] POST recebido: Array
+(
+    [nome] => Ema Viana
+    [email] => macieiradavid0@gmail.com
+    [password] => Ema12345
+    [telefone] => 919241169
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 962ecc8e1cd7fe50e3e75bda4b53fdbd35ce222810f3c36ef110b078143346c9
+)
+
+[10-Apr-2025 16:24:45 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli_stmt::bind_param(): Argument #3 cannot be passed by reference in C:\xampp\htdocs\PAP\login\registar.php:135
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\PAP\login\registar.php on line 135
