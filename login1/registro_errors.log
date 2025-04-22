@@ -131,3 +131,49 @@
 [22-Apr-2025 15:00:15 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
                 <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
                 <p><a href='http://localhost:8080/PAP/...
+[22-Apr-2025 17:03:54 Europe/Berlin] Início do processamento de registro
+[22-Apr-2025 17:03:54 Europe/Berlin] POST recebido: Array
+(
+    [nome] => Teste
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David12345
+    [telefone] => 919919919
+    [documento] => 7237336263
+    [aceitar_termos] => on
+    [csrf_token] => a9c2409486c14bbcc4c50899c94d62d976d318c73e19e0eff52a44836c96e411
+)
+
+[22-Apr-2025 17:04:11 Europe/Berlin] Início do processamento de registro
+[22-Apr-2025 17:04:11 Europe/Berlin] POST recebido: Array
+(
+    [nome] => Teste
+    [email] => 03lucasmaciel@gmail.com
+    [password] => David12345
+    [telefone] => 919919919
+    [documento] => 7237336263
+    [aceitar_termos] => on
+    [csrf_token] => a9c2409486c14bbcc4c50899c94d62d976d318c73e19e0eff52a44836c96e411
+)
+
+[22-Apr-2025 17:04:11 Europe/Berlin] Simulando envio de email para: 03lucasmaciel@gmail.com
+[22-Apr-2025 17:04:11 Europe/Berlin] Assunto: Verifique seu email - Quinta Flores
+[22-Apr-2025 17:04:11 Europe/Berlin] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost/PAP/log...
+[22-Apr-2025 17:43:19 Europe/Berlin] Início do processamento de registro
+[22-Apr-2025 17:43:19 Europe/Berlin] POST recebido: Array
+(
+    [nome] => teste
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Teste12345
+    [telefone] => 182991281
+    [documento] => 38747
+    [aceitar_termos] => on
+    [csrf_token] => a9c2409486c14bbcc4c50899c94d62d976d318c73e19e0eff52a44836c96e411
+)
+
+[22-Apr-2025 17:43:19 Europe/Berlin] Simulando envio de email para: 03lucasmaciel@gmail.com
+[22-Apr-2025 17:43:19 Europe/Berlin] Assunto: Verifique seu email - Quinta Flores
+[22-Apr-2025 17:43:19 Europe/Berlin] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost/PAP/log...

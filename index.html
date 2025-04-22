@@ -23,7 +23,29 @@
     <title>QUINTA | FLORES</title>
     <link rel="icon" type="image/png" href="assets/logos/logotipo1.png" sizes="1000x1000">
   
-    
+    <style>
+      .language-selector {
+        display: flex;
+        gap: 10px;
+        margin-left: 20px;
+        align-items: center;
+      }
+      .language-flag {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+      .language-flag.active {
+        background-color: #6A0DAD;
+        color: white;
+      }
+      .language-flag:hover {
+        transform: scale(1.0);
+      }
+    </style>
   </head>
   <body>  
     <!-- Cabeçalho da página -->
@@ -42,26 +64,33 @@
         </div>
         <!-- Links de navegação para as seções da página -->
         <ul class="nav__links" id="nav-links">
-          <li><a href="#home">Quinta</a></li>
-          <li><a href="#about">Sobre Nós</a></li>
-          <li><a href="#comodidades">Comodidades</a></li>
-          <li><a href="#contactos">Contactos</a></li>
+          <li><a href="#home" class="lang" data-key="home">Quinta</a></li>
+          <li><a href="#about" class="lang" data-key="about">Sobre Nós</a></li>
+          <li><a href="#comodidades" class="lang" data-key="amenities">Comodidades</a></li>
+          <li><a href="#contactos" class="lang" data-key="contacts">Contactos</a></li>
         </ul>
+        
+        <!-- Seletor de idiomas -->
+        <div class="language-selector">
+          <span class="language-flag active" data-lang="pt">PT</span>
+          <span class="language-flag" data-lang="en">EN</span>
+          <span class="language-flag" data-lang="de">DE</span>
+          <span class="language-flag" data-lang="fr">FR</span>
         </div>
-      </div>
+        
         <!-- Botão de reserva que redireciona para a página de login -->
         <a href="login1/pagina_login.php" class="animated-button1">
           <span></span>
           <span></span>
           <span></span>
           <span></span>
-          Fazer Reserva
+          <span class="lang" data-key="make_reservation">Fazer Reserva</span>
         </a>
       </nav>
       <!-- Cabeçalho com texto de boas-vindas -->
       <div class="section__container header__container" id="home">
-        <p>Aconchegante - Autentico - Sereno</p>
-        <h1>Sossego e beleza <br /><span>Ponte de Lima</span> com certeza!</h1>
+        <p class="lang" data-key="tagline">Aconchegante - Autêntico - Sereno</p>
+        <h1 class="lang" data-key="title_main">Sossego e beleza <br /><span class="lang" data-key="title_location">Ponte de Lima</span> <span class="lang" data-key="title_ending">com certeza!</span></h1>
       </div>
     </header>
     <!-- Formulário de reserva -->
@@ -71,34 +100,34 @@
         <div class="input__group">
           <span><i class="ri-calendar-2-fill"></i></span>
           <div>
-            <label for="check-in">CHECK-IN</label>
-            <input type="text" placeholder="Check In" />
+            <label for="check-in" class="lang" data-key="check_in">CHECK-IN</label>
+            <input type="text" placeholder="Check In" class="lang" data-key="check_in" />
           </div>
         </div>
         <!-- Grupo de input para a data de check-out -->
         <div class="input__group">
           <span><i class="ri-calendar-2-fill"></i></span>
           <div>
-            <label for="check-out">CHECK-OUT</label>
-            <input type="text" placeholder="Check Out"/>
+            <label for="check-out" class="lang" data-key="check_out">CHECK-OUT</label>
+            <input type="text" placeholder="Check Out" class="lang" data-key="check_out" />
           </div>
         </div>
         <!-- Grupo de input para o número de convidados -->
         <div class="input__group">
           <span><i class="ri-user-fill"></i></span>
           <div>
-            <label for="guest">Convidados</label>
-            <input type="text" placeholder="Guest" />
+            <label for="guest" class="lang" data-key="guests">Convidados</label>
+            <input type="text" placeholder="Guest" class="lang" data-key="guests" />
           </div>
         </div>
         <!-- Botão para confirmar a reserva -->
         <div class="input__group input__btn">
-          <a href="../index/confira.php" class="animated-button1">
+          <a href="./index/confira.php" class="animated-button1">
             <span></span>
             <span></span>
             <span></span>
             <span></span>
-            Confira
+            <span class="lang" data-key="check_availability">Confira</span>
           </a>
         </div>
       </form>
@@ -111,192 +140,201 @@
       </div>
       <!-- Conteúdo textual da seção "Sobre Nós" -->
       <div class="about__content">
-        <p class="section__subheader">SOBRE NÓS</p>
-        <h2 class="section__header">O melhor sítio para relaxar e passar as férias é aqui!</h2>
-        <p class="section__description">
+        <p class="section__subheader lang" data-key="about_subtitle">SOBRE NÓS</p>
+        <h2 class="section__header lang" data-key="about_title">O melhor sítio para relaxar e passar as férias é aqui!</h2>
+        <p class="section__description lang" data-key="about_description">
           Se procura um local tranquilo, rodeado pela beleza natural e com muito espaço para descansar e recarregar energias, o nosso alojamento local é o lugar ideal para si. Situado em um ambiente sereno e relaxante, oferecemos o refúgio perfeito para famílias, amigos, casais e até para quem deseja celebrar momentos especiais.
         </p>
         <!-- Botão para ler mais informações -->
         <div class="about__btn">
           <a href="index/lermais.html">
-            <button class="btn">Ler mais</button>
+            <button class="btn lang" data-key="read_more">Ler mais</button>
           </a>
+        </div>
       </div>
     </section>
-<!-- Seção de imagens (Carrossel) -->
-<section class="section__container room__container">
-  <p class="section__subheader">Fotos que vão despertar o seu interesse:</p>
-  <h2 class="section__header"></h2>
-  <div class="slider">
-    <div class="carousel-container">
-      <div class="carousel">
-        <div class="carousel-slide"><img src="assets/images/1.jpeg" alt="Slide 1"></div>
-        <div class="carousel-slide"><img src="assets/images/2.jpeg" alt="Slide 2"></div>
-        <div class="carousel-slide"><img src="assets/images/19.png" alt="Slide 3"></div>
-        <div class="carousel-slide"><img src="assets/images/4.png" alt="Slide 4"></div>
-        <div class="carousel-slide"><img src="assets/images/5.png" alt="Slide 5"></div>
-        <div class="carousel-slide"><img src="assets/images/6.png" alt="Slide 6"></div>
-        <div class="carousel-slide"><img src="assets/images/7.png" alt="Slide 7"></div>
-        <div class="carousel-slide"><img src="assets/images/8.png" alt="Slide 8"></div>
-        <div class="carousel-slide"><img src="assets/images/9.png" alt="Slide 9"></div>
-        <div class="carousel-slide"><img src="assets/images/10.png" alt="Slide 10"></div>
-        <div class="carousel-slide"><img src="assets/images/11.png" alt="Slide 11"></div>
-        <div class="carousel-slide"><img src="assets/images/12.png" alt="Slide 12"></div>
-        <div class="carousel-slide"><img src="assets/images/13.png" alt="Slide 13"></div>
-        <div class="carousel-slide"><img src="assets/images/14.png" alt="Slide 14"></div>
-        <div class="carousel-slide"><img src="assets/images/15.png" alt="Slide 15"></div>
-        <div class="carousel-slide"><img src="assets/images/16.png" alt="Slide 16"></div>
-        <div class="carousel-slide"><img src="assets/images/17.png" alt="Slide 17"></div>
-        <div class="carousel-slide"><img src="assets/images/18.png" alt="Slide 18"></div>
+    <!-- Seção de imagens (Carrossel) -->
+    <section class="section__container room__container">
+      <p class="section__subheader">Fotos que vão despertar o seu interesse:</p>
+      <h2 class="section__header"></h2>
+      <div class="slider">
+        <div class="carousel-container">
+          <div class="carousel">
+            <div class="carousel-slide"><img src="assets/images/1.jpeg" alt="Slide 1"></div>
+            <div class="carousel-slide"><img src="assets/images/2.jpeg" alt="Slide 2"></div>
+            <div class="carousel-slide"><img src="assets/images/19.png" alt="Slide 3"></div>
+            <div class="carousel-slide"><img src="assets/images/4.png" alt="Slide 4"></div>
+            <div class="carousel-slide"><img src="assets/images/5.png" alt="Slide 5"></div>
+            <div class="carousel-slide"><img src="assets/images/6.png" alt="Slide 6"></div>
+            <div class="carousel-slide"><img src="assets/images/7.png" alt="Slide 7"></div>
+            <div class="carousel-slide"><img src="assets/images/8.png" alt="Slide 8"></div>
+            <div class="carousel-slide"><img src="assets/images/9.png" alt="Slide 9"></div>
+            <div class="carousel-slide"><img src="assets/images/10.png" alt="Slide 10"></div>
+            <div class="carousel-slide"><img src="assets/images/11.png" alt="Slide 11"></div>
+            <div class="carousel-slide"><img src="assets/images/12.png" alt="Slide 12"></div>
+            <div class="carousel-slide"><img src="assets/images/13.png" alt="Slide 13"></div>
+            <div class="carousel-slide"><img src="assets/images/14.png" alt="Slide 14"></div>
+            <div class="carousel-slide"><img src="assets/images/15.png" alt="Slide 15"></div>
+            <div class="carousel-slide"><img src="assets/images/16.png" alt="Slide 16"></div>
+            <div class="carousel-slide"><img src="assets/images/17.png" alt="Slide 17"></div>
+            <div class="carousel-slide"><img src="assets/images/18.png" alt="Slide 18"></div>
+          </div>
+          <!-- Botões de navegação -->
+          <div class="button prev">
+            <a href="#" onclick="moveSlide(event, -1)" class="custom-button" aria-label="Anterior">
+              &#10094;
+            </a>
+          </div>
+          <div class="button next">
+            <a href="#" onclick="moveSlide(event, 1)" class="custom-button" aria-label="Próximo">
+              &#10095;
+            </a>
+          </div>
+        </div>
       </div>
-      <!-- Botões de navegação -->
-      <div class="button prev">
-        <a href="#" onclick="moveSlide(event, -1)" class="custom-button" aria-label="Anterior">
-          &#10094;
-        </a>
-      </div>
-      <div class="button next">
-        <a href="#" onclick="moveSlide(event, 1)" class="custom-button" aria-label="Próximo">
-          &#10095;
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<script>
-  let index = 0;
-  function moveSlide(event, step) {
-    event.preventDefault(); // Evita que a página role para o topo
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const slideWidth = document.querySelector('.carousel-container').offsetWidth;
+    <script>
+      let index = 0;
+      function moveSlide(event, step) {
+        event.preventDefault(); // Evita que a página role para o topo
+        const carousel = document.querySelector('.carousel');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const slideWidth = document.querySelector('.carousel-container').offsetWidth;
 
-    index = (index + step + slides.length) % slides.length;
-    carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-  }
-  // Ajuste automático ao redimensionar a tela
-  window.addEventListener('resize', () => {
-    const carousel = document.querySelector('.carousel');
-    const slideWidth = document.querySelector('.carousel-container').offsetWidth;
-    carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-  });
-</script>
+        index = (index + step + slides.length) % slides.length;
+        carousel.style.transform = `translateX(-${index * slideWidth}px)`;
+      }
+      // Ajuste automático ao redimensionar a tela
+      window.addEventListener('resize', () => {
+        const carousel = document.querySelector('.carousel');
+        const slideWidth = document.querySelector('.carousel-container').offsetWidth;
+        carousel.style.transform = `translateX(-${index * slideWidth}px)`;
+      });
+    </script>
 
-<style>
-  html {
-  scroll-behavior: smooth;
-}
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
 
-  /* Estilo do carrossel */
-  .carousel-container {
-    max-width: 900px;
-    margin: auto;
-    overflow: hidden;
-    position: relative;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  .carousel {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-  }
-  .carousel-slide {
-    flex: 0 0 100%;
-  }
-  .carousel-slide img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
+      /* Estilo do carrossel */
+      .carousel-container {
+        max-width: 900px;
+        margin: auto;
+        overflow: hidden;
+        position: relative;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .carousel {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      .carousel-slide {
+        flex: 0 0 100%;
+      }
+      .carousel-slide img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
 
-  /* Estilos dos botões personalizados */
-  .custom-button {
-    background-color: #6A0DAD;
-    color: #FFFFFF;
-    font-family: Open Sans, system-ui, sans-serif;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: normal;
-    border: 1px solid #0e0b0d;
-    transition: all 0.3s ease;
-  }
+      /* Estilos dos botões personalizados */
+      .custom-button {
+        background-color: #6A0DAD;
+        color: #FFFFFF;
+        font-family: Open Sans, system-ui, sans-serif;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: normal;
+        border: 1px solid #0e0b0d;
+        transition: all 0.3s ease;
+      }
 
-  .custom-button:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    filter: brightness(110%);
-    transform: scale(0.95);
-  }
+      .custom-button:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        filter: brightness(110%);
+        transform: scale(0.95);
+      }
 
-  /* Posicionamento dos botões */
-  .button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    display: inline-block;
-    z-index: 10;
-  }
+      /* Posicionamento dos botões */
+      .button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-block;
+        z-index: 10;
+      }
 
-  .prev {
-    left: 10px;
-  }
+      .prev {
+        left: 10px;
+      }
 
-  .next {
-    right: 10px;
-  }
+      .next {
+        right: 10px;
+      }
 
-  /* Ajuste para telas menores */
-  @media (max-width: 768px) {
-    .custom-button {
-      font-size: 18px;
-      padding: 8px 12px;
-    }
-  }
-</style>
+      /* Ajuste para telas menores */
+      @media (max-width: 768px) {
+        .custom-button {
+          font-size: 18px;
+          padding: 8px 12px;
+        }
+        .language-selector {
+          margin-left: 10px;
+          gap: 5px;
+        }
+        .language-flag {
+          padding: 3px 6px;
+          font-size: 12px;
+        }
+      }
+    </style>
     <!-- Seção de comodidades -->
     <section class="comodidades" id="comodidades">
       <div class="comodidades__container">
-        <p class="section__subheader">Comodidades</p>
-        <h2 class="section__header">Tudo o que precisa para uma estadia inesquecível</h2>
+        <p class="section__subheader lang" data-key="amenities_subtitle">Comodidades</p>
+        <h2 class="section__header lang" data-key="amenities_title">Tudo o que precisa para uma estadia inesquecível</h2>
         <!-- Lista de comodidades oferecidas -->
         <ul class="comodidades__list">
           <li>
             <i class="ri-wifi-line"></i>
-            <span>Wi-Fi gratuito em todas as áreas</span>
+            <span class="lang" data-key="wifi">Wi-Fi gratuito em todas as áreas</span>
           </li>
           <li>
             <i class="ri-parking-box-line"></i>
-            <span>Estacionamento privado e gratuito</span>
+            <span class="lang" data-key="parking">Estacionamento privado e gratuito</span>
           </li>
           <li>
             <i class="fa-solid fa-water-ladder"></i>
-            <span>Piscina ao ar livre com espreguiçadeiras</span>
+            <span class="lang" data-key="pool">Piscina ao ar livre com espreguiçadeiras</span>
           </li>
           <li>
             <i class="ri-hand-heart-line"></i>
-            <span>Espaço acolhedor e adequado para famílias</span>
+            <span class="lang" data-key="family">Espaço acolhedor e adequado para famílias</span>
           </li>
           <li>
             <i class="fa-solid fa-fire"></i>
-            <span>Churrasqueira disponível</span>
+            <span class="lang" data-key="barbecue">Churrasqueira disponível</span>
           </li>
           <li>
             <i class="fa-solid fa-gamepad"></i>
-            <span>Brinquedos e jogos para crianças</span>
+            <span class="lang" data-key="games">Brinquedos e jogos para crianças</span>
           </li>
           <li>
             <i class="fa-solid fa-hiking"></i>
-            <span>Trilhos para caminhadas</span>
+            <span class="lang" data-key="trails">Trilhos para caminhadas</span>
           </li>
           <li>
             <i class="fa-solid fa-campground"></i>
-            <span>Área para acampar</span>
+            <span class="lang" data-key="camping">Área para acampar</span>
           </li>
         </ul>
       </div>
@@ -333,7 +371,7 @@
             <span></span>
             <span></span>
             <span></span>
-            Fazer Reserva
+            <span class="lang" data-key="make_reservation">Fazer Reserva</span>
           </a>
         </div>
         <!-- Segunda coluna do rodapé: Links sobre Ponte de Lima -->
@@ -375,11 +413,12 @@
         </div>
       </div>
       <!-- Barra de direitos autorais no rodapé -->
-      <div class="footer__bar">
+      <div class="footer__bar lang" data-key="copyright">
         Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
       </div>
     </footer>
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="index/main.js"></script>
+    <script src="assets/i18n/translator.js"></script>
   </body>
 </html>
