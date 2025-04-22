@@ -18,7 +18,7 @@ session_set_cookie_params([
 session_start();
 
 // Inclui arquivos necessários
-require 'mail_config.php';
+require 'email_functions.php';
 require_once '../conexao.php';
 
 // Verifica conexão com o banco
@@ -106,13 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$stmt->execute()) {
             throw new Exception("Erro ao executar a consulta: " . $stmt->error);
         }
-        
-        // Log de atividade
-        $hospede_id = $conexao->insert_id;
-        $log_sql = "INSERT INTO logs_acesso (usuario_id, tipo_usuario, acao, data) VALUES (?, 'hospede', 'registro', NOW())";
-        $log_stmt = $conexao->prepare($log_sql);
-        $log_stmt->bind_param("i", $hospede_id);
-        $log_stmt->execute();
         
         // Link de verificação
         $verification_link = "http://" . $_SERVER['HTTP_HOST'] . "/PAP/login/verify.php?token=$token";

@@ -1,0 +1,133 @@
+[22-Apr-2025 14:36:19 UTC] Início do processamento de registro
+[22-Apr-2025 14:36:19 UTC] [2025-04-22 14:36:19] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:36:19 UTC] [2025-04-22 14:36:19] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:41:33 UTC] Início do processamento de registro
+[22-Apr-2025 14:41:33 UTC] [2025-04-22 14:41:33] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:41:33 UTC] [2025-04-22 14:41:33] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:41:33 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 123
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:41:33 UTC] Em ambiente local: simulando envio de email para 03lucasmaciel@gmail.com
+[22-Apr-2025 14:41:33 UTC] Assunto: Verifique seu email - Quinta Flores
+[22-Apr-2025 14:41:33 UTC] Corpo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PAP/...
+[22-Apr-2025 14:45:47 UTC] Início do processamento de registro
+[22-Apr-2025 14:45:47 UTC] [2025-04-22 14:45:47] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:45:47 UTC] [2025-04-22 14:45:47] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:45:47 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 1234
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:45:47 UTC] Em ambiente local: simulando envio de email para 03lucasmaciel@gmail.com
+[22-Apr-2025 14:45:47 UTC] Assunto: Verifique seu email - Quinta Flores
+[22-Apr-2025 14:45:47 UTC] Corpo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PAP/...
+[22-Apr-2025 14:47:46 UTC] Início do processamento de registro
+[22-Apr-2025 14:47:46 UTC] [2025-04-22 14:47:46] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:47:46 UTC] [2025-04-22 14:47:46] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:47:46 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 123
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:47:46 UTC] Erro ao enviar email: SMTP Error: Could not authenticate.
+[22-Apr-2025 14:49:22 UTC] Início do processamento de registro
+[22-Apr-2025 14:49:23 UTC] [2025-04-22 14:49:23] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:49:23 UTC] [2025-04-22 14:49:23] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:49:23 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 1234
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:49:33 UTC] Início do processamento de registro
+[22-Apr-2025 14:49:33 UTC] [2025-04-22 14:49:33] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:49:33 UTC] [2025-04-22 14:49:33] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:49:33 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 1234
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:49:33 UTC] Tentando inserir novo hospede: {"nome":"Lucas Maciel","email":"03lucasmaciel@gmail.com","telefone":"937563908","documento":"1234"}
+[22-Apr-2025 14:49:34 UTC] Erro ao enviar email: SMTP Error: Could not authenticate.
+[22-Apr-2025 14:49:56 UTC] Início do processamento de registro
+[22-Apr-2025 14:49:56 UTC] [2025-04-22 14:49:56] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:49:56 UTC] [2025-04-22 14:49:56] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:49:56 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 123
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 14:49:56 UTC] Tentando inserir novo hospede: {"nome":"Lucas Maciel","email":"03lucasmaciel@gmail.com","telefone":"937563908","documento":"123"}
+[22-Apr-2025 14:49:57 UTC] Erro ao enviar email: SMTP Error: Could not authenticate.
+[22-Apr-2025 14:52:28 UTC] Início do processamento de registro
+[22-Apr-2025 14:52:28 UTC] [2025-04-22 14:52:28] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:52:28 UTC] [2025-04-22 14:52:28] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:52:50 UTC] Início do processamento de registro
+[22-Apr-2025 14:52:50 UTC] [2025-04-22 14:52:50] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:52:50 UTC] [2025-04-22 14:52:50] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:56:45 UTC] Início do processamento de registro
+[22-Apr-2025 14:56:45 UTC] [2025-04-22 14:56:45] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:56:45 UTC] [2025-04-22 14:56:45] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 14:56:46 UTC] Início do processamento de registro
+[22-Apr-2025 14:56:46 UTC] [2025-04-22 14:56:46] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 14:56:46 UTC] [2025-04-22 14:56:46] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 15:00:15 UTC] Início do processamento de registro
+[22-Apr-2025 15:00:15 UTC] [2025-04-22 15:00:15] - Tentando conectar ao banco de dados: {"host":"db","banco":"basedados_pap","usuario":"root"}
+[22-Apr-2025 15:00:15 UTC] [2025-04-22 15:00:15] - Conexão com o banco de dados estabelecida com sucesso
+[22-Apr-2025 15:00:15 UTC] POST recebido: Array
+(
+    [nome] => Lucas Maciel
+    [email] => 03lucasmaciel@gmail.com
+    [password] => Mat3luc17
+    [telefone] => 937563908
+    [documento] => 123
+    [aceitar_termos] => on
+    [csrf_token] => bef692c00af9703ac96188b3946ef3d9fe8c39d668fd6b02a614a3983f0ca9ac
+)
+
+[22-Apr-2025 15:00:15 UTC] Simulando envio de email para: 03lucasmaciel@gmail.com
+[22-Apr-2025 15:00:15 UTC] Assunto: Verifique seu email - Quinta Flores
+[22-Apr-2025 15:00:15 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PAP/...

@@ -442,17 +442,23 @@ $csrf_token = $_SESSION['csrf_token'];
             const csrfToken = this.querySelector('input[name="csrf_token"]').value;
             const errorElement = document.getElementById('loginError');
             
+            console.log('Tentativa de login:', { email, csrfToken: csrfToken.substring(0, 5) + '...' });
+            
             hideError(errorElement);
             
             if (!validateEmail(email)) {
                 showError(errorElement, 'Por favor, insira um email válido.');
+                console.log('Erro: Email inválido');
                 return;
             }
             
             if (password.length < 8) {
                 showError(errorElement, 'A senha deve ter pelo menos 8 caracteres.');
+                console.log('Erro: Senha muito curta');
                 return;
             }
+            
+            console.log('Validação passou, enviando requisição...');
             
             const formData = new FormData();
             formData.append('email', email);
@@ -463,17 +469,46 @@ $csrf_token = $_SESSION['csrf_token'];
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json())
+            .then(res => {
+                console.log('Resposta recebida:', res.status, res.statusText);
+                return res.json().catch(error => {
+                    console.error('Erro ao processar JSON:', error);
+                    throw new Error('Erro ao processar resposta do servidor');
+                });
+            })
             .then(data => {
+                console.log('Dados recebidos:', data);
                 if (data.redirect) {
+                    console.log('Redirecionando para:', data.redirect);
                     window.location.href = data.redirect;
                 } else if (data.error) {
+                    console.error('Erro retornado pelo servidor:', data.error);
+                    
+                    // Adicionando visualização das informações de debug
+                    if (data.debug) {
+                        console.log('===== INFORMAÇÕES DE DEBUG =====');
+                        console.log('Email tentativa:', data.debug.email_tentativa);
+                        console.log('Tempo:', data.debug.tempo);
+                        console.log('Tipo de usuário inferido:', data.debug.tipo_usuario_inferido);
+                        
+                        if (data.debug.senha_info && typeof data.debug.senha_info === 'object') {
+                            console.log('===== INFORMAÇÕES DE SENHA =====');
+                            console.log('Senha digitada:', data.debug.senha_info.senha_digitada);
+                            console.log('Hash no banco:', data.debug.senha_info.senha_hash_db);
+                            console.log('Resultado password_verify():', data.debug.senha_info.password_verify_result);
+                            console.log('Resultado comparação direta:', data.debug.senha_info.match_direto);
+                            console.log('Formato do hash:', data.debug.senha_info.formato_hash);
+                        }
+                    }
+                    
                     showError(errorElement, data.error);
                 } else {
+                    console.error('Resposta sem formato esperado:', data);
                     showError(errorElement, 'Erro inesperado.');
                 }
             })
-            .catch(() => {
+            .catch(error => {
+                console.error('Erro na requisição:', error);
                 showError(errorElement, 'Erro ao conectar com o servidor.');
             });
         });
