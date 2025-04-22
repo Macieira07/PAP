@@ -1,7 +1,6 @@
 <?php
 // Iniciar sessão
 session_start();
-
 // Função para escapar saída
 function e($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
@@ -15,19 +14,28 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Quinta Flores</title>
     <link rel="stylesheet" href="admin.css">
-    <title>Quinta Flores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Botão de menu -->
+    <button class="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
     <!-- Sidebar -->
-    <div id="sidebar" class="sidebar">
+    <div class="sidebar">
         <div class="sidebar-header">
-            <img src="../logotipos/logotipo1.png" width="170" height="170" alt="Quinta Flores Logo" class="logo-img">
+            <span class="logo-icon">🌼</span>
+            <h2>Quinta Flores</h2>
         </div>
         <nav class="sidebar-nav">
             <ul>
                 <li>
-                    <a href="admin_index.php">
+                    <a href="admin_index.php" class="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -67,7 +75,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     </a>
                 </li>
                 <li class="logout">
-                    <a href="../index.php">
+                    <a href="../index.html">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                             <polyline points="16 17 21 12 16 7"></polyline>
@@ -80,18 +88,11 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
         </nav>
     </div>
 
-    <!-- Botão de alternar menu -->
-    <button class="menu-toggle" aria-label="Alternar menu" aria-expanded="false" aria-controls="sidebar">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
     <!-- Conteúdo principal -->
-    <div id="main-content" class="main">
+    <div class="main">
         <div class="welcome-card">
             <h1>Bem-vindo, <span class="admin-name"><?php echo e($admin_nome); ?></span></h1>
-            <p class="welcome-message">Acesse todas as funcionalidades do sistema e gerencie facilmente a Quinta Flores.</p>
+            <p class="welcome-message">Acesse todas as funcionalidades do sistema e gere facilmente a Quinta Flores.</p>
         </div>
         
         <div class="dashboard-grid">
@@ -103,20 +104,19 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
                 <h3>Funcionários</h3>
-                <p>Gerencie sua equipe e atribua funções específicas para otimizar o trabalho.</p>
+                <p>Gere a tua equipa e atribui funções específicas para otimizar o trabalho.</p>
                 <a href="admin_funcionarios.php" class="link">Acessar →</a>
             </div>
             
             <div class="dashboard-card">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke                    <circle cx="12" cy="7" r="4"></circle>
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
                 </svg>
                 <h3>Hóspedes</h3>
-                <p>Visualize informações detalhadas sobre seus clientes e histórico de estadias.</p>
+                <p>Veja o histórico e os dados dos hóspedes hospedados em sua propriedade.</p>
                 <a href="admin_hospedes.php" class="link">Acessar →</a>
             </div>
-            
+
             <div class="dashboard-card">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -125,33 +125,18 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
                 <h3>Reservas</h3>
-                <p>Controle todas as estadias agendadas e gerencie disponibilidade de quartos.</p>
+                <p>Acompanha e organiza todas as reservas feitas pelos seus hóspedes.</p>
                 <a href="admin_reservas.php" class="link">Acessar →</a>
             </div>
         </div>
     </div>
 
-    <script>
-        // Menu toggle functionality
-        const menuToggle = document.querySelector('.menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        
-        menuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            menuToggle.setAttribute('aria-expanded', 
-                menuToggle.getAttribute('aria-expanded') === 'false' ? 'true' : 'false');
-        });
-        
-        // Marcar item ativo no menu
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPage = window.location.pathname.split('/').pop();
-            document.querySelectorAll('.sidebar-nav a').forEach(link => {
-                const linkPage = link.getAttribute('href').split('/').pop();
-                if (linkPage === currentPage) {
-                    link.classList.add('active');
-                }
-            });
-        });
-    </script>
+    <!-- Botão de alternância de tema -->
+    <button id="themeToggle" class="theme-toggle" title="Alternar tema">
+        🌓
+    </button>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
 </body>
 </html>

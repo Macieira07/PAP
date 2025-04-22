@@ -1,5 +1,5 @@
 <?php
-$host = 'db';
+$host = 'localhost';
 $usuario = 'root';
 $senha = ''; // Adicione sua senha aqui se necessário
 $banco = 'basedados_pap';
