@@ -1,5 +1,3 @@
-
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
  
 :root {
@@ -137,7 +135,7 @@ body {
 }
  
 .header {
-  background-image: url("../assets/imagemprincipal.jpg");
+  background-image: url("../assets/images/imagemprincipal.jpg");
   background-position: center center;
   background-size: cover;  
   background-repeat: no-repeat;
@@ -209,21 +207,31 @@ nav {
 .header__container p {
   margin-bottom: 1rem;
   font-size: 2rem;
-  color: white; /* Altere de black para white */
+  color: white;
   text-align: center;
-  opacity: 0.6;
+  opacity: 0.9;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
 }
- 
+
 .header__container h1 {
   font-size: 4rem;
-  font-weight: 500;
+  font-weight: 700; /* Aumentando o peso da fonte */
   line-height: 4.5rem;
   color: #ffffff;
   text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Adicionando sombra ao título */
+  position: relative; /* Para garantir posicionamento correto */
+  z-index: 2; /* Para garantir que o título apareça acima de outros elementos */
 }
  
 .header__container h1 span {
-  color: #fde910;
+  color: #fde910; /* Cor amarela */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); /* Sombra mais forte */
+  font-weight: 700;
+  opacity: 1;
+  display: inline;
+  padding: 0 4px; /* Pequeno espaçamento para destacar visualmente */
 }
  
 .booking__container {
@@ -711,8 +719,14 @@ nav {
   opacity: 0.2;
 }
 
-.animated-button1 span {
+.animated-button1 span:nth-child(-n+4) {
   position: absolute;
+}
+
+.animated-button1 span:nth-child(5) {
+  position: relative;
+  z-index: 1;
+  color: #ffffff; /* Cor branca para o texto */
 }
 
 .animated-button1 span:nth-child(1) {
@@ -786,7 +800,41 @@ nav {
   }
 }
 
+/* Estilo específico para o botão CONFIRA */
+.input__btn .animated-button1 {
+  padding: 6px 12px; /* Reduzi ainda mais o padding */
+  font-size: 11px; /* Tamanho da fonte menor */
+  width: auto; /* Largura automática baseada no conteúdo */
+  display: inline-block;
+  transform: scale(0.85); /* Reduzir a escala do botão inteiro */
+  transform-origin: center;
+}
 
+.input__btn .animated-button1 span:nth-child(5) {
+  color: #ffffff; /* Garantir que a cor do texto seja branca */
+  font-weight: 500; /* Peso da fonte para melhor legibilidade */
+  letter-spacing: 0.5px; /* Espaçamento entre letras um pouco menor */
+}
+
+/* Remover animação do botão no footer */
+.footer__col .animated-button1 {
+  background: var(--primary-color);
+  transition: background-color 0.3s ease;
+}
+
+.footer__col .animated-button1:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Desativar spans de animação no botão do footer */
+.footer__col .animated-button1 span:nth-child(-n+4) {
+  display: none;
+}
+
+.footer__col .animated-button1 span:nth-child(5) {
+  color: #ffffff;
+  font-weight: 500;
+}
 
   /*lermais.css*/
   /* Additional CSS for lermais.html - Add this to your existing styles.css */
@@ -1055,7 +1103,6 @@ nav {
   .features__grid {
     grid-template-columns: 1fr;
   }
-}
 
 
 /* CSS para os cartões de atrações */
@@ -1469,4 +1516,402 @@ nav {
 /* Responsividade */
 @media (max-width: 768px) {
   /* Estilos mobile... */
+}
+
+/* CSS para os cartões de atrações */
+.room__card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.room__card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Novos estilos para a página de atrações */
+.header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.header__container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 8rem 1rem;
+  color: white;
+}
+
+.header__container h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.header__container span {
+  color: #fde910;
+}
+
+.header-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.btn-explorar {
+  display: inline-block;
+  padding: 12px 30px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.3s;
+  margin-top: 1rem;
+}
+
+.btn-explorar:hover {
+  background: var(--primary-color-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Seção Destaque */
+.destaque-section {
+  background: #f9f7ff;
+  padding: 2rem 0;
+}
+
+.destaque-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+/* Atrações Grid */
+.atracao-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.atracao-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.atracao-imagem {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.atracao-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.atracao-card:hover .atracao-imagem img {
+  transform: scale(1.05);
+}
+
+.atracao-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.atracao-content {
+  padding: 1.5rem;
+}
+
+.atracao-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.atracao-content p {
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.atracao-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.atracao-meta i {
+  margin-right: 5px;
+  color: var(--primary-color);
+}
+
+.btn-saiba-mais {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary-color);
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-saiba-mais i {
+  margin-left: 5px;
+  transition: transform 0.3s;
+}
+
+.btn-saiba-mais:hover {
+  color: var(--primary-color-dark);
+}
+
+.btn-saiba-mais:hover i {
+  transform: translateX(5px);
+}
+
+/* Mapa Section */
+.mapa-section {
+  background: #f5f5f5;
+  padding: 4rem 0;
+}
+
+.mapa-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Comodidades Section */
+.comodidades-section {
+  padding: 4rem 0;
+}
+
+.comodidades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.comodidade-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s;
+}
+
+.comodidade-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.comodidade-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(106, 13, 173, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.comodidade-item h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.comodidade-item p {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Stats Section */
+.stats-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  padding: 1.5rem;
+}
+
+.stat-card h4 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.footer {
+  background: #1a1a1a;
+  color: white;
+  padding-top: 4rem;
+}
+
+.footer__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+}
+
+.footer__col h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer__col h4::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--primary-color);
+}
+
+.footer__links li {
+  margin-bottom: 1rem;
+}
+
+.footer__links a {
+  color: #b3b3b3;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__links a:hover {
+  color: white;
+}
+
+.footer__socials {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.footer__socials a {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s;
+}
+
+.footer__socials a:hover {
+  background: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+.footer__bar {
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  font-size: 0.9rem;
+  color: #b3b3b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header__container h1 {
+    font-size: 2.5rem;
+  }
+  
+  .atracoes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .atracoes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature__item {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.feature__item:hover {
+  transform: translateY(-5px);
+}
+
+.feature__item i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.feature__item h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.feature__item p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
 }
