@@ -1,20 +1,7 @@
 <?php
-// Define função para debug se ainda não existir
-if (!function_exists('debug_log')) {
-    function debug_log($message, $data = null) {
-        $log_message = date('[Y-m-d H:i:s]') . " - " . $message;
-        if ($data !== null) {
-            $log_message .= ": " . (is_array($data) || is_object($data) ? json_encode($data) : $data);
-        }
-        error_log($log_message);
-    }
-}
-
-// Configurações do banco de dados
-// Note: Em ambiente Docker, o host 'db' é o nome do serviço no docker-compose
-$host = 'db';       // Nome do serviço no docker-compose
-$usuario = 'root';  // Usuário padrão do MySQL
-$senha = '';        // Senha vazia conforme configurado
+$host = 'localhost';
+$usuario = 'root';
+$senha = ''; // Adicione sua senha aqui se necessário
 $banco = 'basedados_pap';
 
 debug_log("Tentando conectar ao banco de dados", ['host' => $host, 'banco' => $banco, 'usuario' => $usuario]);

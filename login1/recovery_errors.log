@@ -1,0 +1,6 @@
+[22-Apr-2025 16:23:03 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\PAP\login1\mail_config.php on line 2
+[22-Apr-2025 16:23:03 Europe/Berlin] PHP Warning:  include(login_page.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\PAP\login1\mail_config.php on line 123
+[22-Apr-2025 16:23:03 Europe/Berlin] PHP Warning:  include(): Failed opening 'login_page.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\PAP\login1\mail_config.php on line 123
+[22-Apr-2025 16:23:12 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\PAP\login1\mail_config.php on line 2
+[22-Apr-2025 16:23:12 Europe/Berlin] PHP Warning:  include(login_page.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\PAP\login1\mail_config.php on line 123
+[22-Apr-2025 16:23:12 Europe/Berlin] PHP Warning:  include(): Failed opening 'login_page.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\PAP\login1\mail_config.php on line 123
