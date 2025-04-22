@@ -1,19 +1,26 @@
 <?php
 session_start();
-header('Content-Type: application/json'); // Responder sempre em JSON
 
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
-require_once '../conexao.php';
-
+// Verifica se é uma requisição POST (login)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Configura o cabeçalho para resposta JSON
+    header('Content-Type: application/json');
+    
+    // Verifica e gera token CSRF se necessário
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    // Inclui a conexão com o banco de dados
+    require_once '../conexao.php';
+
+    // Verifica o token CSRF
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         echo json_encode(['error' => 'Token CSRF inválido']);
         exit;
     }
 
+    // Valida campos obrigatórios
     if (empty($_POST['email']) || empty($_POST['senha'])) {
         echo json_encode(['error' => 'Por favor, preencha todos os campos.']);
         exit;
@@ -22,11 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $senha = trim($_POST['senha']);
 
+    // Valida formato do email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['error' => 'Email inválido.']);
         exit;
     }
 
+    // Função para verificar usuário
     function verificarUsuario($conexao, $email, $senha, $tabela, $emailCol, $senhaCol, $idCol, $nomeCol) {
         $sql_code = "SELECT * FROM $tabela WHERE $emailCol = ?";
         $stmt = $conexao->prepare($sql_code);
@@ -48,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return false;
     }
 
-    // Funcionário
+    // Verifica se é funcionário
     $usuario = verificarUsuario($conexao, $email, $senha, 'funcionarios', 'F_email', 'F_senha', 'F_id_funcionario', 'F_nome');
     if ($usuario) {
         if (isset($usuario['F_ativo']) && $usuario['F_ativo'] != 'Sim') {
@@ -73,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Hóspede
+    // Verifica se é hóspede
     $usuario = verificarUsuario($conexao, $email, $senha, 'hospedes', 'H_email', 'H_senha', 'H_id_hospede', 'H_nome');
     if ($usuario && $usuario['H_verificado_email'] == 'Sim') {
         $_SESSION['id'] = $usuario['H_id_hospede'];
@@ -92,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Login falhou
-    $_SESSION['login_attempts']++;
+    $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
     $_SESSION['last_login_attempt'] = time();
 
     $tipo = strpos($email, '@hotel.com') !== false ? 'funcionario' : 'hospede';
@@ -102,13 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $log_stmt->bind_param("sss", $email, $tipo, $acao);
     $log_stmt->execute();
 
-    sleep($_SESSION['login_attempts']); // antiflood
+    sleep(min($_SESSION['login_attempts'], 5)); // antiflood com limite máximo
 
     echo json_encode(['error' => 'Credenciais inválidas.']);
     exit;
 }
 
-// Se for GET, ignora o JSON e mostra o formulário normal (ex: login_page.php)
-header('Content-Type: text/html; charset=utf-8');
-$csrf_token = $_SESSION['csrf_token'];
+// Se não for POST, mostra o formulário normal
+$csrf_token = $_SESSION['csrf_token'] ?? bin2hex(random_bytes(32));
+$_SESSION['csrf_token'] = $csrf_token;
 include('login_page.php');
