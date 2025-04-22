@@ -1,7 +1,7 @@
 <?php
 // Verifica se os arquivos do PHPMailer existem
 $phpmailer_path = __DIR__ . '/PHPMailer/src/';
-if (!file_exists($phpmailer_path . 'Exception.php') {
+if (!file_exists($phpmailer_path . 'Exception.php')) {
     die("Erro: PHPMailer não encontrado no caminho especificado.");
 }
 
