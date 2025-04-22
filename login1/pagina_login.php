@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 $csrf_token = $_SESSION['csrf_token']; 
 ?>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
