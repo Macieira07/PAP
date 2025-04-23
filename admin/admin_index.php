@@ -19,6 +19,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <!-- Botão de menu -->
     <button class="menu-toggle" aria-label="Menu">
         <span></span>
@@ -95,8 +96,9 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
             <p class="welcome-message">Acesse todas as funcionalidades do sistema e gere facilmente a Quinta Flores.</p>
         </div>
         
+        <!-- Updated dashboard grid -->
         <div class="dashboard-grid">
-            <div class="dashboard-card">
+            <div class="dashboard-card" data-aos="fade-up">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -105,16 +107,17 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 </svg>
                 <h3>Funcionários</h3>
                 <p>Gere a tua equipa e atribui funções específicas para otimizar o trabalho.</p>
-                <a href="admin_funcionarios.php" class="link">Acessar →</a>
+                <a href="admin_funcionarios.php" class="link">Aceder →</a>
             </div>
             
             <div class="dashboard-card">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke                    <circle cx="12" cy="7" r="4"></circle>
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7" r="4"></circle>
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 </svg>
                 <h3>Hóspedes</h3>
                 <p>Veja o histórico e os dados dos hóspedes hospedados em sua propriedade.</p>
-                <a href="admin_hospedes.php" class="link">Acessar →</a>
+                <a href="admin_hospedes.php" class="link">Aceder →</a>
             </div>
 
             <div class="dashboard-card">
@@ -126,7 +129,7 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
                 </svg>
                 <h3>Reservas</h3>
                 <p>Acompanha e organiza todas as reservas feitas pelos seus hóspedes.</p>
-                <a href="admin_reservas.php" class="link">Acessar →</a>
+                <a href="admin_reservas.php" class="link">Aceder →</a>
             </div>
         </div>
     </div>

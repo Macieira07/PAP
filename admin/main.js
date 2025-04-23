@@ -41,13 +41,14 @@ function createPreloader() {
             <p>Carregando...</p>
         </div>
     `;
-    document.body.appendChildocument.body.appendChild(preloader);
+    document.body.appendChild(preloader);
 
     window.addEventListener('load', () => {
-        preloader.classList.add('fade-out');
-        setTimeout(() => {
-            preloader.remove();
-        }, 500);
+        const preloader = document.querySelector('.preloader');
+        if (preloader) {
+            preloader.classList.add('fade-out');
+            setTimeout(() => preloader.remove(), 500);
+        }
     });
 }
 
@@ -67,7 +68,11 @@ function initializeTheme() {
 // Inicializa as animações (usando, por exemplo, AOS.js)
 function initializeAnimations() {
     if (window.AOS) {
-        AOS.init();
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
     }
 }
 
