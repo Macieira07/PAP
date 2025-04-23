@@ -410,7 +410,7 @@ $csrf_token = $_SESSION['csrf_token'];
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
                     <h1>Bem-vindo de Volta!</h1>
-                    <p>Entre com seus dados para acessar sua conta</p>
+                    <p>Entre com seus dados para aceder a sua conta</p>
                     <button class="toggle-btn" id="loginToggle">Entrar</button>
                 </div>
                 <div class="toggle-panel toggle-right">

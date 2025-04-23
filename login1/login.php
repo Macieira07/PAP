@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Inclui a conexão com o banco de dados
         require_once '../conexao.php';
-        debug_log("Conexão com o banco de dados incluída");
+        debug_log("Conexão com a base de dados incluída");
 
         // Verifica o token CSRF
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificar se a conexão está ativa
         if (!isset($conexao) || $conexao->connect_error) {
             debug_log("Conexão com o banco inválida", $conexao->connect_error ?? 'Variável $conexao não definida');
-            echo json_encode(['error' => 'Erro na conexão com o banco de dados']);
+            echo json_encode(['error' => 'Erro na conexão com a base de dados']);
             exit;
         }
 
@@ -104,13 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Verificação TEMPORÁRIA de senha - aceita password_verify OU senha em texto puro
                 // REMOVA ESTA VERIFICAÇÃO DUPLA EM AMBIENTE DE PRODUÇÃO!
                 if (password_verify($senha, $usuario[$senhaCol]) || $senha === $usuario[$senhaCol]) {
-                    debug_log("Senha verificada com sucesso");
+                    debug_log("Password  verificada com sucesso");
                     return $usuario;
                 } else {
-                    debug_log("Senha incorreta");
+                    debug_log("Password incorreta");
                 }
             } else {
-                debug_log("Usuário não encontrado");
+                debug_log("Cliente não encontrado");
             }
             return false;
         }
