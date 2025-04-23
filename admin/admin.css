@@ -1,3 +1,6 @@
+/* Fonte clássica e bonita para o site todo */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 :root {
     /* Modern Color Palette */
     --primary: #6d28d9;
@@ -44,6 +47,8 @@
     --radius-md: 0.5rem;
     --radius-lg: 1rem;
     --radius-full: 9999px;
+
+    --font-family-classic: 'Playfair Display', serif;
 }
 
 /* Reset and base styles with smooth scrolling */
@@ -67,6 +72,7 @@ body {
     transition: var(--transition);
     position: relative;
     overflow-x: hidden;
+    font-family: var(--font-family-classic);
 }
 
 /* Dark mode support */

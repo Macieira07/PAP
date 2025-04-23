@@ -1,80 +1,71 @@
 <?php
-// Start session if not already started
 session_start();
-
-// Include database connection
 require_once('../conexao.php');
+
+// Constants for messages
+define('SUCCESS_UPDATE', 'Guest updated successfully');
+define('SUCCESS_INSERT', 'Guest added successfully');
+define('ERROR_UNKNOWN', 'An unknown error occurred');
+define('ERROR_FIELDS', 'All required fields must be provided');
+define('ERROR_EMAIL', 'Invalid email format');
 
 // Function to sanitize input data
 function sanitize_input($data) {
     global $conexao;
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $conexao->real_escape_string($data);
+    return $conexao->real_escape_string(htmlspecialchars(trim($data)));
 }
 
-// Initialize response array
-$response = [
-    'status' => 'error',
-    'message' => 'An unknown error occurred',
-    'redirect' => 'admin_hospedes.php'
-];
+// Function to handle database operations
+function handle_guest_operation($id, $nome, $apelido, $email, $telefone) {
+    global $conexao;
+
+    if ($id > 0) {
+        $stmt = $conexao->prepare("UPDATE hospedes SET H_nome=?, H_apelido=?, H_email=?, H_telefone=? WHERE H_id_hospede=?");
+        $stmt->bind_param("ssssi", $nome, $apelido, $email, $telefone, $id);
+        $message = SUCCESS_UPDATE;
+    } else {
+        $stmt = $conexao->prepare("INSERT INTO hospedes (H_nome, H_apelido, H_email, H_telefone) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $nome, $apelido, $email, $telefone);
+        $message = SUCCESS_INSERT;
+    }
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        return ['status' => 'success', 'message' => $message];
+    } else {
+        $stmt->close();
+        throw new Exception("Database error: " . $stmt->error);
+    }
+}
+
+$response = ['status' => 'error', 'message' => ERROR_UNKNOWN, 'redirect' => 'admin_hospedes.php'];
 
 try {
-    // Validate and sanitize inputs
-    if (!isset($_POST['id']) || !isset($_POST['nome']) || !isset($_POST['email']) || !isset($_POST['telefone'])) {
-        throw new Exception("All required fields must be provided");
+    if (!isset($_POST['id'], $_POST['nome'], $_POST['email'], $_POST['telefone'])) {
+        throw new Exception(ERROR_FIELDS);
     }
 
     $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
     $nome = sanitize_input($_POST['nome']);
-    $apelido = sanitize_input($_POST['apelido'] ?? ''); // Optional field
+    $apelido = sanitize_input($_POST['apelido'] ?? '');
     $email = sanitize_input($_POST['email']);
     $telefone = sanitize_input($_POST['telefone']);
 
-    // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        throw new Exception("Invalid email format");
+        throw new Exception(ERROR_EMAIL);
     }
 
-    // Prepare the query based on whether this is an update or insert
-    if ($id > 0) {
-        // Update existing guest
-        $stmt = $conexao->prepare("UPDATE hospedes SET H_nome=?, H_apelido=?, H_email=?, H_telefone=? WHERE H_id_hospede=?");
-        $stmt->bind_param("ssssi", $nome, $apelido, $email, $telefone, $id);
-        $operation = "update";
-    } else {
-        // Insert new guest
-        $stmt = $conexao->prepare("INSERT INTO hospedes (H_nome, H_apelido, H_email, H_telefone) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $nome, $apelido, $email, $telefone);
-        $operation = "insert";
-    }
-
-    // Execute the query
-    if ($stmt->execute()) {
-        $response['status'] = 'success';
-        $response['message'] = ($operation === "update") ? "Guest updated successfully" : "Guest added successfully";
-    } else {
-        throw new Exception("Database error: " . $stmt->error);
-    }
-
-    // Close statement
-    $stmt->close();
-
+    $response = handle_guest_operation($id, $nome, $apelido, $email, $telefone);
 } catch (Exception $e) {
     $response['message'] = $e->getMessage();
-    // Log error to file (optional)
     error_log("Error in atualizar_hospede.php: " . $e->getMessage());
 }
 
-// Store message in session for display after redirect
 $_SESSION['flash_message'] = [
     'type' => $response['status'],
     'message' => $response['message']
 ];
 
-// Redirect back to the guests page
 header("Location: " . $response['redirect']);
 exit();
 ?>
