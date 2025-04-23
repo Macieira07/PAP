@@ -2,24 +2,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Paleta Moderna: Neon Minimalista */
-    --primary: #6366F1; /* Indigo suave */
-    --secondary: #A855F7; /* Roxo vibrante */
-    --background-light: #F9FAFB; /* Fundo claro */
-    --text-primary: #111827; /* Texto principal */
-    --text-secondary: #6B7280; /* Texto secundário */
-    --card-background: #FFFFFF; /* Fundo de cartões */
-    --card-shadow: rgba(0, 0, 0, 0.05); /* Sombra suave */
-    --success: #10B981; /* Verde esmeralda */
-    --error: #EF4444; /* Vermelho vibrante */
-    --transition: all 0.3s ease-in-out;
+    /* Modern Color Palette */
+    --primary: #6d28d9;
+    --primary-light: #8b5cf6;
+    --primary-dark: #5b21b6;
+    --primary-glass: rgba(109, 40, 217, 0.1);
+    --secondary: #f59e0b;
+    --secondary-light: #fbbf24;
+    --secondary-dark: #d97706;
+    
+    /* Neutral Tones */
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-800: #1f2937;
+    --black: #111827;
+    
+    /* Status Colors */
+    --success: #10b981;
+    --success-light: #d1fae5;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --info: #3b82f6;
+    --info-light: #dbeafe;
 
+    /* Transitions */
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
     /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
     /* Border Radius */
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
@@ -42,8 +64,8 @@ html {
 }
 
 body {
-    background-color: var(--background-light);
-    color: var(--text-primary);
+    background-color: var(--gray-50);
+    color: var(--gray-800);
     font-family: 'Inter', sans-serif;
     transition: var(--transition);
     min-height: 100vh;
@@ -55,14 +77,13 @@ body {
 
 /* Dark mode support */
 body.dark-mode {
-    --background-light: #121212;
-    --text-primary: #e5e7eb;
-    --text-secondary: #6b7280;
-    --card-background: #1e1e1e;
-    --card-shadow: rgba(0, 0, 0, 0.15);
+    --gray-50: #121212;
+    --gray-800: #e5e7eb;
+    --gray-400: #6b7280;
+    --white: #1e1e1e;
 
-    color: var(--text-primary);
-    background-color: var(--background-light);
+    color: var(--gray-800);
+    background-color: var(--gray-50);
 }
 
 /* Loading indicator */
@@ -106,7 +127,7 @@ html.loading::before {
 .preloader-spinner {
     width: 50px;
     height: 50px;
-    border: 5px solid var(--card-shadow);
+    border: 5px solid rgba(0, 0, 0, 0.1);
     border-top: 5px solid var(--primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -125,7 +146,7 @@ html.loading::before {
 /* Modern Sidebar */
 .sidebar {
     width: 260px;
-    background-color: var(--card-background);
+    background-color: var(--white);
     box-shadow: var(--shadow-md);
     padding: 1.5rem 0;
     transition: var(--transition);
@@ -133,7 +154,7 @@ html.loading::before {
     position: fixed;
     height: 100vh;
     transform: translateX(-100%);
-    border-right: 1px solid var(--text-secondary);
+    border-right: 1px solid var(--gray-400);
     display: flex;
     flex-direction: column;
 }
@@ -146,7 +167,7 @@ html.loading::before {
     display: flex;
     align-items: center;
     padding: 0 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--gray-400);
     margin-bottom: 0.5rem;
 }
 
@@ -196,7 +217,7 @@ html.loading::before {
     display: flex;
     align-items: center;
     padding: 0.75rem 1.5rem;
-    color: var(--text-primary);
+    color: var(--gray-800);
     text-decoration: none;
     transition: var(--transition);
     font-weight: 500;
@@ -224,7 +245,7 @@ html.loading::before {
 .sidebar-nav a:hover, 
 .sidebar-nav a.active {
     background-color: var(--primary);
-    color: var(--card-background);
+    color: var(--white);
 }
 
 .sidebar-nav .icon {
@@ -251,7 +272,7 @@ html.loading::before {
 
 .sidebar-footer {
     padding: 1rem 1.5rem;
-    border-top: 1px solid var(--text-secondary);
+    border-top: 1px solid var(--gray-400);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -307,7 +328,7 @@ body.sidebar-open .main {
 
 /* Modern cards */
 .card, .welcome-card {
-    background-color: var(--card-background);
+    background-color: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     padding: 1.75rem 2rem;
@@ -320,7 +341,7 @@ body.sidebar-open .main {
 
 .card:hover, .welcome-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 8px var(--card-shadow);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 }
 
 .welcome-card {
@@ -370,12 +391,12 @@ body.sidebar-open .main {
 }
 
 .dashboard-card {
-    background-color: var(--card-background);
+    background-color: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     padding: 1.5rem;
     transition: var(--transition);
-    border: 1px solid var(--text-secondary);
+    border: 1px solid var(--gray-400);
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -385,7 +406,7 @@ body.sidebar-open .main {
 
 .dashboard-card:hover {
     transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 6px 8px var(--card-shadow);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
     border-color: var(--primary);
     z-index: 1;
 }
@@ -399,11 +420,11 @@ body.sidebar-open .main {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-primary);
+    color: var(--gray-800);
 }
 
 .dashboard-card p {
-    color: var(--text-secondary);
+    color: var(--gray-400);
     margin-bottom: 1rem;
     font-size: 0.9rem;
 }
@@ -430,27 +451,27 @@ button, .btn-primary {
     border-radius: 0.5rem;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 4px 6px var(--card-shadow);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover, .btn-primary:hover {
     background-color: var(--secondary);
-    box-shadow: 0 6px 8px var(--card-shadow);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Modern tables */
 .table-container {
-    background-color: var(--card-background);
+    background-color: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     overflow: hidden;
     margin-bottom: 2rem;
-    border: 1px solid var(--text-secondary);
+    border: 1px solid var(--gray-400);
     transition: var(--transition);
 }
 
 .table-container:hover {
-    box-shadow: 0 6px 8px var(--card-shadow);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 }
 
 .table-header {
@@ -458,13 +479,13 @@ button:hover, .btn-primary:hover {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--gray-400);
 }
 
 .table-title {
     font-weight: 600;
     font-size: 1.125rem;
-    color: var(--text-primary);
+    color: var(--gray-800);
 }
 
 .data-table {
@@ -476,12 +497,12 @@ button:hover, .btn-primary:hover {
 .data-table th, 
 .data-table td {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--gray-400);
 }
 
 .data-table th {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
-    color: var(--card-background);
+    color: var(--white);
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;
@@ -498,7 +519,7 @@ button:hover, .btn-primary:hover {
 
 .data-table tr:hover {
     background-color: var(--primary);
-    color: var(--card-background);
+    color: var(--white);
 }
 
 /* Status badges */
@@ -522,17 +543,17 @@ button:hover, .btn-primary:hover {
 }
 
 .cancelada {
-    background-color: var(--error);
+    background-color: var(--danger);
     color: #FFFFFF;
 }
 
 /* Inputs */
 input, textarea {
     background-color: #FFFFFF;
-    border: 1px solid var(--text-secondary);
+    border: 1px solid var(--gray-400);
     padding: 0.75rem;
     border-radius: 0.5rem;
-    color: var(--text-primary);
+    color: var(--gray-800);
     transition: var(--transition);
 }
 

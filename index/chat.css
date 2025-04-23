@@ -1,0 +1,358 @@
+.chat-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+
+.chat-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #FFD700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.chat-button i {
+  font-size: 24px;
+  color: #000;
+}
+
+.chat-notification {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #DAA520;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.chat-window {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  background-color: #FFD700;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.chat-header h3 {
+  margin: 0;
+  color: #000;
+  font-size: 16px;
+}
+
+.chat-status {
+  font-size: 12px;
+  color: #000;
+}
+
+.chat-status.online::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #22C55E;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.chat-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-action-btn {
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.chat-action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.chat-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #F9FAFB;
+}
+
+.chat-tabs {
+  display: flex;
+  background-color: #fff;
+  padding: 10px;
+  gap: 10px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.chat-tab {
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #6B7280;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chat-tab.active {
+  background-color: #FFD700;
+  color: #000;
+}
+
+.chat-tab i {
+  font-size: 16px;
+}
+
+.chat-panels {
+  flex: 1;
+  overflow: hidden;
+}
+
+.chat-panel {
+  display: none;
+  height: 100%;
+}
+
+.chat-panel.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.chat-input-area {
+  padding: 15px;
+  background-color: #fff;
+  border-top: 1px solid #E5E7EB;
+}
+
+.chat-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.chat-extras {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.chat-extra-btn {
+  background: none;
+  border: none;
+  color: #6B7280;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 18px;
+}
+
+.chat-extra-btn:hover {
+  color: #FFD700;
+}
+
+textarea {
+  flex: 1;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 10px 15px;
+  resize: none;
+  max-height: 100px;
+  font-size: 14px;
+}
+
+.send-button {
+  background-color: #FFD700;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.send-button i {
+  color: #000;
+  font-size: 18px;
+}
+
+.quick-replies {
+  padding: 10px 15px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  background-color: #fff;
+  border-top: 1px solid #E5E7EB;
+}
+
+.quick-reply-btn {
+  white-space: nowrap;
+  padding: 8px 15px;
+  background-color: #F3F4F6;
+  border: none;
+  border-radius: 15px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #4B5563;
+}
+
+.quick-reply-btn:hover {
+  background-color: #FFD700;
+  color: #000;
+}
+
+/* Estilos para o formulário de reserva rápida */
+.quick-booking {
+  padding: 20px;
+}
+
+.quick-booking h4 {
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+.booking-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #374151;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.booking-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #FFD700;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.booking-btn:hover {
+  background-color: #DAA520;
+}
+
+/* Estilos para FAQ */
+.faq-list {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.faq-list h4 {
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+.faq-item {
+  border-bottom: 1px solid #E5E7EB;
+  padding: 10px 0;
+}
+
+.faq-question {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+}
+
+.faq-answer {
+  padding: 10px;
+  color: #6B7280;
+  display: none;
+}
+
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+/* Animações */
+@keyframes slideIn {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.chat-window.show {
+  display: flex;
+  animation: slideIn 0.3s ease-out;
+}

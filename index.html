@@ -16,6 +16,7 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"> 
     <!-- Arquivo CSS local para estilos personalizados -->
     <link rel="stylesheet" href="index/index.css">
+    <link rel="stylesheet" href="index/chat.css">
     <!-- Pré-carregamentos -->
     <link rel="preload" href="imagens/hero.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,6 +48,7 @@
       }
     </style>
   </head>
+
   <body>  
     <!-- Cabeçalho da página -->
     <header class="header">
@@ -77,7 +79,7 @@
           <span class="language-flag" data-lang="de">DE</span>
           <span class="language-flag" data-lang="fr">FR</span>
         </div>
-        
+ 
         <!-- Botão de reserva que redireciona para a página de login -->
         <a href="login1/pagina_login.php" class="animated-button1">
           <span></span>
@@ -354,178 +356,156 @@
         </div>
       </div>
     </section>
-    <!-- Chat Online Button -->
-    <div id="chat-button" class="chat-button">
-        <i class="fas fa-comments"></i>
+<!-- Widget de Chat Interativo - Quinta Flores -->
+<div id="chatWidget" class="chat-widget">
+  <!-- Botão de chat flutuante -->
+  <button id="chatButton" class="chat-button">
+    <i class="ri-chat-3-fill"></i>
+    <span class="chat-notification" id="chatNotification">1</span>
+  </button>
+
+  <!-- Janela de chat completa -->
+  <div id="chatWindow" class="chat-window">
+    <!-- Cabeçalho do chat -->
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chat-logo">
+        <div>
+          <h3>Quinta Flores</h3>
+          <p id="chatStatus" class="chat-status online">Online</p>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <button id="minimizeChat" class="chat-action-btn">
+          <i class="ri-subtract-line"></i>
+        </button>
+        <button id="closeChat" class="chat-action-btn">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Chat Online Modal -->
-    <div id="chat-modal" class="chat-modal">
-        <div class="chat-header">
-            <h4>Chat Online</h4>
-            <button id="close-chat" class="close-chat">&times;</button>
-        </div>
-        <div class="chat-body">
-            <div id="chat-messages" class="chat-messages">
-                <!-- Messages will appear here -->
+    <!-- Corpo do chat com abas -->
+    <div class="chat-body">
+      <!-- Abas de navegação -->
+      <div class="chat-tabs">
+        <button class="chat-tab active" data-tab="messages">
+          <i class="ri-message-3-line"></i> Mensagens
+        </button>
+        <button class="chat-tab" data-tab="booking">
+          <i class="ri-calendar-check-line"></i> Reserva
+        </button>
+        <button class="chat-tab" data-tab="faq">
+          <i class="ri-question-line"></i> FAQ
+        </button>
+      </div>
+
+      <!-- Painéis de conteúdo -->
+      <div class="chat-panels">
+        <!-- Painel de mensagens -->
+        <div class="chat-panel active" id="messagesPanel">
+          <div id="chatMessages" class="chat-messages">
+            <div class="chat-day-separator">
+              <span id="chatDate">Hoje</span>
             </div>
-            <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
-                <button id="send-chat" class="send-chat">Enviar</button>
+            <div class="message received">
+              <div class="message-bubble">
+                <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudar você hoje?</p>
+                <span class="message-time">10:00</span>
+              </div>
             </div>
+          </div>
         </div>
+
+        <!-- Painel de reserva rápida -->
+        <div class="chat-panel" id="bookingPanel">
+          <div class="quick-booking">
+            <h4>Reserva Rápida</h4>
+            <form id="quickBookingForm">
+              <div class="booking-dates">
+                <div class="form-group">
+                  <label for="checkInDate">Check-in</label>
+                  <input type="date" id="checkInDate" min="" required>
+                </div>
+                <div class="form-group">
+                  <label for="checkOutDate">Check-out</label>
+                  <input type="date" id="checkOutDate" min="" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="guestCount">Número de hóspedes</label>
+                <select id="guestCount">
+                  <option value="1">1 hóspede</option>
+                  <option value="2" selected>2 hóspedes</option>
+                  <option value="3">3 hóspedes</option>
+                  <option value="4">4 hóspedes</option>
+                  <option value="5">5 hóspedes</option>
+                  <option value="6">6+ hóspedes</option>
+                </select>
+              </div>
+              <button type="submit" class="booking-btn">Verificar disponibilidade</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Painel de FAQ -->
+        <div class="chat-panel" id="faqPanel">
+          <div class="faq-list">
+            <h4>Perguntas Frequentes</h4>
+            <div class="faq-accordion">
+              <div class="faq-item">
+                <div class="faq-question">Qual o horário de check-in e check-out?</div>
+                <div class="faq-answer">O check-in é a partir das 15h00 e o check-out até as 11h00. Se precisar de horários diferentes, entre em contato conosco com antecedência.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">A Quinta aceita animais de estimação?</div>
+                <div class="faq-answer">Sim, aceitamos animais de estimação de pequeno e médio porte mediante consulta prévia.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">Há estacionamento disponível?</div>
+                <div class="faq-answer">Sim, oferecemos estacionamento gratuito nas dependências da Quinta.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">A piscina funciona em todas as épocas do ano?</div>
+                <div class="faq-answer">A piscina ao ar livre está disponível de maio a setembro, dependendo das condições climáticas.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">Como é o acesso à internet?</div>
+                <div class="faq-answer">Oferecemos Wi-Fi gratuito em todas as áreas da Quinta Flores.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatButton = document.getElementById('chat-button');
-            const chatModal = document.getElementById('chat-modal');
-            const closeChat = document.getElementById('close-chat');
-            const sendChat = document.getElementById('send-chat');
-            const chatInput = document.getElementById('chat-input');
-            const chatMessages = document.getElementById('chat-messages');
+    <!-- Área para digitar mensagens -->
+    <div class="chat-input-area">
+      <div class="chat-extras">
+        <button class="chat-extra-btn" id="attachButton">
+          <i class="ri-attachment-2"></i>
+        </button>
+        <button class="chat-extra-btn" id="emojiButton">
+          <i class="ri-emoji-sticker-line"></i>
+        </button>
+      </div>
+      <div class="chat-input-wrapper">
+        <textarea id="chatInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
+        <button id="sendMessage" class="send-button">
+          <i class="ri-send-plane-fill"></i>
+        </button>
+      </div>
+    </div>
 
-            chatButton.addEventListener('click', () => {
-                chatModal.style.display = 'block';
-            });
-
-            closeChat.addEventListener('click', () => {
-                chatModal.style.display = 'none';
-            });
-
-            sendChat.addEventListener('click', () => {
-                const message = chatInput.value.trim();
-                if (message) {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = 'chat-message user';
-                    messageElement.textContent = message;
-                    chatMessages.appendChild(messageElement);
-                    chatInput.value = '';
-
-                    // Simulate a response
-                    setTimeout(() => {
-                        const responseElement = document.createElement('div');
-                        responseElement.className = 'chat-message bot';
-                        responseElement.textContent = 'Obrigado por entrar em contato! Em breve responderemos.';
-                        chatMessages.appendChild(responseElement);
-                    }, 1000);
-                }
-            });
-        });
-    </script>
-
-    <style>
-        .chat-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #6A0DAD;
-            color: white;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .chat-modal {
-            display: none;
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 300px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-
-        .chat-header {
-            background: #6A0DAD;
-            color: white;
-            padding: 10px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-header h4 {
-            margin: 0;
-        }
-
-        .close-chat {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .chat-body {
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            height: 300px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            padding: 5px;
-            border-radius: 4px;
-        }
-
-        .chat-message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 4px;
-        }
-
-        .chat-message.user {
-            background: #6A0DAD;
-            color: white;
-            align-self: flex-end;
-        }
-
-        .chat-message.bot {
-            background: #f1f1f1;
-            color: #333;
-            align-self: flex-start;
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 5px;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .chat-input button {
-            background: #6A0DAD;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .chat-input button:hover {
-            background: #A56EFF;
-        }
-    </style>
+    <!-- Sugestões de mensagens rápidas -->
+    <div class="quick-replies">
+      <button class="quick-reply-btn">Quero fazer uma reserva</button>
+      <button class="quick-reply-btn">Ver disponibilidade</button>
+      <button class="quick-reply-btn">Comodidades</button>
+      <button class="quick-reply-btn">Contato</button>
+    </div>
+  </div>
+</div>
     <!-- Rodapé da página -->
     <footer class="footer" id="contactos">
       <div class="section__container footer__container">
@@ -591,6 +571,7 @@
     </footer>
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="index/main.js"></script>
+    <script src="index/chat.js"></script>
     <script src="assets/i18n/translator.js"></script>
   </body>
 </html>

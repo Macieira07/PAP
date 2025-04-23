@@ -16,6 +16,17 @@
   --max-width: 1200px;
   --font-family: "Inter", sans-serif;
   --font-family-heading: "Garamond", serif;
+
+  /* Nova Paleta de Cores */
+  --primary: #2C7A7B; /* Verde petróleo */
+  --secondary: #F4A261; /* Laranja queimado suave */
+  --background-light: #F9FAFB; /* Fundo principal */
+  --card-background: #FFFFFF; /* Branco puro */
+  --text-primary: #1A202C; /* Preto acinzentado */
+  --text-secondary: #718096; /* Cinza médio */
+  --success: #38A169; /* Verde folha */
+  --error: #E53E3E; /* Vermelho claro */
+  --card-shadow: rgba(0, 0, 0, 0.1);
 }
 
 * {
