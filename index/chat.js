@@ -1,48 +1,81 @@
 document.addEventListener('DOMContentLoaded', () => {
-    initChat();
-});
-
-function initChat() {
+    const chatWidget = document.querySelector('.chat-widget');
     const chatButton = document.getElementById('chatButton');
     const chatWindow = document.getElementById('chatWindow');
-    const minimizeChat = document.getElementById('minimizeChat');
-    const closeChat = document.getElementById('closeChat');
     const chatInput = document.getElementById('chatInput');
-    const sendMessage = document.getElementById('sendMessage');
+    const sendButton = document.getElementById('sendMessage');
     const chatMessages = document.getElementById('chatMessages');
-    const chatTabs = document.querySelectorAll('.chat-tab');
     const quickReplies = document.querySelectorAll('.quick-reply-btn');
-    const faqItems = document.querySelectorAll('.faq-item');
 
-    // Sistema de respostas automáticas
-    const autoResponses = {
-        'default': 'Olá! Como posso ajudar você hoje?',
-        'reserva': 'Para fazer uma reserva, você pode usar nossa aba de "Reserva" ou acessar diretamente nosso sistema de reservas. Posso ajudar você com isso?',
-        'horario': 'Nosso horário de check-in é às 15h00 e o check-out às 11h00. Podemos ser flexíveis mediante disponibilidade.',
-        'preço': 'Os preços variam conforme a temporada e o tipo de acomodação. Posso verificar as tarifas específicas para suas datas?',
-        'localização': 'Estamos localizados em Ponte de Lima. Você gostaria de receber as coordenadas GPS ou instruções de como chegar?',
-        'wifi': 'Sim, oferecemos WiFi gratuito em todas as áreas da propriedade.',
-        'estacionamento': 'Sim, temos estacionamento gratuito para nossos hóspedes.',
-        'animais': 'Aceitamos animais de estimação mediante consulta prévia.',
-        'piscina': 'Nossa piscina está disponível de maio a setembro, dependendo das condições climáticas.'
+    // Sistema de respostas inteligentes
+    const responses = {
+        welcome: [
+            "Olá! Bem-vindo à Quinta Flores. Como posso ajudar você hoje?",
+            "Olá! É um prazer atendê-lo. Em que posso ser útil?",
+            "Bem-vindo! Estou aqui para ajudar com informações sobre a Quinta Flores."
+        ],
+        reservas: {
+            triggers: ['reserva', 'reservar', 'agendar', 'marcar', 'disponibilidade', 'vaga', 'quartos'],
+            responses: [
+                "Para fazer uma reserva, posso te ajudar de duas formas:\n1. Verificar disponibilidade imediatamente\n2. Informar sobre nossos tipos de acomodação\nO que você prefere?",
+                "Ótimo! Temos várias opções de hospedagem disponíveis. Gostaria de saber as datas que você está planejando?"
+            ]
+        },
+        precos: {
+            triggers: ['preço', 'valor', 'custo', 'tarifa', 'diária', 'quanto', 'custa'],
+            responses: [
+                "Os preços variam conforme a temporada e o tipo de acomodação. Para dar um valor preciso, preciso saber:\n- Data prevista\n- Número de hóspedes\n- Tipo de acomodação\nPode me informar?",
+                "Temos diferentes opções de valores para melhor atender seu orçamento. Quando você planeja se hospedar?"
+            ]
+        },
+        comodidades: {
+            triggers: ['wifi', 'internet', 'piscina', 'estacionamento', 'café', 'restaurante', 'serviços'],
+            responses: [
+                "Na Quinta Flores você encontra:\n✓ WiFi gratuito\n✓ Piscina\n✓ Estacionamento gratuito\n✓ Café da manhã\n✓ Área de churrasco\nGostaria de saber mais sobre algum destes serviços?",
+                "Oferecemos diversas comodidades para seu conforto! Quer saber mais detalhes sobre algo específico?"
+            ]
+        },
+        localizacao: {
+            triggers: ['local', 'onde', 'endereço', 'localização', 'chegar', 'encontro'],
+            responses: [
+                "Estamos localizados em Ponte de Lima, um lugar tranquilo e aconchegante. Posso te enviar:\n1. Nosso endereço completo\n2. Coordenadas GPS\n3. Instruções de como chegar\nO que prefere?",
+                "A Quinta Flores está situada em um local privilegiado em Ponte de Lima. Quer que eu envie as direções?"
+            ]
+        }
     };
 
-    // Mostrar/esconder chat
-    chatButton.addEventListener('click', () => {
-        chatWindow.classList.toggle('show');
-        document.getElementById('chatNotification').style.display = 'none';
-    });
+    // Inicialização do chat
+    function initChat() {
+        chatButton.addEventListener('click', toggleChat);
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', handleEnterPress);
+        setupQuickReplies();
+    }
 
-    minimizeChat.addEventListener('click', () => {
-        chatWindow.classList.remove('show');
-    });
-
-    closeChat.addEventListener('click', () => {
-        chatWindow.classList.remove('show');
-    });
+    // Alternar visibilidade do chat
+    function toggleChat() {
+        const isVisible = chatWindow.style.display === 'flex';
+        chatWindow.style.display = isVisible ? 'none' : 'flex';
+        
+        if (!isVisible) {
+            chatWindow.classList.add('show');
+            chatInput.focus();
+            document.getElementById('chatNotification').style.display = 'none';
+        }
+    }
 
     // Enviar mensagem
-    function sendChatMessage(message, isUser = true) {
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (message) {
+            addMessage(message, true);
+            chatInput.value = '';
+            handleResponse(message);
+        }
+    }
+
+    // Adicionar mensagem ao chat
+    function addMessage(message, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'sent' : 'received'}`;
         
@@ -57,104 +90,91 @@ function initChat() {
         
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-        // Se for mensagem do usuário, gerar resposta automática
-        if (isUser) {
-            setTimeout(() => {
-                const response = getAutoResponse(message.toLowerCase());
-                sendChatMessage(response, false);
-            }, 1000);
+    // Mostrar indicador de digitação
+    function showTyping() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Remover indicador de digitação
+    function hideTyping() {
+        const typingIndicator = chatMessages.querySelector('.typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
         }
     }
 
-    // Sistema de respostas automáticas
-    function getAutoResponse(message) {
-        const keywords = {
-            'reserva': ['reserva', 'reservar', 'agendar', 'marcar', 'disponibilidade'],
-            'horario': ['horário', 'check-in', 'check-out', 'chegada', 'saída'],
-            'preço': ['preço', 'valor', 'custo', 'tarifa', 'diária'],
-            'localização': ['localização', 'endereço', 'onde', 'chegar'],
-            'wifi': ['wifi', 'internet', 'conexão'],
-            'estacionamento': ['estacionamento', 'parque', 'estacionar', 'carro'],
-            'animais': ['animal', 'pet', 'cachorro', 'gato'],
-            'piscina': ['piscina', 'nadar']
-        };
-
-        for (const [key, terms] of Object.entries(keywords)) {
-            if (terms.some(term => message.includes(term))) {
-                return autoResponses[key];
+    // Processar resposta com base na mensagem do usuário
+    function handleResponse(userMessage) {
+        showTyping();
+        
+        // Simular tempo de digitação natural
+        setTimeout(() => {
+            hideTyping();
+            
+            // Encontrar categoria apropriada
+            let responseText = '';
+            const messageLower = userMessage.toLowerCase();
+            
+            // Verificar cada categoria de resposta
+            for (const [category, data] of Object.entries(responses)) {
+                if (category === 'welcome') continue;
+                
+                if (data.triggers.some(trigger => messageLower.includes(trigger))) {
+                    responseText = data.responses[Math.floor(Math.random() * data.responses.length)];
+                    break;
+                }
             }
-        }
-
-        return autoResponses.default;
+            
+            // Se nenhuma categoria específica for encontrada, dar uma resposta genérica
+            if (!responseText) {
+                responseText = "Desculpe, não entendi completamente. Você poderia reformular sua pergunta? Posso ajudar com:\n- Reservas\n- Preços\n- Comodidades\n- Localização";
+            }
+            
+            addMessage(responseText, false);
+        }, 1000 + Math.random() * 1000); // Tempo de resposta variável para parecer mais natural
     }
 
-    // Enviar mensagem ao clicar no botão ou pressionar Enter
-    sendMessage.addEventListener('click', () => {
-        const message = chatInput.value.trim();
-        if (message) {
-            sendChatMessage(message);
-            chatInput.value = '';
-        }
-    });
+    // Configurar respostas rápidas
+    function setupQuickReplies() {
+        quickReplies.forEach(button => {
+            button.addEventListener('click', () => {
+                const message = button.textContent;
+                addMessage(message, true);
+                handleResponse(message);
+            });
+        });
+    }
 
-    chatInput.addEventListener('keypress', (e) => {
+    // Lidar com tecla Enter
+    function handleEnterPress(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            sendMessage.click();
+            sendMessage();
         }
-    });
-
-    // Respostas rápidas
-    quickReplies.forEach(button => {
-        button.addEventListener('click', () => {
-            const message = button.textContent;
-            sendChatMessage(message);
-        });
-    });
-
-    // Alternar entre abas
-    chatTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const targetId = tab.getAttribute('data-tab');
-            
-            // Atualizar classes ativas
-            document.querySelector('.chat-tab.active').classList.remove('active');
-            tab.classList.add('active');
-            
-            // Mostrar painel correspondente
-            document.querySelector('.chat-panel.active').classList.remove('active');
-            document.getElementById(`${targetId}Panel`).classList.add('active');
-        });
-    });
-
-    // Toggle FAQ
-    faqItems.forEach(item => {
-        item.querySelector('.faq-question').addEventListener('click', () => {
-            item.classList.toggle('active');
-        });
-    });
-
-    // Inicializar formulário de reserva rápida
-    const quickBookingForm = document.getElementById('quickBookingForm');
-    if (quickBookingForm) {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('checkInDate').min = today;
-        document.getElementById('checkOutDate').min = today;
-
-        quickBookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const checkIn = document.getElementById('checkInDate').value;
-            const checkOut = document.getElementById('checkOutDate').value;
-            const guests = document.getElementById('guestCount').value;
-
-            sendChatMessage(`Solicitação de reserva: Check-in: ${checkIn}, Check-out: ${checkOut}, Hóspedes: ${guests}`);
-            sendChatMessage('Obrigado pelo seu interesse! Vou verificar a disponibilidade e retornar em breve.', false);
-        });
     }
 
-    // Mensagem inicial após um pequeno delay
+    // Auto-expandir textarea
+    chatInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Inicializar chat
+    initChat();
+
+    // Mensagem de boas-vindas após um pequeno delay
     setTimeout(() => {
-        sendChatMessage('Olá! Bem-vindo à Quinta Flores. Como posso ajudar você hoje?', false);
+        const welcomeMessage = responses.welcome[Math.floor(Math.random() * responses.welcome.length)];
+        addMessage(welcomeMessage, false);
     }, 1000);
-}
+});

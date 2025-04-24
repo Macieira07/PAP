@@ -1,0 +1,55 @@
+<!-- Chat Widget -->
+<div class="chat-widget">
+    <!-- Botão do chat -->
+    <button id="chatButton" class="chat-button" aria-label="Abrir chat">
+        <i class="ri-chat-3-fill"></i>
+        <span class="chat-notification" id="chatNotification">1</span>
+    </button>
+
+    <!-- Janela do chat -->
+    <div id="chatWindow" class="chat-window">
+        <!-- Cabeçalho -->
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chat-logo">
+                <div>
+                    <h3>Assistente Quinta Flores</h3>
+                    <p class="chat-status online">Online</p>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <button id="closeChat" class="chat-action-btn" aria-label="Fechar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de mensagens -->
+        <div id="chatMessages" class="chat-messages">
+            <!-- As mensagens serão inseridas aqui via JavaScript -->
+        </div>
+
+        <!-- Área de input -->
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <textarea 
+                    id="chatInput" 
+                    placeholder="Digite sua mensagem..." 
+                    rows="1"
+                    aria-label="Digite sua mensagem"
+                ></textarea>
+                <button id="sendMessage" class="send-button" aria-label="Enviar mensagem">
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Respostas rápidas -->
+        <div class="quick-replies">
+            <button class="quick-reply-btn">Fazer reserva</button>
+            <button class="quick-reply-btn">Preços</button>
+            <button class="quick-reply-btn">Comodidades</button>
+            <button class="quick-reply-btn">Localização</button>
+        </div>
+    </div>
+</div>
