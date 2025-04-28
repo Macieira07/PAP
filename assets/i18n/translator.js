@@ -109,28 +109,45 @@ async function changeLanguage(lang) {
 }
 
 // Inicializar a funcionalidade quando o DOM estiver pronto
-document.addEventListener("DOMContentLoaded", async () => {
-  // Carregar as traduções do idioma padrão ou do último idioma selecionado
-  await loadTranslations(currentLanguage);
+document.addEventListener('DOMContentLoaded', function() {
+    const flags = document.querySelectorAll('.language-flag');
+    let currentLang = localStorage.getItem('lang') || 'pt';
+    
+    // Carregar o idioma inicial
+    loadTranslations(currentLang);
+    updateActiveFlag(currentLang);
 
-  // Atualizar os textos na página
-  updateTexts(translations[currentLanguage]);
-
-  // Adicionar event listeners às bandeiras
-  document.querySelectorAll(".language-flag").forEach((flag) => {
-    flag.addEventListener("click", function () {
-      const lang = this.getAttribute("data-lang");
-      changeLanguage(lang);
+    // Adicionar evento de clique para cada bandeira
+    flags.forEach(flag => {
+        flag.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            localStorage.setItem('lang', lang);
+            loadTranslations(lang);
+            updateActiveFlag(lang);
+        });
     });
 
-    // Definir a bandeira ativa com base no idioma atual
-    if (flag.getAttribute("data-lang") === currentLanguage) {
-      flag.classList.add("active");
-    } else {
-      flag.classList.remove("active");
+    function updateActiveFlag(lang) {
+        flags.forEach(flag => {
+            if (flag.getAttribute('data-lang') === lang) {
+                flag.classList.add('active');
+            } else {
+                flag.classList.remove('active');
+            }
+        });
     }
-  });
 
-  // Definir o atributo lang no elemento HTML
-  document.documentElement.lang = currentLanguage;
+    function loadTranslations(lang) {
+        fetch(`assets/i18n/${lang}.json`)
+            .then(response => response.json())
+            .then(translations => {
+                document.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    if (translations[key]) {
+                        element.textContent = translations[key];
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading translations:', error));
+    }
 });
