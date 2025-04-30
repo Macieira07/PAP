@@ -129,7 +129,7 @@ body {
 }
  
 .header {
-  background-image: url("../assets/images/foto_principal_2.jpeg");
+  background-image: url("../assets/images/IMG_20230616_210252.jpg");
   background-position: center center;
   background-size: cover;  
   background-repeat: no-repeat;
@@ -1484,6 +1484,5 @@ nav {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--primary-color);
-}
 }
 }
