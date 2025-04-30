@@ -267,106 +267,286 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
         :root {
             --primary-color: <?= PRIMARY_COLOR ?>;
             --secondary-color: <?= SECONDARY_COLOR ?>;
+            --background-color: <?= BACKGROUND_COLOR ?>;
+            --text-color: <?= TEXT_COLOR ?>;
+            --light-color: <?= LIGHT_COLOR ?>;
         }
-
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .payment-method {
-            border: 2px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        
+        .progress-steps {
             display: flex;
-            align-items: center;
-            gap: 15px;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            counter-reset: step;
         }
-
-        .payment-method:hover {
+        
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .progress-step:before {
+            content: counter(step);
+            counter-increment: step;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border: 2px solid #ddd;
+            display: block;
+            text-align: center;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background-color: white;
+            color: #999;
+            font-weight: bold;
+        }
+        
+        .progress-step.completed:before {
             border-color: var(--primary-color);
-        }
-
-        .payment-method.selected {
-            border-color: var(--primary-color);
-            background-color: var(--primary-color-light);
-        }
-
-        .payment-method input[type="radio"] {
-            margin: 0;
-        }
-
-        .payment-method i {
-            font-size: 24px;
             color: var(--primary-color);
         }
-
-        .payment-details {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            background-color: #f8f8f8;
+        
+        .progress-step.active:before {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
-
-        .payment-details.active {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
+        
+        .progress-step:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #ddd;
+            top: 15px;
+            left: -50%;
+            z-index: -1;
         }
-
-        .bank-details {
-            margin-top: 20px;
-            padding: 20px;
+        
+        .progress-step:first-child:after {
+            content: none;
+        }
+        
+        .progress-step.completed:after,
+        .progress-step.active:after {
+            background-color: var(--primary-color);
+        }
+        
+        .resumo-reserva {
             background-color: var(--light-color);
-            border-radius: var(--border-radius);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
             border-left: 4px solid var(--primary-color);
         }
-
-        .bank-details table {
+        
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .resumo-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .resumo-item span:first-child {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .metodos-pagamento {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .metodo-option {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .metodo-option input {
+            display: none;
+        }
+        
+        .metodo-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .metodo-option input:checked + label {
+            border-color: var(--primary-color);
+            background-color: rgba(106, 13, 173, 0.05);
+        }
+        
+        .metodo-option i {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .dados-pagamento {
+            display: none;
+            animation: fadeIn 0.5s;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffecec;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .preco-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: right;
+        }
+        
+        .info-bancaria {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-bancaria h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .info-bancaria table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        .bank-details td {
-            padding: 8px;
+        
+        .info-bancaria table td {
+            padding: 8px 0;
             border-bottom: 1px solid #e0e0e0;
         }
-
-        .bank-details td:first-child {
+        
+        .info-bancaria table td:first-child {
             font-weight: 600;
-            color: var(--primary-color);
             width: 30%;
         }
-
-        .upload-area {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            border-radius: var(--border-radius);
-            margin: 20px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        
+        .arquivo-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        .upload-area:hover {
-            border-color: var(--primary-color);
+        
+        .arquivo-upload input[type="file"] {
+            flex: 1;
         }
-
-        .card-input-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
+        
         @media (max-width: 768px) {
-            .card-input-group {
-                grid-template-columns: 1fr;
+            .progress-steps {
+                font-size: 14px;
+            }
+            
+            .progress-step:before {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+            }
+            
+            .progress-step:after {
+                top: 12px;
+            }
+            
+            .metodos-pagamento {
+                flex-direction: column;
+            }
+            
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .info-bancaria table td:first-child {
+                width: 40%;
             }
         }
     </style>
@@ -374,7 +554,7 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
 <body>
     <div class="container">
         <h1 class="fade-in">Pagamento</h1>
-
+        
         <div class="progress-steps">
             <div class="progress-step completed">
                 <span>Datas</span>
@@ -389,22 +569,18 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                 <span>Confirmação</span>
             </div>
         </div>
-
+        
         <?php if (!empty($mensagem_erro)): ?>
             <div class="error-message" style="display: block;">
                 <i class="fas fa-exclamation-circle"></i> <?= $mensagem_erro ?>
             </div>
         <?php endif; ?>
-
+        
         <div class="resumo-reserva">
             <h3><i class="fas fa-calendar-check"></i> Resumo da Reserva</h3>
             <div class="resumo-item">
-                <span>Check-in:</span>
-                <span><?= (new DateTime($_SESSION['checkin']))->format('d/m/Y') ?></span>
-            </div>
-            <div class="resumo-item">
-                <span>Check-out:</span>
-                <span><?= (new DateTime($_SESSION['checkout']))->format('d/m/Y') ?></span>
+                <span>Datas:</span>
+                <span><?= $checkin->format('d/m/Y') ?> - <?= $checkout->format('d/m/Y') ?></span>
             </div>
             <div class="resumo-item">
                 <span>Noites:</span>
@@ -412,84 +588,131 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
             </div>
             <div class="resumo-item">
                 <span>Hóspedes:</span>
-                <span><?= $_SESSION['num_hospedes'] ?></span>
+                <span><?= $_SESSION['num_hospedes'] ?> <?= $_SESSION['num_hospedes'] == 1 ? 'pessoa' : 'pessoas' ?></span>
             </div>
-            <div class="resumo-item">
-                <span>Valor Total:</span>
-                <span>€<?= $preco_total ?></span>
-            </div>
+            <?php if (!empty($_SESSION['servicos'])): ?>
+                <div class="resumo-item">
+                    <span>Serviços:</span>
+                    <span>
+                        <?php 
+                        $servicos_nomes = [
+                            'pequeno-almoco' => 'Pequeno-Almoço',
+                            'decoracao' => 'Decoração Temática',
+                            'limpeza' => 'Limpeza Diária',
+                            'cesto' => 'Cesto de Boas-Vindas',
+                            'jantar' => 'Jantar'
+                        ];
+                        $servicos_selecionados = array_map(function($s) use ($servicos_nomes) {
+                            return $servicos_nomes[$s] ?? $s;
+                        }, $_SESSION['servicos']);
+                        echo implode(', ', $servicos_selecionados);
+                        ?>
+                    </span>
+                </div>
+            <?php endif; ?>
         </div>
-
+        
+        <div class="preco-total">
+            Total a Pagar: €<?= number_format($preco_total, 2, ',', '.') ?>
+        </div>
+        
         <form action="pagina3.php" method="POST" id="pagamentoForm" class="fade-in" enctype="multipart/form-data">
             <h3><i class="fas fa-credit-card"></i> Método de Pagamento</h3>
-            <div class="payment-methods">
-                <div class="payment-method" onclick="selectPayment('Cartão')">
-                    <input type="radio" name="pagamento" value="Cartão" id="cartao" required>
-                    <label for="cartao">
+            
+            <div class="metodos-pagamento">
+                <div class="metodo-option">
+                    <input type="radio" id="cartao_radio" name="pagamento" value="Cartão" required 
+                           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Cartão') ? 'checked' : '' ?>>
+                    <label for="cartao_radio">
                         <i class="fas fa-credit-card"></i>
-                        Cartão de Crédito/Débito
+                        <span>Cartão de Crédito</span>
                     </label>
                 </div>
-
-                <div class="payment-method" onclick="selectPayment('MB WAY')">
-                    <input type="radio" name="pagamento" value="MB WAY" id="mbway" required>
-                    <label for="mbway">
+                
+                <div class="metodo-option">
+                    <input type="radio" id="mbway_radio" name="pagamento" value="MB WAY" 
+                           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'MB WAY') ? 'checked' : '' ?>>
+                    <label for="mbway_radio">
                         <i class="fas fa-mobile-alt"></i>
-                        MB WAY
+                        <span>MB WAY</span>
                     </label>
                 </div>
-
-                <div class="payment-method" onclick="selectPayment('Transferência')">
-                    <input type="radio" name="pagamento" value="Transferência" id="transferencia" required>
-                    <label for="transferencia">
+                
+                <div class="metodo-option">
+                    <input type="radio" id="transferencia_radio" name="pagamento" value="Transferência" 
+                           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Transferência') ? 'checked' : '' ?>>
+                    <label for="transferencia_radio">
                         <i class="fas fa-university"></i>
-                        Transferência Bancária
+                        <span>Transferência Bancária</span>
                     </label>
                 </div>
-
-                <div class="payment-method" onclick="selectPayment('Dinheiro')">
-                    <input type="radio" name="pagamento" value="Dinheiro" id="dinheiro" required>
-                    <label for="dinheiro">
+                
+                <!-- Nova opção de pagamento em dinheiro -->
+                <div class="metodo-option">
+                    <input type="radio" id="dinheiro_radio" name="pagamento" value="Dinheiro" 
+                           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Dinheiro') ? 'checked' : '' ?>>
+                    <label for="dinheiro_radio">
                         <i class="fas fa-money-bill-wave"></i>
-                        Pagamento em Dinheiro
+                        <span>Dinheiro</span>
                     </label>
                 </div>
             </div>
-
-            <div id="cartao-details" class="payment-details">
-                <div class="card-input-group">
-                    <div class="form-group">
-                        <label for="nome_cartao"><i class="fas fa-user"></i> Nome no Cartão</label>
-                        <input type="text" id="nome_cartao" name="nome_cartao" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="numero_cartao"><i class="fas fa-credit-card"></i> Número do Cartão</label>
-                        <input type="text" id="numero_cartao" name="numero_cartao" class="form-control" maxlength="19">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="validade"><i class="fas fa-calendar-alt"></i> Data de Validade</label>
-                        <input type="text" id="validade" name="validade" class="form-control" placeholder="MM/AA" maxlength="5">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cvc"><i class="fas fa-lock"></i> CVC</label>
-                        <input type="text" id="cvc" name="cvc" class="form-control" maxlength="3">
-                    </div>
-                </div>
-            </div>
-
-            <div id="mbway-details" class="payment-details">
+            
+            <div id="dados-cartao" class="dados-pagamento" 
+                 style="<?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Cartão') ? 'display: block;' : '' ?>">
+                <h4><i class="fas fa-credit-card"></i> Dados do Cartão</h4>
+                
                 <div class="form-group">
-                    <label for="numero_mbway"><i class="fas fa-phone"></i> Número de Telefone MB WAY</label>
-                    <input type="text" id="numero_mbway" name="numero_mbway" class="form-control" maxlength="9">
+                    <label for="nome_cartao">Nome no Cartão</label>
+                    <input type="text" id="nome_cartao" name="nome_cartao" class="form-control" 
+                           value="<?= isset($_POST['nome_cartao']) ? htmlspecialchars($_POST['nome_cartao']) : '' ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="numero_cartao">Número do Cartão</label>
+                    <input type="text" id="numero_cartao" name="numero_cartao" class="form-control" 
+                           value="<?= isset($_POST['numero_cartao']) ? htmlspecialchars($_POST['numero_cartao']) : '' ?>"
+                           placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="validade">Validade</label>
+                        <input type="month" id="validade" name="validade" class="form-control" 
+                               value="<?= isset($_POST['validade']) ? htmlspecialchars($_POST['validade']) : '' ?>">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cvc">Código CVC</label>
+                        <input type="text" id="cvc" name="cvc" class="form-control" 
+                               value="<?= isset($_POST['cvc']) ? htmlspecialchars($_POST['cvc']) : '' ?>"
+                               placeholder="123" maxlength="3">
+                    </div>
                 </div>
             </div>
-
-            <div id="transferencia-details" class="payment-details">
-                <div class="bank-details">
-                    <h4><i class="fas fa-university"></i> Dados Bancários</h4>
+            
+            <div id="dados-mbway" class="dados-pagamento" 
+                 style="<?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'MB WAY') ? 'display: block;' : '' ?>">
+                <h4><i class="fas fa-mobile-alt"></i> Dados MB WAY</h4>
+                
+                <div class="form-group">
+                    <label for="numero_mbway">Número de Telemóvel</label>
+                    <input type="text" id="numero_mbway" name="numero_mbway" class="form-control" 
+                           value="<?= isset($_POST['numero_mbway']) ? htmlspecialchars($_POST['numero_mbway']) : (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : '') ?>"
+                           placeholder="912345678">
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Irá receber uma notificação no seu telemóvel para confirmar o pagamento.
+                </div>
+            </div>
+            
+            <div id="dados-transferencia" class="dados-pagamento" 
+                 style="<?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Transferência') ? 'display: block;' : '' ?>">
+                <h4><i class="fas fa-university"></i> Dados para Transferência Bancária</h4>
+                
+                <div class="info-bancaria">
+                    <h4>Informações Bancárias (<?= $pais ?>)</h4>
                     <table>
                         <tr>
                             <td>Banco:</td>
@@ -507,141 +730,174 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                             <td>Titular:</td>
                             <td><?= $info_bancaria['titular'] ?></td>
                         </tr>
+                        <tr>
+                            <td>Valor:</td>
+                            <td>€<?= number_format($preco_total, 2, ',', '.') ?></td>
+                        </tr>
                     </table>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="comprovativo"><i class="fas fa-file-upload"></i> Comprovativo de Transferência</label>
-                    <div class="upload-area" onclick="document.getElementById('comprovativo').click()">
-                        <i class="fas fa-cloud-upload-alt fa-2x"></i>
-                        <p>Clique para selecionar ou arraste o comprovativo</p>
+                    <label>Comprovativo de Transferência</label>
+                    <div class="arquivo-upload">
+                        <input type="file" id="comprovativo" name="comprovativo" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <small>Formatos aceites: PDF, JPG, PNG (max. 5MB)</small>
                     </div>
-                    <input type="file" id="comprovativo" name="comprovativo" style="display: none" accept=".pdf,.jpg,.jpeg,.png">
-                    <small id="file-name"></small>
                 </div>
-            </div>
-
-            <div id="dinheiro-details" class="payment-details">
+                
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    O pagamento será feito em dinheiro no momento do check-in.
+                    <i class="fas fa-info-circle"></i> Sua reserva será confirmada após a validação do comprovativo. Envie o comprovativo com o número da reserva como referência.
                 </div>
             </div>
-
+            
+            <!-- Adicionar seção para pagamento em dinheiro -->
+            <div id="dados-dinheiro" class="dados-pagamento" 
+                 style="<?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Dinheiro') ? 'display: block;' : '' ?>">
+                <h4><i class="fas fa-money-bill-wave"></i> Pagamento em Dinheiro</h4>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> O pagamento em dinheiro deve ser efetuado no momento do check-in. A sua reserva será mantida como pendente até a confirmação do pagamento.
+                </div>
+            </div>
+            
             <div class="form-actions">
                 <a href="pagina2.php" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Voltar
                 </a>
-                <button type="submit" class="btn btn-primary">
-                    Confirmar Pagamento <i class="fas fa-check"></i>
+                <button type="submit" class="btn btn-primary pulse">
+                    <i class="fas fa-check"></i> Confirmar Reserva
                 </button>
             </div>
         </form>
     </div>
 
     <script>
-        function selectPayment(method) {
-            // Remove seleção anterior
-            document.querySelectorAll('.payment-method').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelectorAll('.payment-details').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // Seleciona novo método
-            document.querySelector(`input[value="${method}"]`).checked = true;
-            document.querySelector(`input[value="${method}"]`).closest('.payment-method').classList.add('selected');
-            
-            // Mostra detalhes do método selecionado
-            const detailsDiv = document.getElementById(`${method.toLowerCase()}-details`);
-            if (detailsDiv) {
-                detailsDiv.classList.add('active');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Formatar número do cartão
-            document.getElementById('numero_cartao')?.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                value = value.replace(/(.{4})/g, '$1 ').trim();
-                e.target.value = value;
-            });
-
-            // Formatar data de validade
-            document.getElementById('validade')?.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 2) {
-                    value = value.substring(0,2) + '/' + value.substring(2);
-                }
-                e.target.value = value;
-            });
-
-            // Manipular upload de arquivo
-            document.getElementById('comprovativo')?.addEventListener('change', function(e) {
-                const fileName = e.target.files[0]?.name;
-                if (fileName) {
-                    document.getElementById('file-name').textContent = fileName;
-                }
-            });
+            // Mostrar/ocultar métodos de pagamento
+            const cartaoRadio = document.getElementById('cartao_radio');
+            const mbwayRadio = document.getElementById('mbway_radio');
+            const transferenciaRadio = document.getElementById('transferencia_radio');
+            const dinheiroRadio = document.getElementById('dinheiro_radio');
+            const dadosCartao = document.getElementById('dados-cartao');
+            const dadosMbway = document.getElementById('dados-mbway');
+            const dadosTransferencia = document.getElementById('dados-transferencia');
+            const dadosDinheiro = document.getElementById('dados-dinheiro');
             
-            // Restaurar método de pagamento selecionado após erro de validação
-            <?php if (isset($_POST['pagamento'])): ?>
-                selectPayment('<?= htmlspecialchars($_POST['pagamento']) ?>');
-            <?php endif; ?>
-        });
-
-        // Validação do formulário
-        document.getElementById('pagamentoForm').addEventListener('submit', function(e) {
-            const metodoPagamento = document.querySelector('input[name="pagamento"]:checked')?.value;
-            let valid = true;
-            let message = '';
-
-            switch (metodoPagamento) {
-                case 'Cartão':
-                    const numero = document.getElementById('numero_cartao').value.replace(/\s/g, '');
+            function toggleMetodoPagamento() {
+                dadosCartao.style.display = 'none';
+                dadosMbway.style.display = 'none';
+                dadosTransferencia.style.display = 'none';
+                dadosDinheiro.style.display = 'none';
+                
+                if (cartaoRadio.checked) {
+                    dadosCartao.style.display = 'block';
+                } else if (mbwayRadio.checked) {
+                    dadosMbway.style.display = 'block';
+                } else if (transferenciaRadio.checked) {
+                    dadosTransferencia.style.display = 'block';
+                } else if (dinheiroRadio.checked) {
+                    dadosDinheiro.style.display = 'block';
+                }
+            }
+            
+            cartaoRadio.addEventListener('change', toggleMetodoPagamento);
+            mbwayRadio.addEventListener('change', toggleMetodoPagamento);
+            transferenciaRadio.addEventListener('change', toggleMetodoPagamento);
+            dinheiroRadio.addEventListener('change', toggleMetodoPagamento);
+            
+            // Validação do formulário
+            document.getElementById('pagamentoForm').addEventListener('submit', function(e) {
+                const metodoPagamento = document.querySelector('input[name="pagamento"]:checked');
+                const errorElement = document.querySelector('.error-message');
+                
+                if (!metodoPagamento) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, selecione um método de pagamento.';
+                    return false;
+                }
+                
+                if (metodoPagamento.value === 'Cartão') {
+                    const nomeCartao = document.getElementById('nome_cartao').value;
+                    const numeroCartao = document.getElementById('numero_cartao').value.replace(/\s/g, '');
                     const validade = document.getElementById('validade').value;
                     const cvc = document.getElementById('cvc').value;
-
-                    if (!document.getElementById('nome_cartao').value) {
-                        message = 'Nome no cartão é obrigatório.';
-                        valid = false;
-                    } else if (numero.length !== 16) {
-                        message = 'Número do cartão inválido.';
-                        valid = false;
-                    } else if (!/^\d{2}\/\d{2}$/.test(validade)) {
-                        message = 'Data de validade inválida.';
-                        valid = false;
-                    } else if (!/^\d{3}$/.test(cvc)) {
-                        message = 'CVC inválido.';
-                        valid = false;
+                    
+                    if (!nomeCartao || !numeroCartao || !validade || !cvc) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, preencha todos os campos do cartão.';
+                        return false;
                     }
-                    break;
-
-                case 'MB WAY':
-                    const mbway = document.getElementById('numero_mbway').value;
-                    if (!/^\d{9}$/.test(mbway)) {
-                        message = 'Número MB WAY inválido.';
-                        valid = false;
+                    
+                    if (!/^\d{16}$/.test(numeroCartao)) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número do cartão inválido. Deve conter 16 dígitos.';
+                        return false;
                     }
-                    break;
-
-                case 'Transferência':
+                    
+                    if (!/^\d{3}$/.test(cvc)) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Código CVC inválido. Deve conter 3 dígitos.';
+                        return false;
+                    }
+                } else if (metodoPagamento.value === 'MB WAY') {
+                    const numeroMbway = document.getElementById('numero_mbway').value;
+                    
+                    if (!/^\d{9}$/.test(numeroMbway)) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número MB WAY inválido. Deve conter 9 dígitos.';
+                        return false;
+                    }
+                } else if (metodoPagamento.value === 'Transferência') {
                     const comprovativo = document.getElementById('comprovativo').files[0];
+                    
                     if (!comprovativo) {
-                        message = 'Por favor, envie o comprovativo de transferência.';
-                        valid = false;
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, envie o comprovativo de transferência.';
+                        return false;
                     }
-                    break;
-            }
-
-            if (!valid) {
-                e.preventDefault();
-                const errorDiv = document.querySelector('.error-message');
-                errorDiv.style.display = 'block';
-                errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-                errorDiv.scrollIntoView({ behavior: 'smooth' });
-            }
+                    
+                    const extensoesValidas = ['pdf', 'jpg', 'jpeg', 'png'];
+                    const extensao = comprovativo.name.split('.').pop().toLowerCase();
+                    const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
+                    
+                    if (!extensoesValidas.includes(extensao)) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Formato de arquivo inválido. Use PDF, JPG ou PNG.';
+                        return false;
+                    }
+                    
+                    if (comprovativo.size > tamanhoMaximo) {
+                        e.preventDefault();
+                        errorElement.style.display = 'block';
+                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Arquivo muito grande. Tamanho máximo: 5MB.';
+                        return false;
+                    }
+                }
+                // Não é necessária validação para pagamento em dinheiro
+                
+                return true;
+            });
+            
+            // Formatação do número do cartão
+            document.getElementById('numero_cartao').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s/g, '');
+                if (value.length > 16) value = value.substr(0, 16);
+                
+                let formatted = '';
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) formatted += ' ';
+                    formatted += value[i];
+                }
+                
+                e.target.value = formatted;
+            });
         });
     </script>
 </body>

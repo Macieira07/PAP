@@ -1,7 +1,8 @@
 <?php
-$host = 'localhost';
+// Configurações de conexão para o Docker
+$host = 'db'; // Nome do serviço MySQL no docker-compose
 $usuario = 'root';
-$senha = ''; // Adicione sua senha aqui se necessário
+$senha = ''; // Senha vazia conforme definido no docker-compose
 $banco = 'basedados_pap';
 
 // Cria conexão com tratamento de erros
