@@ -1,27 +1,33 @@
 <?php
-    session_start();
-    include('../conexao.php');
-    $sql = "SELECT * FROM funcionarios";
-    $resultado = $conexao->query($sql);
-?>
+// Iniciar sessão
+session_start();
 
+// Função para escapar saída
+function e($text) {
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+}
+
+// Verificar se o administrador está logado
+if (!isset($_SESSION['admin_nome'])) {
+    header('Location: ../login1/pagina_login.php');
+    exit;
+}
+
+// Nome do administrador da sessão
+$admin_nome = $_SESSION['admin_nome'];
+?>
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Funcionários - Painel da Quinta Flores</title>
+    <title>Gerir Funcionários - Quinta Flores</title>
     <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="menu-toggle" data-tooltip="Mostrar Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
 
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <span class="logo-icon">🌼</span>
@@ -38,75 +44,40 @@
         </nav>
     </div>
 
+    <!-- Conteúdo principal -->
     <div class="main">
-        <h1 class="page-title">Gestão de Funcionários</h1>
-        <a href="editar_funcionario.php" class="add-btn">
-            <span>+</span> Adicionar Novo Funcionário
-        </a>
-        
-        <table class="data-table">
+        <h1>Gerir Funcionários</h1>
+        <p>Adicione, edite ou remova funcionários da sua equipe.</p>
+
+        <!-- Tabela de funcionários -->
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Email</th>
-                    <th>Cargo</th>
-                    <th>Telefone</th>
+                    <th>Função</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while($f = $resultado->fetch_assoc()) { ?>
+                <!-- Exemplo de linha de funcionário -->
                 <tr>
-                    <td><?= $f['F_id_funcionario'] ?></td>
-                    <td><?= $f['F_nome'] ?></td>
-                    <td><?= $f['F_email'] ?></td>
-                    <td><?= $f['F_cargo'] ?></td>
-                    <td><?= $f['F_telefone'] ?></td>
+                    <td>1</td>
+                    <td>João Silva</td>
+                    <td>joao.silva@example.com</td>
+                    <td>Gerente</td>
                     <td>
-                        <a href="editar_funcionario.php?id=<?= $f['F_id_funcionario'] ?>" class="action-btn edit-btn">Editar</a>
-                        <a href="excluir_funcionario.php?id=<?= $f['F_id_funcionario'] ?>" class="action-btn delete-btn" onclick="return confirm('Tem certeza que deseja excluir este funcionário?')">Excluir</a>
+                        <a href="editar_funcionario.php?id=1">Editar</a>
+                        <a href="excluir_funcionario.php?id=1">Excluir</a>
                     </td>
                 </tr>
-                <?php } ?>
+                <!-- ...outras linhas... -->
             </tbody>
         </table>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const body = document.body;
-            
-            // Efeito inicial - mostrar sidebar automaticamente
-            setTimeout(() => {
-                body.classList.toggle('sidebar-open');
-                menuToggle.setAttribute('data-tooltip', 'Esconder Menu');
-            }, 800);
-            
-            menuToggle.addEventListener('click', function() {
-                body.classList.toggle('sidebar-open');
-                
-                // Atualizar tooltip do botão
-                if (body.classList.contains('sidebar-open')) {
-                    menuToggle.setAttribute('data-tooltip', 'Esconder Menu');
-                } else {
-                    menuToggle.setAttribute('data-tooltip', 'Mostrar Menu');
-                }
-            });
-            
-            // Efeito de hover nas linhas da tabela
-            const tableRows = document.querySelectorAll('.data-table tbody tr');
-            tableRows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateX(5px)';
-                });
-                
-                row.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                });
-            });
-        });
-    </script>
+    <!-- JavaScript -->
+    <script src="main.js"></script>
 </body>
 </html>

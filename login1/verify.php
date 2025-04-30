@@ -41,12 +41,14 @@ if (!empty($token)) {
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
     <style>
         :root {
-            --primary-color: #6A0DAD;
-            --primary-color-dark: #A56EFF;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --white: #ffffff;
-            --font-family: "Garamond";
+            --primary-color: #10B981;
+            --primary-color-dark: #047857;
+            --text-dark: #111827;
+            --text-light: #6B7280;
+            --white: #F9FAFB;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+            --font-family: "Inter", sans-serif;
         }
         
         * {

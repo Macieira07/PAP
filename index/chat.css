@@ -1,10 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #10B981;
+    --primary-color-dark: #047857;
+    --text-dark: #111827;
+    --text-light: #6B7280;
+    --white: #F9FAFB;
+    --font-family: "Inter", sans-serif;
+}
+
+/* Aplicando a nova fonte em todos os elementos */
+* {
+    font-family: var(--font-family);
+}
+
 /* Chat Widget Container */
 .chat-widget {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
-    font-family: "Garamond", serif;
 }
 
 /* Chat Button */
@@ -12,7 +27,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     border: none;
     cursor: pointer;
     display: flex;
@@ -30,7 +45,7 @@
 
 .chat-button:hover {
     transform: scale(1.1);
-    background-color: #A56EFF;
+    background-color: var(--primary-color-dark);
 }
 
 .chat-notification {
@@ -66,7 +81,7 @@
 /* Chat Header */
 .chat-header {
     padding: 15px;
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     color: white;
     display: flex;
     justify-content: space-between;
@@ -146,12 +161,12 @@
 }
 
 .chat-tab:hover {
-    color: #6A0DAD;
+    color: var(--primary-color);
 }
 
 .chat-tab.active {
-    color: #6A0DAD;
-    border-bottom: 2px solid #6A0DAD;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .chat-tab i {
@@ -229,7 +244,7 @@
 }
 
 .message.sent .message-bubble {
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     color: white;
     border-bottom-right-radius: 5px;
 }
@@ -274,7 +289,7 @@
 .booking-btn {
     width: 100%;
     padding: 10px;
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -348,7 +363,7 @@
 }
 
 .chat-extra-btn:hover {
-    color: #6A0DAD;
+    color: var(--primary-color);
 }
 
 .chat-input-wrapper {
@@ -368,7 +383,7 @@
 }
 
 .send-button {
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     width: 35px;
@@ -405,9 +420,9 @@
 }
 
 .quick-reply-btn:hover {
-    background-color: #6A0DAD;
+    background-color: var(--primary-color);
     color: white;
-    border-color: #6A0DAD;
+    border-color: var(--primary-color);
 }
 
 /* Responsive Adjustments */

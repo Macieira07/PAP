@@ -1,6 +1,7 @@
 <?php
 // Iniciar sessão
 session_start();
+
 // Função para escapar saída
 function e($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
@@ -88,12 +89,11 @@ $admin_nome = $_SESSION['admin_nome'] ?? 'Administrador';
             </ul>
         </nav>
     </div>
-
     <!-- Conteúdo principal -->
     <div class="main">
         <div class="welcome-card">
             <h1>Bem-vindo, <span class="admin-name"><?php echo e($admin_nome); ?></span></h1>
-            <p class="welcome-message">Acesse todas as funcionalidades do sistema e gere facilmente a Quinta Flores.</p>
+            <p class="welcome-message">Administre o sistema de forma eficiente e crie a Quinta Flores sem complicação.</p>
         </div>
         
         <!-- Updated dashboard grid -->

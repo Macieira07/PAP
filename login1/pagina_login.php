@@ -19,13 +19,13 @@ $csrf_token = $_SESSION['csrf_token'];
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
     <style>
         :root {
-            --primary-color: #6A0DAD;
-            --primary-color-dark: #A56EFF;
-            --text-dark: #0c0a09;
-            --text-light: #78716c;
-            --white: #ffffff;
+            --primary-color: #10B981;
+            --primary-color-dark: #047857;
+            --text-dark: #111827;
+            --text-light: #6B7280;
+            --white: #F9FAFB;
             --max-width: 1200px;
-            --font-family: "Garamond";
+            --font-family: "Inter", sans-serif;
         }
 
         * {

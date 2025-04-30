@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt" data-theme="light">
   <head>
     <!-- Inclusão de scripts e estilos externos -->
     <!-- FontAwesome: Biblioteca de ícones -->
@@ -45,6 +45,78 @@
       }
       .language-flag:hover {
         transform: scale(1.0);
+      }
+
+      /* Estilos para o botão de tema */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #6A0DAD;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.1);
+      }
+
+      /* Estilos para o modo escuro */
+      [data-theme="dark"] {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] .header,
+      [data-theme="dark"] .booking__container,
+      [data-theme="dark"] .about__container,
+      [data-theme="dark"] .room__container,
+      [data-theme="dark"] .comodidades,
+      [data-theme="dark"] .footer {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] .nav__links a,
+      [data-theme="dark"] .section__header,
+      [data-theme="dark"] .section__subheader {
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] .booking__form {
+        background: #2d2d2d;
+      }
+
+      [data-theme="dark"] .input__group {
+        background: #333333;
+      }
+
+      [data-theme="dark"] .input__group input,
+      [data-theme="dark"] .input__group label {
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] .chat-window {
+        background: #2d2d2d;
+        color: #ffffff;
+      }
+
+      [data-theme="dark"] .chat-messages {
+        background: #333333;
+      }
+
+      [data-theme="dark"] .message-bubble {
+        background: #444444;
       }
     </style>
   </head>
@@ -370,6 +442,7 @@
         <div id="lightbox" onclick="closeLightbox()">
           <span class="close">&times;</span>
           <img id="lightboxImage" class="lightbox__content" src="">
+
         </div>
       </div>
     </section>
@@ -484,11 +557,7 @@
               </div>
               <div class="faq-item">
                 <div class="faq-question">Que atividades posso fazer na região?</div>
-                <div class="faq-answer">A região oferece diversas atividades como trilhos pedestres, ciclovias, visitas a monumentos históricos, degustação de vinhos e gastronomia local. Temos guias e recomendações personalizadas para nossos hóspedes.</div>
-              </div>
-              <div class="faq-item">
-                <div class="faq-question">Como é o acesso à internet?</div>
-                <div class="faq-answer">Oferecemos Wi-Fi gratuito de alta velocidade em todas as áreas da Quinta Flores.</div>
+                <div class="faq-answer">A região oferece diversas atividades como trilhos pedestres, ciclovias, visitas a monumentos históricos, degustação de vinhos e gastronomia local. Temos guias e recomendações personnaol rizoaddaapsé  pdaor as intoessos hóspedes.s.</div>
               </div>
             </div>
           </div>
@@ -519,7 +588,7 @@
       <button class="quick-reply-btn">Quero fazer uma reserva</button>
       <button class="quick-reply-btn">Ver disponibilidade</button>
       <button class="quick-reply-btn">Horário check-in</button>
-      <button class="quick-reply-btn">Localização</button>
+      <button class="quick-reply-btn">Onde fica o alojamento?</button>
     </div>
   </div>
 </div>
@@ -535,7 +604,7 @@
             Viva uma experiência única de conforto e hospitalidade no nosso alojamento local, onde cada detalhe foi pensado para tornar a sua estadia inesquecível. Explore a tranquilidade, a beleza e a cultura da região enquanto desfruta de momentos de puro relaxamento.
           </p>
           <!-- Botão para reservar -->
-          <a href="login/login_page.php" class="animated-button1">
+          <a href="login1/pagina_login.php" class="animated-button1">
             <span></span>
             <span></span>
             <span></span>
@@ -590,5 +659,41 @@
     <script src="index/main.js"></script>
     <script src="index/chat.js"></script>
     <script src="assets/i18n/translator.js"></script>
+    <!-- Botão de alternar tema -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="ri-sun-line"></i>
+    </button>
+
+    <script>
+        // Função para alternar o tema
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const currentTheme = html.getAttribute('data-theme');
+            const icon = themeToggle.querySelector('i');
+            
+            if (currentTheme === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'ri-moon-line';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'ri-sun-line';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Inicializar tema baseado na preferência salva
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            
+            themeToggle.addEventListener('click', toggleTheme);
+        });
+    </script>
   </body>
 </html>

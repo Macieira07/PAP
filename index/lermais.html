@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,110 +9,180 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <style>
-        .more-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        .section-title {
-            color: #6A0DAD;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
+:root {
+    --primary-color: #10B981;
+    --primary-color-dark: #047857;
+    --text-dark: #111827;
+    --text-light: #6B7280;
+    --white: #F9FAFB;
+}
 
-        .section-subtitle {
-            color: #666;
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
+* {
+    font-family: "Inter", sans-serif;
+}
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
+.more-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
 
-        .info-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
+.section-title {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
 
-        .info-card:hover {
-            transform: translateY(-5px);
-        }
+.section-subtitle {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+}
 
-        .info-card h3 {
-            color: #6A0DAD;
-            margin-bottom: 1rem;
-        }
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
 
-        .info-card p {
-            color: #444;
-            line-height: 1.6;
-        }
+.info-card {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            padding: 2rem 0;
-        }
+.info-card:hover {
+    transform: translateY(-5px);
+}
 
-        .gallery img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
+.info-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
 
-        .gallery img:hover {
-            transform: scale(1.05);
-        }
+.info-card p {
+    color: var(--text-dark);
+    line-height: 1.6;
+}
 
-        .features-list {
-            list-style: none;
-            padding: 0;
-        }
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 2rem 0;
+}
 
-        .features-list li {
-            margin-bottom: 1rem;
-            padding-left: 2rem;
-            position: relative;
-        }
+.gallery img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
 
-        .features-list li::before {
-            content: "✓";
-            color: #6A0DAD;
-            position: absolute;
-            left: 0;
-        }
+.gallery img:hover {
+    transform: scale(1.05);
+}
 
-        .map-container {
-            width: 100%;
-            height: 400px;
-            margin: 2rem 0;
-            border-radius: 15px;
-            overflow: hidden;
-        }
+.features-list {
+    list-style: none;
+    padding: 0;
+}
 
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 2rem;
-            }
+.features-list li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+}
 
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+.features-list li::before {
+    content: "✓";
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
+}
+
+.map-container {
+    width: 100%;
+    height: 400px;
+    margin: 2rem 0;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilos para o botão de tema */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Estilos para o modo escuro */
+[data-theme="dark"] {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .info-card {
+    background: #2d2d2d;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .section-title {
+    color: #9b4dca;
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: #cccccc;
+}
+
+[data-theme="dark"] .info-card h3 {
+    color: #9b4dca;
+}
+
+[data-theme="dark"] .info-card p {
+    color: #dddddd;
+}
+
+[data-theme="dark"] .footer {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
     </style>
 </head>
 <body>
@@ -248,6 +318,11 @@
                 <span>Fazer Reserva</span>
             </a>
         </div>
+
+        <!-- Botão de alternar tema -->
+        <button class="theme-toggle" id="themeToggle">
+            <i class="ri-sun-line"></i>
+        </button>
     </main>
 
     <!-- Rodapé -->
@@ -260,5 +335,38 @@
             </div>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Função para alternar o tema
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const currentTheme = html.getAttribute('data-theme');
+            const icon = themeToggle.querySelector('i');
+            
+            if (currentTheme === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'ri-moon-line';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'ri-sun-line';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Inicializar tema baseado na preferência salva
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            
+            themeToggle.addEventListener('click', toggleTheme);
+        });
+    </script>
 </body>
 </html>
