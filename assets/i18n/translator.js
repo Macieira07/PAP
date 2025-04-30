@@ -13,7 +13,6 @@ async function loadTranslations(lang) {
         return translations[lang];
     } catch (error) {
         console.error(`Erro ao carregar o arquivo de tradução para ${lang}:`, error);
-        // Em caso de erro, usar português como fallback
         if (lang !== 'pt') {
             return loadTranslations('pt');
         }
@@ -33,9 +32,11 @@ function updateTexts(langData) {
         const key = element.getAttribute('data-key');
         if (key && langData[key]) {
             if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                if (element.getAttribute('placeholder')) {
-                    element.placeholder = langData[key];
-                } else {
+                // Para campos de input e textarea, atualizar o placeholder
+                element.placeholder = langData[key];
+                
+                // Se o campo estiver vazio, também atualizar o valor
+                if (!element.value) {
                     element.value = langData[key];
                 }
             } else {
@@ -44,16 +45,32 @@ function updateTexts(langData) {
         }
     });
 
-    // Atualizar meta tags específicas
+    // Atualizar meta tags
     const descriptionMeta = document.querySelector('meta[name="description"]');
     if (descriptionMeta && langData.meta_description) {
         descriptionMeta.content = langData.meta_description;
     }
+
+    // Atualizar placeholders específicos
+    const placeholders = {
+        name: langData.name || 'Nome',
+        email: langData.email_placeholder || 'Email',
+        phone: langData.phone_placeholder || 'Telefone',
+        message: langData.message || 'Mensagem',
+        chat: langData.chat_write || 'Escreva a sua mensagem...'
+    };
+
+    // Aplicar placeholders traduzidos
+    Object.entries(placeholders).forEach(([key, value]) => {
+        document.querySelectorAll(`[data-placeholder="${key}"]`).forEach(element => {
+            element.placeholder = value;
+        });
+    });
 }
 
 // Função para alternar entre idiomas
 async function changeLanguage(lang) {
-    if (currentLanguage === lang) return; // Evitar recarregar o mesmo idioma
+    if (currentLanguage === lang) return;
 
     // Remover a classe 'active' de todas as bandeiras
     document.querySelectorAll('.language-flag').forEach(flag => {
@@ -108,6 +125,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         flag.addEventListener('click', function() {
             const lang = this.getAttribute('data-lang');
             changeLanguage(lang);
+        });
+    });
+
+    // Adicionar manipulador para o evento de envio do formulário
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Evitar que campos de placeholder sejam enviados como valores
+            const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+            inputs.forEach(input => {
+                if (input.value === input.placeholder) {
+                    input.value = '';
+                }
+            });
         });
     });
 });

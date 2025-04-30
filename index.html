@@ -797,20 +797,6 @@
         border-top: 1px solid #eee;
       }
       
-      .chat-extras {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .chat-extra-btn {
-        background: none;
-        border: none;
-        color: #666;
-        cursor: pointer;
-        font-size: 1.2rem;
-      }
-      
       .chat-input-wrapper {
         display: flex;
         align-items: center;
@@ -1072,7 +1058,7 @@
       /* Animations */
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0        }
+        to { opacity: 1; transform: translateY(0); }
       }
       
       /* Responsividade */
@@ -1454,32 +1440,25 @@
           <div class="chat-panels">
           <div class="chat-panels">
             <div class="chat-panel active">
+              <div class="chat-messages">
                 <div class="chat-day-separator">
-                  <span>Hoje</span>
+                  <span class="lang" data-key="today">Hoje</span>
                 </div>
                 <div class="message received">
-                  <div class="message-bubble">
+                  <div class="message-bubble lang" data-key="chat_greeting">
                     Olá! Como podemos ajudar?
                   </div>
                   <div class="message-time">10:30</div>
                 </div>
               </div>
               <div class="quick-replies">
-                <button class="quick-reply-btn">Disponibilidade</button>
-                <button class="quick-reply-btn">Preços</button>
-                <button class="quick-reply-btn">Localização</button>
+                <button class="quick-reply-btn lang" data-key="chat_availability">Disponibilidade</button>
+                <button class="quick-reply-btn lang" data-key="chat_prices">Preços</button>
+                <button class="quick-reply-btn lang" data-key="chat_location">Localização</button>
               </div>
               <div class="chat-input-area">
-                <div class="chat-extras">
-                  <button class="chat-extra-btn">
-                    <i class="ri-emotion-line"></i>
-                  </button>
-                  <button class="chat-extra-btn">
-                    <i class="ri-image-line"></i>
-                  </button>
-                </div>
                 <div class="chat-input-wrapper">
-                  <textarea id="chatInput" placeholder="Escreva a sua mensagem..."></textarea>
+                  <textarea id="chatInput" class="lang" data-key="chat_write" placeholder="Escreva a sua mensagem..."></textarea>
                   <button class="send-button">
                     <i class="ri-send-plane-line"></i>
                   </button>
@@ -1548,115 +1527,5 @@
         © 2023 Quinta Flores. Todos os direitos reservados.
       </div>
     </footer>
-
-    <script>
-      // Mobile Menu Toggle
-      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-      const navLinks = document.querySelector('.nav__links');
-      
-      mobileMenuBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
-          ? '<i class="ri-close-line"></i>' 
-          : '<i class="ri-menu-line"></i>';
-      });
-      
-      // Theme Toggle
-      const themeToggle = document.getElementById('themeToggle');
-      const html = document.documentElement;
-      
-      // Check for saved theme preference
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      html.setAttribute('data-theme', savedTheme);
-      themeToggle.checked = savedTheme === 'dark';
-      
-      themeToggle.addEventListener('change', () => {
-        const newTheme = themeToggle.checked ? 'dark' : 'light';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-      });
-      
-      // Chat Widget Toggle
-      const chatButton = document.querySelector('.chat-button');
-      const chatWindow = document.querySelector('.chat-window');
-      
-      chatButton.addEventListener('click', () => {
-        chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
-      });
-      
-      // Chat Tabs
-      const chatTabs = document.querySelectorAll('.chat-tab');
-      const chatPanels = document.querySelectorAll('.chat-panel');
-      
-      chatTabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-          chatTabs.forEach(t => t.classList.remove('active'));
-          chatPanels.forEach(p => p.classList.remove('active'));
-          
-          tab.classList.add('active');
-          chatPanels[index].classList.add('active');
-        });
-      });
-      
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          const targetId = this.getAttribute('href');
-          if (targetId === '#') return;
-          
-          const targetElement = document.querySelector(targetId);
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.offsetTop - 80,
-              behavior: 'smooth'
-            });
-            
-            // Close mobile menu if open
-            if (navLinks.classList.contains('active')) {
-              navLinks.classList.remove('active');
-              mobileMenuBtn.innerHTML = '<i class="ri-menu-line"></i>';
-            }
-          }
-        });
-      });
-      
-      // Animation on scroll
-      const animateOnScroll = () => {
-        const elements = document.querySelectorAll('.section__container, .room__card, .testimonial__card');
-        
-        elements.forEach(element => {
-          const elementPosition = element.getBoundingClientRect().top;
-          const screenPosition = window.innerHeight / 1.3;
-          
-          if (elementPosition < screenPosition) {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-          }
-        });
-      };
-      
-      // Set initial state for animated elements
-      document.querySelectorAll('.section__container, .room__card, .testimonial__card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      });
-      
-      window.addEventListener('scroll', animateOnScroll);
-      window.addEventListener('load', animateOnScroll);
-      
-      // Booking form date restrictions
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('checkIn').min = today;
-      
-      document.getElementById('checkIn').addEventListener('change', function() {
-        const checkInDate = new Date(this.value);
-        checkInDate.setDate(checkInDate.getDate() + 1);
-        const nextDay = checkInDate.toISOString().split('T')[0];
-        document.getElementById('checkOut').min = nextDay;
-      });
-    </script>
   </body>
-  </html>
+</html>
