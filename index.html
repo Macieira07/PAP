@@ -18,9 +18,10 @@
     <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
     
-    <!-- Título da página exibido na aba do navegador -->
+    <!-- Script de tradução -->
+    <script src="assets/i18n/translator.js" defer></script>
     <title>QUINTA | FLORES</title>
-    <link rel="icon" type="image/png" href="assets/logos/logotipo1.png" sizes="1000x1000">
+    <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
   
     <style>
       :root {
@@ -1120,7 +1121,6 @@
     </style>
   </head>
   <body>
-    <!-- Header Section -->
     <header class="header">
       <nav>
         <div class="nav__bar">
@@ -1128,19 +1128,19 @@
             <img src="assets/logos/logotipo1.png" alt="logo">
           </div>
           <ul class="nav__links">
-            <li><a href="#home">Início</a></li>
-            <li><a href="#about">Sobre Nós</a></li>
-            <li><a href="#rooms">Quartos</a></li>
-            <li><a href="#gallery">Galeria</a></li>
-            <li><a href="#amenities">Comodidades</a></li>
-            <li><a href="#location">Localização</a></li>
-            <li><a href="#contact">Contactos</a></li>
+            <li><a href="#home" class="lang" data-key="nav_home">Início</a></li>
+            <li><a href="#about" class="lang" data-key="nav_about">Sobre Nós</a></li>
+            <li><a href="#rooms" class="lang" data-key="nav_rooms">Quartos</a></li>
+            <li><a href="#gallery" class="lang" data-key="nav_gallery">Galeria</a></li>
+            <li><a href="#amenities" class="lang" data-key="nav_amenities">Comodidades</a></li>
+            <li><a href="#location" class="lang" data-key="nav_location">Localização</a></li>
+            <li><a href="#contact" class="lang" data-key="nav_contact">Contactos</a></li>
           </ul>
           <div class="language-selector">
-            <img src="assets/flags/pt.png" alt="Português" class="language-flag active" title="Português">
-            <img src="assets/flags/en.png" alt="English" class="language-flag" title="English">
-            <img src="assets/flags/es.png" alt="Español" class="language-flag" title="Español">
-            <img src="assets/flags/fr.png" alt="Français" class="language-flag" title="Français">
+            <img src="assets/flags/pt.png" alt="Português" class="language-flag" data-lang="pt" title="Português">
+            <img src="assets/flags/en.png" alt="English" class="language-flag" data-lang="en" title="English">
+            <img src="assets/flags/fr.png" alt="Français" class="language-flag" data-lang="fr" title="Français">
+            <img src="assets/flags/de.png" alt="Deutsch" class="language-flag" data-lang="de" title="Deutsch">
           </div>
           <div class="theme-toggle">
             <i class="ri-sun-line theme-icon"></i>
@@ -1157,9 +1157,9 @@
       </nav>
       
       <div class="header__container" id="home">
-        <p>Bem-vindo à</p>
+        <p class="lang" data-key="welcome">Bem-vindo à</p>
         <h1>QUINTA <span>FLORES</span></h1>
-        <a href="#booking" class="animated-button1">Reservar Agora</a>
+        <a href="#booking" class="animated-button1 lang" data-key="book_now">Reservar Agora</a>
       </div>
     </header>
 
@@ -1169,26 +1169,26 @@
         <div class="input__group">
           <span><i class="ri-calendar-line"></i></span>
           <div>
-            <label for="checkIn">Check In</label>
+            <label for="checkIn" class="lang" data-key="check_in">Check In</label>
             <input type="date" id="checkIn" required>
           </div>
         </div>
         <div class="input__group">
           <span><i class="ri-calendar-line"></i></span>
           <div>
-            <label for="checkOut">Check Out</label>
+            <label for="checkOut" class="lang" data-key="check_out">Check Out</label>
             <input type="date" id="checkOut" required>
           </div>
         </div>
         <div class="input__group">
           <span><i class="ri-user-line"></i></span>
           <div>
-            <label for="guests">Hóspedes</label>
+            <label for="guests" class="lang" data-key="guests">Hóspedes</label>
             <input type="number" id="guests" min="1" value="2" required>
           </div>
         </div>
         <div class="input__group input__btn">
-          <button type="submit" class="btn">Ver Disponibilidade</button>
+          <button type="submit" class="btn lang" data-key="check_availability">Ver Disponibilidade</button>
         </div>
       </form>
     </section>
@@ -1199,15 +1199,15 @@
         <img src="assets/images/about.webp" alt="sobre nós">
       </div>
       <div class="about__content">
-        <p class="section__subheader">SOBRE NÓS</p>
-        <h2 class="section__header">Descubra a Nossa História</h2>
-        <p class="section__description">
+        <p class="section__subheader lang" data-key="about_subtitle">SOBRE NÓS</p>
+        <h2 class="section__header lang" data-key="about_title">Descubra a Nossa História</h2>
+        <p class="section__description lang" data-key="about_description">
           Localizada no coração do Minho, a Quinta Flores é um refúgio de paz e tranquilidade, onde a tradição minhota se encontra com o conforto moderno. Nossa propriedade familiar acolhe hóspedes desde 1985, oferecendo uma experiência autêntica da vida rural portuguesa.
         </p>
-        <p class="section__description">
+        <p class="section__description lang" data-key="about_description_2">
           Com jardins exuberantes, vinhas tradicionais e uma vista deslumbrante sobre o vale do Lima, nosso alojamento local é o local perfeito para relaxar e recarregar energias.
         </p>
-        <button class="btn">Saiba Mais</button>
+        <a href="index/lermais.html" class="btn lang" data-key="read_more" style="text-decoration: none;">Ler Mais</a>
       </div>
     </section>
 
@@ -1221,22 +1221,24 @@
             <img src="assets/images/room1.webp" alt="Quarto Standard">
           </div>
           <div class="room__content">
-            <h3 class="room__title">Quarto Standard</h3>
+            <h3 class="room__title lang" data-key="room_standard">Quarto Standard</h3>
             <div class="room__details">
               <div class="room__detail">
                 <i class="ri-user-line"></i>
-                <span>2 pessoas</span>
+                <span class="lang" data-key="people_2">2 pessoas</span>
               </div>
               <div class="room__detail">
                 <i class="ri-home-4-line"></i>
-                <span>25m²</span>
+                <span class="lang" data-key="area_25">25m²</span>
               </div>
             </div>
-            <p class="room__description">
+            <p class="room__description lang" data-key="room_standard_desc">
               Quarto aconchegante com vista para o jardim, equipado com cama de casal, casa de banho privativa e varanda.
             </p>
-            <p class="room__price">€85<span>/noite</span></p>
-            <button class="btn">Reservar</button>
+            <p class="room__price">
+              €85<span class="lang" data-key="per_night">/noite</span>
+            </p>
+            <button class="btn lang" data-key="book_room">Reservar</button>
           </div>
         </div>
         
@@ -1245,7 +1247,7 @@
             <img src="assets/images/room2.webp" alt="Quarto Superior">
           </div>
           <div class="room__content">
-            <h3 class="room__title">Quarto Superior</h3>
+            <h3 class="room__title lang" data-key="room_superior">Quarto Superior</h3>
             <div class="room__details">
               <div class="room__detail">
                 <i class="ri-user-line"></i>
@@ -1256,11 +1258,13 @@
                 <span>35m²</span>
               </div>
             </div>
-            <p class="room__description">
+            <p class="room__description lang" data-key="room_superior_desc">
               Espaçoso quarto com vista para o vale, cama king-size, área de estar e casa de banho com banheira.
             </p>
-            <p class="room__price">€120<span>/noite</span></p>
-            <button class="btn">Reservar</button>
+            <p class="room__price">
+              €120<span class="lang" data-key="per_night">/noite</span>
+            </p>
+            <button class="btn lang" data-key="book_room">Reservar</button>
           </div>
         </div>
         
@@ -1269,7 +1273,7 @@
             <img src="assets/images/room3.webp" alt="Suite Familiar">
           </div>
           <div class="room__content">
-            <h3 class="room__title">Suite Familiar</h3>
+            <h3 class="room__title lang" data-key="room_family">Suite Familiar</h3>
             <div class="room__details">
               <div class="room__detail">
                 <i class="ri-user-line"></i>
@@ -1280,91 +1284,27 @@
                 <span>50m²</span>
               </div>
             </div>
-            <p class="room__description">
+            <p class="room__description lang" data-key="room_family_desc">
               Amplo apartamento com dois quartos, sala de estar completa e cozinha equipada, ideal para famílias.
             </p>
-            <p class="room__price">€160<span>/noite</span></p>
-            <button class="btn">Reservar</button>
+            <p class="room__price">
+              €160<span class="lang" data-key="per_night">/noite</span>
+            </p>
+            <button class="btn lang" data-key="book_room">Reservar</button>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section class="section__container gallery__container" id="gallery">
-      <p class="section__subheader">GALERIA</p>
-      <h2 class="section__header">Explore o Nosso Espaço</h2>
-      <div class="gallery__controls">
-        <button class="gallery__filter active" data-filter="all">Tudo</button>
-        <button class="gallery__filter" data-filter="rooms">Quartos</button>
-        <button class="gallery__filter" data-filter="areas">Áreas Comuns</button>
-        <button class="gallery__filter" data-filter="nature">Natureza</button>
-      </div>
-      <div class="gallery__grid">
-        <div class="gallery__item" data-category="rooms">
-          <img src="assets/images/gallery1.webp" alt="Quarto">
-        </div>
-        <div class="gallery__item" data-category="areas">
-          <img src="assets/images/gallery2.webp" alt="Piscina">
-        </div>
-        <div class="gallery__item" data-category="nature">
-          <img src="assets/images/gallery3.webp" alt="Vinhas">
-        </div>
-        <div class="gallery__item" data-category="rooms">
-          <img src="assets/images/gallery4.webp" alt="Casa de banho">
-        </div>
-        <div class="gallery__item" data-category="areas">
-          <img src="assets/images/gallery5.webp" alt="Jardim">
-        </div>
-        <div class="gallery__item" data-category="nature">
-          <img src="assets/images/gallery6.webp" alt="Vale do Lima">
-        </div>
-      </div>
-    </section>
-
-    <!-- Amenities Section -->
-    <section class="section__container comodidades" id="amenities">
-      <p class="section__subheader">COMODIDADES</p>
-      <h2 class="section__header">O Que Oferecemos</h2>
-      <div class="comodidades__container">
-        <div class="comodidades__list">
-          <li>
-            <i class="ri-wifi-line"></i>
-            <span>Wi-Fi Gratuito</span>
-          </li>
-          <li>
-            <i class="ri-swimming-pool-line"></i>
-            <span>Piscina Exterior</span>
-          </li>
-          <li>
-            <i class="ri-car-line"></i>
-            <span>Estacionamento Gratuito</span>
-          </li>
-          <li>
-            <i class="ri-restaurant-line"></i>
-            <span>Pequeno-almoço Regional</span>
-          </li>
-          <li>
-            <i class="ri-bike-line"></i>
-            <span>Bicicletas Disponíveis</span>
-          </li>
-          <li>
-            <i class="ri-spa-line"></i>
-            <span>Massagens (sob marcação)</span>
-          </li>
         </div>
       </div>
     </section>
 
     <!-- Testimonials Section -->
     <section class="section__container testimonials" id="testimonials">
-      <p class="section__subheader">DEPOIMENTOS</p>
-      <h2 class="section__header">O Que Dizem os Nossos Hóspedes</h2>
+      <p class="section__subheader lang" data-key="testimonials_subtitle">DEPOIMENTOS</p>
+      <h2 class="section__header lang" data-key="testimonials_title">O Que Dizem os Nossos Hóspedes</h2>
       <div class="testimonial__container">
         <div class="testimonial__grid">
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
-            <p class="testimonial__text">
+            <p class="testimonial__text lang" data-key="testimonial_1">
               A Quinta Flores superou todas as nossas expectativas. O local é lindo, os quartos impecáveis e o pequeno-almoço delicioso com produtos regionais. Voltaremos com certeza!
             </p>
             <div class="testimonial__author">
@@ -1385,7 +1325,7 @@
           
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
-            <p class="testimonial__text">
+            <p class="testimonial__text lang" data-key="testimonial_2">
               Foi nossa segunda estadia e foi tão boa quanto a primeira. A atenção da equipa é excepcional e adoramos os passeios sugeridos pela região. Recomendamos!
             </p>
             <div class="testimonial__author">
@@ -1397,7 +1337,7 @@
                   <i class="ri-star-fill"></i>
                   <i class="ri-star-fill"></i>
                   <i class="ri-star-fill"></i>
-                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill
                   <i class="ri-star-fill"></i>
                 </div>
               </div>
@@ -1406,7 +1346,7 @@
           
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
-            <p class="testimonial__text">
+            <p class="testimonial__text lang" data-key="testimonial_3">
               Perfect place to experience authentic Portuguese countryside. The owners are lovely and made us feel at home. The pool area is fantastic with amazing views.
             </p>
             <div class="testimonial__author">
@@ -1430,30 +1370,30 @@
 
     <!-- Location Section -->
     <section class="section__container location" id="location">
-      <p class="section__subheader">LOCALIZAÇÃO</p>
-      <h2 class="section__header">Como Chegar</h2>
+      <p class="section__subheader lang" data-key="location_subtitle">LOCALIZAÇÃO</p>
+      <h2 class="section__header lang" data-key="location_title">Como Chegar</h2>
       <div class="map__container">
         <div class="map__info">
           <h3>Quinta Flores</h3>
           <div class="location__detail">
             <i class="ri-map-pin-line"></i>
-            <span>Rua da Quinta, 123, Ponte de Lima, Portugal</span>
+            <span class="lang" data-key="address">Rua da Quinta, 123, Ponte de Lima, Portugal</span>
           </div>
           <div class="location__detail">
             <i class="ri-phone-line"></i>
-            <span>+351 258 123 456</span>
+            <span class="lang" data-key="phone">+351 258 123 456</span>
           </div>
           <div class="location__detail">
             <i class="ri-mail-line"></i>
-            <span>info@quintaflores.pt</span>
+            <span class="lang" data-key="email">info@quintaflores.pt</span>
           </div>
           <div class="location__detail">
             <i class="ri-car-line"></i>
-            <span>45 min do Aeroporto do Porto (OPO)</span>
+            <span class="lang" data-key="airport_info">45 min do Aeroporto do Porto (OPO)</span>
           </div>
           <div class="location__detail">
             <i class="ri-train-line"></i>
-            <span>Estação de Ponte de Lima a 10 min</span>
+            <span class="lang" data-key="train_info">Estação de Ponte de Lima a 10 min</span>
           </div>
         </div>
         <div class="map__frame">
@@ -1464,23 +1404,23 @@
 
     <!-- Contact Section -->
     <section class="section__container contact" id="contact">
-      <p class="section__subheader">CONTACTOS</p>
-      <h2 class="section__header">Fale Connosco</h2>
+      <p class="section__subheader lang" data-key="contact_subtitle">CONTACTOS</p>
+      <h2 class="section__header lang" data-key="contact_title">Fale Connosco</h2>
       <div class="contact__container">
         <form class="contact__form">
           <div class="input__group">
-            <input type="text" placeholder="Nome" required>
+            <input type="text" class="lang" data-key="name" required>
           </div>
           <div class="input__group">
-            <input type="email" placeholder="Email" required>
+            <input type="email" class="lang" data-key="email_placeholder" required>
           </div>
           <div class="input__group">
-            <input type="tel" placeholder="Telefone">
+            <input type="tel" class="lang" data-key="phone_placeholder">
           </div>
           <div class="input__group">
-            <textarea rows="4" placeholder="Mensagem" required></textarea>
+            <textarea rows="4" class="lang" data-key="message" required></textarea>
           </div>
-          <button type="submit" class="btn">Enviar Mensagem</button>
+          <button type="submit" class="btn lang" data-key="send_message">Enviar Mensagem</button>
         </form>
       </div>
     </section>
@@ -1512,8 +1452,8 @@
             <button class="chat-tab">FAQ</button>
           </div>
           <div class="chat-panels">
+          <div class="chat-panels">
             <div class="chat-panel active">
-              <div class="chat-messages">
                 <div class="chat-day-separator">
                   <span>Hoje</span>
                 </div>
@@ -1573,7 +1513,7 @@
           <div class="logo">
             <img src="assets/logos/logotipo1.png" alt="logo">
           </div>
-          <p>
+          <p class="lang" data-key="footer_about">
             A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.
           </p>
           <div class="footer__socials">
@@ -1583,45 +1523,28 @@
           </div>
         </div>
         <div class="footer__col">
-          <h4>Links Rápidos</h4>
+          <h4 class="lang" data-key="quick_links">Links Rápidos</h4>
           <ul class="footer__links">
-            <li><a href="#home">Início</a></li>
-            <li><a href="#about">Sobre Nós</a></li>
-            <li><a href="#rooms">Quartos</a></li>
-            <li><a href="#gallery">Galeria</a></li>
-            <li><a href="#amenities">Comodidades</a></li>
-            <li><a href="#location">Localização</a></li>
-            <li><a href="#contact">Contactos</a></li>
+            <li><a href="#home" class="lang" data-key="nav_home">Início</a></li>
+            <li><a href="#about" class="lang" data-key="nav_about">Sobre Nós</a></li>
+            <li><a href="#rooms" class="lang" data-key="nav_rooms">Quartos</a></li>
+            <li><a href="#gallery" class="lang" data-key="nav_gallery">Galeria</a></li>
+            <li><a href="#amenities" class="lang" data-key="nav_amenities">Comodidades</a></li>
+            <li><a href="#location" class="lang" data-key="nav_location">Localização</a></li>
+            <li><a href="#contact" class="lang" data-key="nav_contact">Contactos</a></li>
           </ul>
         </div>
         <div class="footer__col">
-          <h4>Informações</h4>
+          <h4 class="lang" data-key="information">Informações</h4>
           <ul class="footer__links">
-            <li><a href="#">Política de Privacidade</a></li>
-            <li><a href="#">Termos e Condições</a></li>
-            <li><a href="#">Política de Cancelamento</a></li>
-            <li><a href="#">FAQ</a></li>
-          </ul>
-        </div>
-        <div class="footer__col">
-          <h4>Contactos</h4>
-          <ul class="footer__links">
-            <li>
-              <i class="ri-map-pin-line"></i>
-              <span>Rua da Quinta, 123, Ponte de Lima, Portugal</span>
-            </li>
-            <li>
-              <i class="ri-phone-line"></i>
-              <span>+351 258 123 456</span>
-            </li>
-            <li>
-              <i class="ri-mail-line"></i>
-              <span>info@quintaflores.pt</span>
-            </li>
+            <li><a href="#" class="lang" data-key="privacy_policy">Política de Privacidade</a></li>
+            <li><a href="#" class="lang" data-key="terms">Termos e Condições</a></li>
+            <li><a href="#" class="lang" data-key="cancellation">Política de Cancelamento</a></li>
+            <li><a href="#" class="lang" data-key="faq">FAQ</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer__bar">
+      <div class="footer__bar lang" data-key="copyright">
         © 2023 Quinta Flores. Todos os direitos reservados.
       </div>
     </footer>
@@ -1638,30 +1561,6 @@
           : '<i class="ri-menu-line"></i>';
       });
       
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          const targetId = this.getAttribute('href');
-          if (targetId === '#') return;
-          
-          const targetElement = document.querySelector(targetId);
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.offsetTop - 80,
-              behavior: 'smooth'
-            });
-            
-            // Close mobile menu if open
-            if (navLinks.classList.contains('active')) {
-              navLinks.classList.remove('active');
-              mobileMenuBtn.innerHTML = '<i class="ri-menu-line"></i>';
-            }
-          }
-        });
-      });
-      
       // Theme Toggle
       const themeToggle = document.getElementById('themeToggle');
       const html = document.documentElement;
@@ -1675,16 +1574,6 @@
         const newTheme = themeToggle.checked ? 'dark' : 'light';
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-      });
-      
-      // Language Selector
-      const languageFlags = document.querySelectorAll('.language-flag');
-      languageFlags.forEach(flag => {
-        flag.addEventListener('click', () => {
-          languageFlags.forEach(f => f.classList.remove('active'));
-          flag.classList.add('active');
-          // Here you would implement language change logic
-        });
       });
       
       // Chat Widget Toggle
@@ -1709,88 +1598,28 @@
         });
       });
       
-      // Gallery Filter
-      const galleryFilters = document.querySelectorAll('.gallery__filter');
-      const galleryItems = document.querySelectorAll('.gallery__item');
-      
-      galleryFilters.forEach(filter => {
-        filter.addEventListener('click', () => {
-          galleryFilters.forEach(f => f.classList.remove('active'));
-          filter.classList.add('active');
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
           
-          const filterValue = filter.dataset.filter;
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
           
-          galleryItems.forEach(item => {
-            if (filterValue === 'all' || item.dataset.category === filterValue) {
-              item.style.display = 'block';
-            } else {
-              item.style.display = 'none';
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+            
+            // Close mobile menu if open
+            if (navLinks.classList.contains('active')) {
+              navLinks.classList.remove('active');
+              mobileMenuBtn.innerHTML = '<i class="ri-menu-line"></i>';
             }
-          });
-        });
-      });
-      
-      // Lightbox
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = lightbox.querySelector('img');
-      const closeBtn = lightbox.querySelector('.close');
-      const prevBtn = lightbox.querySelector('.prev');
-      const nextBtn = lightbox.querySelector('.next');
-      
-      // Open lightbox when gallery item is clicked
-      galleryItems.forEach(item => {
-        item.addEventListener('click', () => {
-          const imgSrc = item.querySelector('img').src;
-          lightboxImg.src = imgSrc;
-          lightbox.style.display = 'flex';
-        });
-      });
-      
-      // Close lightbox
-      closeBtn.addEventListener('click', () => {
-        lightbox.style.display = 'none';
-      });
-      
-      // Click outside image to close
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-          lightbox.style.display = 'none';
-        }
-      });
-      
-      // Navigation between images (simplified)
-      let currentImageIndex = 0;
-      
-      function showImage(index) {
-        if (index >= galleryItems.length) index = 0;
-        if (index < 0) index = galleryItems.length - 1;
-        
-        currentImageIndex = index;
-        const imgSrc = galleryItems[index].querySelector('img').src;
-        lightboxImg.src = imgSrc;
-      }
-      
-      prevBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showImage(currentImageIndex - 1);
-      });
-      
-      nextBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showImage(currentImageIndex + 1);
-      });
-      
-      // Keyboard navigation
-      document.addEventListener('keydown', (e) => {
-        if (lightbox.style.display === 'flex') {
-          if (e.key === 'Escape') {
-            lightbox.style.display = 'none';
-          } else if (e.key === 'ArrowLeft') {
-            showImage(currentImageIndex - 1);
-          } else if (e.key === 'ArrowRight') {
-            showImage(currentImageIndex + 1);
           }
-        }
+        });
       });
       
       // Animation on scroll
@@ -1830,4 +1659,4 @@
       });
     </script>
   </body>
-</html>
+  </html>
