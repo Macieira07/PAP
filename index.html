@@ -1,564 +1,1554 @@
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
   <head>
-    <!-- Inclusão de scripts e estilos externos -->
-    <!-- FontAwesome: Biblioteca de ícones -->
-    <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
     <!-- Meta tags para configuração básica da página -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Alojamento local em Ponte de Lima - Aconchego, natureza e tradição minhota">  
-    <!-- Remixicon: Biblioteca de ícones -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"rel="stylesheet"/>
-        <!-- Fontes -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Garamond&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"> 
-    <!-- Arquivo CSS local para estilos personalizados -->
-    <link rel="stylesheet" href="index/index.css">
-    <link rel="stylesheet" href="index/chat.css">
+    
     <!-- Pré-carregamentos -->
     <link rel="preload" href="imagens/hero.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bibliotecas de Ícones -->
+    <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
+    
     <!-- Título da página exibido na aba do navegador -->
     <title>QUINTA | FLORES</title>
     <link rel="icon" type="image/png" href="assets/logos/logotipo1.png" sizes="1000x1000">
   
     <style>
+      :root {
+        --primary-color: #10B981;
+        --primary-color-dark: #047857;
+        --secondary-color: #6A0DAD;
+        --text-dark: #111827;
+        --text-light: #6B7280;
+        --white: #F9FAFB;
+        --light-bg: #F3F4F6;
+        --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+      }
+      
+      body {
+        color: var(--text-dark);
+        background-color: var(--white);
+        line-height: 1.6;
+      }
+      
+      /* Header Styling */
+      .header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/images/hero.webp');
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+        color: var(--white);
+        padding: 1rem 0;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        height: 80px;
+        backdrop-filter: blur(5px);
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .nav__bar {
+        display: flex;
+        align-items: center;
+      }
+      
+      .logo img {
+        height: 60px;
+        width: auto;
+        filter: brightness(0) invert(1);
+      }
+      
+      .nav__links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      
+      .nav__links a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        position: relative;
+        transition: var(--transition);
+      }
+      
+      .nav__links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background-color: var(--primary-color);
+        transition: var(--transition);
+      }
+      
+      .nav__links a:hover::after {
+        width: 100%;
+      }
+      
+      .header__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        padding: 2rem 5%;
+      }
+      
+      .header__container p {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      
+      .header__container h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        line-height: 1.2;
+      }
+      
+      .header__container h1 span {
+        color: var(--primary-color);
+      }
+      
+      /* Botão animado */
+      .animated-button1 {
+        position: relative;
+        display: inline-block;
+        padding: 12px 24px;
+        color: var(--white);
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        z-index: 1;
+      }
+      
+      .animated-button1:hover {
+        background-color: var(--primary-color-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      .animated-button1:active {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Booking section */
+      .booking__container {
+        margin-top: -50px;
+        padding: 0 5%;
+        z-index: 10;
+        position: relative;
+      }
+      
+      .booking__form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+      }
+      
+      .input__group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background-color: var(--light-bg);
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+      
+      .input__group span {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+      }
+      
+      .input__group div {
+        flex: 1;
+      }
+      
+      .input__group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-bottom: 0.3rem;
+      }
+      
+      .input__group input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 1rem;
+        color: var(--text-dark);
+      }
+      
+      .input__group input:focus {
+        outline: none;
+      }
+      
+      .input__btn {
+        justify-content: center;
+      }
+      
+      /* Sobre Nós */
+      .section__container {
+        padding: 5rem 5%;
+      }
+      
+      .about__container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        align-items: center;
+      }
+      
+      .about__image img {
+        width: 100%;
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+        transition: var(--transition);
+      }
+      
+      .about__image img:hover {
+        transform: scale(1.03);
+      }
+      
+      .section__subheader {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      
+      .section__header {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+      }
+      
+      .section__description {
+        margin-bottom: 2rem;
+        color: var(--text-light);
+      }
+      
+      .btn {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      
+      .btn:hover {
+        background-color: var(--primary-color-dark);
+      }
+      
+      /* Quartos Section */
+      .rooms__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+      
+      .room__card {
+        background: var(--white);
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: var(--transition);
+      }
+      
+      .room__card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      .room__image {
+        height: 200px;
+        width: 100%;
+        overflow: hidden;
+      }
+      
+      .room__image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+      }
+      
+      .room__card:hover .room__image img {
+        transform: scale(1.1);
+      }
+      
+      .room__content {
+        padding: 1.5rem;
+      }
+      
+      .room__title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .room__details {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+        color: var(--text-light);
+      }
+      
+      .room__detail {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .room__price {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-top: 1rem;
+      }
+      
+      /* Galeria */
+      .gallery__container {
+        background-color: var(--light-bg);
+      }
+      
+      .gallery__controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      
+      .gallery__filter {
+        padding: 8px 16px;
+        background: transparent;
+        border: 1px solid var(--primary-color);
+        border-radius: 20px;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      
+      .gallery__filter.active, .gallery__filter:hover {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+      
+      .gallery__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+      
+      .gallery__item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        height: 250px;
+      }
+      
+      .gallery__item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+      }
+      
+      .gallery__item:hover img {
+        transform: scale(1.1);
+      }
+      
+      /* Comodidades */
+      .comodidades {
+        padding: 5rem 5%;
+      }
+      
+      .comodidades__container {
+        text-align: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      
+      .comodidades__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+        list-style: none;
+      }
+      
+      .comodidades__list li {
+        background-color: var(--white);
+        padding: 2rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+        text-align: center;
+        transition: var(--transition);
+      }
+      
+      .comodidades__list li:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      .comodidades__list i {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: block;
+      }
+      
+      .comodidades__list span {
+        font-weight: 500;
+      }
+      
+      /* Testemunhos */
+      .testimonials {
+        background-color: var(--light-bg);
+        padding: 5rem 5%;
+        text-align: center;
+      }
+      
+      .testimonial__container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      
+      .testimonial__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+      
+      .testimonial__card {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+        position: relative;
+      }
+      
+      .testimonial__quote {
+        font-size: 4rem;
+        position: absolute;
+        top: -20px;
+        left: 20px;
+        opacity: 0.1;
+        color: var(--primary-color);
+      }
+      
+      .testimonial__text {
+        margin-bottom: 1.5rem;
+        font-style: italic;
+      }
+      
+      .testimonial__author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .testimonial__author img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      
+      .author__info h4 {
+        font-weight: 600;
+      }
+      
+      .author__info p {
+        font-size: 0.9rem;
+        color: var(--text-light);
+      }
+      
+      .rating {
+        color: #FFD700;
+        margin-top: 0.5rem;
+      }
+      
+      /* Mapa e localização */
+      .location {
+        padding: 5rem 5%;
+      }
+      
+      .map__container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+      
+      .map__info {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+      }
+      
+      .map__info h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+      }
+      
+      .location__detail {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .location__detail i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+      }
+      
+      .map__frame {
+        border-radius: 1rem;
+        overflow: hidden;
+        height: 100%;
+        min-height: 300px;
+      }
+      
+      .map__frame iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      
+      /* Chat Widget */
+      .chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+      
+      .chat-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        transition: var(--transition);
+      }
+      
+      .chat-notification {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .chat-window {
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background-color: var(--white);
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+      }
+      
+      .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+      
+      .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .chat-logo {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      
+      .chat-status {
+        font-size: 0.8rem;
+      }
+      
+      .chat-status.online::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #2ECC71;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+      
+      .chat-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      
+      .chat-action-btn {
+        background: none;
+        border: none;
+        color: var(--white);
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      
+      .chat-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .chat-tabs {
+        display: flex;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .chat-tab {
+        flex: 1;
+        padding: 0.8rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+      }
+      
+      .chat-tab.active {
+        border-bottom: 2px solid var(--primary-color);
+        color: var(--primary-color);
+      }
+      
+      .chat-panels {
+        flex: 1;
+        position: relative;
+      }
+      
+      .chat-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        overflow-y: auto;
+        display: none;
+      }
+      
+      .chat-panel.active {
+        display: block;
+      }
+      
+      .chat-messages {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 1rem;
+      }
+      
+      .chat-day-separator {
+        text-align: center;
+        margin: 0.5rem 0;
+        position: relative;
+      }
+      
+      .chat-day-separator span {
+        background-color: var(--white);
+        padding: 0 10px;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        position: relative;
+        z-index: 1;
+      }
+      
+      .chat-day-separator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #eee;
+        z-index: 0;
+      }
+      
+      .message {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .message.received {
+        align-items: flex-start;
+      }
+      
+      .message.sent {
+        align-items: flex-end;
+      }
+      
+      .message-bubble {
+        max-width: 80%;
+        padding: 0.8rem 1rem;
+        border-radius: 1rem;
+        position: relative;
+      }
+      
+      .message.received .message-bubble {
+        background-color: #f0f0f0;
+        border-bottom-left-radius: 0;
+      }
+      
+      .message.sent .message-bubble {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-bottom-right-radius: 0;
+      }
+      
+      .message-time {
+        font-size: 0.7rem;
+        color: #999;
+        margin-top: 0.3rem;
+        align-self: flex-end;
+      }
+      
+      .message.sent .message-time {
+        color: #eee;
+      }
+      
+      .chat-input-area {
+        padding: 1rem;
+        border-top: 1px solid #eee;
+      }
+      
+      .chat-extras {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .chat-extra-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      
+      .chat-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #f0f0f0;
+        padding: 0.5rem;
+        border-radius: 2rem;
+      }
+      
+      #chatInput {
+        flex: 1;
+        border: none;
+        background: none;
+        padding: 0.5rem;
+        resize: none;
+      }
+      
+      #chatInput:focus {
+        outline: none;
+      }
+      
+      .send-button {
+        background-color: var(--primary-color);
+        border: none;
+        color: var(--white);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      
+      .quick-replies {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .quick-replies::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .quick-reply-btn {
+        background-color: #f0f0f0;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      
+      .quick-reply-btn:hover {
+        background-color: #e0e0e0;
+      }
+      
+      /* Footer */
+      .footer {
+        background-color: #222;
+        color: var(--white);
+        padding-top: 5rem;
+      }
+      
+      .footer__container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+      
+      .footer__col:first-child .logo img {
+        filter: brightness(0) invert(1);
+        height: 60px;
+        margin-bottom: 1rem;
+      }
+      
+      .footer__col h4 {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      
+      .footer__col h4::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        width: 50px;
+        height: 2px;
+        background-color: var(--primary-color);
+      }
+      
+      .footer__links {
+        list-style: none;
+      }
+      
+      .footer__links li {
+        margin-bottom: 0.8rem;
+      }
+      
+      .footer__links a {
+        color: #ccc;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+      
+      .footer__links a:hover {
+        color: var(--primary-color);
+        padding-left: 5px;
+      }
+      
+      .footer__bar {
+        padding: 1.5rem 5%;
+        text-align: center;
+        border-top: 1px solid #444;
+        margin-top: 4rem;
+        font-size: 0.9rem;
+        color: #999;
+      }
+      
+      /* Lightbox */
+      #lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 1001;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .lightbox__content {
+        max-width: 90%;
+        max-height: 90%;
+        margin: auto;
+      }
+      
+      .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 30px;
+        color: var(--white);
+        cursor: pointer;
+      }
+      
+      .nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--white);
+        font-size: 30px;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 50%;
+      }
+      
+      .prev {
+        left: 20px;
+      }
+      
+      .next {
+        right: 20px;
+      }
+      
+      /* Language Selector */
       .language-selector {
         display: flex;
         gap: 10px;
         margin-left: 20px;
         align-items: center;
       }
+      
       .language-flag {
         cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        font-size: 14px;
-        transition: all 0.3s ease;
-      }
-      .language-flag.active {
-        background-color: #6A0DAD;
-        color: white;
-      }
-      .language-flag:hover {
-        transform: scale(1.0);
+        width: 30px;
+        height: 20px;
+        border-radius: 3px;
+        overflow: hidden;
+        transition: var(--transition);
+        opacity: 0.7;
       }
 
-      /* Estilos para o botão de tema */
+      .language-flag:hover, .language-flag.active {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+      
+      /* Dark Mode Toggle */
       .theme-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #10B981;
-        border: none;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        cursor: pointer;
+        position: relative;
+        margin-left: 20px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        color: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        z-index: 1000;
-        transition: all 0.3s ease;
       }
-
-      .theme-toggle:hover {
-        transform: scale(1.1);
-        background: #047857;
+      
+      .theme-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
       }
-
-      /* Estilos para o modo escuro */
-      [data-theme="dark"] {
-        background-color: #1a1a1a;
-        color: #F9FAFB;
+      
+      .theme-slider {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 34px;
+        transition: var(--transition);
+        cursor: pointer;
       }
-
-      [data-theme="dark"] .header,
-      [data-theme="dark"] .booking__container,
-      [data-theme="dark"] .about__container,
-      [data-theme="dark"] .room__container,
-      [data-theme="dark"] .comodidades,
-      [data-theme="dark"] .footer {
-        background-color: #1a1a1a;
-        color: #F9FAFB;
+      
+      .theme-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: var(--transition);
       }
-
-      [data-theme="dark"] .nav__links a,
-      [data-theme="dark"] .section__header,
-      [data-theme="dark"] .section__subheader {
-        color: #F9FAFB;
+      
+      input:checked + .theme-slider {
+        background-color: var(--primary-color);
       }
-
-      [data-theme="dark"] .booking__form {
-        background: #2d2d2d;
+      
+      input:checked + .theme-slider:before {
+        transform: translateX(26px);
       }
-
-      [data-theme="dark"] .input__group {
-        background: #333333;
+      
+      .theme-icon {
+        margin: 0 8px;
+        color: var(--white);
+        font-size: 0.9rem;
       }
-
-      [data-theme="dark"] .input__group input,
-      [data-theme="dark"] .input__group label {
-        color: #F9FAFB;
+      
+      /* Mobile menu */
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--white);
+        font-size: 1.5rem;
+        cursor: pointer;
       }
-
-      [data-theme="dark"] .chat-window {
-        background: #2d2d2d;
-        color: #F9FAFB;
+      
+      /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0        }
       }
-
-      [data-theme="dark"] .chat-messages {
-        background: #333333;
-      }
-
-      [data-theme="dark"] .message-bubble {
-        background: #444444;
+      
+      /* Responsividade */
+      @media (max-width: 768px) {
+        .nav__links {
+          position: fixed;
+          top: 80px;
+          left: -100%;
+          width: 80%;
+          height: calc(100vh - 80px);
+          background-color: rgba(0, 0, 0, 0.9);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+          transition: var(--transition);
+          z-index: 999;
+        }
+        
+        .nav__links.active {
+          left: 0;
+        }
+        
+        .mobile-menu-btn {
+          display: block;
+        }
+        
+        .header__container h1 {
+          font-size: 2.5rem;
+        }
+        
+        .booking__form {
+          grid-template-columns: 1fr;
+        }
+        
+        .footer__container {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        
+        .footer__col h4::after {
+          left: 50%;
+          transform: translateX(-50%);
+        }
       }
     </style>
   </head>
-
-  <body>  
-    <!-- Cabeçalho da página -->
+  <body>
+    <!-- Header Section -->
     <header class="header">
-      <nav>   
-        <!-- Barra de navegação com logo e botão de menu -->
+      <nav>
         <div class="nav__bar">
-          <!-- Logo da página -->
           <div class="logo">
-            <a href="#"><img src="assets/logos/logotipo1.png" alt="logo"> </a>
+            <img src="assets/logos/logotipo1.png" alt="logo">
           </div>
-          <!-- Botão de menu para dispositivos móveis -->
-          <div class="nav__menu__btn" id="menu-btn">
+          <ul class="nav__links">
+            <li><a href="#home">Início</a></li>
+            <li><a href="#about">Sobre Nós</a></li>
+            <li><a href="#rooms">Quartos</a></li>
+            <li><a href="#gallery">Galeria</a></li>
+            <li><a href="#amenities">Comodidades</a></li>
+            <li><a href="#location">Localização</a></li>
+            <li><a href="#contact">Contactos</a></li>
+          </ul>
+          <div class="language-selector">
+            <img src="assets/flags/pt.png" alt="Português" class="language-flag active" title="Português">
+            <img src="assets/flags/en.png" alt="English" class="language-flag" title="English">
+            <img src="assets/flags/es.png" alt="Español" class="language-flag" title="Español">
+            <img src="assets/flags/fr.png" alt="Français" class="language-flag" title="Français">
+          </div>
+          <div class="theme-toggle">
+            <i class="ri-sun-line theme-icon"></i>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle">
+              <span class="theme-slider"></span>
+            </label>
+            <i class="ri-moon-line theme-icon"></i>
+          </div>
+          <button class="mobile-menu-btn">
             <i class="ri-menu-line"></i>
-          </div>
+          </button>
         </div>
-        <!-- Links de navegação para as seções da página -->
-        <ul class="nav__links" id="nav-links">
-          <li><a href="#home" class="lang" data-key="home">Quinta</a></li>
-          <li><a href="#about" class="lang" data-key="about">Sobre Nós</a></li>
-          <li><a href="#comodidades" class="lang" data-key="amenities">Comodidades</a></li>
-          <li><a href="#contactos" class="lang" data-key="contacts">Contactos</a></li>
-        </ul>
-        
-        <!-- Seletor de idiomas -->
-        <div class="language-selector">
-          <div class="language-flag active" data-lang="pt">
-            <img src="assets/flags/pt.png" alt="Português">
-          </div>
-          <div class="language-flag" data-lang="en">
-            <img src="assets/flags/en.png" alt="English">
-          </div>
-          <div class="language-flag" data-lang="de">
-            <img src="assets/flags/de.png" alt="Deutsch">
-          </div>
-          <div class="language-flag" data-lang="fr">
-            <img src="assets/flags/fr.png" alt="Français">
-          </div>
-        </div>
- 
-        <!-- Botão de reserva que redireciona para a página de login -->
-        <a href="login1/pagina_login.php" class="animated-button1">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span class="lang" data-key="make_reservation">Fazer Reserva</span>
-        </a>
       </nav>
-      <!-- Cabeçalho com texto de boas-vindas -->
-      <div class="section__container header__container" id="home">
-        <p class="lang" data-key="tagline">Aconchegante - Autêntico - Sereno</p>
-        <h1 class="lang" data-key="title_main">Sossego e beleza <br /><span class="lang" data-key="title_location">Ponte de Lima</span> <span class="lang" data-key="title_ending">com certeza!</span></h1>
+      
+      <div class="header__container" id="home">
+        <p>Bem-vindo à</p>
+        <h1>QUINTA <span>FLORES</span></h1>
+        <a href="#booking" class="animated-button1">Reservar Agora</a>
       </div>
     </header>
-    <!-- Formulário de reserva -->
-    <section class="section__container booking__container">
-      <form action="/" class="booking__form">
-        <!-- Grupo de input para a data de check-in -->
+
+    <!-- Booking Section -->
+    <section class="booking__container" id="booking">
+      <form class="booking__form">
         <div class="input__group">
-          <span><i class="ri-calendar-2-fill"></i></span>
+          <span><i class="ri-calendar-line"></i></span>
           <div>
-            <label for="check-in" class="lang" data-key="check_in">CHECK-IN</label>
-            <input type="text" placeholder="Check In" class="lang" data-key="check_in" />
+            <label for="checkIn">Check In</label>
+            <input type="date" id="checkIn" required>
           </div>
         </div>
-        <!-- Grupo de input para a data de check-out -->
         <div class="input__group">
-          <span><i class="ri-calendar-2-fill"></i></span>
+          <span><i class="ri-calendar-line"></i></span>
           <div>
-            <label for="check-out" class="lang" data-key="check_out">CHECK-OUT</label>
-            <input type="text" placeholder="Check Out" class="lang" data-key="check_out" />
+            <label for="checkOut">Check Out</label>
+            <input type="date" id="checkOut" required>
           </div>
         </div>
-        <!-- Grupo de input para o número de convidados -->
         <div class="input__group">
-          <span><i class="ri-user-fill"></i></span>
+          <span><i class="ri-user-line"></i></span>
           <div>
-            <label for="guest" class="lang" data-key="guests">Convidados</label>
-            <input type="text" placeholder="Guest" class="lang" data-key="guests" />
+            <label for="guests">Hóspedes</label>
+            <input type="number" id="guests" min="1" value="2" required>
           </div>
         </div>
-        <!-- Botão para confirmar a reserva -->
         <div class="input__group input__btn">
-          <a href="./index/confira.php" class="animated-button1">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span class="lang" data-key="check_availability">Confira</span>
-          </a>
+          <button type="submit" class="btn">Ver Disponibilidade</button>
         </div>
       </form>
     </section>
-    <!-- Seção "Sobre Nós" -->
+
+    <!-- About Section -->
     <section class="section__container about__container" id="about">
-      <!-- Imagem da entrada da quinta -->
       <div class="about__image">
-        <img src="assets/images/entrada.jpg" alt="entrada" />
+        <img src="assets/images/about.webp" alt="sobre nós">
       </div>
-      <!-- Conteúdo textual da seção "Sobre Nós" -->
       <div class="about__content">
-        <p class="section__subheader lang" data-key="about_subtitle">SOBRE NÓS</p>
-        <h2 class="section__header lang" data-key="about_title">O melhor sítio para relaxar e passar as férias é aqui!</h2>
-        <p class="section__description lang" data-key="about_description">
-          Se procura um local tranquilo, rodeado pela beleza natural e com muito espaço para descansar e recarregar energias, o nosso alojamento local é o lugar ideal para si. Situado em um ambiente sereno e relaxante, oferecemos o refúgio perfeito para famílias, amigos, casais e até para quem deseja celebrar momentos especiais.
+        <p class="section__subheader">SOBRE NÓS</p>
+        <h2 class="section__header">Descubra a Nossa História</h2>
+        <p class="section__description">
+          Localizada no coração do Minho, a Quinta Flores é um refúgio de paz e tranquilidade, onde a tradição minhota se encontra com o conforto moderno. Nossa propriedade familiar acolhe hóspedes desde 1985, oferecendo uma experiência autêntica da vida rural portuguesa.
         </p>
-        <!-- Botão para ler mais informações -->
-        <div class="about__btn">
-          <a href="index/lermais.html">
-            <button class="btn lang" data-key="read_more">Ler mais</button>
-          </a>
-        </div>
-      </div>
-    </section>
-    <!-- Seção de imagens (Carrossel) -->
-    <section class="section__container room__container">
-      <p class="section__subheader">Fotos que vão despertar o seu interesse:</p>
-      <h2 class="section__header"></h2>
-      <div class="slider">
-        <div class="carousel-container">
-          <div class="carousel">
-            <div class="carousel-slide"><img src="assets/images/foto_principal_1.jpeg" alt="Slide 1"></div>
-            <div class="carousel-slide"><img src="assets/images/foto_principal_2.jpeg." alt="Slide 2"></div>
-            <div class="carousel-slide"><img src="assets/images/foto_principal_3.png" alt="Slide 3"></div>
-            <div class="carousel-slide"><img src="assets/images/foto_principal_4.jpg" alt="Slide 4"></div>
-            <div class="carousel-slide"><img src="assets/images/5.png" alt="Slide 5"></div>
-            <div class="carousel-slide"><img src="assets/images/6.png" alt="Slide 6"></div>
-            <div class="carousel-slide"><img src="assets/images/7.png" alt="Slide 7"></div>
-            <div class="carousel-slide"><img src="assets/images/8.png" alt="Slide 8"></div>
-            <div class="carousel-slide"><img src="assets/images/9.png" alt="Slide 9"></div>
-            <div class="carousel-slide"><img src="assets/images/10.png" alt="Slide 10"></div>
-            <div class="carousel-slide"><img src="assets/images/11.png" alt="Slide 11"></div>
-            <div class="carousel-slide"><img src="assets/images/12.png" alt="Slide 12"></div>
-            <div class="carousel-slide"><img src="assets/images/13.png" alt="Slide 13"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0022.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0023.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0024.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0025.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0027.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0030.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0034.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0030.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/IMG-20250424-WA0035.jpg" alt="Slide 18"></div>
-            <div class="carousel-slide"><img src="assets/images/14.png" alt="Slide 14"></div>
-            <div class="carousel-slide"><img src="assets/images/15.png" alt="Slide 15"></div>
-            <div class="carousel-slide"><img src="assets/images/16.png" alt="Slide 16"></div>
-            <div class="carousel-slide"><img src="assets/images/17.png" alt="Slide 17"></div>
-            <div class="carousel-slide"><img src="assets/images/18.png" alt="Slide 18"></div>
-          </div>
-          <!-- Botões de navegação -->
-          <div class="button prev">
-            <a href="#" onclick="moveSlide(event, -1)" class="custom-button" aria-label="Anterior">
-              &#10094;
-            </a>
-          </div>
-          <div class="button next">
-            <a href="#" onclick="moveSlide(event, 1)" class="custom-button" aria-label="Próximo">
-              &#10095;
-            </a>
-          </div>
-        </div>
+        <p class="section__description">
+          Com jardins exuberantes, vinhas tradicionais e uma vista deslumbrante sobre o vale do Lima, nosso alojamento local é o local perfeito para relaxar e recarregar energias.
+        </p>
+        <button class="btn">Saiba Mais</button>
       </div>
     </section>
 
-    <script>
-      let index = 0;
-      function moveSlide(event, step) {
-        event.preventDefault(); // Evita que a página role para o topo
-        const carousel = document.querySelector('.carousel');
-        const slides = document.querySelectorAll('.carousel-slide');
-        const slideWidth = document.querySelector('.carousel-container').offsetWidth;
+    <!-- Rooms Section -->
+    <section class="section__container rooms__container" id="rooms">
+      <p class="section__subheader">OS NOSSOS QUARTOS</p>
+      <h2 class="section__header">Alojamento Confortável</h2>
+      <div class="rooms__grid">
+        <div class="room__card">
+          <div class="room__image">
+            <img src="assets/images/room1.webp" alt="Quarto Standard">
+          </div>
+          <div class="room__content">
+            <h3 class="room__title">Quarto Standard</h3>
+            <div class="room__details">
+              <div class="room__detail">
+                <i class="ri-user-line"></i>
+                <span>2 pessoas</span>
+              </div>
+              <div class="room__detail">
+                <i class="ri-home-4-line"></i>
+                <span>25m²</span>
+              </div>
+            </div>
+            <p class="room__description">
+              Quarto aconchegante com vista para o jardim, equipado com cama de casal, casa de banho privativa e varanda.
+            </p>
+            <p class="room__price">€85<span>/noite</span></p>
+            <button class="btn">Reservar</button>
+          </div>
+        </div>
+        
+        <div class="room__card">
+          <div class="room__image">
+            <img src="assets/images/room2.webp" alt="Quarto Superior">
+          </div>
+          <div class="room__content">
+            <h3 class="room__title">Quarto Superior</h3>
+            <div class="room__details">
+              <div class="room__detail">
+                <i class="ri-user-line"></i>
+                <span>2-3 pessoas</span>
+              </div>
+              <div class="room__detail">
+                <i class="ri-home-4-line"></i>
+                <span>35m²</span>
+              </div>
+            </div>
+            <p class="room__description">
+              Espaçoso quarto com vista para o vale, cama king-size, área de estar e casa de banho com banheira.
+            </p>
+            <p class="room__price">€120<span>/noite</span></p>
+            <button class="btn">Reservar</button>
+          </div>
+        </div>
+        
+        <div class="room__card">
+          <div class="room__image">
+            <img src="assets/images/room3.webp" alt="Suite Familiar">
+          </div>
+          <div class="room__content">
+            <h3 class="room__title">Suite Familiar</h3>
+            <div class="room__details">
+              <div class="room__detail">
+                <i class="ri-user-line"></i>
+                <span>4 pessoas</span>
+              </div>
+              <div class="room__detail">
+                <i class="ri-home-4-line"></i>
+                <span>50m²</span>
+              </div>
+            </div>
+            <p class="room__description">
+              Amplo apartamento com dois quartos, sala de estar completa e cozinha equipada, ideal para famílias.
+            </p>
+            <p class="room__price">€160<span>/noite</span></p>
+            <button class="btn">Reservar</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        index = (index + step + slides.length) % slides.length;
-        carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-      }
-      // Ajuste automático ao redimensionar a tela
-      window.addEventListener('resize', () => {
-        const carousel = document.querySelector('.carousel');
-        const slideWidth = document.querySelector('.carousel-container').offsetWidth;
-        carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-      });
-    </script>
+    <!-- Gallery Section -->
+    <section class="section__container gallery__container" id="gallery">
+      <p class="section__subheader">GALERIA</p>
+      <h2 class="section__header">Explore o Nosso Espaço</h2>
+      <div class="gallery__controls">
+        <button class="gallery__filter active" data-filter="all">Tudo</button>
+        <button class="gallery__filter" data-filter="rooms">Quartos</button>
+        <button class="gallery__filter" data-filter="areas">Áreas Comuns</button>
+        <button class="gallery__filter" data-filter="nature">Natureza</button>
+      </div>
+      <div class="gallery__grid">
+        <div class="gallery__item" data-category="rooms">
+          <img src="assets/images/gallery1.webp" alt="Quarto">
+        </div>
+        <div class="gallery__item" data-category="areas">
+          <img src="assets/images/gallery2.webp" alt="Piscina">
+        </div>
+        <div class="gallery__item" data-category="nature">
+          <img src="assets/images/gallery3.webp" alt="Vinhas">
+        </div>
+        <div class="gallery__item" data-category="rooms">
+          <img src="assets/images/gallery4.webp" alt="Casa de banho">
+        </div>
+        <div class="gallery__item" data-category="areas">
+          <img src="assets/images/gallery5.webp" alt="Jardim">
+        </div>
+        <div class="gallery__item" data-category="nature">
+          <img src="assets/images/gallery6.webp" alt="Vale do Lima">
+        </div>
+      </div>
+    </section>
 
-    <style>
-      html {
-        scroll-behavior: smooth;
-      }
-
-      /* Estilo do carrossel */
-      .carousel-container {
-        max-width: 900px;
-        margin: auto;
-        overflow: hidden;
-        position: relative;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-      }
-      .carousel {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-      }
-      .carousel-slide {
-        flex: 0 0 100%;
-      }
-      .carousel-slide img {
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
-        border-radius: 10px;
-      }
-
-      /* Estilos dos botões personalizados */
-      .custom-button {
-        background-color: #6A0DAD;
-        color: #FFFFFF;
-        font-family: Open Sans, system-ui, sans-serif;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        cursor: pointer;
-        font-weight: normal;
-        border: 1px solid #0e0b0d;
-        transition: all 0.3s ease;
-      }
-
-      .custom-button:hover {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        filter: brightness(110%);
-        transform: scale(0.95);
-      }
-
-      /* Posicionamento dos botões */
-      .button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        display: inline-block;
-        z-index: 10;
-      }
-
-      .prev {
-        left: 10px;
-      }
-
-      .next {
-        right: 10px;
-      }
-
-      /* Ajuste para telas menores */
-      @media (max-width: 768px) {
-        .custom-button {
-          font-size: 18px;
-          padding: 8px 12px;
-        }
-        .language-selector {
-          margin-left: 10px;
-          gap: 5px;
-        }
-        .language-flag {
-          padding: 3px 6px;
-          font-size: 12px;
-        }
-      }
-    </style>
-    <!-- Seção de comodidades -->
-    <section class="comodidades" id="comodidades">
+    <!-- Amenities Section -->
+    <section class="section__container comodidades" id="amenities">
+      <p class="section__subheader">COMODIDADES</p>
+      <h2 class="section__header">O Que Oferecemos</h2>
       <div class="comodidades__container">
-        <p class="section__subheader lang" data-key="amenities_subtitle">Comodidades</p>
-        <h2 class="section__header lang" data-key="amenities_title">Tudo o que precisa para uma estadia inesquecível</h2>
-        <!-- Lista de comodidades oferecidas -->
-        <ul class="comodidades__list">
+        <div class="comodidades__list">
           <li>
             <i class="ri-wifi-line"></i>
-            <span class="lang" data-key="wifi">Wi-Fi gratuito em todas as áreas</span>
+            <span>Wi-Fi Gratuito</span>
           </li>
           <li>
-            <i class="ri-parking-box-line"></i>
-            <span class="lang" data-key="parking">Estacionamento privado e gratuito</span>
+            <i class="ri-swimming-pool-line"></i>
+            <span>Piscina Exterior</span>
           </li>
           <li>
-            <i class="fa-solid fa-water-ladder"></i>
-            <span class="lang" data-key="pool">Piscina ao ar livre com espreguiçadeiras</span>
+            <i class="ri-car-line"></i>
+            <span>Estacionamento Gratuito</span>
           </li>
           <li>
-            <i class="ri-hand-heart-line"></i>
-            <span class="lang" data-key="family">Espaço acolhedor e adequado para famílias</span>
+            <i class="ri-restaurant-line"></i>
+            <span>Pequeno-almoço Regional</span>
           </li>
           <li>
-            <i class="fa-solid fa-fire"></i>
-            <span class="lang" data-key="barbecue">Churrasqueira disponível</span>
+            <i class="ri-bike-line"></i>
+            <span>Bicicletas Disponíveis</span>
           </li>
           <li>
-            <i class="fa-solid fa-gamepad"></i>
-            <span class="lang" data-key="games">Brinquedos e jogos para crianças</span>
+            <i class="ri-spa-line"></i>
+            <span>Massagens (sob marcação)</span>
           </li>
-          <li>
-            <i class="fa-solid fa-hiking"></i>
-            <span class="lang" data-key="trails">Trilhos para caminhadas</span>
-          </li>
-          <li>
-            <i class="fa-solid fa-campground"></i>
-            <span class="lang" data-key="camping">Área para acampar</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-    <!-- Lightbox para visualização de imagens ampliadas -->
-    <div id="lightbox" onclick="closeLightbox()">
-        <span class="close">&times;</span>
-        <img id="lightboxImage" class="lightbox__content" src="">
-        <!-- Setas de navegação para o lightbox -->
-        <span class="nav prev" onclick="navigate(-1)">&#10094;</span>
-        <span class="nav next" onclick="navigate(1)">&#10095;</span>
-      </div>
-        </div>
-        <div id="lightbox" onclick="closeLightbox()">
-          <span class="close">&times;</span>
-          <img id="lightboxImage" class="lightbox__content" src="">
-
         </div>
       </div>
     </section>
-<!-- Widget de Chat Interativo - Quinta Flores -->
-<div id="chatWidget" class="chat-widget">
-  <!-- Botão de chat flutuante -->
-  <button id="chatButton" class="chat-button">
-    <i class="ri-chat-3-fill"></i>
-    <span class="chat-notification" id="chatNotification">1</span>
-  </button>
 
-  <!-- Janela de chat completa -->
-  <div id="chatWindow" class="chat-window">
-    <!-- Cabeçalho do chat -->
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chat-logo">
-        <div>
+    <!-- Testimonials Section -->
+    <section class="section__container testimonials" id="testimonials">
+      <p class="section__subheader">DEPOIMENTOS</p>
+      <h2 class="section__header">O Que Dizem os Nossos Hóspedes</h2>
+      <div class="testimonial__container">
+        <div class="testimonial__grid">
+          <div class="testimonial__card">
+            <div class="testimonial__quote">"</div>
+            <p class="testimonial__text">
+              A Quinta Flores superou todas as nossas expectativas. O local é lindo, os quartos impecáveis e o pequeno-almoço delicioso com produtos regionais. Voltaremos com certeza!
+            </p>
+            <div class="testimonial__author">
+              <img src="assets/images/testimonial1.webp" alt="Ana Silva">
+              <div class="author__info">
+                <h4>Ana Silva</h4>
+                <p>Porto, Portugal</p>
+                <div class="rating">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial__card">
+            <div class="testimonial__quote">"</div>
+            <p class="testimonial__text">
+              Foi nossa segunda estadia e foi tão boa quanto a primeira. A atenção da equipa é excepcional e adoramos os passeios sugeridos pela região. Recomendamos!
+            </p>
+            <div class="testimonial__author">
+              <img src="assets/images/testimonial2.webp" alt="Carlos Mendes">
+              <div class="author__info">
+                <h4>Carlos Mendes</h4>
+                <p>Lisboa, Portugal</p>
+                <div class="rating">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial__card">
+            <div class="testimonial__quote">"</div>
+            <p class="testimonial__text">
+              Perfect place to experience authentic Portuguese countryside. The owners are lovely and made us feel at home. The pool area is fantastic with amazing views.
+            </p>
+            <div class="testimonial__author">
+              <img src="assets/images/testimonial3.webp" alt="Emma Johnson">
+              <div class="author__info">
+                <h4>Emma Johnson</h4>
+                <p>London, UK</p>
+                <div class="rating">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="section__container location" id="location">
+      <p class="section__subheader">LOCALIZAÇÃO</p>
+      <h2 class="section__header">Como Chegar</h2>
+      <div class="map__container">
+        <div class="map__info">
           <h3>Quinta Flores</h3>
-          <p id="chatStatus" class="chat-status online">Online</p>
-        </div>
-      </div>
-      <div class="chat-actions">
-        <button id="minimizeChat" class="chat-action-btn">
-          <i class="ri-subtract-line"></i>
-        </button>
-        <button id="closeChat" class="chat-action-btn">
-          <i class="ri-close-line"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Corpo do chat com abas -->
-    <div class="chat-body">
-      <!-- Abas de navegação -->
-      <div class="chat-tabs">
-        <button class="chat-tab active" data-tab="messages">
-          <i class="ri-message-3-line"></i> Chat
-        </button>
-        <button class="chat-tab" data-tab="booking">
-          <i class="ri-calendar-check-line"></i> Reserva
-        </button>
-        <button class="chat-tab" data-tab="faq">
-          <i class="ri-question-line"></i> FAQ
-        </button>
-      </div>
-
-      <!-- Painéis de conteúdo -->
-      <div class="chat-panels">
-        <!-- Painel de mensagens -->
-        <div class="chat-panel active" id="messagesPanel">
-          <div id="chatMessages" class="chat-messages">
-            <div class="chat-day-separator">
-              <span id="chatDate">Hoje</span>
-            </div>
-            <div class="message received">
-              <div class="message-bubble">
-                <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudar você hoje?</p>
-                <span class="message-time">10:00</span>
-              </div>
-            </div>
+          <div class="location__detail">
+            <i class="ri-map-pin-line"></i>
+            <span>Rua da Quinta, 123, Ponte de Lima, Portugal</span>
+          </div>
+          <div class="location__detail">
+            <i class="ri-phone-line"></i>
+            <span>+351 258 123 456</span>
+          </div>
+          <div class="location__detail">
+            <i class="ri-mail-line"></i>
+            <span>info@quintaflores.pt</span>
+          </div>
+          <div class="location__detail">
+            <i class="ri-car-line"></i>
+            <span>45 min do Aeroporto do Porto (OPO)</span>
+          </div>
+          <div class="location__detail">
+            <i class="ri-train-line"></i>
+            <span>Estação de Ponte de Lima a 10 min</span>
           </div>
         </div>
+        <div class="map__frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2984.373647071926!2d-8.5847886845692!3d41.61519697924639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd245fe5e8e1a5a5%3A0x9c8d1b3d3c4d5e6f!2sPonte%20de%20Lima!5e0!3m2!1spt-PT!2spt!4v1620000000000!5m2!1spt-PT!2spt" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
 
-        <!-- Painel de reserva rápida -->
-        <div class="chat-panel" id="bookingPanel">
-          <div class="quick-booking">
-            <h4>Reserva Rápida</h4>
-            <form id="quickBookingForm">
-              <div class="booking-dates">
-                <div class="form-group">
-                  <label for="checkInDate">Check-in</label>
-                  <input type="date" id="checkInDate" min="" required>
+    <!-- Contact Section -->
+    <section class="section__container contact" id="contact">
+      <p class="section__subheader">CONTACTOS</p>
+      <h2 class="section__header">Fale Connosco</h2>
+      <div class="contact__container">
+        <form class="contact__form">
+          <div class="input__group">
+            <input type="text" placeholder="Nome" required>
+          </div>
+          <div class="input__group">
+            <input type="email" placeholder="Email" required>
+          </div>
+          <div class="input__group">
+            <input type="tel" placeholder="Telefone">
+          </div>
+          <div class="input__group">
+            <textarea rows="4" placeholder="Mensagem" required></textarea>
+          </div>
+          <button type="submit" class="btn">Enviar Mensagem</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+      <button class="chat-button">
+        <i class="ri-chat-3-line"></i>
+        <span class="chat-notification">1</span>
+      </button>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chat-logo">
+            <div>
+              <h4>Quinta Flores</h4>
+              <p class="chat-status online">Online</p>
+            </div>
+          </div>
+          <div class="chat-actions">
+            <button class="chat-action-btn">
+              <i class="ri-close-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div class="chat-tabs">
+            <button class="chat-tab active">Chat</button>
+            <button class="chat-tab">FAQ</button>
+          </div>
+          <div class="chat-panels">
+            <div class="chat-panel active">
+              <div class="chat-messages">
+                <div class="chat-day-separator">
+                  <span>Hoje</span>
                 </div>
-                <div class="form-group">
-                  <label for="checkOutDate">Check-out</label>
-                  <input type="date" id="checkOutDate" min="" required>
+                <div class="message received">
+                  <div class="message-bubble">
+                    Olá! Como podemos ajudar?
+                  </div>
+                  <div class="message-time">10:30</div>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="guestCount">Número de hóspedes</label>
-                <select id="guestCount">
-                  <option value="1">1 hóspede</option>
-                  <option value="2" selected>2 hóspedes</option>
-                  <option value="3">3 hóspedes</option>
-                  <option value="4">4 hóspedes</option>
-                  <option value="5">5 hóspedes</option>
-                  <option value="6">6+ hóspedes</option>
-                </select>
+              <div class="quick-replies">
+                <button class="quick-reply-btn">Disponibilidade</button>
+                <button class="quick-reply-btn">Preços</button>
+                <button class="quick-reply-btn">Localização</button>
               </div>
-              <button type="submit" class="booking-btn">Verificar disponibilidade</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Painel de FAQ -->
-        <div class="chat-panel" id="faqPanel">
-          <div class="faq-list">
-            <h4>Perguntas Frequentes</h4>
-            <div class="faq-accordion">
-              <div class="faq-item">
-                <div class="faq-question">Qual o horário de check-in e check-out?</div>
-                <div class="faq-answer">O check-in é a partir das 15h00 e o check-out até as 11h00. Horários diferentes podem ser acordados previamente, dependendo da disponibilidade.</div>
+              <div class="chat-input-area">
+                <div class="chat-extras">
+                  <button class="chat-extra-btn">
+                    <i class="ri-emotion-line"></i>
+                  </button>
+                  <button class="chat-extra-btn">
+                    <i class="ri-image-line"></i>
+                  </button>
+                </div>
+                <div class="chat-input-wrapper">
+                  <textarea id="chatInput" placeholder="Escreva a sua mensagem..."></textarea>
+                  <button class="send-button">
+                    <i class="ri-send-plane-line"></i>
+                  </button>
+                </div>
               </div>
-              <div class="faq-item">
-                <div class="faq-question">A Quinta aceita animais de estimação?</div>
-                <div class="faq-answer">Sim, aceitamos animais de estimação de pequeno e médio porte mediante consulta prévia e algumas regras específicas.</div>
-              </div>
-              <div class="faq-item">
-                <div class="faq-question">Como funciona o estacionamento?</div>
-                <div class="faq-answer">Oferecemos estacionamento gratuito e privativo dentro da propriedade para todos os hóspedes.</div>
-              </div>
-              <div class="faq-item">
-                <div class="faq-question">Que atividades posso fazer na região?</div>
-                <div class="faq-answer">A região oferece diversas atividades como trilhos pedestres, ciclovias, visitas a monumentos históricos, degustação de vinhos e gastronomia local. Temos guias e recomendações personnaol rizoaddaapsé  pdaor as intoessos hóspedes.s.</div>
+            </div>
+            <div class="chat-panel">
+              <div class="faq-list">
+                <!-- FAQ content would go here -->
               </div>
             </div>
           </div>
@@ -566,135 +1556,278 @@
       </div>
     </div>
 
-    <!-- Área para digitar mensagens -->
-    <div class="chat-input-area">
-      <div class="chat-extras">
-        <button class="chat-extra-btn" id="attachButton">
-          <i class="ri-attachment-2"></i>
-        </button>
-        <button class="chat-extra-btn" id="emojiButton">
-          <i class="ri-emoji-sticker-line"></i>
-        </button>
-      </div>
-      <div class="chat-input-wrapper">
-        <textarea id="chatInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
-        <button id="sendMessage" class="send-button">
-          <i class="ri-send-plane-fill"></i>
-        </button>
+    <!-- Lightbox -->
+    <div id="lightbox">
+      <span class="close">&times;</span>
+      <span class="nav prev">&lt;</span>
+      <span class="nav next">&gt;</span>
+      <div class="lightbox__content">
+        <img src="" alt="Lightbox Image">
       </div>
     </div>
 
-    <!-- Sugestões de mensagens rápidas -->
-    <div class="quick-replies">
-      <button class="quick-reply-btn">Quero fazer uma reserva</button>
-      <button class="quick-reply-btn">Ver disponibilidade</button>
-      <button class="quick-reply-btn">Horário check-in</button>
-      <button class="quick-reply-btn">Onde fica o alojamento?</button>
-    </div>
-  </div>
-</div>
-    <!-- Rodapé da página -->
-    <footer class="footer" id="contactos">
+    <!-- Footer -->
+    <footer class="footer">
       <div class="section__container footer__container">
-        <!-- Primeira coluna do rodapé: Logo e descrição -->
         <div class="footer__col">
           <div class="logo">
-            <a href="#contactos"><img src="assets/logos/logotipo1.png" alt="logo" /></a>
+            <img src="assets/logos/logotipo1.png" alt="logo">
           </div>
-          <p class="section__description">
-            Viva uma experiência única de conforto e hospitalidade no nosso alojamento local, onde cada detalhe foi pensado para tornar a sua estadia inesquecível. Explore a tranquilidade, a beleza e a cultura da região enquanto desfruta de momentos de puro relaxamento.
+          <p>
+            A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.
           </p>
-          <!-- Botão para reservar -->
-          <a href="login1/pagina_login.php" class="animated-button1">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span class="lang" data-key="make_reservation">Fazer Reserva</span>
-          </a>
+          <div class="footer__socials">
+            <a href="#"><i class="ri-facebook-fill"></i></a>
+            <a href="#"><i class="ri-instagram-line"></i></a>
+            <a href="#"><i class="ri-pinterest-line"></i></a>
+          </div>
         </div>
-        <!-- Segunda coluna do rodapé: Links sobre Ponte de Lima -->
         <div class="footer__col">
-          <h4>Descubra Ponte de Lima</h4>
+          <h4>Links Rápidos</h4>
           <ul class="footer__links">
-            <li><a href="rodape/atracoes.html">Atrações e Atividades Locais</a></li>
-            <li><a href="rodape/gastronomia.html">Gastronomia e Restaurantes</a></li>
-            <li><a href="rodape/visitar.html">O que visitar no conselho de Ponte de Lima</a></li>
-            <li><a href="rodape/trilhos.html">Trilhos e Percursos</a></li>          
+            <li><a href="#home">Início</a></li>
+            <li><a href="#about">Sobre Nós</a></li>
+            <li><a href="#rooms">Quartos</a></li>
+            <li><a href="#gallery">Galeria</a></li>
+            <li><a href="#amenities">Comodidades</a></li>
+            <li><a href="#location">Localização</a></li>
+            <li><a href="#contact">Contactos</a></li>
           </ul>
         </div>
-        <!-- Terceira coluna do rodapé: Serviços oferecidos -->
         <div class="footer__col">
-          <h4>NOSSOS SERVIÇOS</h4>
+          <h4>Informações</h4>
           <ul class="footer__links">
-            <li><a href="#">Atendimento Personalizado</a></li>
-            <li><a href="#">Opções de Reserva Flexíveis</a></li>
-            <li><a href="#">Transferes para o Aeroporto</a></li>
-            <li><a href="#">Experiências Locais & Lazer</a></li>
-            <li><a href="#">Serviço de Limpeza Diário</a></li>
-            <li><a href="#">Guias Locais e Dicas Personalizadas</a></li>
-          </ul>          
-        </div>
-        <!-- Quarta coluna do rodapé: Informações de contato -->
-        <div class="footer__col">
-          <h4>CONTACTOS</h4>
-          <ul class="footer__links">
-            <li>
-              <a href="mailto:quinta.flores19@gmail.com?subject=Tenho agumas duvidas sobre a quinta&body=Gostaria de mais informações">quinta.flores19@gmail.com</a>
-          </li>                    
-            <li>
-              <a href="https://wa.me/351912418976" target="_blank" rel="noopener noreferrer">+351 912 418 976</a>
-          </li>
-            <li><a href="https://www.instagram.com/quintaflores19?igsh=MTAzbXg0OXB3emducA==" target="_blank">@quintaflores19</a></li>
+            <li><a href="#">Política de Privacidade</a></li>
+            <li><a href="#">Termos e Condições</a></li>
+            <li><a href="#">Política de Cancelamento</a></li>
+            <li><a href="#">FAQ</a></li>
           </ul>
-            </a>
         </div>
+        <div class="footer__col">
+          <h4>Contactos</h4>
+          <ul class="footer__links">
+            <li>
+              <i class="ri-map-pin-line"></i>
+              <span>Rua da Quinta, 123, Ponte de Lima, Portugal</span>
+            </li>
+            <li>
+              <i class="ri-phone-line"></i>
+              <span>+351 258 123 456</span>
+            </li>
+            <li>
+              <i class="ri-mail-line"></i>
+              <span>info@quintaflores.pt</span>
+            </li>
+          </ul>
         </div>
       </div>
-      <!-- Barra de direitos autorais no rodapé -->
-      <div class="footer__bar lang" data-key="copyright">
-        Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
+      <div class="footer__bar">
+        © 2023 Quinta Flores. Todos os direitos reservados.
       </div>
     </footer>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="index/main.js"></script>
-    <script src="index/chat.js"></script>
-    <script src="assets/i18n/translator.js"></script>
-    <!-- Botão de alternar tema -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="ri-sun-line"></i>
-    </button>
 
     <script>
-        // Função para alternar o tema
-        function toggleTheme() {
-            const html = document.documentElement;
-            const themeToggle = document.getElementById('themeToggle');
-            const currentTheme = html.getAttribute('data-theme');
-            const icon = themeToggle.querySelector('i');
+      // Mobile Menu Toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav__links');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+          ? '<i class="ri-close-line"></i>' 
+          : '<i class="ri-menu-line"></i>';
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
             
-            if (currentTheme === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                icon.className = 'ri-moon-line';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                html.setAttribute('data-theme', 'light');
-                icon.className = 'ri-sun-line';
-                localStorage.setItem('theme', 'light');
+            // Close mobile menu if open
+            if (navLinks.classList.contains('active')) {
+              navLinks.classList.remove('active');
+              mobileMenuBtn.innerHTML = '<i class="ri-menu-line"></i>';
             }
-        }
-
-        // Inicializar tema baseado na preferência salva
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            const themeToggle = document.getElementById('themeToggle');
-            const icon = themeToggle.querySelector('i');
-            
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
-            
-            themeToggle.addEventListener('click', toggleTheme);
+          }
         });
+      });
+      
+      // Theme Toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      themeToggle.checked = savedTheme === 'dark';
+      
+      themeToggle.addEventListener('change', () => {
+        const newTheme = themeToggle.checked ? 'dark' : 'light';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+      
+      // Language Selector
+      const languageFlags = document.querySelectorAll('.language-flag');
+      languageFlags.forEach(flag => {
+        flag.addEventListener('click', () => {
+          languageFlags.forEach(f => f.classList.remove('active'));
+          flag.classList.add('active');
+          // Here you would implement language change logic
+        });
+      });
+      
+      // Chat Widget Toggle
+      const chatButton = document.querySelector('.chat-button');
+      const chatWindow = document.querySelector('.chat-window');
+      
+      chatButton.addEventListener('click', () => {
+        chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+      });
+      
+      // Chat Tabs
+      const chatTabs = document.querySelectorAll('.chat-tab');
+      const chatPanels = document.querySelectorAll('.chat-panel');
+      
+      chatTabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          chatTabs.forEach(t => t.classList.remove('active'));
+          chatPanels.forEach(p => p.classList.remove('active'));
+          
+          tab.classList.add('active');
+          chatPanels[index].classList.add('active');
+        });
+      });
+      
+      // Gallery Filter
+      const galleryFilters = document.querySelectorAll('.gallery__filter');
+      const galleryItems = document.querySelectorAll('.gallery__item');
+      
+      galleryFilters.forEach(filter => {
+        filter.addEventListener('click', () => {
+          galleryFilters.forEach(f => f.classList.remove('active'));
+          filter.classList.add('active');
+          
+          const filterValue = filter.dataset.filter;
+          
+          galleryItems.forEach(item => {
+            if (filterValue === 'all' || item.dataset.category === filterValue) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+      
+      // Lightbox
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = lightbox.querySelector('img');
+      const closeBtn = lightbox.querySelector('.close');
+      const prevBtn = lightbox.querySelector('.prev');
+      const nextBtn = lightbox.querySelector('.next');
+      
+      // Open lightbox when gallery item is clicked
+      galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const imgSrc = item.querySelector('img').src;
+          lightboxImg.src = imgSrc;
+          lightbox.style.display = 'flex';
+        });
+      });
+      
+      // Close lightbox
+      closeBtn.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+      });
+      
+      // Click outside image to close
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.style.display = 'none';
+        }
+      });
+      
+      // Navigation between images (simplified)
+      let currentImageIndex = 0;
+      
+      function showImage(index) {
+        if (index >= galleryItems.length) index = 0;
+        if (index < 0) index = galleryItems.length - 1;
+        
+        currentImageIndex = index;
+        const imgSrc = galleryItems[index].querySelector('img').src;
+        lightboxImg.src = imgSrc;
+      }
+      
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showImage(currentImageIndex - 1);
+      });
+      
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showImage(currentImageIndex + 1);
+      });
+      
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display === 'flex') {
+          if (e.key === 'Escape') {
+            lightbox.style.display = 'none';
+          } else if (e.key === 'ArrowLeft') {
+            showImage(currentImageIndex - 1);
+          } else if (e.key === 'ArrowRight') {
+            showImage(currentImageIndex + 1);
+          }
+        }
+      });
+      
+      // Animation on scroll
+      const animateOnScroll = () => {
+        const elements = document.querySelectorAll('.section__container, .room__card, .testimonial__card');
+        
+        elements.forEach(element => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.3;
+          
+          if (elementPosition < screenPosition) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+          }
+        });
+      };
+      
+      // Set initial state for animated elements
+      document.querySelectorAll('.section__container, .room__card, .testimonial__card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      });
+      
+      window.addEventListener('scroll', animateOnScroll);
+      window.addEventListener('load', animateOnScroll);
+      
+      // Booking form date restrictions
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('checkIn').min = today;
+      
+      document.getElementById('checkIn').addEventListener('change', function() {
+        const checkInDate = new Date(this.value);
+        checkInDate.setDate(checkInDate.getDate() + 1);
+        const nextDay = checkInDate.toISOString().split('T')[0];
+        document.getElementById('checkOut').min = nextDay;
+      });
     </script>
   </body>
 </html>
