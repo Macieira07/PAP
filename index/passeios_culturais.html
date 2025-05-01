@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passeios Culturais | Quinta Flores - Ponte de Lima</title>
+    <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        :root {
+            --primary-color: #10B981;
+            --primary-color-dark: #047857;
+            --primary-color-light: #D1FAE5;
+            --accent-color: #FCD34D;
+            --text-dark: #111827;
+            --text-light: #6B7280;
+            --white: #F9FAFB;
+            --gray-light: #F3F4F6;
+            --transition: all 0.3s ease-in-out;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: "Playfair Display", serif;
+            font-weight: 700;
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 0;
+            background-color: rgba(255,255,255,0.98);
+        }
+
+        .nav__container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+        }
+
+        .header.scrolled .logo img {
+            height: 40px;
+        }
+
+        .nav__links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav__link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav__link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav__link:hover:after {
+            width: 100%;
+        }
+
+        .nav__cta {
+            padding: 0.7rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav__cta:hover {
+            background-color: var(--primary-color-dark);
+            transform: translateY(-3px);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../assets/images/passeios_culturais.avif');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            position: relative;
+        }
+
+        .hero__content {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero__title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .hero__subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in 0.5s forwards;
+            opacity: 0;
+        }
+
+        .hero__cta {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            animation: fadeIn 1s ease-in 1s forwards;
+            opacity: 0;
+        }
+
+        .hero__cta:hover {
+            background-color: var(--primary-color-dark);
+            transform: translateY(-5px);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--white);
+            animation: bounce 2s infinite;
+        }
+
+        /* Main Content */
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section__container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            color: var(--primary-color-dark);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Activities Section */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .activity-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .activity-card__image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .activity-card__content {
+            padding: 1.5rem;
+        }
+
+        .activity-card__title {
+            color: var(--primary-color-dark);
+            font-size: 1.3rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .activity-card__text {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .activity-card__details {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background-color: var(--primary-color-light);
+            border-radius: 8px;
+        }
+
+        .activity-card__detail {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-card__detail i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .activity-card__link {
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .activity-card__link:hover {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+        }
+
+        /* Features */
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            background-color: var(--gray-light);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            height: 250px;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 1rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        /* Map Section */
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin: 3rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            color: var(--white);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer__container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer__col h4 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer__links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer__link {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer__link a {
+            color: #a3a3a3;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer__link a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #333;
+            color: var(--white);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer__bar {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #a3a3a3;
+            font-size: 0.9rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .header {
+            background-color: rgba(18, 18, 18, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] .nav__link {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .hamburger {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .activity-card {
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .activity-card__title {
+            color: var(--primary-color);
+        }
+
+        [data-theme="dark"] .activity-card__text {
+            color: #b0b0b0;
+        }
+
+        [data-theme="dark"] .activity-card__details {
+            background-color: #2a2a2a;
+        }
+
+        [data-theme="dark"] .section-title {
+            color: var(--primary-color);
+        }
+
+        [data-theme="dark"] .section-subtitle {
+            color: #b0b0b0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-20px) translateX(-50%); }
+            60% { transform: translateY(-10px) translateX(-50%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero__title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav__links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background-color: var(--white);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            .nav__links.active {
+                transform: translateY(0);
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hero__title {
+                font-size: 2.5rem;
+            }
+
+            .hero__subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            [data-theme="dark"] .nav__links {
+                background-color: #1e1e1e;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header" id="header">
+        <div class="nav__container">
+            <div class="logo">
+                <a href="../index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
+            </div>
+            
+            <ul class="nav__links" id="navLinks">
+                <li><a href="../index.html#about" class="nav__link">Sobre</a></li>
+                <li><a href="../index.html#accommodation" class="nav__link">Acomodações</a></li>
+                <li><a href="../index.html#activities" class="nav__link">Experiências</a></li>
+                <li><a href="../index.html#gallery" class="nav__link">Galeria</a></li>
+                <li><a href="../index.html#testimonials" class="nav__link">Avaliações</a></li>
+                <li><a href="../index.html#contact" class="nav__link">Contato</a></li>
+                <li><a href="../login1/pagina_login.php" class="nav__link nav__cta">Reservar</a></li>
+            </ul>
+
+            <button class="hamburger" id="hamburger">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero__content">
+            <h1 class="hero__title">Passeios Culturais</h1>
+            <p class="hero__subtitle">Descubra as riquezas naturais e culturais de Calheiros e Ponte de Lima</p>
+            <a href="../login1/pagina_login.php" class="hero__cta">Reservar Agora</a>
+        </div>
+        <a href="#passeios" class="scroll-down">
+            <i class="ri-arrow-down-s-line"></i>
+        </a>
+    </section>
+
+    <!-- Passeios Section -->
+    <section class="section" id="passeios">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Passeios Naturais em Calheiros e Ponte de Lima</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Explore trilhas deslumbrantes e paisagens culturais únicas na região do Minho</p>
+
+            <div class="activities-grid">
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/percurso_lagoa.jpg" alt="Percurso da Lagoa" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Percurso da Lagoa</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: 1,57 km (circular)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Aproximadamente 45 minutos</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Fácil</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Lagoa de S. Pedro d'Arcos, observação de aves, nenúfares em flor e passadiços de madeira. Ideal para famílias e amantes da natureza.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../assets/images/percurso_rio.jpg" alt="Percurso do Rio" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Percurso do Rio</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: 2,9 km (circular)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Cerca de 1h30</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Fácil</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Rio Estorãos, bosques autóctones, avifauna e paisagens ribeirinhas. Perfeito para caminhadas relaxantes.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="../assets/images/percurso_agua.jpg" alt="Percurso da Água" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Percurso da Água</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: 12,5 km (circular)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Aproximadamente 6 horas</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Moderada</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Lagoa do Mimoso, Quinta de Pentieiros, pontes históricas e paisagens culturais. Uma imersão na natureza e cultura local.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/passadicos_bertiandos.jpg" alt="Passadiços e Lagoas de Bertiandos" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Passadiços e Lagoas de Bertiandos</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: 6,2 km (circular)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Cerca de 2 horas</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Baixa</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Passadiços de madeira, observação de aves e flora diversificada. Um passeio tranquilo em área protegida.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../assets/images/trilho_portelas.jpg" alt="Trilho das Portelas" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">PR14 - Trilho das Portelas</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: 14,7 km (circular)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Cerca de 5 horas</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Moderada</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Moinhos, riachos, miradouros naturais e vegetação autóctone. Ideal para quem busca uma conexão mais profunda com a natureza.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="../assets/images/rota_paisagens.jpg" alt="Rota das Paisagens Protegidas" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Rota das Paisagens Protegidas do Alto Minho</h3>
+                        <div class="activity-card__details">
+                            <div class="activity-card__detail">
+                                <i class="ri-map-pin-line"></i>
+                                <span>Distância: Cerca de 100 km (dividida em etapas)</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-time-line"></i>
+                                <span>Duração: Variável</span>
+                            </div>
+                            <div class="activity-card__detail">
+                                <i class="ri-bar-chart-line"></i>
+                                <span>Dificuldade: Variada</span>
+                            </div>
+                        </div>
+                        <p class="activity-card__text">Destaques: Conecta áreas protegidas como as Lagoas de Bertiandos, Corno de Bico e Serra d'Arga. Oferece experiências de natureza, cultura e gastronomia.</p>
+                        <a href="#" class="activity-card__link">Saiba mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Paço de Calheiros Section -->
+    <section class="section" style="background-color: var(--gray-light);">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Paço de Calheiros</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Um marco cultural e histórico na região de Ponte de Lima</p>
+
+            <div class="activities-grid">
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/paco_calheiros.jpg" alt="Paço de Calheiros" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Paço de Calheiros</h3>
+                        <p class="activity-card__text">Além dos percursos naturais, o Paço de Calheiros é uma atração imperdível. Esta casa senhorial do século XVII oferece vistas panorâmicas sobre o vale do Lima, jardins históricos e experiências de enoturismo. É um excelente ponto de partida para explorar os trilhos da região.</p>
+                        <ul class="features-list">
+                            <li>Arquitetura histórica do século XVII</li>
+                            <li>Jardins paisagísticos com vista para o vale do Lima</li>
+                            <li>Experiências de enoturismo com vinhos locais</li>
+                            <li>Visitas guiadas à casa senhorial</li>
+                            <li>Localização privilegiada para explorar os trilhos da região</li>
+                        </ul>
+                        <a href="#" class="activity-card__link">Visitar Website <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="section gallery-section">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Galeria de Imagens</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Momentos capturados nos passeios culturais de Calheiros e Ponte de Lima</p>
+
+            <div class="gallery">
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="../assets/images/galeria1.jpg" alt="Lagoa de S. Pedro d'Arcos">
+                    <div class="gallery-caption">Lagoa de S. Pedro d'Arcos</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/galeria2.jpg" alt="Passadiços de madeira">
+                    <div class="gallery-caption">Passadiços de madeira</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../assets/images/galeria3.jpg" alt="Rio Estorãos">
+                    <div class="gallery-caption">Rio Estorãos</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
+                    <img src="../assets/images/galeria4.jpg" alt="Lagoa do Mimoso">
+                    <div class="gallery-caption">Lagoa do Mimoso</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
+                    <img src="../assets/images/galeria5.jpg" alt="Ponte histórica">
+                    <div class="gallery-caption">Ponte histórica</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
+                    <img src="../assets/images/galeria6.jpg" alt="Passadiços de Bertiandos">
+                    <div class="gallery-caption">Passadiços de Bertiandos</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
+                    <img src="../assets/images/galeria7.jpg" alt="Moinhos tradicionais">
+                    <div class="gallery-caption">Moinhos tradicionais</div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
+                    <img src="../assets/images/galeria8.jpg" alt="Vista do Paço de Calheiros">
+                    <div class="gallery-caption">Vista do Paço de Calheiros</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="section">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Localização dos Passeios</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Explore no mapa os principais pontos de interesse cultural e natural da região</p>
+
+            <div class="map-container" data-aos="fade-up" data-aos-delay="200">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47893.81180278912!2d-8.614690644970705!3d41.76716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd25a6e2139e817f%3A0x400ebbde490c450!2sPonte%20de%20Lima!5e0!3m2!1spt-PT!2spt!4v1708106431705!5m2!1spt-PT!2spt" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer__col">
+                <h4>Quinta Flores</h4>
+                <p style="margin-bottom: 1rem; color: #a3a3a3;">Uma experiência única no coração do Minho, combinando tradição e conforto em um ambiente acolhedor.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="ri-facebook-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-instagram-line"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-twitter-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-youtube-fill"></i></a>
+                </div>
+            </div>
+            <div class="footer__col">
+                <h4>Links Úteis</h4>
+                <ul class="footer__links">
+                    <li class="footer__link"><a href="../index.html#about">Sobre Nós</a></li>
+                    <li class="footer__link"><a href="../index.html#accommodation">Acomodações</a></li>
+                    <li class="footer__link"><a href="../index.html#activities">Experiências</a></li>
+                    <li class="footer__link"><a href="../index.html#gallery">Galeria</a></li>
+                    <li class="footer__link"><a href="../index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h4>Passeios Culturais</h4>
+                <ul class="footer__links">
+                    <li class="footer__link"><a href="#passeios">Percurso da Lagoa</a></li>
+                    <li class="footer__link"><a href="#passeios">Percurso do Rio</a></li>
+                    <li class="footer__link"><a href="#passeios">Percurso da Água</a></li>
+                    <li class="footer__link"><a href="#passeios">Passadiços de Bertiandos</a></li>
+                    <li class="footer__link"><a href="#passeios">Trilho das Portelas</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h4>Newsletter</h4>
+                <p style="margin-bottom: 1rem; color: #a3a3a3;">Inscreva-se para receber nossas ofertas especiais e novidades.</p>
+                <form style="display: flex; margin-bottom: 1rem;">
+                    <input type="email" placeholder="Seu email" style="padding: 0.8rem; border-radius: 8px 0 0 8px; border: none; flex-grow: 1;">
+                    <button style="background-color: var(--primary-color); border: none; color: white; padding: 0 1rem; border-radius: 0 8px 8px 0; cursor: pointer;">
+                        <i class="ri-mail-send-line"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="footer__bar">
+            Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Botão de alternar tema -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="ri-sun-line"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Menu móvel
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const header = document.getElementById('header');
+            const navItems = document.querySelectorAll('.nav__link');
+
+            // Função para controlar o menu
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                hamburger.innerHTML = navLinks.classList.contains('active') 
+                    ? '<i class="ri-close-line"></i>' 
+                    : '<i class="ri-menu-line"></i>';
+            });
+
+            // Fechar menu ao clicar em um link
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.innerHTML = '<i class="ri-menu-line"></i>';
+                });
+            });
+
+            // Mudar estilo do header ao rolar
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Função para alternar o tema
+            function toggleTheme() {
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                const currentTheme = html.getAttribute('data-theme');
+                const icon = themeToggle.querySelector('i');
+                
+                if (currentTheme === 'light') {
+                    html.setAttribute('data-theme', 'dark');
+                    icon.className = 'ri-moon-line';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.setAttribute('data-theme', 'light');
+                    icon.className = 'ri-sun-line';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+
+            // Inicializar tema baseado na preferência salva
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            
+            themeToggle.addEventListener('click', toggleTheme);
+        });
+    </script>
+</body>
+</html>
