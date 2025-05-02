@@ -1,301 +1,361 @@
+// Chat IA para Quinta Flores
 document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const chatWidget = document.getElementById('chatWidget');
-    const chatButton = document.getElementById('chatButton');
-    const chatWindow = document.getElementById('chatWindow');
-    const minimizeChat = document.getElementById('minimizeChat');
-    const closeChat = document.getElementById('closeChat');
+    // Elementos do chat
+    const chatButton = document.querySelector('.chat-button');
+    const chatWindow = document.querySelector('.chat-window');
+    const chatCloseBtn = document.querySelector('.chat-action-btn');
     const chatInput = document.getElementById('chatInput');
-    const sendMessage = document.getElementById('sendMessage');
-    const chatMessages = document.getElementById('chatMessages');
-    const chatTabs = document.querySelectorAll('.chat-tab');
-    const chatPanels = document.querySelectorAll('.chat-panel');
-    const quickReplies = document.querySelectorAll('.quick-reply-btn');
-    const faqItems = document.querySelectorAll('.faq-item');
-    const quickBookingForm = document.getElementById('quickBookingForm');
-
-    // Initial state
-    let isOpen = false;
-    updateChatDate();
-    setMinDates();
-
-    // Open/Close chat window
+    const sendButton = document.querySelector('.send-button');
+    const chatMessages = document.querySelector('.chat-messages');
+    const quickReplyButtons = document.querySelectorAll('.quick-reply-btn');
+    const chatNotification = document.querySelector('.chat-notification');
+  
+    // Base de conhecimento da Quinta Flores
+    const knowledgeBase = {
+      // Informações gerais
+      greeting: ["Olá!", "Bem-vindo à Quinta Flores!", "Como posso ajudar?"],
+      goodbye: ["Até breve!", "Obrigado pelo contacto!", "Tenha um ótimo dia!"],
+      thanks: ["De nada!", "Estamos aqui para ajudar!", "É um prazer!"],
+      
+      // Sobre o alojamento
+      rooms: {
+        info: "Temos 3 quartos disponíveis: um quarto com suite e jacuzzi para 2 pessoas, e dois quartos para 4 pessoas cada que partilham casa de banho.",
+        suite: "O nosso quarto com suite tem 25m², cama de casal, jacuzzi privativo e varanda com vista para o jardim.",
+        quarto2: "O nosso quarto 2 tem 35m² e dispõe de duas camas de casal. Partilha casa de banho com o quarto vizinho.",
+        quarto3: "O nosso quarto 3 é um espaçoso quarto de 50m² com duas camas de casal, ideal para famílias ou pequenos grupos."
+      },
+      
+      // Disponibilidade e reservas
+      disponibilidade: "Para verificar disponibilidade, indique-nos as datas pretendidas e o número de pessoas, ou use o formulário de disponibilidade no topo da página.",
+      reservar: "Para fazer uma reserva, pode usar o botão 'Reservar Agora' no topo da página ou contactar-nos diretamente pelo telefone +351 912 418 976 ou email quinta.flores2019@gmail.com.",
+      
+      // Preços
+      precos: {
+        general: "Os nossos preços variam conforme a época do ano e o tipo de quarto.",
+        baixa: "Na época baixa (Novembro a Março), os preços começam em 75€ por noite.",
+        alta: "Na época alta (Abril a Outubro), os preços começam em 95€ por noite.",
+        suite: "O quarto com suite tem um acréscimo de 20€ por noite."
+      },
+      
+      // Localização e transportes
+      localizacao: "A Quinta Flores está localizada na Travessa da Seara 265, 4490-575 Calheiros, Ponte de Lima, Viana do Castelo, Portugal.",
+      chegar: "Estamos a 45 minutos do Aeroporto do Porto (OPO) e a 10 minutos da estação de Ponte de Lima.",
+      
+      // Comodidades
+      comodidades: "Oferecemos Wi-Fi gratuito, piscina exterior, estacionamento gratuito, pequeno-almoço regional, bicicletas disponíveis e massagens (sob marcação).",
+      
+      // Gastronomia e atividades
+      pequeno_almoco: "O nosso pequeno-almoço regional inclui produtos frescos locais, como pão caseiro, compotas artesanais, queijos regionais e frutas da época.",
+      atividades: "Na região pode desfrutar de passeios de bicicleta, caminhadas, visitas a vinhas, explorar o centro histórico de Ponte de Lima e muito mais.",
+      
+      // Políticas
+      check_in: "O check-in é das 15h00 às 20h00. Para chegadas fora deste horário, por favor entre em contacto connosco.",
+      check_out: "O check-out deve ser feito até às 12h00.",
+      cancelamento: "A nossa política de cancelamento permite cancelamentos gratuitos até 7 dias antes da data de check-in. Após esse prazo, será cobrada a primeira noite.",
+      animais: "Lamentamos, mas não aceitamos animais de estimação.",
+      criancas: "As crianças são bem-vindas! Temos berços disponíveis mediante solicitação prévia."
+    };
+  
+    // Reconhecimento de intenções
+    function recognizeIntent(message) {
+      message = message.toLowerCase();
+      
+      // Comprimentos e despedidas
+      if (containsAny(message, ['olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'hi', 'hello'])) {
+        return 'greeting';
+      }
+      
+      if (containsAny(message, ['adeus', 'tchau', 'até logo', 'até breve'])) {
+        return 'goodbye';
+      }
+      
+      if (containsAny(message, ['obrigado', 'obrigada', 'agradecido', 'thanks'])) {
+        return 'thanks';
+      }
+      
+      // Quartos
+      if (containsAny(message, ['quarto', 'quartos', 'suite', 'suíte', 'dormir', 'cama', 'acomodações'])) {
+        if (message.includes('suite') || message.includes('suíte') || message.includes('jacuzzi')) {
+          return 'rooms.suite';
+        } else if (containsAny(message, ['quarto 2', 'segundo quarto', 'quarto dois'])) {
+          return 'rooms.quarto2';
+        } else if (containsAny(message, ['quarto 3', 'terceiro quarto', 'quarto três'])) {
+          return 'rooms.quarto3';
+        } else {
+          return 'rooms.info';
+        }
+      }
+      
+      // Disponibilidade e reservas
+      if (containsAny(message, ['disponibilidade', 'disponível', 'vaga', 'livre', 'quando'])) {
+        return 'disponibilidade';
+      }
+      
+      if (containsAny(message, ['reserva', 'reservar', 'marcar', 'agendar', 'booking'])) {
+        return 'reservar';
+      }
+      
+      // Preços
+      if (containsAny(message, ['preço', 'precos', 'preços', 'custo', 'valor', 'quanto custa', 'tarifa'])) {
+        if (message.includes('baixa') || containsAny(message, ['inverno', 'novembro', 'dezembro', 'janeiro', 'fevereiro', 'março'])) {
+          return 'precos.baixa';
+        } else if (message.includes('alta') || containsAny(message, ['verão', 'verao', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro'])) {
+          return 'precos.alta';
+        } else if (message.includes('suite') || message.includes('suíte')) {
+          return 'precos.suite';
+        } else {
+          return 'precos.general';
+        }
+      }
+      
+      // Localização
+      if (containsAny(message, ['local', 'localização', 'localizacao', 'endereço', 'morada', 'onde fica'])) {
+        return 'localizacao';
+      }
+      
+      if (containsAny(message, ['chegar', 'como ir', 'transporte', 'aeroporto', 'estação', 'comboio', 'autocarro'])) {
+        return 'chegar';
+      }
+      
+      // Comodidades
+      if (containsAny(message, ['comodidade', 'comodidades', 'facilidades', 'wifi', 'piscina', 'estacionamento', 'oferece'])) {
+        return 'comodidades';
+      }
+      
+      // Gastronomia e atividades
+      if (containsAny(message, ['pequeno almoço', 'pequeno-almoço', 'café da manhã', 'breakfast'])) {
+        return 'pequeno_almoco';
+      }
+      
+      if (containsAny(message, ['fazer', 'atividade', 'atividades', 'passeio', 'passeios', 'visitar', 'turismo'])) {
+        return 'atividades';
+      }
+      
+      // Políticas
+      if (containsAny(message, ['check-in', 'check in', 'checkin', 'entrada'])) {
+        return 'check_in';
+      }
+      
+      if (containsAny(message, ['check-out', 'check out', 'checkout', 'saída', 'saida'])) {
+        return 'check_out';
+      }
+      
+      if (containsAny(message, ['cancelar', 'cancelamento', 'desistir', 'reembolso'])) {
+        return 'cancelamento';
+      }
+      
+      if (containsAny(message, ['animal', 'animais', 'pet', 'pets', 'cão', 'cao', 'gato'])) {
+        return 'animais';
+      }
+      
+      if (containsAny(message, ['criança', 'criancas', 'crianças', 'bebé', 'bebe', 'bebê', 'filho'])) {
+        return 'criancas';
+      }
+      
+      // Resposta padrão para mensagens não reconhecidas
+      return 'unknown';
+    }
+  
+    // Função auxiliar para verificar se a mensagem contém alguma das palavras-chave
+    function containsAny(text, keywords) {
+      return keywords.some(keyword => text.includes(keyword));
+    }
+  
+    // Obter resposta com base na intenção reconhecida
+    function getResponse(intent) {
+      // Dividir o caminho da intenção (ex: "rooms.suite" -> ["rooms", "suite"])
+      const path = intent.split('.');
+      
+      // Se for uma intenção desconhecida
+      if (intent === 'unknown') {
+        return "Desculpe, não compreendi completamente. Pode reformular ou perguntar sobre os nossos quartos, preços, disponibilidade, localização ou comodidades?";
+      }
+      
+      // Para intenções com subcategorias (com ponto)
+      if (path.length > 1) {
+        try {
+          const response = knowledgeBase[path[0]][path[1]];
+          return response;
+        } catch (error) {
+          return "Desculpe, não tenho essa informação específica.";
+        }
+      }
+      
+      // Para intenções simples (sem ponto)
+      if (Array.isArray(knowledgeBase[intent])) {
+        // Se for um array, escolher uma resposta aleatória
+        const responses = knowledgeBase[intent];
+        return responses[Math.floor(Math.random() * responses.length)];
+      } else {
+        return knowledgeBase[intent] || "Desculpe, não tenho essa informação.";
+      }
+    }
+  
+    // Função para adicionar mensagem ao chat
+    function addMessage(message, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      
+      const bubbleDiv = document.createElement('div');
+      bubbleDiv.className = 'message-bubble';
+      bubbleDiv.textContent = message;
+      
+      const timeDiv = document.createElement('div');
+      timeDiv.className = 'message-time';
+      
+      // Obter hora atual formatada (HH:MM)
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      timeDiv.textContent = `${hours}:${minutes}`;
+      
+      messageDiv.appendChild(bubbleDiv);
+      messageDiv.appendChild(timeDiv);
+      
+      chatMessages.appendChild(messageDiv);
+      
+      // Rolar para a mensagem mais recente
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  
+    // Função para simular digitação da IA (efeito de "está digitando...")
+    function simulateTyping() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'message received typing';
+      
+      const bubbleDiv = document.createElement('div');
+      bubbleDiv.className = 'message-bubble';
+      bubbleDiv.innerHTML = '<span class="typing-indicator"><span>.</span><span>.</span><span>.</span></span>';
+      
+      typingDiv.appendChild(bubbleDiv);
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      return typingDiv;
+    }
+  
+    // Função para processar mensagem do usuário
+    function processUserMessage(message) {
+      if (!message.trim()) return;
+      
+      // Adicionar mensagem do usuário ao chat
+      addMessage(message, 'sent');
+      
+      // Limpar input
+      chatInput.value = '';
+      
+      // Simular "está digitando..."
+      const typingDiv = simulateTyping();
+      
+      // Reconhecer intenção e obter resposta
+      const intent = recognizeIntent(message);
+      const response = getResponse(intent);
+      
+      // Simular tempo de resposta (entre 1 e 2 segundos)
+      const responseTime = Math.floor(Math.random() * 1000) + 1000;
+      
+      setTimeout(() => {
+        // Remover indicador de digitação
+        typingDiv.remove();
+        
+        // Adicionar resposta da IA
+        addMessage(response, 'received');
+        
+        // Sugerir respostas adicionais com base na intenção
+        suggestFollowUp(intent);
+      }, responseTime);
+    }
+  
+    // Sugerir perguntas de acompanhamento
+    function suggestFollowUp(intent) {
+      // Limpar sugestões existentes
+      document.querySelector('.quick-replies').innerHTML = '';
+      
+      const suggestions = [];
+      
+      // Sugestões baseadas na intenção anterior
+      switch (intent) {
+        case 'greeting':
+          suggestions.push('Disponibilidade', 'Preços', 'Localização');
+          break;
+        case 'rooms.info':
+        case 'rooms.suite':
+        case 'rooms.quarto2':
+        case 'rooms.quarto3':
+          suggestions.push('Preços', 'Disponibilidade', 'Comodidades');
+          break;
+        case 'disponibilidade':
+          suggestions.push('Preços', 'Como reservar', 'Política de cancelamento');
+          break;
+        case 'precos.general':
+        case 'precos.baixa':
+        case 'precos.alta':
+        case 'precos.suite':
+          suggestions.push('Disponibilidade', 'Como reservar', 'O que está incluído');
+          break;
+        case 'localizacao':
+        case 'chegar':
+          suggestions.push('Atividades na região', 'Estacionamento', 'Transporte');
+          break;
+        case 'comodidades':
+          suggestions.push('Piscina', 'Wi-Fi', 'Pequeno-almoço');
+          break;
+        default:
+          suggestions.push('Quartos', 'Preços', 'Disponibilidade');
+      }
+      
+      // Limitar a no máximo 3 sugestões
+      const limitedSuggestions = suggestions.slice(0, 3);
+      
+      // Adicionar sugestões ao DOM
+      limitedSuggestions.forEach(suggestion => {
+        const button = document.createElement('button');
+        button.className = 'quick-reply-btn';
+        button.textContent = suggestion;
+        button.addEventListener('click', () => processUserMessage(suggestion));
+        document.querySelector('.quick-replies').appendChild(button);
+      });
+    }
+  
+    // Event Listeners
+    
+    // Toggle chat window
     chatButton.addEventListener('click', () => {
-        isOpen = !isOpen;
-        chatWindow.style.display = isOpen ? 'flex' : 'none';
-        chatButton.classList.toggle('active');
-        if (isOpen) {
-            document.getElementById('chatNotification').style.display = 'none';
-        }
+      chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+      chatNotification.style.display = 'none'; // Remover notificação quando abrir o chat
     });
-
-    // Minimize chat
-    minimizeChat.addEventListener('click', () => {
-        isOpen = false;
-        chatWindow.style.display = 'none';
-        chatButton.classList.remove('active');
+    
+    // Close chat window
+    chatCloseBtn.addEventListener('click', () => {
+      chatWindow.style.display = 'none';
     });
-
-    // Close chat
-    closeChat.addEventListener('click', () => {
-        isOpen = false;
-        chatWindow.style.display = 'none';
-        chatButton.classList.remove('active');
+    
+    // Send message on button click
+    sendButton.addEventListener('click', () => {
+      processUserMessage(chatInput.value);
     });
-
-    // Tab switching
-    chatTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all tabs and panels
-            chatTabs.forEach(t => t.classList.remove('active'));
-            chatPanels.forEach(p => p.classList.remove('active'));
-
-            // Add active class to clicked tab and corresponding panel
-            tab.classList.add('active');
-            const panelId = tab.getAttribute('data-tab') + 'Panel';
-            document.getElementById(panelId).classList.add('active');
-        });
-    });
-
-    // Quick replies
-    quickReplies.forEach(button => {
-        button.addEventListener('click', () => {
-            const message = button.textContent;
-            addUserMessage(message);
-            handleUserMessage(message);
-        });
-    });
-
-    // FAQ accordion
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        question.addEventListener('click', () => {
-            item.classList.toggle('active');
-        });
-    });
-
-    // Send message
-    sendMessage.addEventListener('click', sendUserMessage);
+    
+    // Send message on Enter key press
     chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendUserMessage();
-        }
-    });
-
-    // Auto-resize textarea
-    chatInput.addEventListener('input', () => {
-        chatInput.style.height = 'auto';
-        chatInput.style.height = chatInput.scrollHeight + 'px';
-    });
-
-    // Quick booking form submission
-    quickBookingForm.addEventListener('submit', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        const checkInDate = document.getElementById('checkInDate').value;
-        const checkOutDate = document.getElementById('checkOutDate').value;
-        const guestCount = document.getElementById('guestCount').value;
-        
-        // Switch to messages tab
-        document.querySelector('.chat-tab[data-tab="messages"]').click();
-        
-        // Add user message
-        const bookingMessage = `Gostaria de reservar de ${formatDate(checkInDate)} até ${formatDate(checkOutDate)} para ${guestCount} hóspedes`;
-        addUserMessage(bookingMessage);
-        
-        // Simulate response
-        setTimeout(() => {
-            addBotMessage(`Recebemos sua solicitação de reserva para ${guestCount} hóspedes de ${formatDate(checkInDate)} a ${formatDate(checkOutDate)}. Em breve entraremos em contato para confirmar a disponibilidade.`);
-        }, 1000);
+        processUserMessage(chatInput.value);
+      }
     });
-
-    // Helper functions
-    function sendUserMessage() {
-        const message = chatInput.value.trim();
-        if (message) {
-            addUserMessage(message);
-            handleUserMessage(message);
-            chatInput.value = '';
-            chatInput.style.height = 'auto';
-        }
-    }
-
-    function addUserMessage(message) {
-        const messageElement = createMessageElement(message, 'sent');
-        chatMessages.appendChild(messageElement);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function addBotMessage(message) {
-        const messageElement = createMessageElement(message, 'received');
-        chatMessages.appendChild(messageElement);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function createMessageElement(message, type) {
-        const div = document.createElement('div');
-        div.className = `message ${type}`;
-        div.innerHTML = `
-            <div class="message-bubble">
-                <p>${message}</p>
-                <span class="message-time">${getCurrentTime()}</span>
-            </div>
-        `;
-        return div;
-    }
-
-    function handleUserMessage(message) {
-        const lowerMessage = message.toLowerCase();
-        let response = '';
-        let delay = 1000;
-
-        // Sistema de respostas aprimorado
-        if (lowerMessage.includes('reserva') || lowerMessage.includes('reservar') || 
-            lowerMessage.includes('disponibilidade') || lowerMessage.includes('disponível')) {
-            response = 'Para fazer uma reserva, você pode usar nossa aba de "Reserva" ou me informar as datas que deseja. Posso verificar a disponibilidade para você!';
-            
-            // Sugere usar o formulário de reserva
-            setTimeout(() => {
-                addBotMessage('Gostaria que eu verificasse a disponibilidade para você? Posso ajudar com isso!');
-            }, delay + 1000);
-        } 
-        else if (lowerMessage.includes('preço') || lowerMessage.includes('valor') || 
-                 lowerMessage.includes('custo') || lowerMessage.includes('quanto custa')) {
-            response = 'Os preços variam conforme a temporada e o número de hóspedes. Em média, nossas diárias variam entre €80 e €150 por noite.';
-            
-            // Oferece mais detalhes
-            setTimeout(() => {
-                addBotMessage('Para valores exatos, posso verificar as datas específicas que você está interessado. Quais seriam?');
-            }, delay + 1000);
-        } 
-        else if (lowerMessage.includes('localização') || lowerMessage.includes('endereço') || 
-                 lowerMessage.includes('como chegar') || lowerMessage.includes('onde fica')) {
-            response = 'Estamos localizados em Ponte de Lima, uma região encantadora do norte de Portugal. O endereço exato é Rua da Quinta Flores, 123.';
-            
-            // Oferece mapa
-            setTimeout(() => {
-                addBotMessage('Posso enviar um link com a localização exata no Google Maps, se desejar!');
-            }, delay + 1000);
-        } 
-        else if (lowerMessage.includes('check-in') || lowerMessage.includes('check out') || 
-                 lowerMessage.includes('horário') || lowerMessage.includes('hora')) {
-            response = 'O check-in é a partir das 15h00 e o check-out até as 11h00. Horários diferentes podem ser acordados previamente, dependendo da disponibilidade.';
-        } 
-        else if (lowerMessage.includes('wifi') || lowerMessage.includes('internet') || 
-                 lowerMessage.includes('conexão') || lowerMessage.includes('wi-fi')) {
-            response = 'Sim, oferecemos Wi-Fi gratuito de alta velocidade em todas as áreas da Quinta. A senha é fornecida no check-in.';
-        } 
-        else if (lowerMessage.includes('animais') || lowerMessage.includes('pet') || 
-                 lowerMessage.includes('cão') || lowerMessage.includes('cachorro') || 
-                 lowerMessage.includes('gato')) {
-            response = 'Sim, aceitamos animais de estimação de pequeno e médio porte mediante consulta prévia. Há uma taxa adicional de €15 por animal por estadia.';
-        } 
-        else if (lowerMessage.includes('estacionamento') || lowerMessage.includes('carro') || 
-                 lowerMessage.includes('parqueamento') || lowerMessage.includes('parque')) {
-            response = 'Oferecemos estacionamento gratuito e privativo dentro da propriedade para todos os hóspedes. Temos vagas cobertas e descobertas.';
-        } 
-        else if (lowerMessage.includes('café da manhã') || lowerMessage.includes('pequeno almoço') || 
-                 lowerMessage.includes('refeição') || lowerMessage.includes('comida')) {
-            response = 'Oferecemos café da manhã continental incluído na diária, com produtos locais frescos. Também temos opção de menu à la carte mediante reserva prévia.';
-        } 
-        else if (lowerMessage.includes('piscina') || lowerMessage.includes('natação') || 
-                 lowerMessage.includes('banho')) {
-            response = 'Temos uma piscina ao ar livre disponível de maio a setembro, das 9h às 20h. É aquecida e possui área de espreguiçadeiras. Crianças devem ser supervisionadas.';
-        } 
-        else if (lowerMessage.includes('atividades') || lowerMessage.includes('passeios') || 
-                 lowerMessage.includes('o que fazer') || lowerMessage.includes('lazer')) {
-            response = 'Na região você pode fazer trilhas, visitar vinícolas, conhecer o centro histórico de Ponte de Lima, ou relaxar em nossa propriedade. Posso sugerir atividades conforme seus interesses!';
-        } 
-        else if (lowerMessage.includes('pagamento') || lowerMessage.includes('cartão') || 
-                 lowerMessage.includes('dinheiro') || lowerMessage.includes('transferência')) {
-            response = 'Aceitamos pagamento em dinheiro, cartões (Visa, Mastercard) e transferência bancária. Para reservas, pedimos 30% de sinal.';
-        } 
-        else if (lowerMessage.includes('cancelamento') || lowerMessage.includes('reembolso') || 
-                 lowerMessage.includes('política')) {
-            response = 'Cancelamentos até 7 dias antes da reserva têm reembolso total. Entre 7 e 2 dias, 50% do sinal é retido. Menos de 48h, não há reembolso.';
-        } 
-        else if (lowerMessage.includes('acessibilidade') || lowerMessage.includes('cadeirante') || 
-                 lowerMessage.includes('deficiente') || lowerMessage.includes('mobilidade')) {
-            response = 'Temos um quarto adaptado para cadeirantes no piso térreo, com banheiro acessível. Por favor, informe suas necessidades específicas para podermos ajudar melhor.';
-        } 
-        else if (lowerMessage.includes('família') || lowerMessage.includes('crianças') || 
-                 lowerMessage.includes('bebê') || lowerMessage.includes('filhos')) {
-            response = 'Somos family-friendly! Temos berço disponível (sem custo), cadeira alta e espaço para crianças brincarem. Também oferecemos jogos e brinquedos.';
-        } 
-        else if (lowerMessage.includes('evento') || lowerMessage.includes('casamento') || 
-                 lowerMessage.includes('festa') || lowerMessage.includes('reunião')) {
-            response = 'Temos espaço para eventos até 50 pessoas. Oferecemos pacotes completos para casamentos, aniversários e reuniões corporativas. Posso enviar mais informações!';
-        } 
-        else if (lowerMessage.includes('contato') || lowerMessage.includes('telefone') || 
-                 lowerMessage.includes('email') || lowerMessage.includes('whatsapp')) {
-            response = 'Você pode nos contatar por telefone (+351 912 418 976), email (quinta.flores19@gmail.com) ou WhatsApp. Estamos disponíveis das 8h às 22h.';
-        } 
-        else if (lowerMessage.includes('obrigado') || lowerMessage.includes('agradeço') || 
-                 lowerMessage.includes('grato') || lowerMessage.includes('valeu')) {
-            response = 'De nada! Estou aqui para ajudar. Se tiver mais alguma dúvida, é só perguntar!';
-        } 
-        else if (lowerMessage.includes('oi') || lowerMessage.includes('olá') || 
-                 lowerMessage.includes('bom dia') || lowerMessage.includes('boa tarde') || 
-                 lowerMessage.includes('boa noite')) {
-            response = 'Olá! Bem-vindo à Quinta Flores. Como posso ajudar você hoje?';
-        } 
-        else {
-            response = 'Obrigado pelo seu contato! Posso ajudar com informações sobre reservas, preços, localização ou outras dúvidas sobre a Quinta Flores. Sobre o que você gostaria de saber?';
-            
-            // Sugere opções
-            setTimeout(() => {
-                addBotMessage('Você pode perguntar sobre:');
-                setTimeout(() => {
-                    addBotMessage('• Disponibilidade para reservas');
-                    setTimeout(() => {
-                        addBotMessage('• Preços e formas de pagamento');
-                        setTimeout(() => {
-                            addBotMessage('• Localização e como chegar');
-                            setTimeout(() => {
-                                addBotMessage('• Serviços e comodidades oferecidos');
-                            }, 500);
-                        }, 500);
-                    }, 500);
-                }, 500);
-            }, 1000);
-        }
-
-        setTimeout(() => addBotMessage(response), delay);
-    }
-
-    function getCurrentTime() {
-        const now = new Date();
-        return now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function updateChatDate() {
-        const dateElement = document.getElementById('chatDate');
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        dateElement.textContent = new Date().toLocaleDateString('pt-PT', options);
-    }
-
-    function setMinDates() {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        const checkInDate = document.getElementById('checkInDate');
-        const checkOutDate = document.getElementById('checkOutDate');
-        
-        // Format as YYYY-MM-DD
-        const todayStr = today.toISOString().split('T')[0];
-        const tomorrowStr = tomorrow.toISOString().split('T')[0];
-        
-        checkInDate.min = todayStr;
-        checkOutDate.min = tomorrowStr;
-        
-        // Set initial values
-        checkInDate.value = todayStr;
-        checkOutDate.value = tomorrowStr;
-    }
-
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long' });
-    }
-});
+    
+    // Quick reply buttons
+    quickReplyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        processUserMessage(button.textContent);
+      });
+    });
+  
+    // Adicionar mensagem inicial de boas-vindas após um pequeno delay
+    setTimeout(() => {
+      const welcomeMessage = "Olá! Bem-vindo à Quinta Flores. Como posso ajudar com a sua estadia?";
+      addMessage(welcomeMessage, 'received');
+      
+      // Sugestões iniciais
+      suggestFollowUp('greeting');
+    }, 1000);
+  });

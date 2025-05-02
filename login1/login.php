@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Função para verificar usuário
+        // Função para verificar usuário - CORRIGIDA
         function verificarUsuario($conexao, $email, $senha, $tabela, $emailCol, $senhaCol, $idCol, $nomeCol) {
             debug_log("Verificando usuário na tabela $tabela", ['email' => $email]);
             
@@ -88,29 +88,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $usuario = $sql_query->fetch_assoc();
                 debug_log("Usuário encontrado, verificando senha");
                 
-                // LOG para depuração - mostra a senha digitada e a senha armazenada
-                debug_log("DEBUG - Senha recebida (não use em produção)", $senha);
+                // LOG para depuração - mostra a senha armazenada
                 debug_log("DEBUG - Senha armazenada (hash)", $usuario[$senhaCol]);
                 
-                // Armazenar informações de debug global para enviar ao frontend
-                $GLOBALS['senha_debug'] = [
-                    'senha_digitada' => $senha,
-                    'senha_hash_db' => $usuario[$senhaCol],
-                    'password_verify_result' => password_verify($senha, $usuario[$senhaCol]) ? 'true' : 'false',
-                    'match_direto' => ($senha === $usuario[$senhaCol]) ? 'true' : 'false',
-                    'formato_hash' => (substr($usuario[$senhaCol], 0, 4) === '$2y$') ? 'bcrypt (correto)' : 'não é bcrypt (incorreto)'
-                ];
+                // Verificação melhorada de senha
+                $senha_correta = false;
                 
-                // Verificação TEMPORÁRIA de senha - aceita password_verify OU senha em texto puro
-                // REMOVA ESTA VERIFICAÇÃO DUPLA EM AMBIENTE DE PRODUÇÃO!
-                if (password_verify($senha, $usuario[$senhaCol]) || $senha === $usuario[$senhaCol]) {
-                    debug_log("Password  verificada com sucesso");
+                // Primeiro tenta com password_verify (caso seja bcrypt)
+                if (substr($usuario[$senhaCol], 0, 4) === '$2y$') {
+                    $senha_correta = password_verify($senha, $usuario[$senhaCol]);
+                    debug_log("Verificando com password_verify (bcrypt)", $senha_correta ? "Senha correta" : "Senha incorreta");
+                }
+                // Se não for bcrypt, compara diretamente (temporário, não recomendado para produção)
+                else {
+                    $senha_correta = ($senha === $usuario[$senhaCol]);
+                    debug_log("Verificando com comparação direta", $senha_correta ? "Senha correta" : "Senha incorreta");
+                }
+                
+                if ($senha_correta) {
+                    debug_log("Password verificada com sucesso");
                     return $usuario;
                 } else {
                     debug_log("Password incorreta");
                 }
             } else {
-                debug_log("Cliente não encontrado");
+                debug_log("Usuário não encontrado");
             }
             return false;
         }
@@ -143,18 +145,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 debug_log("Erro ao registrar log de acesso", $e->getMessage());
             }
 
-            echo json_encode(['redirect' => '../admin/admin_index.php']);
+            echo json_encode(['redirect' => '../quinta_flores_admin/admin_index.php']);
             exit;
         }
 
         // Verifica se é hóspede
         $usuario = verificarUsuario($conexao, $email, $senha, 'hospedes', 'H_email', 'H_senha', 'H_id_hospede', 'H_nome');
         if ($usuario) {
+            // MODIFICAÇÃO: Comentado temporariamente para permitir login mesmo sem verificação de email
+            /*
             if ($usuario['H_verificado_email'] != 'Sim') {
                 debug_log("Conta de hóspede não verificada", ['id' => $usuario['H_id_hospede']]);
                 echo json_encode(['error' => 'Por favor, verifique seu email antes de fazer login.']);
                 exit;
             }
+            */
             
             debug_log("Login de hóspede bem-sucedido", ['id' => $usuario['H_id_hospede'], 'nome' => $usuario['H_nome']]);
             $_SESSION['id'] = $usuario['H_id_hospede'];
@@ -203,8 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'tempo' => date('Y-m-d H:i:s'),
                 'email_tentativa' => $email,
                 'tipo_usuario_inferido' => $tipo,
-                'verificacao' => 'Falha na verificação de senha ou usuário não encontrado',
-                'senha_info' => $GLOBALS['senha_debug'] ?? 'Usuário não encontrado no banco'
+                'verificacao' => 'Falha na verificação de senha ou utilizador não encontrado'
             ]
         ];
         echo json_encode($debug_info);
