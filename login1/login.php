@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 debug_log("Erro ao registrar log de acesso", $e->getMessage());
             }
 
-            echo json_encode(['redirect' => '../admin/admin_index.php']);
+            echo json_encode(['redirect' => '../admin/admin.php']);
             exit;
         }
 

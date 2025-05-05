@@ -1,132 +1,56 @@
 <?php
-session_start();
-include('../conexao.php');
+require '../conexao.php';
 
-$nome = $apelido = $email = $telefone = "";
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$id = $_GET['id'];
 
-if ($id > 0) {
-    $sql = "SELECT * FROM hospedes WHERE H_id_hospede = $id";
-    $resultado = $conexao->query($sql);
-    if ($resultado && $resultado->num_rows > 0) {
-        $hospede = $resultado->fetch_assoc();
-        $nome = $hospede['H_nome'];
-        $apelido = $hospede['H_apelido'];
-        $email = $hospede['H_email'];
-        $telefone = $hospede['H_telefone'];
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST['nome'];
+    $apelido = $_POST['apelido'];
+    $email = $_POST['email'];
+    $telefone = $_POST['telefone'];
+    $documento = $_POST['documento'];
+    $morada = $_POST['morada'];
+    $verificado = $_POST['verificado'];
+    $aceitou = $_POST['aceitou'];
+
+    $stmt = $conexao->prepare("UPDATE hospedes SET 
+        H_nome=?, H_apelido=?, H_email=?, H_telefone=?, H_documento_ident=?, 
+        H_morada=?, H_verificado_email=?, H_aceitou_termos_uso=? 
+        WHERE H_id_hospede=?");
+
+    $stmt->bind_param("ssssssssi", $nome, $apelido, $email, $telefone, $documento, $morada, $verificado, $aceitou, $id);
+    $stmt->execute();
+
+    header("Location: hospedes.php");
+    exit;
 }
+
+$stmt = $conexao->prepare("SELECT * FROM hospedes WHERE H_id_hospede=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$resultado = $stmt->get_result();
+$h = $resultado->fetch_assoc();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-PT">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $id > 0 ? "Editar" : "Adicionar" ?> Hóspede - Quinta Flores</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="menu-toggle" data-tooltip="Mostrar Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <span class="logo-icon">🌼</span>
-            <h2>Quinta Flores</h2>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="admin_index.php"><span class="icon">🏠</span> Início</a></li>
-                <li><a href="admin_funcionarios.php"><span class="icon">👷</span> Funcionários</a></li>
-                <li><a href="admin_hospedes.php" class="active"><span class="icon">🧍</span> Hóspedes</a></li>
-                <li><a href="admin_reservas.php"><span class="icon">📅</span> Reservas</a></li>
-                <li class="logout"><a href="logout.php"><span class="icon">🚪</span> Sair</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="main">
-        <h1 class="page-title"><?= $id > 0 ? "Editar" : "Adicionar Novo" ?> Hóspede</h1>
-        
-        <div class="form-container">
-            <form method="POST" action="atualizar_hospede.php">
-                <input type="hidden" name="id" value="<?= $id ?>">
-                
-                <div class="form-group">
-                    <label for="nome" class="form-label">Nome</label>
-                    <input type="text" id="nome" name="nome" class="form-control" value="<?= $nome ?>" required placeholder="Insira o nome">
-                </div>
-                
-                <div class="form-group">
-                    <label for="apelido" class="form-label">Apelido</label>
-                    <input type="text" id="apelido" name="apelido" class="form-control" value="<?= $apelido ?>" required placeholder="Insira o apelido">
-                </div>
-                
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" value="<?= $email ?>" required placeholder="Insira o email">
-                </div>
-                
-                <div class="form-group">
-                    <label for="telefone" class="form-label">Telefone</label>
-                    <input type="text" id="telefone" name="telefone" class="form-control" value="<?= $telefone ?>" required placeholder="Insira o telefone">
-                </div>
-                
-                <div class="actions">
-                    <button type="submit" class="btn btn-primary">Salvar Hóspede</button>
-                    <a href="admin_hospedes.php" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
-        
-        <a href="admin_hospedes.php" class="back-link">← Voltar para Lista de Hóspedes</a>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const body = document.body;
-            
-            // Efeito inicial - mostrar sidebar automaticamente
-            setTimeout(() => {
-                body.classList.toggle('sidebar-open');
-                menuToggle.setAttribute('data-tooltip', 'Esconder Menu');
-            }, 800);
-            
-            menuToggle.addEventListener('click', function() {
-                body.classList.toggle('sidebar-open');
-                
-                // Atualizar tooltip do botão
-                if (body.classList.contains('sidebar-open')) {
-                    menuToggle.setAttribute('data-tooltip', 'Esconder Menu');
-                } else {
-                    menuToggle.setAttribute('data-tooltip', 'Mostrar Menu');
-                }
-            });
-            
-            // Efeito de foco nos campos do formulário
-            const formControls = document.querySelectorAll('.form-control');
-            formControls.forEach(control => {
-                control.addEventListener('focus', function() {
-                    const label = this.previousElementSibling;
-                    if (label && label.classList.contains('form-label')) {
-                        label.style.color = 'var(--primary-light)';
-                    }
-                });
-                
-                control.addEventListener('blur', function() {
-                    const label = this.previousElementSibling;
-                    if (label && label.classList.contains('form-label')) {
-                        label.style.color = 'var(--secondary)';
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+<h2>Editar Hóspede</h2>
+<link rel="stylesheet" href="admin.css">
+<form method="post">
+    Nome: <input type="text" name="nome" value="<?= $h['H_nome'] ?>" required><br><br>
+    Apelido: <input type="text" name="apelido" value="<?= $h['H_apelido'] ?>"><br><br>
+    Email: <input type="email" name="email" value="<?= $h['H_email'] ?>" required><br><br>
+    Telefone: <input type="text" name="telefone" value="<?= $h['H_telefone'] ?>" required><br><br>
+    Documento: <input type="text" name="documento" value="<?= $h['H_documento_ident'] ?>" required><br><br>
+    Morada: <input type="text" name="morada" value="<?= $h['H_morada'] ?>"><br><br>
+    Verificou Email?
+    <select name="verificado">
+        <option value="Não" <?= $h['H_verificado_email'] == 'Não' ? 'selected' : '' ?>>Não</option>
+        <option value="Sim" <?= $h['H_verificado_email'] == 'Sim' ? 'selected' : '' ?>>Sim</option>
+    </select><br><br>
+    Aceitou os Termos?
+    <select name="aceitou">
+        <option value="Não" <?= $h['H_aceitou_termos_uso'] == 'Não' ? 'selected' : '' ?>>Não</option>
+        <option value="Sim" <?= $h['H_aceitou_termos_uso'] == 'Sim' ? 'selected' : '' ?>>Sim</option>
+    </select><br><br>
+    <button type="submit">Atualizar</button>
+</form>
+<a href="hospedes.php">← Voltar</a>

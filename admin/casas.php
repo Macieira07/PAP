@@ -1,0 +1,74 @@
+<?php
+require '../conexao.php';
+
+// Pesquisa
+$pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
+
+// Paginação
+$casas_por_pagina = 10;
+$página_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($página_atual - 1) * $casas_por_pagina;
+
+$query = "SELECT * FROM casas WHERE C_nome LIKE ? OR C_estado LIKE ? OR C_capacidade LIKE ? LIMIT ?, ?";
+$stmt = $conexao->prepare($query);
+$pesquisa_completa = "%$pesquisa%";
+$stmt->bind_param("sssii", $pesquisa_completa, $pesquisa_completa, $pesquisa_completa, $offset, $casas_por_pagina);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+// Total de casas para paginação
+$query_total = "SELECT COUNT(*) FROM casas WHERE C_nome LIKE ? OR C_estado LIKE ? OR C_capacidade LIKE ?";
+$stmt_total = $conexao->prepare($query_total);
+$stmt_total->bind_param("sss", $pesquisa_completa, $pesquisa_completa, $pesquisa_completa);
+$stmt_total->execute();
+$total_resultados = $stmt_total->get_result()->fetch_row()[0];
+$total_páginas = ceil($total_resultados / $casas_por_pagina);
+?>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="stylesheet" href="admin.css">
+    <meta charset="UTF-8">
+    <title>Casas</title>
+</head>
+<body>
+    <h1>Lista de Casas</h1>
+    <a href="admin.php">← Voltar</a> | 
+    <a href="adicionar_casa.php">+ Adicionar Casa</a>
+    
+    <form method="get" action="casas.php" style="margin-top: 20px;">
+        <input type="text" name="pesquisa" placeholder="Pesquisar por nome, estado ou capacidade" value="<?= isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '' ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
+
+    <table border="1" cellpadding="10" style="margin-top: 20px;">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Capacidade</th>
+            <th>Preço/Noite</th>
+            <th>Estado</th>
+            <th>Ações</th>
+        </tr>
+        <?php while ($casa = $resultado->fetch_assoc()): ?>
+            <tr>
+                <td><?= $casa['C_id_casa'] ?></td>
+                <td><?= $casa['C_nome'] ?></td>
+                <td><?= $casa['C_capacidade'] ?></td>
+                <td><?= $casa['C_preco_noite'] ?>€</td>
+                <td><?= $casa['C_estado'] ?></td>
+                <td>
+                    <a href="editar_casa.php?id=<?= $casa['C_id_casa'] ?>">Editar</a> |
+                    <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    </table>
+
+    <div class="paginacao" style="margin-top: 20px;">
+        <?php for ($i = 1; $i <= $total_páginas; $i++): ?>
+            <a href="casas.php?pagina=<?= $i ?>&pesquisa=<?= $pesquisa ?>"><?= $i ?></a> 
+        <?php endfor; ?>
+    </div>
+</body>
+</html>
