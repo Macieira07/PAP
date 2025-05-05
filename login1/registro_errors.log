@@ -178,3 +178,37 @@
                 <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
                 <p><a href='http://localhost/PAP/log...
 [30-Apr-2025 08:56:24 UTC] Início do processamento de registro
+[05-May-2025 09:53:59 UTC] Início do processamento de registro
+[05-May-2025 09:54:00 UTC] POST recebido: Array
+(
+    [nome] => Ema
+    [email] => emavviana8@gmail.com
+    [password] => Ema123456&
+    [telefone] => 919241169
+    [documento] => 234654321
+    [aceitar_termos] => on
+    [csrf_token] => ad8dfa4d1813550d2c6e269264a7083684a2c0f3556263062e867713ccabe3e9
+)
+
+[05-May-2025 09:54:00 UTC] Simulando envio de email para: emavviana8@gmail.com
+[05-May-2025 09:54:00 UTC] Assunto: Verifique seu email - Quinta Flores
+[05-May-2025 09:54:00 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PA...
+[05-May-2025 09:59:26 UTC] Início do processamento de registro
+[05-May-2025 09:59:26 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919241169
+    [documento] => 250987654
+    [aceitar_termos] => on
+    [csrf_token] => ad8dfa4d1813550d2c6e269264a7083684a2c0f3556263062e867713ccabe3e9
+)
+
+[05-May-2025 09:59:26 UTC] Simulando envio de email para: davidfloresmacieira@gmail.com
+[05-May-2025 09:59:26 UTC] Assunto: Verifique seu email - Quinta Flores
+[05-May-2025 09:59:26 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PA...
