@@ -71,38 +71,36 @@
       </div>
     </header>
 
-    <!-- Booking Section -->
-    <section class="booking__container" id="booking">
-      <form class="booking__form">
-        <div class="input__group">
-          <span><i class="ri-calendar-line"></i></span>
-          <div>
-            <label for="checkIn">Check In</label>
-            <input type="date" id="checkIn" required>
-          </div>
-        </div>
-        <div class="input__group">
-          <span><i class="ri-calendar-line"></i></span>
-          <div>
-            <label for="checkOut">Check Out</label>
-            <input type="date" id="checkOut" required>
-          </div>
-        </div>
-        <div class="input__group">
-          <span><i class="ri-user-line"></i></span>
-          <div>
-            <label for="guests">Hóspedes</label>
-            <!-- Limite de 10 pessoas -->
-            <input type="number" id="guests" min="1" max="10" value="2" required>
-          </div>
-        </div>
-        <div class="input__group input__btn">
-          <a href="../index/disponibilidade.php" class="btn" target="_blank">Ver disponibilidade</a>
-        </div>
-        
-      </form>
-    </section>
-    
+ <!-- Booking Section -->
+<section class="booking__container" id="booking">
+  <form class="booking__form">
+    <div class="input__group">
+      <span><i class="ri-calendar-line"></i></span>
+      <div>
+        <label for="checkIn">Check In</label>
+        <input type="date" id="checkIn" required>
+      </div>
+    </div>
+    <div class="input__group">
+      <span><i class="ri-calendar-line"></i></span>
+      <div>
+        <label for="checkOut">Check Out</label>
+        <input type="date" id="checkOut" required>
+      </div>
+    </div>
+    <div class="input__group">
+      <span><i class="ri-user-line"></i></span>
+      <div>
+        <label for="guests">Hóspedes</label>
+        <input type="number" id="guests" min="1" max="10" value="2" required>
+      </div>
+    </div>
+    <div class="input__group input__btn">
+    <button id="searchBtn" class="btn">Ver disponibilidade</button>
+
+    </div>
+  </form>
+</section>
 
     <!-- About Section -->
     <section class="section__container about__container" id="about">
@@ -815,5 +813,6 @@
 
     </script>
     <script src="../index/chat.js"></script>
+    <script src="../index/disponibilidade.js"></script>
   </body>
 </html> 

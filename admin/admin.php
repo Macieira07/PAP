@@ -25,6 +25,7 @@
         <a class="card" href="servicos.php">Gerir Servicos</a>
         <a class="card" href="despesas.php">Gerir Despesas</a>
         <a class="card" href="manutencao.php">Gerir Manutenções</a>
+        <a class="card" href="receitas.php">Gerir Receitas</a>
     </div>
 </body>
 </html>

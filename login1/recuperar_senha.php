@@ -125,7 +125,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Recuperar Senha - Quinta Flores</title>
     <style>
         :root {
-            --primary-color: #6A0DAD;
+            /* New color scheme */
+            --color-primary: #10B981;
+            --color-primary-dark: #047857;
+            --color-primary-light: #D1FAE5;
+            --color-accent: #FCD34D;
+            --color-text-dark: #111827;
+            --color-text-light: #6B7280;
+            --color-white: #F9FAFB;
+            --color-gray-light: #F3F4F6;
+            
+            /* Effects and utilities */
+            --transition: all 0.3s ease-in-out;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            
+            /* Keeping error and success colors the same */
             --error-color: #dc3545;
             --success-color: #28a745;
             --info-color: #17a2b8;
@@ -133,20 +149,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--color-gray-light);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text-dark);
         }
         
         .container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             width: 100%;
             max-width: 500px;
             padding: 30px;
@@ -154,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         h1 {
-            color: var(--primary-color);
+            color: var(--color-primary);
             text-align: center;
             margin-bottom: 30px;
         }
@@ -192,6 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--color-text-dark);
         }
         
         input[type="email"] {
@@ -200,18 +217,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: var(--transition);
+            background-color: var(--color-white);
         }
         
         input[type="email"]:focus {
-            border-color: var(--primary-color);
+            border-color: var(--color-primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.2);
+            box-shadow: 0 0 0 3px var(--color-primary-light);
         }
         
         button {
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--color-primary);
+            color: var(--color-white);
             border: none;
             padding: 12px;
             width: 100%;
@@ -219,11 +237,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: var(--transition);
         }
         
         button:hover {
-            background-color: #5a0a9c;
+            background-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-hover);
         }
         
         .text-center {
@@ -235,13 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         a {
-            color: var(--primary-color);
+            color: var(--color-primary);
             text-decoration: none;
             font-weight: 600;
         }
         
         a:hover {
             text-decoration: underline;
+            color: var(--color-primary-dark);
         }
     </style>
 </head>

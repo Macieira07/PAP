@@ -196,7 +196,6 @@ try {
         $servicos_email = '<div style="margin: 15px 0;">
             <h3 style="color:'.EMAIL_COLOR.'; margin-bottom: 10px;">Serviços Adicionais</h3>
             <ul>';
-        
         foreach ($servicos_adicionais as $servico) {
             $servicos_email .= '<li>'.$servico.'</li>';
         }
@@ -209,7 +208,6 @@ try {
         
         $servicos_email .= '</div>';
     }
-    
     $mail->Body = '
     <!DOCTYPE html>
     <html lang="pt">
@@ -264,26 +262,23 @@ try {
                 <li>Check-out até às 11:00 horas</li>
                 <li>Traga o comprovante em anexo quando chegar à Quinta</li>
                 <li>Não é permitido fumar nas dependências</li>
-                <li>Cancelamento gratuito até 10 dias antes da data de check-in</li>
+                <li>Cancelamento gratuito até 10 dias antes da data do check-in</li>
             </ul>
             
-            <p>Em anexo, você encontrará o comprovante da sua reserva em PDF.</p>
+            <p>Em anexo, você encontrará o comprovativo da da sua reserva em PDF.</p>
             
             <div style="text-align: center; margin: 30px 0;">
                 <a href="https://www.google.com/maps?q='.urlencode(PROPERTY_ADDRESS).'" class="button">Ver Localização no Mapa</a>
             </div>
-            
             <div class="contact-box">
                 <h3 style="margin-top: 0; color: '.EMAIL_COLOR.';">Precisa de ajuda?</h3>
                 <p><strong>E-mail:</strong> '.CONTACT_EMAIL.'</p>
                 <p><strong>Endereço:</strong> '.PROPERTY_ADDRESS.'</p>
             </div>
-            
             <p>Estamos ansiosos para recebê-lo(a) na '.SITE_NAME.' e proporcionar uma estadia memorável repleta de momentos especiais!</p>
             
             <p>Atenciosamente,<br>Equipa '.SITE_NAME.'</p>
         </div>
-        
         <div class="footer">
             <p>© '.date('Y').' '.SITE_NAME.'. Todos os direitos reservados.</p>
             <p>Este é um e-mail automático, por favor não responda diretamente.</p>
@@ -291,11 +286,8 @@ try {
     </body>
     </html>
     ';
-
     $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nIMPORTANTE: Traga este comprovante quando chegar à Quinta.\nCancelamento gratuito até 10 dias antes da data de check-in.\n\nEm anexo encontrará o comprovante completo.\n\nPara dúvidas: ".CONTACT_EMAIL."\n\nAtenciosamente,\nEquipa ".SITE_NAME;
-    
     $mail->addStringAttachment($pdfContent, 'Comprovante_Reserva_'.$reserva_id.'.pdf');
-    
     $ical = "BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//".SITE_NAME."//Reserva//PT
@@ -309,12 +301,9 @@ DESCRIPTION:Reserva confirmada para ".$_SESSION['nome']." ".$_SESSION['apelido']
 LOCATION:".PROPERTY_ADDRESS."
 END:VEVENT
 END:VCALENDAR";
-    
     $mail->addStringAttachment($ical, 'evento.ics');
-
     if ($mail->send()) {
         error_log("E-mail enviado com sucesso para {$_SESSION['email']}");
-        
         echo '<div style="text-align: center; padding: 40px 20px; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
                 <img src="../logotipos/logotipo1.jpg" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
                 <svg width="100" height="100" viewBox="0 0 24 24" style="fill:'.PRIMARY_COLOR.';margin:0 auto 25px;">
@@ -337,7 +326,6 @@ END:VCALENDAR";
                 echo htmlspecialchars($servico).'<br>';
             }
             echo '</p>';
-            
             if (!empty($descricao_servicos)) {
                 echo '<p><strong>Detalhes da Decoração:</strong><br>'.htmlspecialchars($descricao_servicos).'</p>';
             }
@@ -381,6 +369,5 @@ END:VCALENDAR";
             </div>
           </div>';
 }
-
 session_destroy();
 ?>  

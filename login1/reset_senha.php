@@ -95,119 +95,137 @@ if (empty($token)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinir Senha - Quinta Flores</title>
     <style>
-        :root {
-            --primary-color: #6A0DAD;
-            --error-color: #dc3545;
-            --success-color: #28a745;
-        }
+    :root {
+        /* Cores primárias novas */
+        --color-primary: #10B981;
+        --color-primary-dark: #047857;
+        --color-primary-light: #D1FAE5;
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
+        /* Cores de acento e texto */
+        --color-accent: #FCD34D;
+        --color-text-dark: #111827;
+        --color-text-light: #6B7280;
+        --color-white: #F9FAFB;
+        --color-gray-light: #F3F4F6;
         
-        .container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            padding: 30px;
-            margin: 20px;
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        .alert-success {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
-        }
-        
-        .alert-error {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        input[type="password"]:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.2);
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #5a0a9c;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .mt-3 {
-            margin-top: 15px;
-        }
-        
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+        /* Efeitos e utilidades */
+        --transition: all 0.3s ease-in-out;
+        --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+
+        /* Mantendo as cores originais para mensagens */
+        --error-color: #dc3545;
+        --success-color: #28a745;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: var(--color-text-dark);
+    }
+    
+    .container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 500px;
+        padding: 30px;
+        margin: 20px;
+    }
+    
+    h1 {
+        color: var(--color-primary);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: var(--success-color);
+        border: 1px solid var(--success-color);
+    }
+    
+    .alert-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: var(--error-color);
+        border: 1px solid var(--error-color);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: var(--transition);
+    }
+    
+    input[type="password"]:focus {
+        border-color: var(--color-primary);
+        outline: none;
+        box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+    
+    button {
+        background-color: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    button:hover {
+        background-color: var(--color-primary-dark);
+        box-shadow: var(--shadow-hover);
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .mt-3 {
+        margin-top: 15px;
+    }
+    
+    a {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
 </head>
 <body>
     <div class="container">

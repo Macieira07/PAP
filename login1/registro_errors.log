@@ -212,3 +212,20 @@
 [05-May-2025 09:59:26 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
                 <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
                 <p><a href='http://localhost:8080/PA...
+[06-May-2025 14:10:36 UTC] Início do processamento de registro
+[06-May-2025 14:10:37 UTC] POST recebido: Array
+(
+    [nome] => Ema Viana
+    [email] => eee@gmail.com
+    [password] => Rgdfsfsfs888
+    [telefone] => 624623784
+    [documento] => 7345274245
+    [aceitar_termos] => on
+    [csrf_token] => e1e7d234d28730aded08c07f18e3053901e92dedca328cf5d2a2a76d6175514e
+)
+
+[06-May-2025 14:10:37 UTC] Simulando envio de email para: eee@gmail.com
+[06-May-2025 14:10:37 UTC] Assunto: Verifique seu email - Quinta Flores
+[06-May-2025 14:10:37 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PA...
