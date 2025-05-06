@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Componentes - FAQ
+   ========================================================================== */
+
+/**
+ * Seção de perguntas frequentes
+ */
+ .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq__item {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1.5rem;
+}
+
+.faq__question {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq__answer {
+    color: var(--color-text-light);
+    max-height: 0;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.faq__item--active .faq__answer {
+    max-height: 500px;
+    transition: max-height 0.5s ease;
+}
+
+.faq__icon {
+    transition: var(--transition);
+}
+
+.faq__item--active .faq__icon {
+    transform: rotate(180deg);
+}

@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Utilidades - Tema e Toggle
+   ========================================================================== */
+
+/**
+ * Botão para alternar entre tema claro e escuro
+ */
+ .theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/**
+ * Estilos para o tema escuro
+ */
+[data-theme="dark"] {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .header {
+    background-color: rgba(18, 18, 18, 0.95);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .nav__link {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .nav__hamburger {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .testimonial,
+[data-theme="dark"] .activity-card,
+[data-theme="dark"] .contact-form {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .gallery-section {
+    background-color: #121212;
+}
+
+[data-theme="dark"] .contact-section {
+    background-color: #121212;
+}
+
+[data-theme="dark"] .info-card__title,
+[data-theme="dark"] .activity-card__title,
+[data-theme="dark"] .faq__question,
+[data-theme="dark"] .contact-info__title {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .section__title {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .section__subtitle,
+[data-theme="dark"] .info-card__text,
+[data-theme="dark"] .activity-card__text,
+[data-theme="dark"] .testimonial__text {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .form__input,
+[data-theme="dark"] .form__textarea {
+    background-color: #2a2a2a;
+    border-color: #333;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .nav__list {
+    background-color: #1e1e1e;
+}

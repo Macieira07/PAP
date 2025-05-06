@@ -44,3 +44,10 @@ Stack trace:
 [12-Apr-2025 00:13:04 Europe/Berlin] Erro: Dados da reserva não encontrados na sessão
 [12-Apr-2025 00:14:32 Europe/Berlin] Nova reserva criada: ID=41 para davidfloresmacieira@gmail.com
 [12-Apr-2025 00:14:34 Europe/Berlin] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[06-May-2025 10:16:21 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 27
+[06-May-2025 10:16:21 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
+[06-May-2025 10:16:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 40

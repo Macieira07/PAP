@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Componentes - Testimonials
+   ========================================================================== */
+
+/**
+ * Slider de depoimentos
+ */
+ .testimonials__slider {
+    padding: 2rem 0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.testimonial {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    margin: 1rem;
+}
+
+.testimonial__image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    border: 3px solid var(--color-primary);
+}
+
+.testimonial__text {
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: var(--color-text-dark);
+}
+
+.testimonial__author {
+    font-weight: 600;
+    color: var(--color-primary-dark);
+}
+
+.testimonial__rating {
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}

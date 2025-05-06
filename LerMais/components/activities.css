@@ -1,0 +1,59 @@
+/* ==========================================================================
+   Componentes - Activities
+   ========================================================================== */
+
+/**
+ * Grid de cards para atividades
+ */
+ .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.activity-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.activity-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.activity-card__image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.activity-card__content {
+    padding: 1.5rem;
+}
+
+.activity-card__title {
+    color: var(--color-primary-dark);
+    font-size: 1.3rem;
+    margin-bottom: 0.7rem;
+}
+
+.activity-card__text {
+    color: var(--color-text-dark);
+    margin-bottom: 1rem;
+}
+
+.activity-card__link {
+    display: inline-block;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.activity-card__link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}

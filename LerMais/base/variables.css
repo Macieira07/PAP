@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Base - Variáveis
+   ========================================================================== */
+/**
+ * Variáveis principais do tema
+ * Armazena todas as cores, sombras e valores comuns para manter consistência
+ */
+ :root {
+    /* Cores primárias */
+    --color-primary: #10B981;
+    --color-primary-dark: #047857;
+    --color-primary-light: #D1FAE5;
+    
+    /* Cores de acento e texto */
+    --color-accent: #FCD34D;
+    --color-text-dark: #111827;
+    --color-text-light: #6B7280;
+    --color-white: #F9FAFB;
+    --color-gray-light: #F3F4F6;
+    
+    /* Efeitos e utilidades */
+    --transition: all 0.3s ease-in-out;
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+    --border-radius: 12px;
+}

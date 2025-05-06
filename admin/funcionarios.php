@@ -39,7 +39,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css">
     <meta charset="UTF-8">
     <title>Funcionários</title>
 </head>
@@ -63,6 +63,8 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
             <th>Cargo</th>
             <th>Telefone</th>
             <th>Data de Contratação</th>
+            <th>Turno</th>
+            <th>Férias/Ausência</th>
             <th>Ações</th>
         </tr>
         <?php while ($f = $resultado->fetch_assoc()): ?>
@@ -73,6 +75,39 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
                 <td><?= $f['F_cargo'] ?></td>
                 <td><?= $f['F_telefone'] ?></td>
                 <td><?= $f['F_data_contratacao'] ?></td>
+                
+                <?php
+                // Buscar turnos
+                $stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario=?");
+                $stmt_turno->bind_param("i", $f['F_id_funcionario']);
+                $stmt_turno->execute();
+                $turnos_result = $stmt_turno->get_result();
+                $turnos = $turnos_result->fetch_assoc();
+
+                // Buscar férias
+                $stmt_ferias = $conexao->prepare("SELECT * FROM ferias_ausencias WHERE F_id_funcionario=?");
+                $stmt_ferias->bind_param("i", $f['F_id_funcionario']);
+                $stmt_ferias->execute();
+                $ferias_result = $stmt_ferias->get_result();
+                $ferias = $ferias_result->fetch_assoc();
+                ?>
+
+                <td>
+                    <?php if ($turnos): ?>
+                        <a href="editar_turno.php?id=<?= $turnos['T_id_turno'] ?>">Editar Turno</a><br>
+                        <?= $turnos['T_inicio'] ?> - <?= $turnos['T_fim'] ?>
+                    <?php else: ?>
+                        Nenhum turno registrado
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($ferias && isset($ferias['FA_inicio']) && isset($ferias['FA_fim'])): ?>
+                        <a href="editar_ferias.php?id=<?= $ferias['FA_id_ferias'] ?>">Editar Férias</a><br>
+                        <?= $ferias['FA_inicio'] ?> a <?= $ferias['FA_fim'] ?>
+                    <?php else: ?>
+                        Nenhuma férias registrada
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a href="editar_funcionario.php?id=<?= $f['F_id_funcionario'] ?>">Editar</a> |
                     <a href="eliminar_funcionario.php?id=<?= $f['F_id_funcionario'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
@@ -92,3 +127,4 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     </div>
 </body>
 </html>
+            
