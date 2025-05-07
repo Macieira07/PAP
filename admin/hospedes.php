@@ -11,7 +11,10 @@ $resultado = $conexao->query("SELECT * FROM hospedes");
     <title>Hóspedes</title>
 </head>
 <body>
-    <h1>Lista de Hóspedes</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
+        <h1>Todos os Hóspedes</h1>
+    </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_hospede.php">+ Adicionar Hóspede</a>
     <table border="1" cellpadding="10" style="margin-top: 20px;">

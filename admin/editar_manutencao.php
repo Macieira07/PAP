@@ -40,7 +40,10 @@ $casas_resultado = $conexao->query("SELECT * FROM casas");
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <h1>Editar Manutenção</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
+        <h1>Editar Manutenção</h1>
+    </div>
     <form method="post">
         Tipo de Manutenção:
         <select name="tipo" required>

@@ -16,68 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $metodo_pagamento = $_POST['metodo_pagamento'];
     $observacoes = $_POST['observacoes'];
     $servicos = $_POST['servicos'];
-require '../conexao.php'; // Conectar ao banco de dados
 
-// Obter os dados do formulário
-$data_checkin = $_POST['data_checkin'];
-$data_checkout = $_POST['data_checkout'];
-$num_hospedes = $_POST['num_hospedes'];
-$metodo_pagamento = $_POST['metodo_pagamento'];
-$comprovativo = $_FILES['comprovativo']; // Comprovativo de pagamento
-$servicos = isset($_POST['servicos']) ? $_POST['servicos'] : [];
-
-// Verificar se todos os campos estão preenchidos corretamente
-if (!$data_checkin || !$data_checkout || !$num_hospedes || !$metodo_pagamento) {
-    die("Por favor, preencha todos os campos obrigatórios.");
-}
-
-// Preço fixo da casa
-$preco_casa = 120;
-
-// Calcular o preço total (incluir serviços)
-$preco_servicos = 0;
-foreach ($servicos as $servico_id) {
-    // Buscar o preço do serviço selecionado
-    $query_servico = $conexao->query("SELECT S_preco FROM servicos WHERE S_id_servico = $servico_id");
-    $servico = $query_servico->fetch_assoc();
-    $preco_servicos += $servico['S_preco'];
-}
-
-$preco_total = $preco_casa + $preco_servicos;
-
-// Inserir a reserva no banco de dados
-$query_reserva = $conexao->prepare("INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_metodo_pagamento, R_servicos) 
-VALUES (?, 1, ?, ?, ?, ?, 'pendente', ?, ?)");
-$query_reserva->bind_param("issdss", $num_hospedes, $data_checkin, $data_checkout, $num_hospedes, $preco_total, $metodo_pagamento, implode(",", $servicos));
-
-if ($query_reserva->execute()) {
-    $reserva_id = $query_reserva->insert_id; // ID da reserva recém-criada
-
-    // Processar o comprovativo de pagamento, se houver
-    if ($comprovativo['error'] === UPLOAD_ERR_OK) {
-        $comprovativo_path = 'uploads/' . $comprovativo['name'];
-        move_uploaded_file($comprovativo['tmp_name'], $comprovativo_path);
-
-        // Atualizar a reserva com o comprovativo
-        $query_comprovativo = $conexao->prepare("UPDATE reservas SET R_comprovativo_entregue = 1, R_dados_pagamento = ? WHERE R_id_reserva = ?");
-        $query_comprovativo->bind_param("si", $comprovativo_path, $reserva_id);
-        $query_comprovativo->execute();
+    // Verificar se o estado é válido
+    if (!in_array($estado, ['pendente', 'confirmada', 'cancelada', 'concluída'])) {
+        die("Estado inválido.");
     }
 
-    // Associar os serviços à reserva
-    foreach ($servicos as $servico_id) {
-        $query_servicos_reserva = $conexao->prepare("INSERT INTO reserva_servicos (RS_id_reserva, RS_id_servico) VALUES (?, ?)");
-        $query_servicos_reserva->bind_param("ii", $reserva_id, $servico_id);
-        $query_servicos_reserva->execute();
-    }
+    // Iniciar transação
+    $conexao->begin_transaction();
 
-    echo "Reserva realizada com sucesso!";
-} else {
-    echo "Erro ao processar a reserva. Tente novamente mais tarde.";
-}
-?>
-    $stmt = $conexao->prepare("
-        UPDATE reservas SET 
+    try {
+        // Obter estado anterior
+        $estado_anterior = $reserva['R_estado'];
+
+        // Atualizar a reserva no banco de dados
+        $stmt = $conexao->prepare("UPDATE reservas SET 
             R_id_hospede = ?, 
             R_id_casa = ?, 
             R_data_checkin = ?, 
@@ -87,20 +40,55 @@ if ($query_reserva->execute()) {
             R_estado = ?, 
             R_metodo_pagamento = ?, 
             R_observacoes = ?, 
-            R_servicos = ?, 
-            R_dados_pagamento = ?
-        WHERE R_id_reserva = ?
-    ");
-    $stmt->bind_param("iissidsssssi", $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco, $estado, $metodo_pagamento, $observacoes, $servicos, $dados_pagamento, $id_reserva);
-    $stmt->execute();
+            R_servicos = ? 
+            WHERE R_id_reserva = ?");
+        $stmt->bind_param("iissdsssssi", $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco, $estado, $metodo_pagamento, $observacoes, $servicos, $id_reserva);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Erro ao atualizar reserva: " . $stmt->error);
+        }
+        $stmt->close();
 
-    header("Location: reservas.php");
-    exit;
+        // Verificar mudança de estado
+        if ($estado_anterior != $estado) {
+            if ($estado == 'confirmada') {
+                // Adicionar o valor ao saldo
+                $stmt = $conexao->prepare("UPDATE conta SET saldo = saldo + ? WHERE id_conta = 1");
+                $stmt->bind_param("d", $preco);
+                if (!$stmt->execute()) {
+                    throw new Exception("Erro ao atualizar saldo: " . $stmt->error);
+                }
+                $stmt->close();
+            } elseif ($estado_anterior == 'confirmada' && $estado != 'confirmada') {
+                // Remover o valor se estava confirmada e foi alterada para outro estado
+                $stmt = $conexao->prepare("UPDATE conta SET saldo = saldo - ? WHERE id_conta = 1");
+                $stmt->bind_param("d", $preco);
+                if (!$stmt->execute()) {
+                    throw new Exception("Erro ao atualizar saldo: " . $stmt->error);
+                }
+                $stmt->close();
+            }
+        }
+
+        // Confirmar todas as operações
+        $conexao->commit();
+
+        header("Location: reservas.php");
+        exit;
+
+    } catch (Exception $e) {
+        // Reverter em caso de erro
+        $conexao->rollback();
+        die($e->getMessage());
+    }
 }
 ?>
+
 <link rel="stylesheet" href="admin.css">
-<h2>Editar Reserva</h2>
-<link rel="stylesheet" href="admin.css">
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
+        <h1>Editar Reserva</h1>
+    </div>
 <form method="post">
     Hóspede:
     <select name="id_hospede" required>
@@ -137,9 +125,7 @@ if ($query_reserva->execute()) {
     
     Serviços Adicionais:
     <input type="text" name="servicos" value="<?= $reserva['R_servicos'] ?>"><br><br>
-    
-    Dados de Pagamento:
-    <input type="text" name="dados_pagamento" value="<?= $reserva['R_dados_pagamento'] ?>"><br><br>
-    
+
     <button type="submit">Salvar Alterações</button>
 </form>
+<a href="reservas.php">← Voltar</a>

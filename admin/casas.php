@@ -32,7 +32,11 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <title>Casas</title>
 </head>
 <body>
-    <h1>Lista de Casas</h1>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
+        <h1>Lista de Alojamentos</h1>
+    </div>
+
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_casa.php">+ Adicionar Casa</a>
     

@@ -58,7 +58,10 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
     </script>
 </head>
 <body>
-    <h2>Adicionar Manutenção</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
+        <h1>Adicionar Manutenção</h1>
+    </div>
     <form method="post">
         Casa:
         <select name="id_casa" required>

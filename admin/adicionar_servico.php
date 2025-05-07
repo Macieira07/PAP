@@ -94,7 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
-    <h2>Adicionar Novo Serviço</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
+        <h1>Adicionar Serviço</h1>
+    </div>
     <form method="post">
         Nome do Serviço: <input type="text" name="nome_servico" required><br><br>
         Descrição: <textarea id="descricao" name="descricao" readonly></textarea><br><br>

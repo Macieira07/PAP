@@ -32,7 +32,10 @@ $resultado = $stmt->get_result();
 $h = $resultado->fetch_assoc();
 ?>
 
-<h2>Editar Hóspede</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
+        <h2>Editar Hóspede</h2>
+    </div>
 <link rel="stylesheet" href="admin.css">
 <form method="post">
     Nome: <input type="text" name="nome" value="<?= $h['H_nome'] ?>" required><br><br>

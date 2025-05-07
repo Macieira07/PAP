@@ -15,7 +15,10 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
   <title>Adicionar Reserva</title>
 </head>
 <body>
-  <h2>Adicionar Reserva</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
+        <h1>Adicionar Reserva</h1>
+    </div>
   <form method="POST" action="processar_reserva.php">
     <label for="data_checkin">Data de Check-in:</label><br>
     <input type="date" id="data_checkin" name="data_checkin" required><br><br>
@@ -53,12 +56,28 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
       <option value="cartao">Cartão de Crédito</option>
     </select><br><br>
 
+    <label for="estado">Estado:</label><br>
+    <select name="estado" id="estado" required>
+      <option value="pendente">Pendente</option>
+      <option value="confirmada">Confirmada</option>
+    </select><br><br>
+
     <p><strong>Preço total estimado: <span id="preco_total">0.00€</span></strong></p>
 
     <button type="submit">Confirmar Reserva</button>
   </form>
+  <a href="reservas.php">← Voltar</a>
 
   <script>
+    // Definir data mínima para check-in (hoje)
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('data_checkin').min = hoje;
+    
+    // Definir data mínima para check-out (amanhã)
+    const amanha = new Date();
+    amanha.setDate(amanha.getDate() + 1);
+    document.getElementById('data_checkout').min = amanha.toISOString().split('T')[0];
+    
     const selectCasa     = document.querySelector('select[name="id_casa"]');
     const inputCheckin   = document.querySelector('input[name="data_checkin"]');
     const inputCheckout  = document.querySelector('input[name="data_checkout"]');
@@ -76,10 +95,32 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
         spanTotal.textContent = '0.00€';
       }
     }
+    
+    // Verificar validade das datas de check-in e check-out
+    inputCheckin.addEventListener('change', function() {
+      const checkin = new Date(this.value);
+      const checkout = new Date(inputCheckout.value);
+      
+      // Atualizar data mínima para check-out
+      const minCheckout = new Date(checkin);
+      minCheckout.setDate(minCheckout.getDate() + 1);
+      inputCheckout.min = minCheckout.toISOString().split('T')[0];
+      
+      // Se checkout for anterior ao novo checkin + 1 dia, atualize-o
+      if (checkout <= checkin) {
+        inputCheckout.value = minCheckout.toISOString().split('T')[0];
+      }
+      
+      atualizarTotal();
+    });
 
     selectCasa.addEventListener('change', atualizarTotal);
-    inputCheckin.addEventListener('change', atualizarTotal);
     inputCheckout.addEventListener('change', atualizarTotal);
+    
+    // Inicializar com valores padrão
+    if (inputCheckin.value) {
+      atualizarTotal();
+    }
   </script>
 </body>
 </html>

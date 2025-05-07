@@ -70,6 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=37174&format=png&color=000000" alt="Ícone Funcionários" style="height: 50px;">
+        <h1>Adicionar um novo Funcionário</h1>
+    </div>
 
 <link rel="stylesheet" href="admin.css">
 <form method="post">
@@ -99,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <button type="submit">Salvar</button>
 </form>
+<a href="funcionarios.php">← Voltar</a>
 
 <?php
 if (isset($erro)) {

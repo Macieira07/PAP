@@ -37,7 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Adicionar Nova Casa</title>
 </head>
 <body>
-    <h2>Adicionar Nova Casa</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
+        <h2>Adicionar Novo Alojamento</h2>
+    </div>
     <form method="post">
         Nome: <input type="text" name="nome" required><br><br>
         Descrição: <textarea name="descricao"></textarea><br><br>

@@ -11,7 +11,10 @@ $resultado = $conexao->query("SELECT * FROM servicos");
     <title>Serviços</title>
 </head>
 <body>
-    <h1>Lista de Serviços</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
+        <h1>Todos os Serviços</h1>
+    </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_servico.php">+ Adicionar Serviço</a>
     <table border="1" cellpadding="10" style="margin-top: 20px;">

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Elementos do chat
   const chatButton = document.querySelector('.chat-button');
   const chatWindow = document.querySelector('.chat-window');
-  const chatCloseBtn = document.querySelector('.chat-action-btn');
+  const chatCloseBtn = document.querySelector('.close-btn');
   const chatInput = document.getElementById('chatInput');
   const sendButton = document.querySelector('.send-button');
   const chatMessages = document.querySelector('.chat-messages');
@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const chatTabs = document.querySelectorAll('.chat-tab');
   const chatPanels = document.querySelectorAll('.chat-panel');
   const faqList = document.querySelector('.faq-list');
-  const emojiButton = document.querySelector('.chat-extra-btn:first-child');
-  const attachButton = document.querySelector('.chat-extra-btn:last-child');
+  const emojiButton = document.querySelector('.emoji-btn');
+  const attachButton = document.querySelector('.attach-btn');
 
   // Estado do chat
   let chatHistory = [];
@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', function () {
   let isFirstMessage = true;
   let sessionId = generateSessionId();
 
-  // Base de conhecimento expandida com mais informações sobre a Quinta Flores
+  // Base de conhecimento expandida
   const knowledgeBase = {
     greeting: [
-      "Olá! Bem-vindo à Quinta Flores. Como posso ajudar com a sua estadia?",
-      "Bem-vindo! Sou o assistente virtual da Quinta Flores. Em que posso ser útil hoje?",
+      "Olá! Bem-vindo à Quinta Flores. Como posso ajudar?",
+      "Bem-vindo! Sou um assistente virtual da Quinta Flores. Em que posso ser útil?",
       "Olá! É um prazer recebê-lo na Quinta Flores. Como posso tornar a sua experiência melhor?"
     ],
     goodbye: [
@@ -40,43 +40,38 @@ document.addEventListener('DOMContentLoaded', function () {
     ],
     rooms: {
       info: "A Quinta Flores dispõe de 3 quartos acolhedores: um quarto com suite e jacuzzi ideal para casais, e dois quartos familiares para até 4 pessoas cada, que partilham casa de banho.",
-      suite: "O nosso quarto com suite tem 25m², cama de casal king-size, casa de banho privativa com jacuzzi e varanda com vista privilegiada para o jardim e piscina.",
-      quarto2: "O Quarto 2 é espaçoso com 35m², duas camas de casal confortáveis, decoração rústica e partilha casa de banho com o Quarto 3. Ideal para famílias ou grupos.",
-      quarto3: "O Quarto 3 oferece 50m², duas camas de casal, amplo espaço para relaxar e partilha casa de banho com o Quarto 2. Perfeito para grupos que viajam juntos."
+      suite: "O nosso quarto com suite tem 21.8m², cama de casal king-size, casa de banho privada com jacuzzi e varanda com vista privilegiada para o jardim e piscina.",
+      quarto2: "O Quarto 2 é espaçoso com 16.2m², duas camas de casal confortáveis, decoração rústica e partilha casa de banho com o Quarto 3. Ideal para famílias ou grupos.",
+      quarto3: "O Quarto 3 oferece 16.2m², duas camas de casal, amplo espaço para relaxar e partilha casa de banho com o Quarto 2. Perfeito para grupos que viajam juntos."
     },
     disponibilidade: {
-      geral: "Para verificar disponibilidade específica para as suas datas, utilize o formulário de reserva no topo da página ou entre em contacto direto connosco.",
+      geral: "Para verificar disponibilidade específica para as suas datas, utilize o [formulário de reserva](#reservas) no nosso site ou entre em contacto direto connosco pelo telefone +351 919 241 169.",
       verao: "Os meses de verão (junho a setembro) são muito procurados, recomendamos reservar com pelo menos 2 meses de antecedência.",
       inverno: "Na época baixa (novembro a março, exceto festas) temos geralmente boa disponibilidade e ofertas especiais para estadias longas."
     },
     precos: {
-      geral: "Os preços variam conforme a época do ano e duração da estadia. Consulte nossa tabela no site para valores atualizados.",
-      suite: "O quarto com suite e jacuzzi tem preços a partir de 120€ por noite na época baixa e 160€ na época alta.",
-      quartos: "Os quartos familiares têm preços a partir de 100€ por noite na época baixa e 140€ na época alta, com capacidade para até 4 pessoas.",
-      descontos: "Oferecemos 10% de desconto para estadias de 5 ou mais noites e 15% para estadias superiores a 7 noites."
+      geral: "Os preços variam conforme a época do ano e duração da estadia mas normalmente é 120 euros por noite. Consulte nossa [tabela de preços](#precos) no site para valores atualizados.",
     },
     politicas: {
-      checkin: "O check-in é realizado entre as 15h00 e as 20h00. Check-ins tardios são possíveis mediante aviso prévio.",
-      checkout: "O check-out deve ser feito até às 11h00. Podemos guardar as suas bagagens se precisar sair mais tarde.",
-      cancelamento: "Cancelamentos gratuitos até 7 dias antes da data de chegada. Após esse período, será cobrado 50% do valor da reserva.",
-      criancas: "Crianças são bem-vindas! Temos camas extras e berços disponíveis mediante solicitação prévia.",
-      animais: "Infelizmente não podemos acomodar animais de estimação, exceto cães-guia."
+      checkin: "O check-in é realizado a partir das 11h  Check-ins tardios são possíveis mediante aviso prévio.",
+      checkout: "O check-out deve ser feito até às 15h00. Podemos guardar as suas bagagens se precisar sair mais tarde.",
+      cancelamento: "Cancelamentos gratuitos até 10 dias antes da data de chegada. Após esse período, será cobrado 50% do valor da reserva.",
+      animais: "Só aceitamos animais de porte pequeno ou cães-guia."
     },
     localizacao: {
       geral: "A Quinta Flores está localizada em Calheiros, Ponte de Lima, a apenas 5 minutos de carro do centro histórico da vila mais antiga de Portugal.",
       acesso: "Somos facilmente acessíveis pela A3, com estacionamento gratuito na propriedade. O Aeroporto do Porto fica a 45 minutos de carro.",
-      proximidades: "Na região, encontrará o centro histórico de Ponte de Lima, o rio Lima, trilhos pedestres, campos de golfe, praias fluviais e inúmeros locais de interesse cultural."
+      proximidades: "Na região, encontrará o centro histórico de Ponte de Lima, o rio Lima, trilhos pedestres, praias fluviais e inúmeros locais de interesse cultural."
     },
     comodidades: {
-      geral: "Oferecemos Wi-Fi gratuito, piscina exterior, estacionamento privativo, pequeno-almoço regional, área de lazer e jardins exuberantes.",
-      pequeno_almoco: "O pequeno-almoço regional inclui produtos frescos locais, frutas da nossa quinta, pão caseiro, compotas artesanais e muito mais.",
-      piscina: "A piscina está disponível de maio a outubro, das 9h00 às 20h00, com espreguiçadeiras e toalhas à disposição dos hóspedes.",
+      geral: "Oferecemos Wi-Fi gratuito, piscina exterior, estacionamento privado,área de lazer e jardins exuberantes.",
+      piscina: "A piscina está sempre disponível com espreguiçadeiras e toalhas à disposição.",
       jardins: "Os nossos jardins têm mais de 5000m² com árvores centenárias, flores sazonais e áreas de descanso para relaxar."
     },
     atividades: {
-      quinta: "Na quinta, pode desfrutar da piscina, relaxar nos jardins, colher frutas sazonais (quando disponíveis) e participar em workshops gastronómicos ocasionais.",
-      regiao: "A região oferece passeios de barco no rio Lima, trilhos pedestres, visitas a vinícolas, praias fluviais, campos de golfe e feiras tradicionais semanais.",
-      gastronomia: "Recomendamos vivamente explorar a rica gastronomia minhota nos restaurantes locais. Podemos sugerir os melhores estabelecimentos da região."
+      quinta: "Na quinta, pode desfrutar da piscina, relaxar nos jardins e colher frutas sazonais (quando disponíveis) participar em workshops gastronómicos ocasionais.",
+      regiao: "A região oferece passeios de barco no rio Lima, trilhos pedestres, praias fluviais e festas tradicionais semanais.Temos sugestões de passeios no site",
+      gastronomia: "Recomendamos vivamente explorar a rica gastronomia minhota nos restaurantes locais. Podemos sugerir os melhores estabelecimentos da região. Temos sugestões no site"
     },
     eventos: {
       quinta: "A Quinta Flores é um espaço ideal para pequenos eventos como aniversários, reuniões familiares ou retiros empresariais para até 25 pessoas.",
@@ -88,6 +83,21 @@ document.addEventListener('DOMContentLoaded', function () {
       publico: "A estação de autocarros de Ponte de Lima fica a 5 minutos de carro. Podemos arranjar transporte mediante pedido prévio.",
       taxi: "Temos parcerias com serviços de táxi locais que oferecem tarifas especiais para os nossos hóspedes."
     },
+    reservas: {
+      online: "Você pode fazer sua reserva diretamente pelo nosso site [Quinta Flores Reservas](#) ou através de plataformas como Booking.com e Airbnb.",
+      contacto: "Para reservas diretas conosco, ligue para +351 919 241 169 ou envie email para quinta.flores2019@gmail.com.",
+      grupo: "Para reservas de grupo (mais de 8 pessoas), oferecemos condições especiais. Entre em contacto diretamente conosco para negociação.",
+      pagamento: "Aceitamos pagamento por transferência bancária, MB Way, cartão de crédito e dinheiro."
+    },
+    experiencias: {
+      gastronomia: "Oferecemos experiências gastronômicas típicas da região, como workshops de cozinha minhota e degustação de vinho verde.",
+      natureza: "Organizamos passeios guiados pelos jardins da quinta e trilhos pedestres na região com guia local.",
+      cultural: "Temos parcerias com artesãos locais para workshops de cestaria e cerâmica tradicional."
+    },
+    acessibilidade: {
+      geral: "A Quinta Flores tem acesso para pessoas com mobilidade reduzida em áreas comuns, mas alguns quartos possuem escadas.",
+      transporte: "Podemos organizar transporte adaptado mediante solicitação prévia com 48h de antecedência."
+    },
     unknown: [
       "Desculpe, não compreendi completamente. Pode reformular a sua pergunta ou especificar melhor o que procura?",
       "Hmm, não tenho certeza se entendi corretamente. Pode perguntar de outra forma?",
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ]
   };
 
-  // FAQs para a seção de perguntas frequentes
+  // FAQs atualizadas
   const faqs = [
     {
       question: "Qual é o horário de check-in e check-out?",
@@ -128,42 +138,61 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       question: "Têm opções para refeições além do pequeno-almoço?",
       answer: "Não servimos almoço ou jantar regularmente, mas podemos preparar refeições especiais mediante pedido antecipado ou recomendar excelentes restaurantes na região."
+    },
+    {
+      question: "Como posso fazer uma reserva diretamente com a Quinta?",
+      answer: "Você pode reservar diretamente pelo nosso site, por telefone (+351 919 241 169) ou por email (quinta.flores2019@gmail.com). Reservas diretas conosco têm vantagens como flexibilidade de cancelamento."
+    },
+    {
+      question: "Quais métodos de pagamento são aceitos?",
+      answer: "Aceitamos transferência bancária, MB Way, cartões de crédito (Visa, Mastercard) e pagamento em dinheiro no check-in."
+    },
+    {
+      question: "Têm programas especiais para lua de mel?",
+      answer: "Sim! Oferecemos pacotes românticos que incluem jantar privativo, decoração especial no quarto e passeios a locais pitorescos. Consulte-nos para detalhes."
+    },
+    {
+      question: "Há atividades para crianças na quinta?",
+      answer: "Temos área de jogos, atividades de contacto com animais e oficinas de artesanato infantil nos fins de semana e épocas festivas."
+    },
+    {
+      question: "Podem preparar refeições vegetarianas/veganas?",
+      answer: "Sim, nosso pequeno-almoço pode ser adaptado para dietas especiais. Para outras refeições, avise com antecedência para prepararmos opções adequadas."
     }
   ];
 
-  // Preencher a seção de FAQs
-  function populateFAQs() {
-    faqs.forEach(faq => {
-      const faqItem = document.createElement('div');
-      faqItem.className = 'faq-item';
-      faqItem.innerHTML = `
-        <div class="faq-question">
-          <span>${faq.question}</span>
-          <i class="ri-arrow-down-s-line"></i>
-        </div>
-        <div class="faq-answer">${faq.answer}</div>
-      `;
-      faqList.appendChild(faqItem);
-    });
+  // Palavras-chave atualizadas
+  const keywords = {
+    greeting: ['olá', 'oi', 'bom dia', 'boa tarde', 'boa noite', 'saudações', 'olá'],
+    goodbye: ['adeus', 'até logo', 'tchau', 'até breve', 'até amanhã', 'até já'],
+    thanks: ['obrigado', 'obrigada', 'agradecido', 'agradeço', 'valeu', 'grato'],
+    rooms: ['quarto', 'suite', 'cama', 'dormitório', 'dormir', 'jacuzzi', 'alojamento'],
+    precos: ['preço', 'custo', 'valor', 'quanto custa', 'tarifas', 'euros', 'desconto', 'promoção'],
+    disponibilidade: ['disponível', 'disponibilidade', 'vaga', 'livre', 'reservar', 'reserva', 'marcar'],
+    localizacao: ['localização', 'onde fica', 'endereço', 'como chegar', 'distância', 'perto', 'mapa'],
+    comodidades: ['comodidades', 'facilidades', 'wi-fi', 'piscina', 'pequeno-almoço', 'amenities', 'serviços'],
+    politicas: ['política', 'regras', 'check-in', 'check-out', 'cancelamento', 'reembolso', 'horário'],
+    atividades: ['fazer', 'atividades', 'passeios', 'visitar', 'lazer', 'turismo', 'entretenimento'],
+    transportes: ['transporte', 'carro', 'autocarro', 'táxi', 'transfer', 'aeroporto'],
+    reservas: ['reserva', 'reservar', 'marcação', 'book', 'booking', 'alugar', 'hospedagem'],
+    experiencias: ['experiência', 'workshop', 'passeio', 'guiado', 'gastronomia', 'cultural', 'natureza'],
+    acessibilidade: ['acessível', 'cadeira de rodas', 'mobilidade', 'deficiência', 'acesso']
+  };
 
-    // Event listeners para FAQs
-    document.querySelectorAll('.faq-question').forEach(question => {
-      question.addEventListener('click', () => {
-        const answer = question.nextElementSibling;
-        const icon = question.querySelector('i');
-        
-        answer.style.maxHeight = answer.style.maxHeight ? null : answer.scrollHeight + 'px';
-        icon.className = answer.style.maxHeight ? 'ri-arrow-down-s-line' : 'ri-arrow-up-s-line';
-      });
-    });
+  // Função para formatar mensagens com links
+  function formatMessage(text) {
+    let formatted = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="chat-link">$1</a>');
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="chat-link">$1</a>');
+    formatted = formatted.replace(/(\+[\d\s]{9,})/g, '<a href="tel:$1" class="chat-link">$1</a>');
+    formatted = formatted.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g, '<a href="mailto:$1" class="chat-link">$1</a>');
+    return formatted;
   }
 
-  // Função para adicionar mensagens ao chat com opções mais avançadas
+  // Função para adicionar mensagens ao chat
   function addMessage(message, sender, options = {}) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
-    
-    // Verificar se é a primeira mensagem do dia para adicionar separador
+
     const now = new Date();
     if (!lastResponseTime || !isSameDay(lastResponseTime, now)) {
       const separator = document.createElement('div');
@@ -171,40 +200,32 @@ document.addEventListener('DOMContentLoaded', function () {
       separator.innerHTML = `<span>${formatDate(now)}</span>`;
       chatMessages.appendChild(separator);
     }
-    
-    // Criar bolha de mensagem
+
     const bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'message-bubble';
-    
-    // Verificar se é uma mensagem rica (com HTML)
+
     if (options.isRich) {
       bubbleDiv.innerHTML = message;
     } else {
-      // Detectar e formatar URLs
-      const formattedMessage = formatMessage(message);
-      bubbleDiv.innerHTML = formattedMessage;
+      bubbleDiv.innerHTML = formatMessage(message);
     }
-    
-    // Adicionar tempo
+
     const timeDiv = document.createElement('div');
     timeDiv.className = 'message-time';
     const messageTime = options.time || now;
     timeDiv.textContent = formatTime(messageTime);
-    
-    // Adicionar elementos à DOM
+
     messageDiv.appendChild(bubbleDiv);
     messageDiv.appendChild(timeDiv);
     chatMessages.appendChild(messageDiv);
-    
-    // Salvar no histórico
+
     if (sender === 'sent') {
       lastUserMessage = message;
     }
-    
+
     lastResponseTime = now;
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    // Salvar na sessão
+
     if (!options.skipHistory) {
       chatHistory.push({
         message: message,
@@ -213,19 +234,17 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       saveHistory();
     }
-    
+
     return messageDiv;
   }
 
-  // Função para processar mensagens do usuário com sistema de intenções
+  // Função para processar mensagens do usuário
   function processUserMessage(message) {
     if (!message.trim()) return;
-    
-    // Adicionar mensagem do usuário ao chat
+
     addMessage(message, 'sent');
     chatInput.value = '';
-    
-    // Mostrar indicador de digitação
+
     const typingIndicator = document.createElement('div');
     typingIndicator.className = 'message received typing';
     const typingBubble = document.createElement('div');
@@ -234,18 +253,15 @@ document.addEventListener('DOMContentLoaded', function () {
     typingIndicator.appendChild(typingBubble);
     chatMessages.appendChild(typingIndicator);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    // Determinar intenção e resposta
+
     setTimeout(() => {
       typingIndicator.remove();
       
-      // Se for primeira mensagem, mostrar saudação especial
       if (isFirstMessage) {
         const welcomeResponse = getWelcomeResponse(message);
         addMessage(welcomeResponse, 'received');
         isFirstMessage = false;
         
-        // Adicionar sugestões após a primeira interação
         setTimeout(() => {
           addSuggestions();
         }, 1000);
@@ -253,29 +269,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const response = getResponse(message.toLowerCase());
         addMessage(response, 'received');
       }
-    }, Math.random() * 500 + 800); // Tempo de resposta variável para parecer mais natural
+    }, Math.random() * 500 + 800);
   }
 
-  // Função para obter resposta com base na mensagem - sistema de intenções melhorado
+  // Função para obter resposta com base na mensagem
   function getResponse(message) {
-    // Palavras-chave para categorias específicas
-    const keywords = {
-      quartos: ['quarto', 'suite', 'cama', 'dormitório', 'dormir', 'jacuzzi', 'alojamento'],
-      precos: ['preço', 'custo', 'valor', 'quanto custa', 'tarifas', 'euros', 'desconto', 'promoção'],
-      disponibilidade: ['disponível', 'disponibilidade', 'vaga', 'livre', 'reservar', 'reserva', 'marcar'],
-      localizacao: ['localização', 'onde fica', 'endereço', 'como chegar', 'distância', 'perto', 'mapa'],
-      comodidades: ['comodidades', 'facilidades', 'wi-fi', 'piscina', 'pequeno-almoço', 'amenities', 'serviços'],
-      politicas: ['política', 'regras', 'check-in', 'check-out', 'cancelamento', 'reembolso', 'horário'],
-      atividades: ['fazer', 'atividades', 'passeios', 'visitar', 'lazer', 'turismo', 'entretenimento'],
-      transportes: ['transporte', 'carro', 'autocarro', 'táxi', 'transfer', 'aeroporto'],
-      agradecimento: ['obrigado', 'obrigada', 'agradecido', 'agradeço', 'valeu', 'grato'],
-      despedida: ['adeus', 'até logo', 'tchau', 'até breve', 'até amanhã', 'até já']
-    };
-
-    // Verificar cada categoria de intenção
     for (const [category, terms] of Object.entries(keywords)) {
       if (terms.some(term => message.includes(term))) {
-        // Encontrou uma correspondência
         switch (category) {
           case 'quartos':
             if (message.includes('suite') || message.includes('jacuzzi')) {
@@ -357,6 +357,29 @@ document.addEventListener('DOMContentLoaded', function () {
               return knowledgeBase.transportes.carro;
             }
           
+          case 'reservas':
+            if (message.includes('online') || message.includes('site') || message.includes('internet')) {
+              return knowledgeBase.reservas.online;
+            } else if (message.includes('grupo') || message.includes('família grande') || message.includes('amigos')) {
+              return knowledgeBase.reservas.grupo;
+            } else if (message.includes('pagamento') || message.includes('pagar') || message.includes('cartão')) {
+              return knowledgeBase.reservas.pagamento;
+            } else {
+              return knowledgeBase.reservas.contacto;
+            }
+          
+          case 'experiencias':
+            if (message.includes('gastronomia') || message.includes('comida') || message.includes('culinária')) {
+              return knowledgeBase.experiencias.gastronomia;
+            } else if (message.includes('natureza') || message.includes('trilho') || message.includes('passeio')) {
+              return knowledgeBase.experiencias.natureza;
+            } else {
+              return knowledgeBase.experiencias.cultural;
+            }
+          
+          case 'acessibilidade':
+            return knowledgeBase.acessibilidade.geral;
+          
           case 'agradecimento':
             return getRandomResponse(knowledgeBase.thanks);
           
@@ -365,68 +388,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-    
-    // Verificar saudações simples
+
     if (message.includes('olá') || message.includes('oi') || message.includes('bom dia') || 
         message.includes('boa tarde') || message.includes('boa noite')) {
       return getRandomResponse(knowledgeBase.greeting);
     }
-    
-    // Se nenhuma intenção for encontrada
+
     return getRandomResponse(knowledgeBase.unknown);
-  }
-
-  // Função para obter mensagem de boas-vindas personalizada
-  function getWelcomeResponse(message) {
-    let greeting = getRandomResponse(knowledgeBase.greeting);
-    
-    // Personalizar se o usuário se apresentou
-    const nameMatch = message.match(/me chamo|sou [ao]|meu nome (é|e)|chamo-me/) || [];
-    if (nameMatch.length > 0) {
-      const parts = message.split(nameMatch[0]);
-      if (parts.length > 1) {
-        let name = parts[1].trim().split(' ')[0]; // Pegar o primeiro nome
-        name = name.charAt(0).toUpperCase() + name.slice(1); // Capitalizar
-        
-        if (name && name.length > 1) {
-          greeting = `Olá ${name}! É um prazer conhecê-lo. Sou o assistente virtual da Quinta Flores. Como posso ajudar com a sua visita?`;
-        }
-      }
-    }
-    
-    return greeting;
-  }
-
-  // Função para adicionar sugestões personalizadas
-  function addSuggestions() {
-    const suggestionsMessage = `
-      <p>Posso ajudar com:</p>
-      <div class="chat-chips">
-        <span class="chat-chip" data-query="informações sobre quartos">Quartos</span>
-        <span class="chat-chip" data-query="preços">Preços</span>
-        <span class="chat-chip" data-query="localização">Localização</span>
-        <span class="chat-chip" data-query="atividades na região">Atividades</span>
-      </div>
-    `;
-    
-    const msgDiv = addMessage(suggestionsMessage, 'received', { isRich: true });
-    
-    // Adicionar event listeners para os chips
-    msgDiv.querySelectorAll('.chat-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        processUserMessage(chip.dataset.query);
-      });
-    });
   }
 
   // Funções auxiliares
   function getRandomResponse(responses) {
     return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  function formatMessage(text) {
-    // Formatar URLs como links clicáveis
-    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
   }
 
   function formatTime(date) {
@@ -461,15 +434,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const history = JSON.parse(savedHistory);
         if (Array.isArray(history) && history.length > 0) {
           chatHistory = history;
-          
-          // Restaurar até as últimas 10 mensagens para não sobrecarregar
           const limitedHistory = history.slice(-10);
           let lastDate = null;
           
           limitedHistory.forEach((item, index) => {
             const msgDate = new Date(item.time);
             
-            // Verificar se precisamos adicionar separador de data
             if (!lastDate || !isSameDay(lastDate, msgDate)) {
               const separator = document.createElement('div');
               separator.className = 'chat-day-separator';
@@ -478,13 +448,11 @@ document.addEventListener('DOMContentLoaded', function () {
               lastDate = msgDate;
             }
             
-            // Adicionar a mensagem
             addMessage(item.message, item.sender, {
               time: msgDate,
               skipHistory: true
             });
             
-            // Atualizar estado
             if (item.sender === 'sent') {
               lastUserMessage = item.message;
             }
@@ -492,7 +460,6 @@ document.addEventListener('DOMContentLoaded', function () {
             isFirstMessage = false;
           });
           
-          // Scroll para o final
           chatMessages.scrollTop = chatMessages.scrollHeight;
         }
       } catch (e) {
@@ -502,18 +469,104 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Event listeners para tabs do chat
+  // Função para obter mensagem de boas-vindas personalizada
+  function getWelcomeResponse(message) {
+    let greeting = getRandomResponse(knowledgeBase.greeting);
+
+    const nameMatch = message.match(/me chamo|sou [ao]|meu nome (é|e)|chamo-me/) || [];
+    if (nameMatch.length > 0) {
+      const parts = message.split(nameMatch[0]);
+      if (parts.length > 1) {
+        let name = parts[1].trim().split(' ')[0];
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        
+        if (name && name.length > 1) {
+          greeting = `Olá ${name}! É um prazer conhecê-lo. Sou o assistente virtual da Quinta Flores. Como posso ajudar com a sua visita?`;
+        }
+      }
+    }
+
+    return greeting;
+  }
+
+  // Função para adicionar sugestões
+  function addSuggestions() {
+    const suggestionsMessage = `
+      <p>Posso ajudar com:</p>
+      <div class="chat-chips">
+        <span class="chat-chip" data-query="Como fazer reserva?">Reservas</span>
+        <span class="chat-chip" data-query="Preços para estadias longas">Preços</span>
+        <span class="chat-chip" data-query="Atividades para crianças">Atividades</span>
+        <span class="chat-chip" data-query="Experiências gastronômicas">Experiências</span>
+        <a href="#reservas" class="chat-chip-link">Ver Disponibilidade</a>
+        <a href="tel:+351919241169" class="chat-chip-link">Ligar Agora</a>
+      </div>
+    `;
+
+    const msgDiv = addMessage(suggestionsMessage, 'received', { isRich: true });
+
+    msgDiv.querySelectorAll('.chat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        processUserMessage(chip.dataset.query);
+      });
+    });
+  }
+
+  // Função para abrir chat automaticamente
+  function setupAutoOpen() {
+    if (localStorage.getItem('chatOpened')) return;
+    
+    setTimeout(() => {
+      if (!localStorage.getItem('chatAutoOpened')) {
+        chatWindow.style.display = 'flex';
+        chatWindow.classList.add('chat-appear');
+        localStorage.setItem('chatAutoOpened', 'true');
+        
+        setTimeout(() => {
+          addMessage(getRandomResponse(knowledgeBase.greeting), 'received');
+          addSuggestions();
+        }, 500);
+      }
+    }, 30000);
+  }
+
+  // Preencher FAQs
+  function populateFAQs() {
+    faqs.forEach(faq => {
+      const faqItem = document.createElement('div');
+      faqItem.className = 'faq-item';
+      faqItem.innerHTML = `
+        <div class="faq-question">
+          <span>${faq.question}</span>
+          <i class="ri-arrow-down-s-line"></i>
+        </div>
+        <div class="faq-answer">${faq.answer}</div>
+      `;
+      faqList.appendChild(faqItem);
+    });
+
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const icon = question.querySelector('i');
+        
+        answer.style.maxHeight = answer.style.maxHeight ? null : answer.scrollHeight + 'px';
+        icon.className = answer.style.maxHeight ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line';
+      });
+    });
+  }
+
+  // Event listeners
   chatTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
       chatTabs.forEach(t => t.classList.remove('active'));
       chatPanels.forEach(p => p.classList.remove('active'));
-      
+
       tab.classList.add('active');
       chatPanels[index].classList.add('active');
     });
   });
 
-  // Event listener para botão de chat
   chatButton.addEventListener('click', () => {
     if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
       chatWindow.style.display = 'flex';
@@ -529,7 +582,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chatNotification.style.display = 'none';
   });
 
-  // Event listener para fechar chat
   chatCloseBtn.addEventListener('click', () => {
     chatWindow.classList.add('chat-disappear');
     setTimeout(() => {
@@ -538,12 +590,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 300);
   });
 
-  // Event listener para botão de enviar
   sendButton.addEventListener('click', () => {
     processUserMessage(chatInput.value);
   });
 
-  // Event listener para tecla Enter
   chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -551,14 +601,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Auto-resize para o campo de texto
   chatInput.addEventListener('input', function() {
     this.style.height = 'auto';
     const newHeight = Math.min(this.scrollHeight, 100);
     this.style.height = newHeight + 'px';
   });
 
-  // Event listener para botões de resposta rápida
   quickReplyButtons.forEach((button) => {
     button.addEventListener('click', () => {
       processUserMessage(button.textContent);
@@ -567,33 +615,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Inicialização
   function init() {
-    // Carregar histórico se existir
     loadHistory();
-    
-    // Preencher FAQs
     populateFAQs();
-    
-    // Mensagem de boas-vindas se não houver histórico prévio
-    if (isFirstMessage) {
+    setupAutoOpen();
+
+    if (isFirstMessage && !localStorage.getItem('chatAutoOpened')) {
       setTimeout(() => {
         addMessage(getRandomResponse(knowledgeBase.greeting), 'received');
       }, 1000);
-    }
-    
-    // Notificação simulada após alguns segundos
-    if (!localStorage.getItem('chatOpened')) {
-      setTimeout(() => {
-        if (chatWindow.style.display !== 'flex') {
-          chatNotification.style.display = 'flex';
-          chatNotification.textContent = '1';
-        }
-      }, 30000);
     }
   }
 
   // Iniciar o chat
   init();
 
-  // Marcar que o chat foi aberto nesta sessão
+  // Marcar que o chat foi aberto
   localStorage.setItem('chatOpened', 'true');
 });

@@ -51,3 +51,10 @@ Stack trace:
 #0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
+[07-May-2025 08:31:40 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 27
+[07-May-2025 08:31:40 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
+[07-May-2025 08:31:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 40

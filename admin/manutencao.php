@@ -1,8 +1,12 @@
 <?php
 require '../conexao.php';
 
+// Consulta para obter os dados das manutenções
 $resultado = $conexao->query("SELECT * FROM manutencao INNER JOIN casas ON manutencao.M_id_casa = casas.C_id_casa");
 
+// Consulta para calcular o total gasto em manutenções
+$resultado_total = $conexao->query("SELECT SUM(M_custo) AS total_gasto FROM manutencao");
+$total_gasto = $resultado_total->fetch_assoc()['total_gasto'];
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +17,10 @@ $resultado = $conexao->query("SELECT * FROM manutencao INNER JOIN casas ON manut
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <h1>Lista de Manutenções</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
+        <h1>Lista de Manutenções</h1>
+    </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_manutencao.php">+ Adicionar Manutenção</a>
     <table border="1" cellpadding="10" style="margin-top: 20px;">
@@ -43,5 +50,11 @@ $resultado = $conexao->query("SELECT * FROM manutencao INNER JOIN casas ON manut
             </tr>
         <?php endwhile; ?>
     </table>
+
+    <!-- Exibe o total gasto -->
+    <div style="margin-top: 20px;">
+        <strong>Total Gasto em Manutenções: <?= number_format($total_gasto, 2, ',', '.') ?>€</strong>
+    </div>
 </body>
 </html>
+            

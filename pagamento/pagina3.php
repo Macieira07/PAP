@@ -6,7 +6,7 @@ ini_set('display_startup_errors', 1);
 
 session_start();
 
-// Configurações (as mesmas que nas outras páginas)
+// Configurações
 define('SITE_NAME', 'Quinta das Flores');
 define('PRIMARY_COLOR', '#6A0DAD');
 define('SECONDARY_COLOR', '#A56EFF');
@@ -60,7 +60,7 @@ $dados_bancarios = [
     ]
 ];
 
-// Verificar se o usuário está logado
+// Verificar se o utilizador está autenticado
 if (!isset($_SESSION['id'])) {
     header('Location: ../login/login.php');
     exit();
@@ -75,19 +75,20 @@ foreach ($required_session_vars as $var) {
     }
 }
 
+// Conectar à base de dados
 require_once '../conexao.php';
 
 if ($conexao->connect_error) {
-    die('<div class="error-container" style="padding: 20px; color: red;">Falha na conexão com o banco de dados. Por favor, tente novamente mais tarde.</div>');
+    die('<div class="error-container" style="padding: 20px; color: red;">Falha na ligação à base de dados. Por favor, tente novamente mais tarde.</div>');
 }
 
-// Calcula número de noites
+// Cálculo do número de noites
 $checkin = new DateTime($_SESSION['checkin']);
 $checkout = new DateTime($_SESSION['checkout']);
 $num_noites = $checkin->diff($checkout)->days;
 
-// Calcula preço total
-$preco_total = 120 * $num_noites;
+// Cálculo do preço total
+$preco_total = 120 * $num_noites; // Preço base por noite
 if (isset($_SESSION['servicos'])) {
     foreach ($_SESSION['servicos'] as $servico) {
         switch ($servico) {
@@ -109,6 +110,8 @@ if (isset($_SESSION['servicos'])) {
         }
     }
 }
+
+$mensagem_erro = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $metodo_pagamento = $_POST['pagamento'] ?? '';
@@ -135,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
     
-    // Validação básica
+    // Validação
     $erros = [];
     if (empty($metodo_pagamento)) {
         $erros[] = "Selecione um método de pagamento.";
@@ -166,13 +169,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $extensoes_validas = ['pdf', 'jpg', 'jpeg', 'png'];
             
             if (!in_array($extensao, $extensoes_validas)) {
-                $erros[] = "Formato de arquivo inválido. Use PDF, JPG ou PNG.";
+                $erros[] = "Formato de ficheiro inválido. Use PDF, JPG ou PNG.";
             } elseif ($_FILES['comprovativo']['size'] > 5 * 1024 * 1024) { // 5MB
-                $erros[] = "Arquivo muito grande. Tamanho máximo: 5MB.";
+                $erros[] = "Ficheiro muito grande. Tamanho máximo: 5MB.";
             }
         }
     }
-    // Não há validação específica para pagamento em dinheiro
+    // Sem validação específica para pagamento em dinheiro
     
     if (empty($erros)) {
         // Processar upload do comprovativo se for transferência
@@ -194,53 +197,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (empty($erros)) {
             // Seleciona uma casa disponível
-            $query = "SELECT C_id_casa FROM casas 
-                      WHERE C_id_casa NOT IN (
-                          SELECT R_id_casa FROM reservas 
-                          WHERE (R_data_checkin < ? AND R_data_checkout > ?) 
-                          OR (R_data_checkin < ? AND R_data_checkout >= ?)
-                      ) 
-                      AND C_estado = 'disponível'
-                      LIMIT 1";
-            $stmt = $conexao->prepare($query);
-            $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkin'], $_SESSION['checkout']);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            
-            if ($resultado->num_rows > 0) {
-                $casa = $resultado->fetch_assoc();
-                $id_casa = $casa['C_id_casa'];
-                
-                // Insere a reserva
-                $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_metodo_pagamento, R_dados_pagamento)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try {
+                $query = "SELECT C_id_casa FROM casas 
+                          WHERE C_id_casa NOT IN (
+                              SELECT R_id_casa FROM reservas 
+                              WHERE (R_data_checkin < ? AND R_data_checkout > ?) 
+                              OR (R_data_checkin < ? AND R_data_checkout >= ?)
+                          ) 
+                          AND C_estado = 'disponível'
+                          LIMIT 1";
                 $stmt = $conexao->prepare($query);
-                $status_reserva = 'Pendente'; // Estado inicial
+                $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkin'], $_SESSION['checkout']);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
                 
-                // Define o estado da reserva de acordo com o método de pagamento
-                if ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') {
-                    $status_reserva = 'Pendente';
-                } else {
-                    $status_reserva = 'Confirmada';
-                }
-                
-                $dados_pagamento_json = json_encode($dados_pagamento);
-                $stmt->bind_param("iissidsss", $_SESSION['id'], $id_casa, $_SESSION['checkin'], $_SESSION['checkout'], $_SESSION['num_hospedes'], $preco_total, $status_reserva, $metodo_pagamento, $dados_pagamento_json);
-                
-                if ($stmt->execute()) {
-                    $reserva_id = $conexao->insert_id;
-                    $_SESSION['reserva_id'] = $reserva_id;
-                    $_SESSION['preco_total'] = $preco_total;
-                    $_SESSION['metodo_pagamento'] = $metodo_pagamento;
+                if ($resultado->num_rows > 0) {
+                    $casa = $resultado->fetch_assoc();
+                    $id_casa = $casa['C_id_casa'];
                     
-                    // Redireciona para confirmação
-                    header('Location: confirmacao.php');
-                    exit();
+                    // Define o estado da reserva de acordo com o método de pagamento
+                    $status_reserva = ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') 
+                                      ? 'Pendente' : 'Confirmada';
+                    
+                    // Insere a reserva
+                    $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 
+                              R_num_hospedes, R_preco_total, R_estado, R_metodo_pagamento, R_dados_pagamento)
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = $conexao->prepare($query);
+                    
+                    $dados_pagamento_json = json_encode($dados_pagamento);
+                    $stmt->bind_param("iissidsss", $_SESSION['id'], $id_casa, $_SESSION['checkin'], 
+                                     $_SESSION['checkout'], $_SESSION['num_hospedes'], $preco_total, 
+                                     $status_reserva, $metodo_pagamento, $dados_pagamento_json);
+                    
+                    if ($stmt->execute()) {
+                        $reserva_id = $conexao->insert_id;
+                        $_SESSION['reserva_id'] = $reserva_id;
+                        $_SESSION['preco_total'] = $preco_total;
+                        $_SESSION['metodo_pagamento'] = $metodo_pagamento;
+                        
+                        // Redireciona para confirmação
+                        header('Location: confirmacao.php');
+                        exit();
+                    } else {
+                        $erros[] = "Erro ao processar reserva. Por favor, tente novamente. Erro: " . $stmt->error;
+                    }
                 } else {
-                    $erros[] = "Erro ao processar reserva. Por favor, tente novamente.";
+                    $erros[] = "Nenhuma casa disponível para as datas selecionadas.";
                 }
-            } else {
-                $erros[] = "Nenhuma casa disponível para as datas selecionadas.";
+            } catch (Exception $e) {
+                $erros[] = "Ocorreu um erro ao processar a sua reserva: " . $e->getMessage();
             }
         }
     }
@@ -263,6 +269,7 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
     <link rel="icon" type="image/x-icon" href="logotipos/logotipo2.png">
+
 </head>
 <body>
     <div class="container">
@@ -360,7 +367,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                     </label>
                 </div>
                 
-                <!-- Nova opção de pagamento em dinheiro -->
                 <div class="metodo-option">
                     <input type="radio" id="dinheiro_radio" name="pagamento" value="Dinheiro" 
                            <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Dinheiro') ? 'checked' : '' ?>>
@@ -385,7 +391,7 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                     <label for="numero_cartao">Número do Cartão</label>
                     <input type="text" id="numero_cartao" name="numero_cartao" class="form-control" 
                            value="<?= isset($_POST['numero_cartao']) ? htmlspecialchars($_POST['numero_cartao']) : '' ?>"
-                           placeholder="1234 5678 9012 3456">
+                           placeholder="1234 5678 9012 3456" maxlength="19">
                 </div>
                 
                 <div class="form-row">
@@ -409,10 +415,9 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                 <h4><i class="fas fa-mobile-alt"></i> Dados MB WAY</h4>
                 
                 <div class="form-group">
-                    <label for="numero_mbway">Número de Telemóvel</label>
-                    <input type="text" id="numero_mbway" name="numero_mbway" class="form-control" 
+                    <label for="numero_mbway">Número de Telemóvel</label>                    <input type="text" id="numero_mbway" name="numero_mbway" class="form-control" 
                            value="<?= isset($_POST['numero_mbway']) ? htmlspecialchars($_POST['numero_mbway']) : (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : '') ?>"
-                           placeholder="912345678">
+                           placeholder="912345678" maxlength="9">
                 </div>
                 
                 <div class="alert alert-info">
@@ -453,17 +458,16 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                 <div class="form-group">
                     <label>Comprovativo de Transferência</label>
                     <div class="arquivo-upload">
-                        <input type="file" id="comprovativo" name="comprovativo" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <input type="file" id="comprovativo" name="comprovativo" accept=".pdf,.jpg,.jpeg,.png">
                         <small>Formatos aceites: PDF, JPG, PNG (max. 5MB)</small>
                     </div>
                 </div>
                 
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> Sua reserva será confirmada após a validação do comprovativo. Envie o comprovativo com o número da reserva como referência.
+                    <i class="fas fa-info-circle"></i> A sua reserva será confirmada após a validação do comprovativo. Envie o comprovativo com o número da reserva como referência.
                 </div>
             </div>
             
-            <!-- Adicionar seção para pagamento em dinheiro -->
             <div id="dados-dinheiro" class="dados-pagamento" 
                  style="<?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Dinheiro') ? 'display: block;' : '' ?>">
                 <h4><i class="fas fa-money-bill-wave"></i> Pagamento em Dinheiro</h4>
@@ -518,86 +522,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
             transferenciaRadio.addEventListener('change', toggleMetodoPagamento);
             dinheiroRadio.addEventListener('change', toggleMetodoPagamento);
             
-            // Validação do formulário
-            document.getElementById('pagamentoForm').addEventListener('submit', function(e) {
-                const metodoPagamento = document.querySelector('input[name="pagamento"]:checked');
-                const errorElement = document.querySelector('.error-message');
-                
-                if (!metodoPagamento) {
-                    e.preventDefault();
-                    errorElement.style.display = 'block';
-                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, selecione um método de pagamento.';
-                    return false;
-                }
-                
-                if (metodoPagamento.value === 'Cartão') {
-                    const nomeCartao = document.getElementById('nome_cartao').value;
-                    const numeroCartao = document.getElementById('numero_cartao').value.replace(/\s/g, '');
-                    const validade = document.getElementById('validade').value;
-                    const cvc = document.getElementById('cvc').value;
-                    
-                    if (!nomeCartao || !numeroCartao || !validade || !cvc) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, preencha todos os campos do cartão.';
-                        return false;
-                    }
-                    
-                    if (!/^\d{16}$/.test(numeroCartao)) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número do cartão inválido. Deve conter 16 dígitos.';
-                        return false;
-                    }
-                    
-                    if (!/^\d{3}$/.test(cvc)) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Código CVC inválido. Deve conter 3 dígitos.';
-                        return false;
-                    }
-                } else if (metodoPagamento.value === 'MB WAY') {
-                    const numeroMbway = document.getElementById('numero_mbway').value;
-                    
-                    if (!/^\d{9}$/.test(numeroMbway)) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número MB WAY inválido. Deve conter 9 dígitos.';
-                        return false;
-                    }
-                } else if (metodoPagamento.value === 'Transferência') {
-                    const comprovativo = document.getElementById('comprovativo').files[0];
-                    
-                    if (!comprovativo) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, envie o comprovativo de transferência.';
-                        return false;
-                    }
-                    
-                    const extensoesValidas = ['pdf', 'jpg', 'jpeg', 'png'];
-                    const extensao = comprovativo.name.split('.').pop().toLowerCase();
-                    const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
-                    
-                    if (!extensoesValidas.includes(extensao)) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Formato de arquivo inválido. Use PDF, JPG ou PNG.';
-                        return false;
-                    }
-                    
-                    if (comprovativo.size > tamanhoMaximo) {
-                        e.preventDefault();
-                        errorElement.style.display = 'block';
-                        errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Arquivo muito grande. Tamanho máximo: 5MB.';
-                        return false;
-                    }
-                }
-                // Não é necessária validação para pagamento em dinheiro
-                
-                return true;
-            });
-            
             // Formatação do número do cartão
             document.getElementById('numero_cartao').addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\s/g, '');
@@ -611,6 +535,98 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                 
                 e.target.value = formatted;
             });
+            
+            // Form validation
+            document.getElementById('pagamentoForm').addEventListener('submit', function(e) {
+                const metodoPagamento = document.querySelector('input[name="pagamento"]:checked');
+                const errorElement = document.querySelector('.error-message');
+                
+                if (!metodoPagamento) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, selecione um método de pagamento.';
+                    return false;
+                }
+                
+                if (metodoPagamento.value === 'Cartão') {
+                    validateCartao(e);
+                } else if (metodoPagamento.value === 'MB WAY') {
+                    validateMBWay(e);
+                } else if (metodoPagamento.value === 'Transferência') {
+                    validateTransferencia(e);
+                }
+            });
+            
+            function validateCartao(e) {
+                const nomeCartao = document.getElementById('nome_cartao').value;
+                const numeroCartao = document.getElementById('numero_cartao').value.replace(/\s/g, '');
+                const validade = document.getElementById('validade').value;
+                const cvc = document.getElementById('cvc').value;
+                const errorElement = document.querySelector('.error-message');
+                
+                if (!nomeCartao || !numeroCartao || !validade || !cvc) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, preencha todos os campos do cartão.';
+                    return false;
+                }
+                
+                if (!/^\d{16}$/.test(numeroCartao)) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número do cartão inválido. Deve conter 16 dígitos.';
+                    return false;
+                }
+                
+                if (!/^\d{3}$/.test(cvc)) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Código CVC inválido. Deve conter 3 dígitos.';
+                    return false;
+                }
+            }
+            
+            function validateMBWay(e) {
+                const numeroMbway = document.getElementById('numero_mbway').value;
+                const errorElement = document.querySelector('.error-message');
+                
+                if (!/^\d{9}$/.test(numeroMbway)) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Número MB WAY inválido. Deve conter 9 dígitos.';
+                    return false;
+                }
+            }
+            
+            function validateTransferencia(e) {
+                const comprovativo = document.getElementById('comprovativo').files[0];
+                const errorElement = document.querySelector('.error-message');
+                
+                if (!comprovativo) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, envie o comprovativo de transferência.';
+                    return false;
+                }
+                
+                const extensoesValidas = ['pdf', 'jpg', 'jpeg', 'png'];
+                const extensao = comprovativo.name.split('.').pop().toLowerCase();
+                const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
+                
+                if (!extensoesValidas.includes(extensao)) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Formato de ficheiro inválido. Use PDF, JPG ou PNG.';
+                    return false;
+                }
+                
+                if (comprovativo.size > tamanhoMaximo) {
+                    e.preventDefault();
+                    errorElement.style.display = 'block';
+                    errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Ficheiro muito grande. Tamanho máximo: 5MB.';
+                    return false;
+                }
+            }
         });
     </script>
 </body>

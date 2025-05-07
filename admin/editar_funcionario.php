@@ -102,8 +102,10 @@ if (isset($_POST['atualizar_ferias'])) {
     <title>Editar Funcionário</title>
 </head>
 <body>
-    <h1>Editar Funcionário</h1>
-    <a href="funcionarios.php">← Voltar</a>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=37174&format=png&color=000000" alt="Ícone Funcionários" style="height: 50px;">
+        <h1>Editar Funcionário</h1>
+    </div>
 
     <!-- Formulário de Edição de Funcionário -->
     <form method="post">
@@ -137,6 +139,7 @@ if (isset($_POST['atualizar_ferias'])) {
 
         <button type="submit" name="atualizar_ferias">Atualizar Férias/Ausências</button>
     </form>
+    <a href="funcionarios.php">← Voltar</a>
 
     <?php if (isset($erro)) { echo "<p style='color: red;'>$erro</p>"; } ?>
 </body>

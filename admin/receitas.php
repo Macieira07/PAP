@@ -16,7 +16,10 @@ $resultado = $conexao->query($query);
     <title>Listar Receitas</title>
 </head>
 <body>
-    <h1>Lista de Receitas</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=24836&format=png&color=000000" alt="Ícone Receitas" style="height: 50px;">
+        <h1>Todas as Receitas</h1>
+    </div>
     
     <table border="1">
         <thead>

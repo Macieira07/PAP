@@ -78,7 +78,10 @@ $servico = $resultado->fetch_assoc();
     </script>
 </head>
 <body>
-    <h2>Editar Serviço</h2>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
+        <h1>Editar Serviço</h1>
+    </div>
     <form method="post">
         Nome do Serviço: <input type="text" name="nome_servico" value="<?= $servico['S_nome'] ?>" required><br><br>
         Descrição: <textarea name="descricao"><?= $servico['S_descricao'] ?></textarea><br><br>

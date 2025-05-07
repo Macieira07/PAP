@@ -44,7 +44,10 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     <title>Funcionários</title>
 </head>
 <body>
-    <h1>Lista de Funcionários</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=37174&format=png&color=000000" alt="Ícone Funcionários" style="height: 50px;">
+        <h1>Todos os Funcionários</h1>
+    </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_funcionario.php">+ Adicionar Funcionário</a>
 

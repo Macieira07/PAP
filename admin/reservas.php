@@ -43,12 +43,20 @@ $resultado = $conexao->query("
     LIMIT $inicio, $por_pagina
 ");
 
+// Total de reservas para paginação
 $total_reservas = $conexao->query("SELECT COUNT(*) AS total FROM reservas")->fetch_assoc()['total'];
 $paginas = ceil($total_reservas / $por_pagina);
 
+// Consulta para calcular o total ganho nas reservas
+$resultado_total = $conexao->query("SELECT SUM(R_preco_total) AS total_ganho FROM reservas WHERE $where");
+$total_ganho = $resultado_total->fetch_assoc()['total_ganho'];
 ?>
+
 <link rel="stylesheet" href="admin.css">
-<h1>Lista de Reservas</h1>
+<div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
+        <h1>Todas as Reservas</h1>
+    </div>
 <a href="admin.php">← Voltar</a> |
 <a href="adicionar_reserva.php">+ Nova Reserva</a> |
 <a href="?exportar=1">Exportar para CSV</a>
@@ -113,6 +121,11 @@ $paginas = ceil($total_reservas / $por_pagina);
         </tr>
     <?php endwhile; ?>
 </table>
+
+<!-- Exibe o total ganho -->
+<div style="margin-top: 20px;">
+    <strong>Total Ganho nas Reservas: <?= number_format($total_ganho, 2, ',', '.') ?>€</strong>
+</div>
 
 <div>
     <?php for ($i = 1; $i <= $paginas; $i++): ?>
