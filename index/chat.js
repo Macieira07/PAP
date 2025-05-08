@@ -74,29 +74,18 @@ document.addEventListener('DOMContentLoaded', function () {
       gastronomia: "Recomendamos vivamente explorar a rica gastronomia minhota nos restaurantes locais. Podemos sugerir os melhores estabelecimentos da região. Temos sugestões no site"
     },
     eventos: {
-      quinta: "A Quinta Flores é um espaço ideal para pequenos eventos como aniversários, reuniões familiares ou retiros empresariais para até 25 pessoas.",
-      casamentos: "Infelizmente não realizamos casamentos, mas podemos recomendar quintas especializadas na região.",
+      quinta: "A Quinta Flores é um espaço ideal para pequenos eventos como aniversários, reuniões familiares ou retiros empresariais para até 100 pessoas. Para organizar esses eventos devem contactar conosco",
       festas: "Ponte de Lima tem um rico calendário de eventos tradicionais, como a Vaca das Cordas (maio/junho) e as Feiras Novas (setembro)."
     },
     transportes: {
       carro: "Recomendamos o uso de carro para maior flexibilidade. Disponibilizamos estacionamento gratuito e seguro na propriedade.",
-      publico: "A estação de autocarros de Ponte de Lima fica a 5 minutos de carro. Podemos arranjar transporte mediante pedido prévio.",
-      taxi: "Temos parcerias com serviços de táxi locais que oferecem tarifas especiais para os nossos hóspedes."
+      publico: "A estação de autocarros de Ponte de Lima fica a 5 minutos de carro.",
     },
     reservas: {
-      online: "Você pode fazer sua reserva diretamente pelo nosso site [Quinta Flores Reservas](#) ou através de plataformas como Booking.com e Airbnb.",
+      online: "Você pode fazer sua reserva diretamente pelo nosso site [Quinta Flores Reservas](#) presencialmente ou podem nos ligar.",
       contacto: "Para reservas diretas conosco, ligue para +351 919 241 169 ou envie email para quinta.flores2019@gmail.com.",
-      grupo: "Para reservas de grupo (mais de 8 pessoas), oferecemos condições especiais. Entre em contacto diretamente conosco para negociação.",
+      grupo: "Para reservas de grupo (mais de 10 pessoas), entre em contacto diretamente conosco para negociação.",
       pagamento: "Aceitamos pagamento por transferência bancária, MB Way, cartão de crédito e dinheiro."
-    },
-    experiencias: {
-      gastronomia: "Oferecemos experiências gastronômicas típicas da região, como workshops de cozinha minhota e degustação de vinho verde.",
-      natureza: "Organizamos passeios guiados pelos jardins da quinta e trilhos pedestres na região com guia local.",
-      cultural: "Temos parcerias com artesãos locais para workshops de cestaria e cerâmica tradicional."
-    },
-    acessibilidade: {
-      geral: "A Quinta Flores tem acesso para pessoas com mobilidade reduzida em áreas comuns, mas alguns quartos possuem escadas.",
-      transporte: "Podemos organizar transporte adaptado mediante solicitação prévia com 48h de antecedência."
     },
     unknown: [
       "Desculpe, não compreendi completamente. Pode reformular a sua pergunta ou especificar melhor o que procura?",
@@ -109,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const faqs = [
     {
       question: "Qual é o horário de check-in e check-out?",
-      answer: "O check-in é das 15h00 às 20h00 e o check-out até às 11h00. Flexibilidade mediante disponibilidade."
+      answer: "O check-in é a partir das 15h00 e o check-out até às 11h00. Flexibilidade mediante disponibilidade."
     },
     {
       question: "A piscina é aquecida?",
@@ -117,48 +106,36 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       question: "Posso levar o meu animal de estimação?",
-      answer: "Infelizmente não aceitamos animais de estimação, com exceção de cães-guia."
+      answer: "Se o animal for de porte pequeno ou cão-guia pode."
     },
     {
       question: "Têm berços disponíveis?",
-      answer: "Sim, disponibilizamos berços e camas extras mediante solicitação prévia."
+      answer: "Não temos berços mas pode trazer um porque não falta espaço"
     },
     {
       question: "Como posso chegar à Quinta Flores do Aeroporto do Porto?",
-      answer: "O Aeroporto do Porto fica a aproximadamente 45 minutos de carro. Pode alugar um veículo, apanhar um táxi ou solicitar-nos serviço de transfer (com custo adicional)."
-    },
-    {
-      question: "Existe um mínimo de noites para reserva?",
-      answer: "Na época alta (junho a setembro) temos um mínimo de 2 noites. Na época baixa, aceitamos reservas de apenas 1 noite, sujeitas a disponibilidade."
+      answer: "O Aeroporto do Porto fica a aproximadamente 45 minutos de carro. Pode alugar um veículo ou apanhar um táxi."
     },
     {
       question: "O pequeno-almoço está incluído?",
-      answer: "Sim, todas as reservas incluem o nosso pequeno-almoço regional com produtos locais e frescos."
+      answer: "Não fazemos nenhuma refeição."
     },
     {
       question: "Têm opções para refeições além do pequeno-almoço?",
-      answer: "Não servimos almoço ou jantar regularmente, mas podemos preparar refeições especiais mediante pedido antecipado ou recomendar excelentes restaurantes na região."
+      answer: "Não fazemos nenhuma refeição."
     },
     {
       question: "Como posso fazer uma reserva diretamente com a Quinta?",
-      answer: "Você pode reservar diretamente pelo nosso site, por telefone (+351 919 241 169) ou por email (quinta.flores2019@gmail.com). Reservas diretas conosco têm vantagens como flexibilidade de cancelamento."
+      answer: "Você pode reservar diretamente pelo nosso site, por telefone (+351 919 241 169) ou precensialmente."
     },
     {
       question: "Quais métodos de pagamento são aceitos?",
-      answer: "Aceitamos transferência bancária, MB Way, cartões de crédito (Visa, Mastercard) e pagamento em dinheiro no check-in."
-    },
-    {
-      question: "Têm programas especiais para lua de mel?",
-      answer: "Sim! Oferecemos pacotes românticos que incluem jantar privativo, decoração especial no quarto e passeios a locais pitorescos. Consulte-nos para detalhes."
+      answer: "Aceitamos transferência bancária, MB Way, cartões de crédito e pagamento em dinheiro no check-in."
     },
     {
       question: "Há atividades para crianças na quinta?",
-      answer: "Temos área de jogos, atividades de contacto com animais e oficinas de artesanato infantil nos fins de semana e épocas festivas."
+      answer: "Temos vários jogos/atividades de lazer para as crianças"
     },
-    {
-      question: "Podem preparar refeições vegetarianas/veganas?",
-      answer: "Sim, nosso pequeno-almoço pode ser adaptado para dietas especiais. Para outras refeições, avise com antecedência para prepararmos opções adequadas."
-    }
   ];
 
   // Palavras-chave atualizadas

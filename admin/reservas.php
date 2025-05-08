@@ -4,35 +4,36 @@ require '../conexao.php';
 // Filtros
 $where = "1=1";  // Condição inicial
 
-if (isset($_GET['status'])) {
-    $status = $_GET['status'];
+if (isset($_GET['status']) && $_GET['status'] !== '') {
+    $status = $conexao->real_escape_string($_GET['status']);
     $where .= " AND r.R_estado = '$status'";
 }
 
-if (isset($_GET['checkin'])) {
-    $checkin = $_GET['checkin'];
+if (isset($_GET['checkin']) && $_GET['checkin'] !== '') {
+    $checkin = $conexao->real_escape_string($_GET['checkin']);
     $where .= " AND r.R_data_checkin >= '$checkin'";
 }
 
-if (isset($_GET['checkout'])) {
-    $checkout = $_GET['checkout'];
+if (isset($_GET['checkout']) && $_GET['checkout'] !== '') {
+    $checkout = $conexao->real_escape_string($_GET['checkout']);
     $where .= " AND r.R_data_checkout <= '$checkout'";
 }
 
-$busca = isset($_GET['busca']) ? $_GET['busca'] : '';
+$busca = isset($_GET['busca']) ? $conexao->real_escape_string($_GET['busca']) : '';
 if ($busca) {
     $where .= " AND (h.H_nome LIKE '%$busca%' OR c.C_nome LIKE '%$busca%')";
 }
 
-$order = 'R_data_checkin DESC'; // Padrão: ordenar por data de check-in
+$order = 'r.R_data_checkin DESC'; // Padrão: ordenar por data de check-in
 if (isset($_GET['order_by'])) {
-    $order = $_GET['order_by'];
+    $order = $conexao->real_escape_string($_GET['order_by']);
 }
 
-$por_pagina = 10; // Número de registros por página
-$pagina_atual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+$por_pagina = 10;
+$pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 $inicio = ($pagina_atual - 1) * $por_pagina;
 
+// Consulta principal
 $resultado = $conexao->query("
     SELECT r.*, h.H_nome, c.C_nome
     FROM reservas r
@@ -44,22 +45,24 @@ $resultado = $conexao->query("
 ");
 
 // Total de reservas para paginação
-$total_reservas = $conexao->query("SELECT COUNT(*) AS total FROM reservas")->fetch_assoc()['total'];
+$total_reservas_resultado = $conexao->query("SELECT COUNT(*) AS total FROM reservas r WHERE $where");
+$total_reservas = $total_reservas_resultado->fetch_assoc()['total'];
 $paginas = ceil($total_reservas / $por_pagina);
 
-// Consulta para calcular o total ganho nas reservas
-$resultado_total = $conexao->query("SELECT SUM(R_preco_total) AS total_ganho FROM reservas WHERE $where");
-$total_ganho = $resultado_total->fetch_assoc()['total_ganho'];
+// Total ganho
+$resultado_total = $conexao->query("SELECT SUM(r.R_preco_total) AS total_ganho FROM reservas r WHERE $where");
+$total_ganho = $resultado_total->fetch_assoc()['total_ganho'] ?? 0;
 ?>
 
 <link rel="stylesheet" href="admin.css">
 <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
-        <h1>Todas as Reservas</h1>
-    </div>
+    <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
+    <h1>Todas as Reservas</h1>
+</div>
 <a href="admin.php">← Voltar</a> |
 <a href="adicionar_reserva.php">+ Nova Reserva</a> |
 <a href="?exportar=1">Exportar para CSV</a>
+
 <form method="get">
     Status: 
     <select name="status">
@@ -71,11 +74,11 @@ $total_ganho = $resultado_total->fetch_assoc()['total_ganho'];
     </select>
     Check-in: <input type="date" name="checkin" value="<?= isset($_GET['checkin']) ? $_GET['checkin'] : '' ?>">
     Check-out: <input type="date" name="checkout" value="<?= isset($_GET['checkout']) ? $_GET['checkout'] : '' ?>">
-    Busca: <input type="text" name="busca" value="<?= $busca ?>">
+    Busca: <input type="text" name="busca" value="<?= htmlspecialchars($busca) ?>">
     Ordenar por:
     <select name="order_by">
-        <option value="R_data_checkin DESC" <?= $order == 'R_data_checkin DESC' ? 'selected' : '' ?>>Data de Check-in</option>
-        <option value="R_preco_total DESC" <?= $order == 'R_preco_total DESC' ? 'selected' : '' ?>>Preço Total</option>
+        <option value="r.R_data_checkin DESC" <?= $order == 'r.R_data_checkin DESC' ? 'selected' : '' ?>>Data de Check-in</option>
+        <option value="r.R_preco_total DESC" <?= $order == 'r.R_preco_total DESC' ? 'selected' : '' ?>>Preço Total</option>
     </select>
     <button type="submit">Filtrar</button>
 </form>
