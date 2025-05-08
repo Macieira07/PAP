@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <?php
 require '../conexao.php';
 
@@ -29,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -38,23 +41,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
-        <h2>Adicionar Novo Alojamento</h2>
-    </div>
-    <form method="post">
-        Nome: <input type="text" name="nome" required><br><br>
-        Descrição: <textarea name="descricao"></textarea><br><br>
-        Capacidade: <input type="number" name="capacidade" required><br><br>
-        Preço por Noite (€): <input type="number" step="0.01" name="preco" required><br><br>
-        Características: <textarea name="caracteristicas"></textarea><br><br>
-        Estado:
+    <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
+    <h2>Adicionar Novo Alojamento</h2>
+</div>
+
+<form method="post">
+    <label>
+        <i class="fa-solid fa-home"></i> Nome:
+        <input type="text" name="nome" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-align-left"></i> Descrição:
+        <textarea name="descricao"></textarea>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-users"></i> Capacidade:
+        <input type="number" name="capacidade" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-euro-sign"></i> Preço por Noite (€):
+        <input type="number" step="0.01" name="preco" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-cogs"></i> Características:
+        <textarea name="caracteristicas"></textarea>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-clipboard-list"></i> Estado:
         <select name="estado">
             <option value="disponível">Disponível</option>
             <option value="ocupada">Ocupada</option>
             <option value="manutenção">Manutenção</option>
-        </select><br><br>
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="casas.php">← Voltar</a>
+        </select>
+    </label><br><br>
+
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="casas.php">← Voltar</a>
+
 </body>
 </html>

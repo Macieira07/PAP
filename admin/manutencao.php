@@ -50,6 +50,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'];
             </tr>
         <?php endwhile; ?>
     </table>
+    <a href="admin.php">← Voltar</a>
 
     <!-- Exibe o total gasto -->
     <div style="margin-top: 20px;">

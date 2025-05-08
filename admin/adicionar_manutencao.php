@@ -56,44 +56,47 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
             descricaoInput.value = descricoes[tipoSelect.value] || "";
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </head>
 <body>
-<div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
         <h1>Adicionar Manutenção</h1>
     </div>
     <form method="post">
-        Casa:
-        <select name="id_casa" required>
-            <option value="">Selecione...</option>
-            <?php while ($casa = $casas->fetch_assoc()): ?>
-                <option value="<?= $casa['C_id_casa'] ?>"><?= htmlspecialchars($casa['C_nome']) ?></option>
-            <?php endwhile; ?>
-        </select><br><br>
+        <div>
+            <label>Casa: <i class="fa-solid fa-house"></i></label>
+            <select name="id_casa" required>
+                <option value="">Selecione...</option>
+                <?php while ($casa = $casas->fetch_assoc()): ?>
+                    <option value="<?= $casa['C_id_casa'] ?>"><?= htmlspecialchars($casa['C_nome']) ?></option>
+                <?php endwhile; ?>
+            </select><br><br>
 
-        Tipo de Manutenção:
-        <select name="tipo" id="tipo" onchange="atualizarDescricao()" required>
-            <option value="">Selecione...</option>
-            <?php foreach ($tipos_manutencao as $tipo => $desc): ?>
-                <option value="<?= htmlspecialchars($tipo) ?>"><?= htmlspecialchars($tipo) ?></option>
-            <?php endforeach; ?>
-        </select><br><br>
+            <label>Tipo de Manutenção: <i class="fa-solid fa-tools"></i></label>
+            <select name="tipo" id="tipo" onchange="atualizarDescricao()" required>
+                <option value="">Selecione...</option>
+                <?php foreach ($tipos_manutencao as $tipo => $desc): ?>
+                    <option value="<?= htmlspecialchars($tipo) ?>"><?= htmlspecialchars($tipo) ?></option>
+                <?php endforeach; ?>
+            </select><br><br>
 
-        Descrição:<br>
-        <textarea name="descricao" id="descricao" rows="4" cols="50"></textarea><br><br>
+            <label>Descrição: <i class="fa-solid fa-pen"></i></label><br>
+            <textarea name="descricao" id="descricao" rows="4" cols="50"></textarea><br><br>
 
-        Data Início:
-        <input type="date" name="data_inicio" required><br><br>
+            <label>Data Início: <i class="fa-solid fa-calendar-alt"></i></label>
+            <input type="date" name="data_inicio" required><br><br>
 
-        Data Fim:
-        <input type="date" name="data_fim"><br><br>  <!-- Novo campo data de fim -->
+            <label>Data Fim: <i class="fa-solid fa-calendar-check"></i></label>
+            <input type="date" name="data_fim"><br><br>
 
-        Custo (€):
-        <input type="number" name="custo" step="0.01" required><br><br>
+            <label>Custo : <i class="fa-solid fa-euro-sign"></i></label>
+            <input type="number" name="custo" step="0.01" required><br><br>
 
-        <button type="submit">Salvar</button>
+            <button type="submit">Salvar <i class="fa-solid fa-save"></i></button>
+        </div>
     </form>
     <br>
-    <a href="manutencao.php">← Voltar</a>
+    <a href="manutencao.php"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
 </body>
 </html>

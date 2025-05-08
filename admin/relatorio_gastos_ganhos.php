@@ -82,6 +82,7 @@ header("Content-Type: text/html; charset=UTF-8");
     <?php if ($mensagem): ?>
         <p><?= $mensagem ?></p>
     <?php endif; ?>
+    <a href="admin.php">← Voltar</a>
 
     <form method="get">
         <label>Filtrar por tipo de manutenção:</label>
@@ -118,7 +119,9 @@ header("Content-Type: text/html; charset=UTF-8");
             </td>
         </tr>
         <?php endwhile; ?>
+        <a href="admin.php">← Voltar</a>
     </table>
+    <a href="admin.php">← Voltar</a>
 
     <script>
         const ctx = document.getElementById('graficoMensal').getContext('2d');
@@ -152,6 +155,7 @@ header("Content-Type: text/html; charset=UTF-8");
                 }
             }
         });
+        
     </script>
 </body>
 </html>

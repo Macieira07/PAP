@@ -37,4 +37,5 @@ $resultado = $conexao->query("SELECT * FROM servicos");
         <?php endwhile; ?>
     </table>
 </body>
+<a href="admin.php">← Voltar</a>
 </html>

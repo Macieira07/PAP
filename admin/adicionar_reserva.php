@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <?php
 // Conexão com o banco de dados
 include('../conexao.php');
@@ -6,6 +8,7 @@ include('../conexao.php');
 $casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHERE C_estado = 'disponível'");
 $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospedes");
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -19,14 +22,21 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
         <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
         <h1>Adicionar Reserva</h1>
     </div>
+
   <form method="POST" action="processar_reserva.php">
-    <label for="data_checkin">Data de Check-in:</label><br>
+    <label for="data_checkin">
+        <i class="fa-solid fa-calendar-check"></i> Data de Check-in:
+    </label><br>
     <input type="date" id="data_checkin" name="data_checkin" required><br><br>
 
-    <label for="data_checkout">Data de Check-out:</label><br>
+    <label for="data_checkout">
+        <i class="fa-solid fa-calendar-times"></i> Data de Check-out:
+    </label><br>
     <input type="date" id="data_checkout" name="data_checkout" required><br><br>
 
-    <label for="id_casa">Casa:</label><br>
+    <label for="id_casa">
+        <i class="fa-solid fa-house"></i> Casa:
+    </label><br>
     <select name="id_casa" id="id_casa" required>
       <?php while ($c = $casas->fetch_assoc()): ?>
         <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>">
@@ -35,7 +45,9 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
       <?php endwhile; ?>
     </select><br><br>
 
-    <label for="id_hospede">Hóspede:</label>
+    <label for="id_hospede">
+        <i class="fa-solid fa-user"></i> Hóspede:
+    </label>
     <a href="adicionar_hospede.php" style="margin-left:10px;">+ Adicionar Hóspede</a><br>
     <select name="id_hospede" id="id_hospede" required>
       <?php while ($h = $hospedes->fetch_assoc()): ?>
@@ -45,10 +57,14 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
       <?php endwhile; ?>
     </select><br><br>
 
-    <label for="num_hospedes">Número de Hóspedes:</label><br>
+    <label for="num_hospedes">
+        <i class="fa-solid fa-users"></i> Número de Hóspedes:
+    </label><br>
     <input type="number" id="num_hospedes" name="num_hospedes" min="1" max="10" value="1" required><br><br>
 
-    <label for="metodo_pagamento">Método de Pagamento:</label><br>
+    <label for="metodo_pagamento">
+        <i class="fa-solid fa-credit-card"></i> Método de Pagamento:
+    </label><br>
     <select name="metodo_pagamento" id="metodo_pagamento" required>
       <option value="mbway">MB Way</option>
       <option value="dinheiro">Dinheiro</option>
@@ -56,7 +72,9 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
       <option value="cartao">Cartão de Crédito</option>
     </select><br><br>
 
-    <label for="estado">Estado:</label><br>
+    <label for="estado">
+        <i class="fa-solid fa-info-circle"></i> Estado:
+    </label><br>
     <select name="estado" id="estado" required>
       <option value="pendente">Pendente</option>
       <option value="confirmada">Confirmada</option>
@@ -64,9 +82,14 @@ $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_apelido FROM hospede
 
     <p><strong>Preço total estimado: <span id="preco_total">0.00€</span></strong></p>
 
-    <button type="submit">Confirmar Reserva</button>
+    <button type="submit">
+        <i class="fa-solid fa-check"></i> Confirmar Reserva
+    </button>
   </form>
-  <a href="reservas.php">← Voltar</a>
+
+  <a href="reservas.php">
+      <i class="fa-solid fa-arrow-left"></i> Voltar
+  </a>
 
   <script>
     // Definir data mínima para check-in (hoje)

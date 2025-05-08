@@ -128,6 +128,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
             <a href="?pagina=<?= $paginaAtual + 1 ?>&nome=<?= $nomeFiltro ?>&cargo=<?= $cargoFiltro ?>">Próximo</a>
         <?php endif; ?>
     </div>
+    <a href="admin.php">← Voltar</a>
 </body>
 </html>
             

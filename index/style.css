@@ -30,7 +30,7 @@ body {
 
 /* Header Styling */
 .header {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/images/hero.webp');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/images/foto_principal_2.jpeg');
   background-position: center;
   background-size: cover;
   background-attachment: fixed;

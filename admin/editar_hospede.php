@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssssssssi", $nome, $apelido, $email, $telefone, $documento, $morada, $verificado, $aceitou, $id);
     $stmt->execute();
 
-    header("Location: hospedes.php");
+    header("Location: hospedes.php?sucesso=Hóspede atualizado com sucesso");
+
     exit;
 }
 

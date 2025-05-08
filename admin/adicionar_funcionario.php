@@ -75,34 +75,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Adicionar um novo Funcionário</h1>
     </div>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <link rel="stylesheet" href="admin.css">
 <form method="post">
-    Nome: <input type="text" name="nome" required><br><br>
-    Email: <input type="email" name="email" required><br><br>
-    Senha: <input type="password" name="senha" required><br><br>
-    Cargo: 
-    <select name="cargo" required>
-        <option value="gerente">Gerente</option>
-        <option value="administrador">Administrador</option>
-        <option value="recepcionista">Recepcionista</option>
-        <option value="governanta">Governanta</option>
-        <option value="contabilista">Contabilista</option>
-    </select><br><br>
-    Telefone: <input type="text" name="telefone"><br><br>
+    <label>
+        <i class="fa-solid fa-user"></i> Nome:
+        <input type="text" name="nome" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-envelope"></i> Email:
+        <input type="email" name="email" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-lock"></i> Senha:
+        <input type="password" name="senha" required>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-briefcase"></i> Cargo:
+        <select name="cargo" required>
+            <option value="gerente">Gerente</option>
+            <option value="administrador">Administrador</option>
+            <option value="recepcionista">Recepcionista</option>
+            <option value="governanta">Governanta</option>
+            <option value="contabilista">Contabilista</option>
+        </select>
+    </label><br><br>
+
+    <label>
+        <i class="fa-solid fa-phone"></i> Telefone:
+        <input type="text" name="telefone">
+    </label><br><br>
 
     <!-- Dados de Turno -->
-    <h3>Turno</h3>
-    Início: <input type="time" name="turno_inicio"><br><br>
-    Fim: <input type="time" name="turno_fim"><br><br>
+    <h3><i class="fa-solid fa-clock"></i> Turno</h3>
+    <label>
+        Início: <input type="time" name="turno_inicio">
+    </label><br><br>
+    <label>
+        Fim: <input type="time" name="turno_fim">
+    </label><br><br>
 
     <!-- Dados de Férias/Ausência -->
-    <h3>Férias/Ausência</h3>
-    Início: <input type="date" name="ferias_inicio"><br><br>
-    Fim: <input type="date" name="ferias_fim"><br><br>
-    Motivo: <input type="text" name="motivo_ferias"><br><br>
+    <h3><i class="fa-solid fa-plane-departure"></i> Férias/Ausência</h3>
+    <label>
+        Início: <input type="date" name="ferias_inicio">
+    </label><br><br>
+    <label>
+        Fim: <input type="date" name="ferias_fim">
+    </label><br><br>
+    <label>
+        Motivo: <input type="text" name="motivo_ferias">
+    </label><br><br>
 
     <button type="submit">Salvar</button>
 </form>
+
 <a href="funcionarios.php">← Voltar</a>
 
 <?php

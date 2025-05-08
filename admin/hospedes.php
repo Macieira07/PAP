@@ -1,23 +1,52 @@
 <?php
 require '../conexao.php';
 
-$resultado = $conexao->query("SELECT * FROM hospedes");
+// Obter parâmetros de pesquisa/filtro
+$pesquisa = $_GET['pesquisa'] ?? '';
+$filtro_verificado = $_GET['verificado'] ?? '';
+
+// Montar SQL dinamicamente com filtros
+$sql = "SELECT * FROM hospedes WHERE 1=1";
+
+if (!empty($pesquisa)) {
+    $pesq = $conexao->real_escape_string($pesquisa);
+    $sql .= " AND (H_nome LIKE '%$pesq%' OR H_email LIKE '%$pesq%' OR H_documento_ident LIKE '%$pesq%')";
+}
+
+if ($filtro_verificado === 'Sim' || $filtro_verificado === 'Não') {
+    $sql .= " AND H_verificado_email = '$filtro_verificado'";
+}
+
+$resultado = $conexao->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css">
     <meta charset="UTF-8">
     <title>Hóspedes</title>
 </head>
 <body>
-<div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
         <h1>Todos os Hóspedes</h1>
     </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_hospede.php">+ Adicionar Hóspede</a>
-    <table border="1" cellpadding="10" style="margin-top: 20px;">
+
+    <!-- Formulário de pesquisa e filtro -->
+    <form method="get" style="margin-top: 20px; margin-bottom: 20px;">
+        <input type="text" name="pesquisa" placeholder="Pesquisar por nome, email ou documento" value="<?= htmlspecialchars($pesquisa) ?>">
+        <select name="verificado">
+            <option value="">Todos</option>
+            <option value="Sim" <?= $filtro_verificado === 'Sim' ? 'selected' : '' ?>>Verificados</option>
+            <option value="Não" <?= $filtro_verificado === 'Não' ? 'selected' : '' ?>>Não Verificados</option>
+        </select>
+        <button type="submit">Filtrar</button>
+        <a href="hospedes.php" style="margin-left: 10px;">Limpar Filtros</a>
+    </form>
+
+    <table border="1" cellpadding="10">
         <tr>
             <th>ID</th>
             <th>Nome</th>
@@ -44,5 +73,6 @@ $resultado = $conexao->query("SELECT * FROM hospedes");
             </tr>
         <?php endwhile; ?>
     </table>
+    <a href="admin.php">← Voltar</a>
 </body>
 </html>

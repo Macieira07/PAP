@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
-<div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
         <h1>Adicionar Serviço</h1>
     </div>
@@ -103,21 +103,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Descrição: <textarea id="descricao" name="descricao" readonly></textarea><br><br>
 
         <h3>Escolha os Serviços:</h3>
-        <label><input type="checkbox" id="servico_recepcao" onclick="atualizarPreco()"> Recepção 24h (50€)</label><br>
-        <label><input type="checkbox" id="servico_concierge" onclick="atualizarPreco()"> Serviço de Concierge (150€)</label><br>
-        <label><input type="checkbox" id="servico_deposito_bagagem" onclick="atualizarPreco()"> Depósito de Bagagens (30€)</label><br>
-        <label><input type="checkbox" id="servico_lavanderia" onclick="atualizarPreco()"> Serviço de Lavanderia (80€)</label><br>
-        <label><input type="checkbox" id="servico_caixa_segurança" onclick="atualizarPreco()"> Caixa de Segurança (20€)</label><br>
-        <label><input type="checkbox" id="servico_wifi" onclick="atualizarPreco()"> Wi-Fi Gratuito (10€)</label><br>
-        <label><input type="checkbox" id="servico_transfer" onclick="atualizarPreco()"> Transfer para o aeroporto (60€)</label><br>
-        <label><input type="checkbox" id="servico_quarto" onclick="atualizarPreco()"> Serviço de Quarto (50€)</label><br>
-        <label><input type="checkbox" id="servico_bicicleta" onclick="atualizarPreco()"> Aluguel de Bicicleta (40€)</label><br>
-        <label><input type="checkbox" id="servico_massage" onclick="atualizarPreco()"> Massagem e Spa (100€)</label><br>
-        <label><input type="checkbox" id="servico_estacionamento" onclick="atualizarPreco()"> Estacionamento Privado (30€)</label><br><br>
+        <label><input type="checkbox" id="servico_recepcao" onclick="atualizarPreco()"> <i class="fa-solid fa-clock"></i> Recepção 24h (50€)</label><br>
+        <label><input type="checkbox" id="servico_concierge" onclick="atualizarPreco()"> <i class="fa-solid fa-cogs"></i> Serviço de Concierge (150€)</label><br>
+        <label><input type="checkbox" id="servico_deposito_bagagem" onclick="atualizarPreco()"> <i class="fa-solid fa-archive"></i> Depósito de Bagagens (30€)</label><br>
+        <label><input type="checkbox" id="servico_lavanderia" onclick="atualizarPreco()"> <i class="fa-solid fa-tshirt"></i> Serviço de Lavanderia (80€)</label><br>
+        <label><input type="checkbox" id="servico_caixa_segurança" onclick="atualizarPreco()"> <i class="fa-solid fa-lock"></i> Caixa de Segurança (20€)</label><br>
+        <label><input type="checkbox" id="servico_wifi" onclick="atualizarPreco()"> <i class="fa-solid fa-wifi"></i> Wi-Fi Gratuito (10€)</label><br>
+        <label><input type="checkbox" id="servico_transfer" onclick="atualizarPreco()"> <i class="fa-solid fa-shuttle-van"></i> Transfer para o aeroporto (60€)</label><br>
+        <label><input type="checkbox" id="servico_quarto" onclick="atualizarPreco()"> <i class="fa-solid fa-utensils"></i> Serviço de Quarto (50€)</label><br>
+        <label><input type="checkbox" id="servico_bicicleta" onclick="atualizarPreco()"> <i class="fa-solid fa-bicycle"></i> Aluguel de Bicicleta (40€)</label><br>
+        <label><input type="checkbox" id="servico_massage" onclick="atualizarPreco()"> <i class="fa-solid fa-spa"></i> Massagem e Spa (100€)</label><br>
+        <label><input type="checkbox" id="servico_estacionamento" onclick="atualizarPreco()"> <i class="fa-solid fa-parking"></i> Estacionamento Privado (30€)</label><br><br>
 
         Preço (€): <input type="number" step="0.01" id="preco" name="preco" value="0" readonly required><br><br>
         <button type="submit">Salvar</button>
     </form>
     <a href="servicos.php">← Voltar</a>
+
+    <!-- Font Awesome CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
 </html>

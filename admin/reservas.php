@@ -82,6 +82,7 @@ $total_ganho = $resultado_total->fetch_assoc()['total_ganho'] ?? 0;
     </select>
     <button type="submit">Filtrar</button>
 </form>
+<a href="admin.php">← Voltar</a>
 
 <table border="1" cellpadding="10">
     <tr>
@@ -129,7 +130,7 @@ $total_ganho = $resultado_total->fetch_assoc()['total_ganho'] ?? 0;
 <div style="margin-top: 20px;">
     <strong>Total Ganho nas Reservas: <?= number_format($total_ganho, 2, ',', '.') ?>€</strong>
 </div>
-
+<a href="admin.php">← Voltar</a>
 <div>
     <?php for ($i = 1; $i <= $paginas; $i++): ?>
         <a href="?pagina=<?= $i ?>"><?= $i ?></a>
