@@ -140,7 +140,7 @@
         .hero {
             height: 60vh;
             width: 100%;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../vegetais-ajustados-a-esquerda-de-uma-ardosia-preta_1220-685.jpg');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../assets/images/gastronomia.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -469,24 +469,148 @@
                 background-color: #1e1e1e;
             }
         }
+
+
+
+        /*linguagens traduções*/
+        /* Language Selector Styles */
+.language-selector {
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+.language-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    opacity: 0.7;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.language-btn.active {
+    opacity: 1;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.language-btn:hover {
+    opacity: 1;
+}
+
+.language-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+/* Dropdown Language Menu for Mobile */
+.language-dropdown {
+    display: none;
+    position: relative;
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+.language-dropdown-btn {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.language-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: var(--white);
+    min-width: 120px;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    z-index: 1000;
+}
+
+.language-dropdown-content.show {
+    display: block;
+}
+
+.language-dropdown-content .language-btn {
+    display: flex;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    justify-content: flex-start;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .language-selector {
+        display: none;
+    }
+
+    .language-dropdown {
+        display: block;
+    }
+}
+
     </style>
 </head>
 <body>
     <!-- Cabeçalho -->
     <header class="header" id="header">
+        <!-- Desktop language selector -->
+
+<!-- Language dropdown for mobile -->
+<div class="language-dropdown">
+    <button class="language-dropdown-btn" id="langDropdownBtn">
+        <img src="https://flagcdn.com/w20/pt.png" alt="Language" id="currentLangFlag"> 
+        <i class="ri-arrow-down-s-line"></i>
+    </button>
+</div>
+
         <div class="nav__container">
             <div class="logo">
                 <a href="index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
             </div>
             
             <ul class="nav__links" id="navLinks">
-                <li><a href="index.html#about" class="nav__link">Sobre</a></li>
-                <li><a href="index.html#accommodation" class="nav__link">Acomodações</a></li>
-                <li><a href="index.html#activities" class="nav__link">Experiências</a></li>
-                <li><a href="index.html#gallery" class="nav__link">Galeria</a></li>
-                <li><a href="index.html#testimonials" class="nav__link">Avaliações</a></li>
-                <li><a href="index.html#contact" class="nav__link">Contato</a></li>
+                
+                <div class="language-selector">
+                    <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
+                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT
+                    </button>
+                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> EN
+                    </button>
+                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> ES
+                    </button>
+                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR
+                    </button>
+                </div>
+                <li><a href="#sobre" class="nav__link">Tesouros Gastronómicos</a></li>
+                <li><a href="#galeria" class="nav__link">Galeria</a></li>
                 <li><a href="../login1/pagina_login.php" class="nav__link nav__cta">Reservar</a></li>
+                <div class="language-dropdown-content" id="langDropdown">
+                    <button onclick="changeLanguage('pt')" class="language-btn" data-lang="pt">
+                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> Português
+                    </button>
+                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> English
+                    </button>
+                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> Español
+                    </button>
+                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> Français
+                    </button>
+                </div>
             </ul>
 
             <button class="hamburger" id="hamburger">
@@ -504,7 +628,7 @@
     </section>
 
     <!-- Main Content -->
-    <section class="section">
+    <section class="section" id="sobre">
         <div class="section__container">
             <h2 class="section-title" data-aos="fade-up">Tesouros Gastronômicos Limianos</h2>
             <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Descubra os pratos que fazem de Ponte de Lima a capital gastronômica do Alto Minho</p>
@@ -557,13 +681,13 @@
             <h2 class="section-title" data-aos="fade-up">Sabores de Ponte de Lima</h2>
             <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Conheça visualmente as delícias que tornam esta região única</p>
 
-            <div class="gallery">
+            <div class="gallery" id="galeria">
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://www.cm-pontedelima.pt/wp-content/uploads/2021/11/arroz-sarrabulho.jpg" alt="Arroz de Sarrabulho">
+                    <img src="../assets/images/arroz_sarrabulho.jpg" alt="Arroz de Sarrabulho">
                     <div class="gallery-caption">Arroz de Sarrabulho - Prato emblemático</div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://www.cm-pontedelima.pt/wp-content/uploads/2021/11/lampreia.jpg" alt="Lampreia à Bordalesa">
+                    <img src="../assets/images/lampreia.jpg" alt="Lampreia à Bordalesa">
                     <div class="gallery-caption">Lampreia do Rio Lima</div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
@@ -571,16 +695,16 @@
                     <div class="gallery-caption">Vinhos Verdes do Vale do Lima</div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
-                    <img src="https://www.cm-pontedelima.pt/wp-content/uploads/2021/11/feira-quinzenal.jpg" alt="Feira Quinzenal">
-                    <div class="gallery-caption">Feira Quinzenal (desde 1125)</div>
+                    <img src="../assets/images/leite-creme.webp" alt="Leite Creme">
+                    <div class="gallery-caption">Leite Creme queimado</div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
-                    <img src="https://www.cm-pontedelima.pt/wp-content/uploads/2021/11/mercado-municipal.jpg" alt="Mercado Municipal">
-                    <div class="gallery-caption">Mercado Municipal</div>
+                    <img src="../assets/images/naco_de_minhota.jpg" alt="Naco de Minhota">
+                    <div class="gallery-caption">Naco de Minhota</div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
-                    <img src="https://www.cm-pontedelima.pt/wp-content/uploads/2021/11/doçaria-conventual.jpg" alt="Doçaria Conventual">
-                    <div class="gallery-caption">Doçaria Conventual Limiana</div>
+                    <img src="../assets/images/bacalhau.jpg" alt="Doçaria Conventual">
+                    <div class="gallery-caption">Bacalhau</div>
                 </div>
             </div>
         </div>
@@ -591,41 +715,69 @@
         <div class="section__container">
             <div class="footer__container">
                 <div class="footer__col">
-                    <h4>Quinta Flores</h4>
-                    <p>Um refúgio de tranquilidade e autenticidade no coração do Minho, onde a gastronomia tradicional se une à natureza exuberante.</p>
-                    <div class="social-icons">
-                        <a href="#" class="social-icon"><i class="ri-facebook-fill"></i></a>
-                        <a href="#" class="social-icon"><i class="ri-instagram-line"></i></a>
-                        <a href="#" class="social-icon"><i class="ri-pinterest-line"></i></a>
-                    </div>
-                </div>
+                    <img src="../assets/logos/logotipo1.png" alt="Logótipo Quinta Flores" style="width: 150px; margin-bottom: 1rem;">
+                    <p style="color: #a3a3a3;">A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.</p>
+                  </div>
                 <div class="footer__col">
                     <h4>Explorar</h4>
                     <ul class="footer__links">
-                        <li class="footer__link"><a href="index.html">Página Inicial</a></li>
-                        <li class="footer__link"><a href="index.html#about">Sobre Nós</a></li>
-                        <li class="footer__link"><a href="index.html#accommodation">Acomodações</a></li>
-                        <li class="footer__link"><a href="index.html#activities">Experiências</a></li>
-                        <li class="footer__link"><a href="index.html#gallery">Galeria</a></li>
-                    </ul>
+                        <li class="footer__link"><a href="#sobre">🍽️ Tesouros Gastronómicos</a></li>
+                        <li class="footer__link"><a href="#galeria">🖼️ Galeria</a></li>
+                      </ul>
+                      
                 </div>
                 <div class="footer__col">
-                    <h4>Experiências</h4>
+                    <h4>Descobrir a Região</h4>
                     <ul class="footer__links">
-                        <li class="footer__link"><a href="gastronomia.html">Gastronomia</a></li>
-                        <li class="footer__link"><a href="vinhos.html">Rota dos Vinhos</a></li>
-                        <li class="footer__link"><a href="caminhadas.html">Caminhadas</a></li>
-                        <li class="footer__link"><a href="bicicleta.html">Passeios de Bicicleta</a></li>
-                        <li class="footer__link"><a href="cultura.html">Cultura Local</a></li>
+                      <li class="footer__link">
+                        <a href="trilhos.html">
+                          <img src="https://img.icons8.com/?size=100&id=sssl0bdjFnpD&format=png&color=2e7d32" alt="Trilhos" width="16" style="vertical-align: middle; margin-right: 6px;">
+                          Trilhos e Natureza
+                        </a>
+                      </li>
+                      <li class="footer__link">
+                        <a href="gastronomia.html">
+                          <img src="https://img.icons8.com/?size=100&id=bSjYRwluTLTm&format=png&color=2e7d32" alt="Gastronomia" width="16" style="vertical-align: middle; margin-right: 6px;">
+                          Sabores do Minho
+                        </a>
+                      </li>
+                      <li class="footer__link">
+                        <a href="passeios_culturais.html">
+                          <img src="https://img.icons8.com/?size=100&id=juiXdfFuXLd1&format=png&color=2e7d32" alt="Passeios Culturais" width="16" style="vertical-align: middle; margin-right: 6px;">
+                          Passeios Culturais
+                        </a>
+                      </li>
                     </ul>
-                </div>
-                <div class="footer__col">
-                    <h4>Contato</h4>
+                  </div>
+                  <div class="footer__col">
+                    <h4>Contactos</h4>
                     <ul class="footer__links">
-                        <li class="footer__link"><i class="ri-map-pin-line"></i> Calheiros, Ponte de Lima</li>
-                        <li class="footer__link"><i class="ri-phone-line"></i> +351 258 900 000</li>
-                        <li class="footer__link"><i class="ri-mail-line"></i> info@quintaflores.com</li>
+                      <li class="footer__link">
+                        <i class="ri-map-pin-line"></i>
+                        <span>Travessa da Seara 265, 4490-575 Calheiros, Ponte de Lima, Portugal</span>
+                      </li>
+                      <li class="footer__link">
+                        <i class="ri-phone-line"></i>
+                        <a href="tel:+351912418976">+351 912 418 976</a>
+                      </li>
+                      <li class="footer__link">
+                        <i class="ri-mail-line"></i>
+                        <a href="mailto:quinta.flores2019@gmail.com">quinta.flores2019@gmail.com</a>
+                      </li>
+                      <li class="footer__link">
+                        <i class="ri-whatsapp-line"></i>
+                        <a href="https://wa.me/351912418976" target="_blank">Contactar via WhatsApp</a>
+                      </li>
+                      <li class="footer__link">
+                        <i class="ri-map-pin-2-line"></i>
+                        <a href="https://www.google.com/maps/place/Travessa+da+Seara,+Calheiros,+Ponte+de+Lima" target="_blank">Ver no Google Maps</a>
+                      </li>
+                      <li class="footer__link">
+                        <i class="ri-instagram-fill"></i>
+                        <a href="https://www.instagram.com/quintaflores19" target="_blank">Segue-nos no Instagram</a>
+                      </li>
                     </ul>
+                  </div>
                 </div>
             </div>
             <div class="footer__bar">
@@ -640,6 +792,157 @@
     </button>
 
     <!-- Scripts -->
+     <script>
+    // Sistema de tradução com Google Translate
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cria o elemento do Google Translate
+        const googleElement = document.createElement('div');
+        googleElement.id = 'google_translate_element';
+        googleElement.style.visibility = 'hidden'; // Usando visibility em vez de display para manter o elemento renderizado
+        googleElement.style.position = 'absolute';
+        googleElement.style.top = '-1000px'; // Posiciona fora da tela em vez de esconder completamente
+        document.body.appendChild(googleElement);
+    
+        // Carrega o script do Google Translate
+        loadGoogleTranslate();
+    
+        // Configura os listeners para os botões de idioma
+        setupLanguageButtons();
+    
+        // Verifica se há preferência de idioma salva
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang) {
+            // Aguarda um tempo para o Google Translate inicializar
+            setTimeout(() => {
+                changeLanguage(savedLang);
+            }, 2000); // Tempo maior para garantir que o Google Translate esteja carregado
+        }
+    });
+    
+    // Carrega o script do Google Translate
+    function loadGoogleTranslate() {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        document.body.appendChild(script);
+    }
+    
+    // Inicializa o Google Translate (deve ser global para o callback funcionar)
+    window.googleTranslateElementInit = function() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'pt',
+            includedLanguages: 'en,es,fr,pt',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+        
+        // Verifica se há preferência de idioma após inicialização
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang) {
+            setTimeout(() => {
+                changeLanguage(savedLang);
+            }, 500);
+        }
+    };
+    
+    // Configura os event listeners para os botões de idioma
+    function setupLanguageButtons() {
+        // Para botões desktop
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                changeLanguage(lang);
+            });
+        });
+    
+        // Configuração do dropdown para mobile
+        const dropdownBtn = document.getElementById('langDropdownBtn');
+        if (dropdownBtn) {
+            dropdownBtn.addEventListener('click', function() {
+                document.getElementById('langDropdown').classList.toggle('show');
+            });
+        }
+    
+        // Fecha o dropdown ao clicar fora
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.language-dropdown-btn') && !e.target.matches('.language-dropdown-btn *')) {
+                const dropdown = document.getElementById('langDropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+    }
+    
+    // Função para trocar o idioma
+    function changeLanguage(lang) {
+        console.log('Changing language to: ' + lang);
+        
+        // Atualiza os botões ativos
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            }
+        });
+    
+        // Atualiza a bandeira no menu dropdown
+        const currentFlag = document.getElementById('currentLangFlag');
+        if (currentFlag) {
+            switch(lang) {
+                case 'pt':
+                    currentFlag.src = 'https://flagcdn.com/w20/pt.png';
+                    break;
+                case 'en':
+                    currentFlag.src = 'https://flagcdn.com/w20/gb.png';
+                    break;
+                case 'es':
+                    currentFlag.src = 'https://flagcdn.com/w20/es.png';
+                    break;
+                case 'fr':
+                    currentFlag.src = 'https://flagcdn.com/w20/fr.png';
+                    break;
+            }
+        }
+    
+        // Tenta encontrar e alterar o seletor do Google Translate
+        try {
+            // Espera o elemento estar disponível - múltiplas tentativas
+            const selectGoogleElement = () => {
+                // O seletor pode estar em vários locais dependendo da versão do Google Translate
+                const select = document.querySelector('.goog-te-combo') || 
+                              document.querySelector('.VIpgJd-ZVi9od-xl07Ob-lTBxed');
+                
+                if (select) {
+                    select.value = lang;
+                    // Aciona o evento change para o Google Translate detectar a mudança
+                    const event = new Event('change', { bubbles: true });
+                    select.dispatchEvent(event);
+                    
+                    // Salva a preferência
+                    localStorage.setItem('preferredLanguage', lang);
+                    console.log('Language changed successfully to: ' + lang);
+                } else {
+                    console.log('Google Translate element not found, retrying...');
+                    // Tenta novamente após um curto intervalo
+                    setTimeout(selectGoogleElement, 500);
+                }
+            };
+            
+            // Inicia a busca pelo elemento
+            selectGoogleElement();
+            
+        } catch (error) {
+            console.error('Error changing language:', error);
+        }
+    
+        // Fecha o dropdown se estiver aberto
+        const dropdown = document.getElementById('langDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+</script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         // Initialize AOS (Animate On Scroll)

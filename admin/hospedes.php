@@ -47,31 +47,30 @@ $resultado = $conexao->query($sql);
     </form>
 
     <table border="1" cellpadding="10">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Apelido</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Documento</th>
-            <th>Verificado</th>
-            <th>Ações</th>
-        </tr>
-        <?php while ($h = $resultado->fetch_assoc()): ?>
-            <tr>
-                <td><?= $h['H_id_hospede'] ?></td>
-                <td><?= $h['H_nome'] ?></td>
-                <td><?= $h['H_apelido'] ?></td>
-                <td><?= $h['H_email'] ?></td>
-                <td><?= $h['H_telefone'] ?></td>
-                <td><?= $h['H_documento_ident'] ?></td>
-                <td><?= $h['H_verificado_email'] ?></td>
-                <td>
-                    <a href="editar_hospede.php?id=<?= $h['H_id_hospede'] ?>">Editar</a> |
-                    <a href="eliminar_hospede.php?id=<?= $h['H_id_hospede'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
-                </td>
-            </tr>
-        <?php endwhile; ?>
+<tr>
+    <th>ID</th>
+    <th>Nome Completo</th> <!-- atualizado -->
+    <th>Email</th>
+    <th>Telefone</th>
+    <th>Documento</th>
+    <th>Verificado</th>
+    <th>Ações</th>
+</tr>
+<?php while ($h = $resultado->fetch_assoc()): ?>
+<tr>
+    <td><?= $h['H_id_hospede'] ?></td>
+    <td><?= $h['H_nome'] ?></td>
+    <td><?= $h['H_email'] ?></td>
+    <td><?= $h['H_telefone'] ?></td>
+    <td><?= $h['H_documento_ident'] ?></td>
+    <td><?= $h['H_verificado_email'] ?></td>
+    <td>
+        <a href="editar_hospede.php?id=<?= $h['H_id_hospede'] ?>">Editar</a> |
+        <a href="eliminar_hospede.php?id=<?= $h['H_id_hospede'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
+    </td>
+</tr>
+<?php endwhile; ?>
+
     </table>
     <a href="admin.php">← Voltar</a>
 </body>

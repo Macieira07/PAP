@@ -59,8 +59,7 @@ $checkout = new DateTime($_SESSION['checkout']);
 $num_noites = $checkin->diff($checkout)->days;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nome = isset($_POST['nome']) ? trim(htmlspecialchars($_POST['nome'])) : '';
-    $apelido = isset($_POST['apelido']) ? trim(htmlspecialchars($_POST['apelido'])) : '';
+    $nome_completo = isset($_POST['nome_completo']) ? trim(htmlspecialchars($_POST['nome_completo'])) : '';
     $email = isset($_POST['email']) ? filter_var($_POST['email'], FILTER_SANITIZE_EMAIL) : '';
     $documento = isset($_POST['documento']) ? trim($_POST['documento']) : '';
     $telefone = isset($_POST['telefone']) ? trim($_POST['telefone']) : '';
@@ -69,21 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cancelamento = isset($_POST['cancelamento']) ? 1 : 0;
     $descricao_decoracao = isset($_POST['descricao_decoracao']) ? trim(htmlspecialchars($_POST['descricao_decoracao'])) : '';
 
-    // Armazenar serviços adicionais na sessão
-    if (isset($_POST['servicos'])) {
-        $_SESSION['servicos'] = $_POST['servicos'];
-        // Armazena também a descrição da decoração se o serviço foi selecionado
-        if (in_array('decoracao', $_POST['servicos'])) {
-            $_SESSION['descricao_decoracao'] = $descricao_decoracao;
-        }
-    } else {
-        $_SESSION['servicos'] = [];
-    }
-
     // Validação dos campos
     $erros = [];
-    if (empty($nome) || strlen($nome) < 2) {
-        $erros[] = "Nome inválido.";
+    if (empty($nome_completo) || strlen($nome_completo) < 2) {
+        $erros[] = "Nome completo inválido.";
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erros[] = "E-mail inválido.";
@@ -107,14 +95,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($erros)) {
         // Armazena os dados na sessão
-        $_SESSION['nome'] = $nome;
-        $_SESSION['apelido'] = $apelido;
+        $_SESSION['nome_completo'] = $nome_completo;
         $_SESSION['email'] = $email;
         $_SESSION['documento'] = $documento;
         $_SESSION['telefone'] = $telefone;
         $_SESSION['pais_regiao'] = $pais_regiao;
         $_SESSION['confirmacao_digital'] = $confirmacao_digital;
         $_SESSION['cancelamento'] = $cancelamento;
+
+        // Armazenar serviços adicionais na sessão
+        if (isset($_POST['servicos'])) {
+            $_SESSION['servicos'] = $_POST['servicos'];
+            // Armazena também a descrição da decoração se o serviço foi selecionado
+            if (in_array('decoracao', $_POST['servicos'])) {
+                $_SESSION['descricao_decoracao'] = $descricao_decoracao;
+            }
+        } else {
+            $_SESSION['servicos'] = [];
+        }
+
+        // Atualizar o nome do hóspede na tabela hospedes
+        $sql = "UPDATE hospedes SET H_nome = ? WHERE H_id_hospede = ?";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("si", $nome_completo, $id_hospede);
+        $stmt->execute();
+        $stmt->close();
 
         // Redireciona para a próxima página
         header('Location: pagina3.php');
@@ -127,29 +132,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Calcula preço base
 $preco_base = 120 * $num_noites;
 $preco_total = $preco_base;
-
 // Calcula serviços adicionais se existirem
 if (isset($_SESSION['servicos'])) {
     foreach ($_SESSION['servicos'] as $servico) {
         switch ($servico) {
-            case 'pequeno-almoco':
-                $preco_total += 15 * $num_noites;
-                break;
-            case 'decoracao':
-                $preco_total += 130;
-                break;
             case 'limpeza':
                 $preco_total += 15 * $num_noites;
                 break;
             case 'cesto':
                 $preco_total += 10;
                 break;
-            case 'jantar':
-                $preco_total += 15 * $num_noites;
+            case 'decoracao':
+                $preco_total += 130;
                 break;
         }
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -159,7 +158,7 @@ if (isset($_SESSION['servicos'])) {
     <title>Informações Pessoais - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
-    <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
+    <link rel="icon" type="image/x-icon" href="../assets/logos/logotipo1.jpg">
 </head>
 <body>
     <div class="container">
@@ -204,19 +203,9 @@ if (isset($_SESSION['servicos'])) {
         
         <form action="pagina2.php" method="POST" id="dadosPessoaisForm" class="fade-in">
             <h3><i class="fas fa-user-circle"></i> Dados Pessoais</h3>
-            
             <div class="form-group">
-                <label for="nome"><i class="fas fa-user"></i> Nome</label>
-                <input type="text" id="nome" name="nome" class="form-control" 
-                       value="<?= isset($_POST['nome']) ? htmlspecialchars($_POST['nome']) : '' ?>" 
-                       required minlength="2">
-            </div>
-            
-            <div class="form-group">
-                <label for="apelido"><i class="fas fa-user"></i> Apelido</label>
-                <input type="text" id="apelido" name="apelido" class="form-control" 
-                       value="<?= isset($_POST['apelido']) ? htmlspecialchars($_POST['apelido']) : '' ?>" 
-                       required minlength="2">
+                <label for="nome_completo"><i class="fas fa-user"></i> Nome Completo</label>
+                <input type="text" id="nome_completo" name="nome_completo" class="form-control" value="<?= isset($_POST['nome_completo']) ? htmlspecialchars($_POST['nome_completo']) : '' ?>" required minlength="2">
             </div>
             
             <div class="form-group">
@@ -285,29 +274,38 @@ if (isset($_SESSION['servicos'])) {
             <h3><i class="fas fa-concierge-bell"></i> Serviços Adicionais</h3>
             <div class="servicos-container">
                 <div class="servico-option">
-                    <input type="checkbox" id="pequeno-almoco" name="servicos[]" value="pequeno-almoco" 
-                           <?= (isset($_POST['servicos']) && in_array('pequeno-almoco', $_POST['servicos'])) ? 'checked' : '' ?>
-                           onchange="atualizarPreco()">
-                    <label for="pequeno-almoco">
-                        Pequeno-Almoço
-                        <div class="servico-detalhes">€15 por noite</div>
-                    </label>
-                </div>
-                
-                <div class="servico-option">
                     <input type="checkbox" id="decoracao" name="servicos[]" value="decoracao" 
                            <?= (isset($_POST['servicos']) && in_array('decoracao', $_POST['servicos'])) ? 'checked' : '' ?>
                            onchange="atualizarPreco()">
-                    <label for="decoracao">
-                        Decoração Temática
-                        <div class="servico-detalhes">€130 (valor único)</div>
+                           <label>
+                    Decoração Temática
+                    <div class="servico-detalhes">€130 (valor único)</div>
+                </label>
+
+                <div id="descricao-decoracao-container" style="display: none; margin-top: 10px;">
+                    <label for="tema-decoracao"><i class="fas fa-star"></i> Tema desejado:</label>
+                    <select id="tema-decoracao" name="tema_decoracao" class="form-control">
+                        <option value="">Selecione um tema</option>
+                        <option value="Romântico">Romântico</option>
+                        <option value="Aniversário">Aniversário</option>
+                        <option value="Natal">Natal</option>
+                        <option value="Lua de Mel">Lua de Mel</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+
+                    <label for="descricao-decoracao" style="margin-top: 10px;">
+                        <i class="fas fa-pencil-alt"></i> Detalhes adicionais (cores, objetos, quantidade de pessoas,  mensagens...):
                     </label>
-                    <div id="descricao-decoracao-container" style="display: none; margin-top: 10px;">
-                        <label for="descricao-decoracao"><i class="fas fa-pencil-alt"></i> Descreva o tema desejado (ex: Natal, Lua de Mel):</label>
-                        <textarea id="descricao-decoracao" name="descricao_decoracao" class="form-control" rows="2"><?= isset($_POST['descricao_decoracao']) ? htmlspecialchars($_POST['descricao_decoracao']) : '' ?></textarea>
-                    </div>
+                    <textarea id="descricao-decoracao" name="descricao_decoracao" class="form-control" rows="3" placeholder="Ex: Balões vermelhos, pétalas na cama, mensagem 'Feliz Aniversário João'..."><?= isset($_POST['descricao_decoracao']) ? htmlspecialchars($_POST['descricao_decoracao']) : '' ?></textarea>
                 </div>
-                
+
+                <script>
+                // Mostra/esconde o campo de descrição dependendo do checkbox
+                document.getElementById('decoracao').addEventListener('change', function() {
+                    document.getElementById('descricao-decoracao-container').style.display = this.checked ? 'block' : 'none';
+                });
+                </script>
+                </div>
                 <div class="servico-option">
                     <input type="checkbox" id="limpeza" name="servicos[]" value="limpeza" 
                            <?= (isset($_POST['servicos']) && in_array('limpeza', $_POST['servicos'])) ? 'checked' : '' ?>
@@ -328,15 +326,6 @@ if (isset($_SESSION['servicos'])) {
                     </label>
                 </div>
                 
-                <div class="servico-option">
-                    <input type="checkbox" id="jantar" name="servicos[]" value="jantar" 
-                           <?= (isset($_POST['servicos']) && in_array('jantar', $_POST['servicos'])) ? 'checked' : '' ?>
-                           onchange="atualizarPreco()">
-                    <label for="jantar">
-                        Jantar
-                        <div class="servico-detalhes">€15 por noite</div>
-                    </label>
-                </div>
             </div>
             
             <div class="preco-total">

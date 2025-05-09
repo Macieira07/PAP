@@ -36,12 +36,20 @@
             <li><a href="#location" data-translate="location">Localização</a></li>
             <li><a href="#contacto" data-translate="contact">Contactos</a></li>
           </ul>
-          <div class="language-selector">
-            <img src="assets/flags/pt.png" alt="Português" class="language-flag active" title="Português">
-            <img src="assets/flags/en.png" alt="English" class="language-flag" title="English">
-            <img src="assets/flags/es.png" alt="Español" class="language-flag" title="Español">
-            <img src="assets/flags/fr.png" alt="Français" class="language-flag" title="Français">
-          </div>
+                  <div class="language-selector">
+                    <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
+                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT
+                    </button>
+                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> EN
+                    </button>
+                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> ES
+                    </button>
+                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR
+                    </button>
+                </div>
           <div class="theme-toggle">
             <i class="ri-sun-line theme-icon"></i>
             <label class="switch">
@@ -64,8 +72,8 @@
     </header>
 
  <!-- Booking Section -->
-<section class="booking__container" id="booking">
-  <form class="booking__form">
+ <section class="booking__container" id="booking">
+  <form class="booking__form" id="bookingForm">
     <div class="input__group">
       <span><i class="ri-calendar-line"></i></span>
       <div>
@@ -87,12 +95,115 @@
         <input type="number" id="guests" min="1" max="10" value="2" required>
       </div>
     </div>
+    <div class="input__group">
+      <div>
+        <label for="price">Preço Estimado</label>
+        <input type="text" id="price" readonly>
+      </div>
+    </div>
     <div class="input__group input__btn">
-    <button id="searchBtn" class="btn">Ver disponibilidade</button>
-
+      <button type="button" id="searchBtn" class="btn">Ver disponibilidade</button>
     </div>
   </form>
+
+  <div id="availabilityResult" class="availability__message"></div> <!-- Mensagem de disponibilidade -->
 </section>
+
+<script>
+  // Função para calcular a quantidade de noites e o preço
+  function calculatePrice() {
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const guests = document.getElementById('guests').value;
+    const pricePerNight = 120;
+
+    if (checkIn && checkOut && guests) {
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
+
+      if (checkOutDate <= checkInDate) {
+        alert('A data de Check Out deve ser posterior à data de Check In.');
+        return;
+      }
+
+      const nights = (checkOutDate - checkInDate) / (1000 * 3600 * 24);
+      const totalPrice = nights * pricePerNight;
+      document.getElementById('price').value = `€${totalPrice.toFixed(2)} (${guests} hóspede(s))`;
+    }
+  }
+
+  // Função para verificar disponibilidade
+  function checkAvailability() {
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+
+    if (!checkIn || !checkOut) {
+      alert('Por favor, preencha as datas de check-in e check-out.');
+      return;
+    }
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    if (checkOutDate <= checkInDate) {
+      alert('A data de Check Out deve ser posterior à data de Check In.');
+      return;
+    }
+
+    // Faz uma requisição ao backend para verificar a disponibilidade
+    fetch('index/verificar_disponibilidade.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        checkIn: checkIn,
+        checkOut: checkOut
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      const resultDiv = document.getElementById('availabilityResult');
+      if (data.available) {
+        resultDiv.innerHTML = `
+          <p><i class="ri-check-line"></i> A nossa casa está disponível para as datas selecionadas! Fique à vontade para fazer a sua reserva.</p>
+          <a href="reservar.php?checkIn=${checkIn}&checkOut=${checkOut}&guests=${document.getElementById('guests').value}" class="btn btn-reserva">Fazer Reserva</a>
+        `;
+        resultDiv.classList.add('available');
+        resultDiv.classList.remove('unavailable');
+      } else {
+        resultDiv.innerHTML = `
+          <p><i class="ri-error-warning-line"></i> Lamentamos, mas infelizmente a nossa casa já está reservada para as datas selecionadas. Que tal tentar novas datas?</p>
+          <button onclick="resetForm()" class="btn btn-try-again">Tentar Novas Datas</button>
+        `;
+        resultDiv.classList.add('unavailable');
+        resultDiv.classList.remove('available');
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao verificar disponibilidade:', error);
+      alert('Erro ao verificar disponibilidade. Tente novamente mais tarde.');
+    });
+  }
+
+  // Função para resetar o formulário
+  function resetForm() {
+    document.getElementById('bookingForm').reset();
+    document.getElementById('availabilityResult').innerHTML = '';
+  }
+
+  // Adicionar evento de clique ao botão de verificar disponibilidade
+  document.getElementById('searchBtn').addEventListener('click', checkAvailability);
+
+  // Adiciona eventos para recalcular o preço
+  document.getElementById('checkIn').addEventListener('change', calculatePrice);
+  document.getElementById('checkOut').addEventListener('change', calculatePrice);
+  document.getElementById('guests').addEventListener('change', calculatePrice);
+</script>
+
+
+
+
 
     <!-- About Section -->
     <section class="section__container about__container" id="about">

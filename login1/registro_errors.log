@@ -229,3 +229,20 @@
 [06-May-2025 14:10:37 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
                 <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
                 <p><a href='http://localhost:8080/PA...
+[09-May-2025 09:52:04 UTC] Início do processamento de registro
+[09-May-2025 09:52:05 UTC] POST recebido: Array
+(
+    [nome] => ema
+    [email] => emavviana@gmail.com
+    [password] => Davidema123#
+    [telefone] => 919191919
+    [documento] => 919191919
+    [aceitar_termos] => on
+    [csrf_token] => 9d2839f7510a90a3ef5d3371c83ba6b55797ea57d7ce74a7c14f1245f452c480
+)
+
+[09-May-2025 09:52:05 UTC] Simulando envio de email para: emavviana@gmail.com
+[09-May-2025 09:52:05 UTC] Assunto: Verifique seu email - Quinta Flores
+[09-May-2025 09:52:05 UTC] Conteúdo: <h2>Bem-vindo à Quinta Flores!</h2>
+                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='http://localhost:8080/PA...

@@ -5,7 +5,6 @@ $id = $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
-    $apelido = $_POST['apelido'];
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
     $documento = $_POST['documento'];
@@ -14,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $aceitou = $_POST['aceitou'];
 
     $stmt = $conexao->prepare("UPDATE hospedes SET 
-        H_nome=?, H_apelido=?, H_email=?, H_telefone=?, H_documento_ident=?, 
+        H_nome=?, H_email=?, H_telefone=?, H_documento_ident=?, 
         H_morada=?, H_verificado_email=?, H_aceitou_termos_uso=? 
         WHERE H_id_hospede=?");
 
-    $stmt->bind_param("ssssssssi", $nome, $apelido, $email, $telefone, $documento, $morada, $verificado, $aceitou, $id);
+    $stmt->bind_param("sssssssi", $nome,$email, $telefone, $documento, $morada, $verificado, $aceitou, $id);
     $stmt->execute();
 
     header("Location: hospedes.php?sucesso=Hóspede atualizado com sucesso");
@@ -39,8 +38,7 @@ $h = $resultado->fetch_assoc();
     </div>
 <link rel="stylesheet" href="admin.css">
 <form method="post">
-    Nome: <input type="text" name="nome" value="<?= $h['H_nome'] ?>" required><br><br>
-    Apelido: <input type="text" name="apelido" value="<?= $h['H_apelido'] ?>"><br><br>
+    Nome Completo: <input type="text" name="nome" value="<?= $h['H_nome'] ?>" required><br><br>
     Email: <input type="email" name="email" value="<?= $h['H_email'] ?>" required><br><br>
     Telefone: <input type="text" name="telefone" value="<?= $h['H_telefone'] ?>" required><br><br>
     Documento: <input type="text" name="documento" value="<?= $h['H_documento_ident'] ?>" required><br><br>

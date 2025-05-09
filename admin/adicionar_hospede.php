@@ -3,7 +3,6 @@ require '../conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
-    $apelido = $_POST['apelido'];
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $telefone = $_POST['telefone'];
@@ -28,12 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Inserir novo hóspede
-    $stmt = $conexao->prepare("INSERT INTO hospedes 
-        (H_nome, H_apelido, H_email, H_senha, H_telefone, H_documento_ident, H_morada, 
-         H_verificado_email, H_aceitou_termos_uso, H_token_verificacao, H_token_expira)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+ $stmt = $conexao->prepare("INSERT INTO hospedes 
+    (H_nome, H_email, H_senha, H_telefone, H_documento_ident, H_morada, 
+     H_verificado_email, H_aceitou_termos_uso, H_token_verificacao, H_token_expira)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("sssssssssss", $nome, $apelido, $email, $senha, $telefone, $documento, $morada, $verificado, $aceitou, $token, $token_expira);
+
+    $stmt->bind_param("ssssssssss", $nome,$email, $senha, $telefone, $documento, $morada, $verificado, $aceitou, $token, $token_expira);
 
     if ($stmt->execute()) {
         header("Location: hospedes.php?sucesso=Hóspede adicionado com sucesso.");
@@ -52,13 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <form method="post">
     <label>
-        <i class="fa-solid fa-user"></i> Nome:
+        <i class="fa-solid fa-user"></i> Nome Completo:
         <input type="text" name="nome" required>
-    </label><br><br>
-
-    <label>
-        <i class="fa-solid fa-user-tag"></i> Apelido:
-        <input type="text" name="apelido">
     </label><br><br>
 
     <label>

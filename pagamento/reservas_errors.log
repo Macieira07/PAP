@@ -58,3 +58,56 @@ Stack trace:
 #0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
+[09-May-2025 08:49:11 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 27
+[09-May-2025 08:49:11 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
+[09-May-2025 08:49:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 40
+[09-May-2025 08:50:37 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
+[09-May-2025 08:50:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 40
+[09-May-2025 08:51:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:41
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(41): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 41
+[09-May-2025 08:51:41 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Field 'R_metodo_pagamento' doesn't have a default value in /var/www/html/pagamento/confirmacao.php:90
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(90): mysqli_stmt->execute()
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 90
+[09-May-2025 08:51:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Field 'R_metodo_pagamento' doesn't have a default value in /var/www/html/pagamento/confirmacao.php:90
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(90): mysqli_stmt->execute()
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 90
+[09-May-2025 08:51:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Field 'R_metodo_pagamento' doesn't have a default value in /var/www/html/pagamento/confirmacao.php:90
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(90): mysqli_stmt->execute()
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 90
+[09-May-2025 08:51:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Field 'R_metodo_pagamento' doesn't have a default value in /var/www/html/pagamento/confirmacao.php:90
+Stack trace:
+#0 /var/www/html/pagamento/confirmacao.php(90): mysqli_stmt->execute()
+#1 {main}
+  thrown in /var/www/html/pagamento/confirmacao.php on line 90
+[09-May-2025 08:54:32 UTC] Nova reserva criada: ID=14 para davidfloresmacieira@gmail.com
+[09-May-2025 08:54:37 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[09-May-2025 09:36:05 UTC] Nova reserva criada: ID=16 para davidfloresmacieira@gmail.com
+[09-May-2025 09:36:08 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[09-May-2025 09:45:09 UTC] Nova reserva criada: ID=18 para davidfloresmacieira@gmail.com
+[09-May-2025 09:45:11 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[09-May-2025 09:46:38 UTC] Erro: Dados da reserva não encontrados na sessão
+[09-May-2025 10:16:24 UTC] Nova reserva criada: ID=20 para davidfloresmacieira@gmail.com
+[09-May-2025 10:16:24 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 121
+[09-May-2025 10:16:24 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 182
+[09-May-2025 10:16:24 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 272
+[09-May-2025 10:16:27 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[09-May-2025 10:18:32 UTC] Nova reserva criada: ID=22 para davidfloresmacieira@gmail.com
+[09-May-2025 10:18:32 UTC] Exception ao enviar e-mail: You must provide at least one recipient email address.
+[09-May-2025 10:19:02 UTC] Erro: Dados da reserva não encontrados na sessão
