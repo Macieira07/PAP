@@ -1,0 +1,51 @@
+/* Estilo básico para a tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+/* Estilo para as linhas da tabela */
+.hospede-row {
+    position: relative;
+}
+
+/* Detalhes ocultos inicialmente */
+.hospede-details {
+    display: none;
+}
+
+/* Mostrar detalhes ao passar o mouse sobre a linha */
+.hospede-row:hover .hospede-details {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1000;
+}
+
+/* Estilo para o conteúdo dos detalhes */
+.details-content p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Estilo para as ações de editar e eliminar */
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -26,3 +26,25 @@ Stack trace:
 [05-May-2025 09:54:56 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
 [05-May-2025 09:54:56 UTC] PHP Warning:  include(login_page.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 123
 [05-May-2025 09:54:56 UTC] PHP Warning:  include(): Failed opening 'login_page.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 123
+[12-May-2025 11:19:11 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:19:11 UTC] PHP Warning:  include(login_page.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:19:11 UTC] PHP Warning:  include(): Failed opening 'login_page.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:31:33 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:31:33 UTC] PHP Warning:  include(login_page.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:31:33 UTC] PHP Warning:  include(): Failed opening 'login_page.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:29 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:32:29 UTC] PHP Warning:  include(pagina_login.php.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:29 UTC] PHP Warning:  include(): Failed opening 'pagina_login.php.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(pagina_login.php.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(): Failed opening 'pagina_login.php.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(pagina_login.php.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(): Failed opening 'pagina_login.php.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(pagina_login.php.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:30 UTC] PHP Warning:  include(): Failed opening 'pagina_login.php.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:34 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2
+[12-May-2025 11:32:34 UTC] PHP Warning:  include(pagina_login.php.php): Failed to open stream: No such file or directory in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:34 UTC] PHP Warning:  include(): Failed opening 'pagina_login.php.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/login1/mail_config.php on line 122
+[12-May-2025 11:32:42 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /var/www/html/login1/mail_config.php on line 2

@@ -268,7 +268,7 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
     <title>Pagamento - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
-    <link rel="icon" type="image/x-icon" href="logotipos/logotipo2.png">
+    <link rel="icon" type="image/x-icon" href="../assets/logos/logotipo1.png">
 
 </head>
 <body>

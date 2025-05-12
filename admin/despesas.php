@@ -1,6 +1,13 @@
 <?php
 require '../conexao.php';
 
+// Verificar se a tabela despesas tem os campos necessários
+$result = $conexao->query("SHOW COLUMNS FROM despesas LIKE 'D_nome'");
+if ($result->num_rows == 0) {
+    // Adicionar campo se não existir
+    $conexao->query("ALTER TABLE despesas ADD COLUMN D_nome VARCHAR(255) AFTER id");
+}
+
 // Inicialização das variáveis de filtro
 $filtro_data_inicio = isset($_GET['data_inicio']) ? $_GET['data_inicio'] : '';
 $filtro_data_fim = isset($_GET['data_fim']) ? $_GET['data_fim'] : '';
@@ -18,10 +25,10 @@ $saldoAtual = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1")->f
 $query = "SELECT * FROM despesas WHERE 1=1";
 
 if (!empty($filtro_data_inicio)) {
-    $query .= " AND D_data >= '$filtro_data_inicio'";
+    $query .= " AND DATE(D_data) >= '$filtro_data_inicio'";
 }
 if (!empty($filtro_data_fim)) {
-    $query .= " AND D_data <= '$filtro_data_fim'";
+    $query .= " AND DATE(D_data) <= '$filtro_data_fim'";
 }
 if (!empty($filtro_categoria)) {
     $query .= " AND D_categoria = '$filtro_categoria'";
@@ -33,7 +40,7 @@ if (!empty($filtro_valor_max)) {
     $query .= " AND D_valor <= $filtro_valor_max";
 }
 if (!empty($pesquisa)) {
-    $query .= " AND (D_nome LIKE '%$pesquisa%' OR D_descricao LIKE '%$pesquisa%' OR D_fornecedor LIKE '%$pesquisa%')";
+    $query .= " AND (D_fornecedor LIKE '%$pesquisa%' OR D_descricao LIKE '%$pesquisa%')";
 }
 
 // Adicionar ordenação
@@ -47,18 +54,16 @@ $categorias = $conexao->query("SELECT DISTINCT D_categoria FROM despesas ORDER B
 
 // Calcular totais por categoria
 $totalPorCategoria = [];
-$totalQueryBase = "SELECT D_categoria, SUM(D_valor) as total FROM despesas";
+$totalQuery = "SELECT D_categoria, SUM(D_valor) as total FROM despesas WHERE 1=1";
 
-// Aplicar os mesmos filtros dos resultados principais
-$totalQuery = $totalQueryBase . " WHERE 1=1";
 if (!empty($filtro_data_inicio)) {
-    $totalQuery .= " AND D_data >= '$filtro_data_inicio'";
+    $totalQuery .= " AND DATE(D_data) >= '$filtro_data_inicio'";
 }
 if (!empty($filtro_data_fim)) {
-    $totalQuery .= " AND D_data <= '$filtro_data_fim'";
+    $totalQuery .= " AND DATE(D_data) <= '$filtro_data_fim'";
 }
 if (!empty($pesquisa)) {
-    $totalQuery .= " AND (D_nome LIKE '%$pesquisa%' OR D_descricao LIKE '%$pesquisa%' OR D_fornecedor LIKE '%$pesquisa%')";
+    $totalQuery .= " AND (D_fornecedor LIKE '%$pesquisa%' OR D_descricao LIKE '%$pesquisa%')";
 }
 $totalQuery .= " GROUP BY D_categoria";
 
@@ -68,10 +73,7 @@ while ($row = $resultadoTotais->fetch_assoc()) {
 }
 
 // Total de despesas filtradas
-$totalDespesasFiltradas = 0;
-foreach ($totalPorCategoria as $total) {
-    $totalDespesasFiltradas += $total;
-}
+$totalDespesasFiltradas = array_sum($totalPorCategoria);
 
 // Total geral de todas as despesas (sem filtros)
 $totalDespesas = $conexao->query("SELECT SUM(D_valor) AS total FROM despesas")->fetch_assoc()['total'] ?? 0;
@@ -79,58 +81,22 @@ $totalDespesas = $conexao->query("SELECT SUM(D_valor) AS total FROM despesas")->
 // Total a pagar em manutenções (não pagas)
 $totalManutencoes = $conexao->query("SELECT SUM(M_custo) AS total FROM manutencao WHERE M_pago = 0")->fetch_assoc()['total'] ?? 0;
 
-// Total a pagar em serviços (se forem pagos)
-$totalServicos = $conexao->query("SELECT SUM(S_preco) AS total FROM servicos")->fetch_assoc()['total'] ?? 0;
-
 // Total estimado de salários
-$salarioBase = 1000;
-$totalFuncionarios = $conexao->query("SELECT COUNT(*) AS total FROM funcionarios")->fetch_assoc()['total'];
-$totalSalarios = $salarioBase * $totalFuncionarios;
+$totalFuncionarios = $conexao->query("SELECT COUNT(*) AS total FROM funcionarios")->fetch_assoc()['total'] ?? 0;
+$totalSalarios = 1000 * $totalFuncionarios; // Valor base por funcionário
 
 // Total de receitas (dinheiro recebido)
 $totalReceitas = $conexao->query("SELECT SUM(R_valor) AS total FROM receitas")->fetch_assoc()['total'] ?? 0;
 
 // Soma geral de despesas
-$totalGeralDespesas = $totalDespesas + $totalManutencoes + $totalServicos + $totalSalarios;
-
-// Função para pagar a despesa
-if (isset($_GET['pagar_id'])) {
-    $despesa_id = $_GET['pagar_id'];
-
-    // Verificar se há saldo suficiente
-    $result = $conexao->query("SELECT D_valor FROM despesas WHERE D_id_despeza = $despesa_id");
-    $despesa = $result->fetch_assoc();
-    $valorDespesa = $despesa['D_valor'];
-    
-    if ($saldoAtual >= $valorDespesa) {
-        // Atualizar o saldo da conta virtual
-        $conexao->query("UPDATE conta_virtual SET saldo = saldo - $valorDespesa WHERE id = 1");
-
-        // Registrar o pagamento na tabela movimentacoes
-        $descricao = "Pagamento de despesa #$despesa_id";
-        $conexao->query("INSERT INTO movimentacoes (tipo, descricao, valor, origem, origem_id)
-                         VALUES ('despesa', '$descricao', $valorDespesa, 'despesa', $despesa_id)");
-
-        // Marcar despesa como paga
-        $conexao->query("UPDATE despesas SET D_pago = 1, D_data_pagamento = NOW() WHERE D_id_despeza = $despesa_id");
-
-        // Atualizar saldo após pagamento
-        $saldoAtual -= $valorDespesa;
-        
-        // Redirecionar após pagamento
-        header('Location: despesas.php');
-        exit;
-    } else {
-        $mensagemErro = "Saldo insuficiente para realizar o pagamento!";
-    }
-}
+$totalGeralDespesas = $totalDespesas + $totalManutencoes + $totalSalarios;
 
 // Buscar despesas futuras/planejadas
-$despesasFuturas = $conexao->query("SELECT * FROM despesas WHERE D_data > CURDATE() ORDER BY D_data ASC");
+$despesasFuturas = $conexao->query("SELECT * FROM despesas WHERE DATE(D_data) > CURDATE() ORDER BY D_data ASC");
 
 // Buscar despesas não pagas
-$despesasNaoPagas = $conexao->query("SELECT * FROM despesas WHERE D_pago = 0 AND D_data <= CURDATE() ORDER BY D_data ASC");
-$totalNaoPago = $conexao->query("SELECT SUM(D_valor) AS total FROM despesas WHERE D_pago = 0 AND D_data <= CURDATE()")->fetch_assoc()['total'] ?? 0;
+$despesasNaoPagas = $conexao->query("SELECT * FROM despesas WHERE D_pago = 0 AND DATE(D_data) <= CURDATE() ORDER BY D_data ASC");
+$totalNaoPago = $conexao->query("SELECT SUM(D_valor) AS total FROM despesas WHERE D_pago = 0 AND DATE(D_data) <= CURDATE()")->fetch_assoc()['total'] ?? 0;
 
 // Buscar manutenções não pagas
 $manutencoesNaoPagas = $conexao->query("SELECT * FROM manutencao WHERE M_pago = 0 ORDER BY M_data_inicio ASC");
@@ -141,6 +107,21 @@ $receitas = $conexao->query("SELECT * FROM receitas ORDER BY R_data DESC LIMIT 1
 
 // Buscar últimas movimentações
 $movimentacoes = $conexao->query("SELECT * FROM movimentacoes ORDER BY data DESC LIMIT 10");
+
+// Dados para gráfico de evolução mensal
+$meses = [];
+$valoresMensais = [];
+for ($i = 5; $i >= 0; $i--) {
+    $mes = date('Y-m', strtotime("-$i months"));
+    $mesNome = date('M/Y', strtotime("-$i months"));
+    $meses[] = $mesNome;
+    
+    $inicio = $mes . '-01';
+    $fim = date('Y-m-t', strtotime($inicio));
+    
+    $totalMes = $conexao->query("SELECT SUM(D_valor) AS total FROM despesas WHERE DATE(D_data) BETWEEN '$inicio' AND '$fim'")->fetch_assoc()['total'] ?? 0;
+    $valoresMensais[] = $totalMes;
+}
 ?>
 
 <!DOCTYPE html>
@@ -445,7 +426,8 @@ $movimentacoes = $conexao->query("SELECT * FROM movimentacoes ORDER BY data DESC
     </form>
 </div>
 
-h2>Manutenções Pendentes</h2>
+<h2>Manutenções Pendentes</h2>
+<a href="adicionar_manutencao.php"><button>Adicionar Manutenção</button></a>
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>
@@ -487,6 +469,7 @@ h2>Manutenções Pendentes</h2>
 
 <!-- Adicionar seção para Últimas Receitas -->
 <h2>Últimas Receitas</h2>
+<a href="adicionar_receita.php"><button>Adicionar Receita</button></a>
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>
@@ -696,9 +679,8 @@ h2>Manutenções Pendentes</h2>
         <canvas id="graficoCategoria"></canvas>
     </div>
     <div class="grafico">
-        <h3>Evolução de Despesas (Últimos 6 meses)</h3>
-        <canvas id="graficoEvolucao"></canvas>
-    </div>
+    <h3>Evolução de Despesas (Últimos 6 meses)</h3>
+    <canvas id="graficoEvolucao"></canvas>
 </div>
 
 <script>
@@ -742,6 +724,66 @@ h2>Manutenções Pendentes</h2>
         }
     });
 
+    // Gráfico de evolução de despesas
+    const ctxEvolucao = document.getElementById('graficoEvolucao').getContext('2d');
+    const graficoEvolucao = new Chart(ctxEvolucao, {
+        type: 'line', // Gráfico de linha
+        data: {
+            labels: [
+                <?php
+                // Supondo que tenha um array $meses com os últimos 6 meses
+                foreach ($meses as $mes) {
+                    echo "'$mes', ";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Despesas',
+                data: [
+                    <?php
+                    // Aqui estamos a passar os valores das despesas dos últimos 6 meses
+                    foreach ($despesasUltimos6Meses as $despesa) {
+                        echo "$despesa, ";
+                    }
+                    ?>
+                ],
+                borderColor: 'rgba(75, 192, 192, 1)', // Cor da linha
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Cor de fundo da linha
+                fill: true, // Preencher o gráfico
+                tension: 0.1 // Curvatura da linha
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Meses'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Despesas (€)'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+
     // Gráfico de evolução mensal
     <?php
     // Obter dados para o gráfico de evolução (últimos 6 meses)
@@ -760,6 +802,7 @@ h2>Manutenções Pendentes</h2>
         $valoresMensais[] = $totalMes;
     }
     ?>
+    
 
     const ctxEvolucao = document.getElementById('graficoEvolucao').getContext('2d');
     const graficoEvolucao = new Chart(ctxEvolucao, {

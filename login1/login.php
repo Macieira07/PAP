@@ -152,15 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verifica se é hóspede
         $usuario = verificarUsuario($conexao, $email, $senha, 'hospedes', 'H_email', 'H_senha', 'H_id_hospede', 'H_nome');
         if ($usuario) {
-            // MODIFICAÇÃO: Comentado temporariamente para permitir login mesmo sem verificação de email
-            /*
-            if ($usuario['H_verificado_email'] != 'Sim') {
-                debug_log("Conta de hóspede não verificada", ['id' => $usuario['H_id_hospede']]);
-                echo json_encode(['error' => 'Por favor, verifique seu email antes de fazer login.']);
-                exit;
-            }
-            */
-            
             debug_log("Login de hóspede bem-sucedido", ['id' => $usuario['H_id_hospede'], 'nome' => $usuario['H_nome']]);
             $_SESSION['id'] = $usuario['H_id_hospede'];
             $_SESSION['nome'] = $usuario['H_nome'];
@@ -188,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['last_login_attempt'] = time();
 
         try {
-            $tipo = strpos($email, '@hotel.com') !== false ? 'funcionario' : 'hospede';
+            $tipo = strpos($email, 'quinta.flores2019@gmail.com') !== false ? 'funcionario' : 'hospede';
             $acao = 'tentativa_login';
             $log_sql = "INSERT INTO logs_acesso (email, tipo_usuario, acao, data, status) VALUES (?, ?, ?, NOW(), 'falha')";
             $log_stmt = $conexao->prepare($log_sql);

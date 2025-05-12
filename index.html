@@ -67,7 +67,7 @@
       <div class="header__container" id="home">
         <p data-translate="welcome">Bem-vindo à</p>
         <h1>QUINTA <span>FLORES</span></h1>
-        <a href="../login1/pagina_login.php" class="animated-button1" data-translate="book_now">Reservar Agora</a>
+        <a href="../login_registo/login.php" class="animated-button1" data-translate="book_now">Reservar Agora</a>
       </div>
     </header>
 
@@ -201,10 +201,6 @@
   document.getElementById('guests').addEventListener('change', calculatePrice);
 </script>
 
-
-
-
-
     <!-- About Section -->
     <section class="section__container about__container" id="about">
       <div class="about__image">
@@ -219,8 +215,6 @@
           Localizada no coração do Minho, a Quinta Flores é um  refúgio de paz e tranquilidade, onde a tradição minhota se alia ao conforto moderno. 
 
           Com jardins exuberantes, uma piscina ao ar livre de grandes dimensões e vinhas tradicionais, a Quinta Flores oferece um ambiente único para momentos de lazer e relaxamento. Os nossos futuros hóspedes poderão desfrutar de atividades como mesa de bilhar, badminton, cartas e leitura de livros, tudo em meio à natureza deslumbrante.
-          
-          
         </p>
         <p class="section__description">
           A região do Minho é famosa pela sua gastronomia rica, pelos seus passeios culturais e pelas paisagens naturais de grande beleza. A Quinta Flores será o ponto de partida ideal para quem quiser explorar tudo o que o Minho tem para oferecer, desde trilhos pedestres a experiências culturais autênticas.
@@ -230,7 +224,6 @@
         </div>
       </div>
     </section>
-
     <!-- Rooms Section -->
     <section class="section__container rooms__container" id="rooms">
       <p class="section__subheader">OS NOSSOS QUARTOS</p>
@@ -430,11 +423,10 @@
           <img src="assets/images/laranjeira.jpg" alt="Jardim">
         </div>
     </section>
-
 <!-- Amenities Section -->
 <section class="section__container comodidades" id="amenities">
   <p class="section__subheader">COMODIDADES</p>
-  <h2 class="section__header">O Que Oferecemos</h2>
+  <h2 class="section__header">O que este espaço oferece</h2>
   <div class="comodidades__container">
     <div class="comodidades__list">
       <li>
@@ -472,9 +464,6 @@
     </div>
   </div>
 </section>
-
- 
-
     <!-- Testimonials Section -->
     <section class="section__container testimonials" id="testimonials">
       <p class="section__subheader">DEPOIMENTOS</p>
@@ -501,7 +490,6 @@
               </div>
             </div>
           </div>
-          
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
             <p class="testimonial__text">
@@ -521,8 +509,7 @@
                 </div>
               </div>
             </div>
-          </div>
-          
+          </div>    
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
             <p class="testimonial__text">
@@ -546,7 +533,6 @@
         </div>
       </div>
     </section>
-
     <!-- Location Section -->
     <section class="section__container location" id="location">
       <p class="section__subheader">LOCALIZAÇÃO</p>
@@ -703,8 +689,6 @@
     <li><a href="#contact">✉️ Contactos</a></li>
   </ul>
 </div>
-
-  
 <div class="footer__col">
   <h4>Descobrir a Região</h4>
   <ul class="footer__links">
@@ -760,9 +744,7 @@
             </li>
           </ul>
         </div>
-    
       </div>
-    
       <!-- Barra inferior -->
       <div class="footer__bar">
         © 2023 Quinta Flores. Todos os direitos reservados.
@@ -773,7 +755,6 @@
       // Mobile Menu Toggle
       const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
       const navLinks = document.querySelector('.nav__links');
-      
       mobileMenuBtn.addEventListener('click', () => {
         navLinks.classList.toggle('active');
         mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
@@ -989,7 +970,7 @@
         document.getElementById('checkOut').min = nextDay;
       });
     </script>
-    <script src="../index/chat.js"></script>
-    <script src="../index/disponibilidade.js"></script>
+    <script src="index/chat.js"></script>
+    <script src="index/disponibilidade.js"></script>
   </body>
 </html> 

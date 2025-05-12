@@ -4,7 +4,6 @@ require '../conexao.php';
 
 // Verificar se o usuário está logado e é um funcionário
 if (!isset($_SESSION['id']) || $_SESSION['tipo'] !== 'funcionario') {
-    // Redirecionar para login
     header('Location: ../login.php');
     exit;
 }
@@ -16,37 +15,51 @@ $stmt->execute();
 $resultado = $stmt->get_result();
 $funcionario = $resultado->fetch_assoc();
 
-// Calcular o saldo da conta (ganhos - gastos)
-$resultado_gastos = $conexao->query("SELECT SUM(M_custo) AS total_gastos FROM manutencao WHERE M_pago = 1");
-$total_gastos = $resultado_gastos->fetch_assoc()['total_gastos'] ?? 0;
-
-$resultado_ganhos = $conexao->query("SELECT SUM(R_valor_pago) AS total_ganhos FROM reservas WHERE R_estado IN ('confirmada', 'concluída')");
-$total_ganhos = $resultado_ganhos->fetch_assoc()['total_ganhos'] ?? 0;
-
-$saldo = $total_ganhos - $total_gastos;
-
-// Determinar a classe da cor com base no saldo
-$cor_saldo = 'amarelo';
-if ($saldo > 0) $cor_saldo = 'verde';
-elseif ($saldo < 0) $cor_saldo = 'vermelho';
+// Cálculo do saldo de forma mais completa (igual ao das despesas)
+$saldoAtual = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1")->fetch_assoc()['saldo'] ?? 0;
 
 // Consultar notificações não lidas
 $resultado_notificacoes = $conexao->query("SELECT * FROM notificacoes WHERE lida = 0 ORDER BY data_criacao DESC LIMIT 5");
 $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoes WHERE lida = 0")->fetch_assoc()['total'];
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="admin.css">
-    <title>Painel de Administração</title>
-    <!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <title>Painel de Administração</title>
+    <title>Painel de Administração - QUINTA FLORES </title>
     <style>
+        body { font-family: Arial; background: #f5f5f5; text-align: center; padding: 40px; }
+        .menu { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+
+        .card {
+            background: white; padding: 20px; border-radius: 10px; width: 200px;
+            text-decoration: none; color: black; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card:hover { background: #eaeaea; transform: scale(1.05); }
+
+        .card img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .saldo {
+            position: absolute;
+            top: 20px;
+            right: 100px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .positivo { background-color: #28a745; color: white; }
+        .negativo { background-color: #dc3545; color: white; }
+        .neutro { background-color: #ffc107; color: black; }
         body { font-family: Arial; background: #f5f5f5; text-align: center; padding: 40px; }
         .menu { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
@@ -227,10 +240,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             <p><a href="../login1/pagina_login.php">Terminar Sessão</a></p>
         </div>
     </div>
-
-    <!-- Exibe o saldo -->
-    <div class="saldo <?= $cor_saldo ?>">
-        Saldo: €<?= number_format($saldo, 2, ',', '.') ?>
+    <!-- Exibe o saldo (igual ao das despesas) -->
+    <div class="saldo <?= $saldoAtual > 0 ? 'positivo' : ($saldoAtual < 0 ? 'negativo' : 'neutro') ?>">
+        Saldo Disponível: <?= number_format($saldoAtual, 2, ',', '.') ?>€
     </div>
 
     <!-- Ícone de notificações -->

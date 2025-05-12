@@ -1,5 +1,6 @@
 <?php
 require '../conexao.php';
+require_once 'email.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
@@ -10,6 +11,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $morada = $_POST['morada'];
     $verificado = $_POST['verificado'];
     $aceitou = $_POST['aceitou'];
+    
+    // Coletar as opções de notas selecionadas
+    $notas = [];
+    $valor_total = 0;
+    $observacoes_decoracao = "";  // Para armazenar as observações da decoração
+
+    if (isset($_POST['decoracao_tematica'])) {
+        $notas[] = "Decoração Temática";
+        $valor_total += 130;  // Valor único
+        // Capturar a observação de decoração, se houver
+        if (isset($_POST['observacoes_decoracao']) && !empty($_POST['observacoes_decoracao'])) {
+            $observacoes_decoracao = $_POST['observacoes_decoracao'];
+            $notas[] = "Observações: " . $observacoes_decoracao;
+        }
+    }
+
+    if (isset($_POST['limpeza_diaria'])) {
+        $notas[] = "Limpeza Diária";
+        $valor_total += 15;  // Por noite
+    }
+
+    if (isset($_POST['cesto_boas_vindas'])) {
+        $notas[] = "Cesto de Boas-Vindas";
+        $valor_total += 10;  // Valor único
+    }
+
+    $notas_str = implode(", ", $notas);  // Transformar as notas em uma string separada por vírgulas
+
     $token = bin2hex(random_bytes(16));
     $token_expira = date('Y-m-d H:i:s', strtotime('+1 day'));
 
@@ -27,20 +56,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Inserir novo hóspede
- $stmt = $conexao->prepare("INSERT INTO hospedes 
-    (H_nome, H_email, H_senha, H_telefone, H_documento_ident, H_morada, 
-     H_verificado_email, H_aceitou_termos_uso, H_token_verificacao, H_token_expira)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conexao->prepare("INSERT INTO hospedes 
+        (H_nome, H_email, H_senha, H_telefone, H_documento_ident, H_morada, 
+         H_verificado_email, H_aceitou_termos_uso, H_notas, H_token_verificacao, H_token_expira, H_valor_notas)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-
-    $stmt->bind_param("ssssssssss", $nome,$email, $senha, $telefone, $documento, $morada, $verificado, $aceitou, $token, $token_expira);
+    $stmt->bind_param("ssssssssssss", $nome, $email, $senha, $telefone, $documento, $morada, 
+        $verificado, $aceitou, $notas_str, $token, $token_expira, $valor_total);
 
     if ($stmt->execute()) {
-        header("Location: hospedes.php?sucesso=Hóspede adicionado com sucesso.");
+        // Gerar código de verificação
+        $codigo_verificacao = rand(100000, 999999);
+
+        // Guardar o código no campo de verificação
+        $stmt2 = $conexao->prepare("UPDATE hospedes SET H_token_verificacao=? WHERE H_email=?");
+        $stmt2->bind_param("ss", $codigo_verificacao, $email);
+        $stmt2->execute();
+
+        // Enviar o código por email
+        $resultadoEmail = enviarEmailCodigo($email, $nome, $codigo_verificacao);
+        if ($resultadoEmail !== true) {
+            header("Location: hospedes.php?erro=Erro ao enviar email: $resultadoEmail");
+            exit;
+        }
+
+        header("Location: hospedes.php?sucesso=Hóspede adicionado com sucesso! Código de verificação enviado.");
+        exit;
     } else {
         header("Location: hospedes.php?erro=Erro ao adicionar hóspede.");
+        exit;
     }
-    exit;
 }
 ?>
 
@@ -49,40 +94,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
     <h2>Adicionar um novo Hóspede</h2>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <form method="post">
     <label>
-        <i class="fa-solid fa-user"></i> Nome Completo:
+        Nome Completo:
         <input type="text" name="nome" required>
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-envelope"></i> Email:
+        Email:
         <input type="email" name="email" required>
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-lock"></i> Senha:
-        <input type="password" name="senha" required>
+        Senha:
+        <input type="text" name="senha" id="senha" required readonly style="width: 120px;">
+        <button type="button" onclick="gerarSenha()">Gerar Código</button>
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-phone"></i> Telefone:
+        Telefone:
         <input type="text" name="telefone" required>
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-address-card"></i> Documento:
+        Documento:
         <input type="text" name="documento" required>
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-location-dot"></i> Morada:
+        Morada:
         <input type="text" name="morada">
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-check-circle"></i> Verificou Email?
+        Verificou Email?
         <select name="verificado">
             <option value="Não">Não</option>
             <option value="Sim">Sim</option>
@@ -90,14 +136,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </label><br><br>
 
     <label>
-        <i class="fa-solid fa-file-contract"></i> Aceitou os Termos?
+        Aceitou os Termos?
         <select name="aceitou">
             <option value="Não">Não</option>
             <option value="Sim">Sim</option>
         </select>
     </label><br><br>
 
+
     <button type="submit">Salvar</button>
 </form>
 
-<a href="hospedes.php">← Voltar</a>
+<script>
+function gerarSenha() {
+    const codigo = Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('senha').value = codigo;
+}
+
+</script>

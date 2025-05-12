@@ -113,9 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Email de verificação
         $subject = "Verifique seu email - Quinta Flores";
         $body = "<h2>Bem-vindo à Quinta Flores!</h2>
-                <p>Obrigado por se registrar. Por favor, clique no link abaixo para verificar seu email:</p>
-                <p><a href='$verification_link'>Verificar Email</a></p>
-                <p>Se você não se registrou, ignore este email.</p>";
+                <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+                <p><a href='verify.php'>Verificar Email</a></p>";
         
         $conexao->commit();
         
@@ -131,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die(json_encode(['error' => 'Ocorreu um erro durante o registro. Por favor, tente novamente.']));
     }
 } else {
-    header("Location: login.php");
+    header("Location: pagina_login.php");
     exit();
 }
 ?>
