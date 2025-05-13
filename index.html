@@ -12,6 +12,7 @@
     <!-- Fontes -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="index/style.css">
+    <link rel="stylesheet" type="text/css" href="index/chatbot.css">
     <!-- Bibliotecas de Ícones -->
     <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
@@ -67,7 +68,7 @@
       <div class="header__container" id="home">
         <p data-translate="welcome">Bem-vindo à</p>
         <h1>QUINTA <span>FLORES</span></h1>
-        <a href="../login_registo/login.php" class="animated-button1" data-translate="book_now">Reservar Agora</a>
+        <a href="login1/pagina_login.php" class="animated-button1" data-translate="book_now">Reservar Agora</a>
       </div>
     </header>
 
@@ -164,21 +165,9 @@
     .then(response => response.json())
     .then(data => {
       const resultDiv = document.getElementById('availabilityResult');
-      if (data.available) {
-        resultDiv.innerHTML = `
-          <p><i class="ri-check-line"></i> A nossa casa está disponível para as datas selecionadas! Fique à vontade para fazer a sua reserva.</p>
-          <a href="reservar.php?checkIn=${checkIn}&checkOut=${checkOut}&guests=${document.getElementById('guests').value}" class="btn btn-reserva">Fazer Reserva</a>
-        `;
-        resultDiv.classList.add('available');
-        resultDiv.classList.remove('unavailable');
-      } else {
-        resultDiv.innerHTML = `
-          <p><i class="ri-error-warning-line"></i> Lamentamos, mas infelizmente a nossa casa já está reservada para as datas selecionadas. Que tal tentar novas datas?</p>
-          <button onclick="resetForm()" class="btn btn-try-again">Tentar Novas Datas</button>
-        `;
-        resultDiv.classList.add('unavailable');
-        resultDiv.classList.remove('available');
-      }
+      resultDiv.innerHTML = data.message;
+      resultDiv.classList.toggle('available', data.available);
+      resultDiv.classList.toggle('unavailable', !data.available);
     })
     .catch(error => {
       console.error('Erro ao verificar disponibilidade:', error);
@@ -461,9 +450,38 @@
         <i class="ri-leaf-line"></i>
         <span>Produtos de Higiene Pessoal Ecológicos</span>
       </li>
+      <li>
+        <i class="ri-fire-line"></i>
+        <span>Lareira</span>
+      </li>
+      <li>
+        <i class="ri-washing-machine-line"></i>
+        <span>Máquina de Lavar Roupa</span>
+      </li>
+      <li>
+        <i class="ri-tv-2-line"></i>
+        <span>Televisão</span>
+      </li>
+      <li>
+        <i class="ri-restaurant-2-line"></i>
+        <span>Cozinha Totalmente Equipada</span>
+      </li>
+      <li>
+        <i class="ri-hospital-line"></i>
+        <span>Kit de Primeiros Socorros</span>
+      </li>
+      <li>
+        <i class="ri-hot-tub-line"></i>
+        <span>Jacuzzi</span>
+      </li>
+      <li>
+        <i class="ri-restaurant-line"></i>
+        <span>Churrasqueira</span>
+      </li>
     </div>
   </div>
 </section>
+
     <!-- Testimonials Section -->
     <section class="section__container testimonials" id="testimonials">
       <p class="section__subheader">DEPOIMENTOS</p>
@@ -566,93 +584,6 @@
         </div>
       </div>
     </section>
-    <!-- Chat Widget -->
- <!-- Adicionar esta seção no seu HTML, geralmente no final do body -->
-<div class="chat-widget">
-  <button class="chat-button">
-    <i class="ri-chat-3-line"></i>
-    <span class="chat-notification">1</span>
-  </button>
-  <div class="chat-window">
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chat-logo">
-        <div>
-          <h4> Chat Quinta Flores</h4>
-          <p class="chat-status online">Online</p>
-        </div>
-      </div>
-      <div class="chat-actions">
-        <button class="chat-action-btn minimize-btn" title="Minimizar">
-          <i class="ri-subtract-line"></i>
-        </button>
-        <button class="chat-action-btn close-btn" title="Fechar">
-          <i class="ri-close-line"></i>
-        </button>
-      </div>
-    </div>
-    <div class="chat-body">
-      <div class="chat-tabs">
-        <button class="chat-tab active" data-tab="chat">
-          <i class="ri-chat-3-line"></i> Chat
-        </button>
-        <button class="chat-tab" data-tab="faq">
-          <i class="ri-question-line"></i> FAQ
-        </button>
-        <button class="chat-tab" data-tab="info">                     
-          <i class="ri-information-line"></i> Info
-        </button>
-      </div>
-      <div class="chat-panels">
-        <div class="chat-panel active" data-tab="chat">
-          <div class="chat-messages"></div>
-          <div class="quick-replies">
-            <button class="quick-reply-btn">Disponibilidade</button>
-            <button class="quick-reply-btn">Preços</button>
-            <button class="quick-reply-btn">Localização</button>
-          </div>
-          <div class="chat-input-area">
-            <div class="chat-extras">
-              <button class="chat-extra-btn emoji-btn">
-                <i class="ri-emotion-line"></i>
-              </button>
-              <button class="chat-extra-btn attach-btn">
-                <i class="ri-image-line"></i>
-              </button>
-            </div>
-            <div class="chat-input-wrapper">
-              <textarea id="chatInput" placeholder="Escreva a sua mensagem..."></textarea>
-              <button class="send-button">
-                <i class="ri-send-plane-line"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="chat-panel" data-tab="faq">
-          <div class="faq-list"></div>
-        </div>
-        <div class="chat-panel" data-tab="info">
-          <div class="info-panel">
-            <div class="info-section">
-              <h3><i class="ri-phone-line"></i> Contactos</h3>
-              <p>Telefone: 
-                +351 912 418 976<br>Email: quinta.flores2019@gmail.com</p>
-            </div>
-            <div class="info-section">
-              <h3><i class="ri-time-line"></i> Horários</h3>
-              <p>Check-in: 15h00 - 11h00<br>Check-out: Até 11h00<br>Recepção: 8h00 - 22h00</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Lightbox -->
     <div id="lightbox">
       <span class="close">&times;</span>
@@ -664,7 +595,6 @@
     </div>
     <footer class="footer" id="contactos">
       <div class="section__container footer__container">
-    
         <!-- Coluna: Logo e descrição -->
         <div class="footer__col">
           <div class="logo">
@@ -674,8 +604,50 @@
             A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.
           </p>
         </div>
-    
-        <!-- Coluna: Links rápidos -->
+
+
+        <!--CHATBOT-->
+<div class="chatbot-container">
+    <div class="chatbot-button" id="chatbotButton">
+        <i class="ri-message-3-line"></i>
+    </div>
+    <div class="chatbot-box" id="chatbotBox">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <img src="../assets/logos/logotipo1.png" alt="Quinta Flores" class="chatbot-logo">
+                <span>Assistente Virtual da Quinta Flores</span>
+            </div>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <img src="../assets/logos/logotipo1.png" alt="Bot" class="message-avatar">
+                <div class="message-content">
+                    <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudá-lo hoje?</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Digite sua mensagem...">
+            <button id="chatbotSend" class="chatbot-send">
+                <i class="ri-send-plane-fill"></i>
+            </button>
+        </div>
+        <div class="chatbot-suggestions">
+            <button class="suggestion-button">Reservas</button>
+            <button class="suggestion-button">Acomodações</button>
+            <button class="suggestion-button">Serviços</button>
+            <button class="suggestion-button">Localização</button>
+            <button class="suggestion-button">Atividades</button>
+            <button class="suggestion-button">Preços</button>
+        </div>
+        <div class="chatbot-footer">
+            <span>Quinta Flores - Sentindo-se em casa, no coração do Minho</span>
+        </div>
+    </div>
+</div>  
 <!-- Coluna: Links Rápidos com ícones -->
 <div class="footer__col">
   <h4>Links Rápidos</h4>
@@ -948,17 +920,8 @@
         el.style.transform = 'translateY(20px)';
         el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       });
-      
       window.addEventListener('scroll', animateOnScroll);
       window.addEventListener('load', animateOnScroll);
-
-
-
-
-
-
-
-      
       // Booking form date restrictions
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('checkIn').min = today;
@@ -970,7 +933,8 @@
         document.getElementById('checkOut').min = nextDay;
       });
     </script>
-    <script src="index/chat.js"></script>
+   
     <script src="index/disponibilidade.js"></script>
+    <script src="../index/chatbot.js"></script>
   </body>
-</html> 
+</html>

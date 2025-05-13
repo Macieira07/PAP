@@ -269,7 +269,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
     <link rel="icon" type="image/x-icon" href="../assets/logos/logotipo1.png">
-
 </head>
 <body>
     <div class="container">
@@ -316,11 +315,9 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                     <span>
                         <?php 
                         $servicos_nomes = [
-                            'pequeno-almoco' => 'Pequeno-Almoço',
                             'decoracao' => 'Decoração Temática',
                             'limpeza' => 'Limpeza Diária',
                             'cesto' => 'Cesto de Boas-Vindas',
-                            'jantar' => 'Jantar'
                         ];
                         $servicos_selecionados = array_map(function($s) use ($servicos_nomes) {
                             return $servicos_nomes[$s] ?? $s;

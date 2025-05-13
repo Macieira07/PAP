@@ -1,24 +1,16 @@
 <?php
 require '../conexao.php';
 
-$descricao_servicos = [
-    'servico_recepcao' => 'Recepção 24h: Atendimento ao cliente disponível 24 horas.',
-    'servico_concierge' => 'Serviço de Concierge: Reservas de restaurantes, passeios e mais.',
-    'servico_deposito_bagagem' => 'Depósito de Bagagens: Armazenamento seguro para sua bagagem.',
-    'servico_lavanderia' => 'Serviço de Lavanderia: Roupas lavadas e engomadas.',
-    'servico_caixa_segurança' => 'Caixa de Segurança: Proteja seus itens pessoais.',
-    'servico_wifi' => 'Wi-Fi Gratuito: Acesso à internet sem custo.',
-    'servico_transfer' => 'Transfer para o aeroporto: Transporte para o aeroporto ou estação.',
-    'servico_quarto' => 'Serviço de Quarto: Refeições entregues diretamente no quarto.',
-    'servico_bicicleta' => 'Aluguel de Bicicleta: Explore a cidade de bicicleta.',
-    'servico_massage' => 'Massagem e Spa: Serviços de relaxamento no local.',
-    'servico_estacionamento' => 'Estacionamento Privado: Estacionamento seguro para veículos.',
-];
+// Recupera as categorias de serviços para o dropdown
+$stmt = $conexao->prepare("SELECT * FROM categorias_servico");
+$stmt->execute();
+$categorias = $stmt->get_result();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome_servico = $_POST['nome_servico'];
     $descricao = $_POST['descricao'];
     $preco = $_POST['preco'];
+    $categoria_servico = $_POST['categoria_servico'];
 
     // Validação de preço
     if (!is_numeric($preco) || $preco <= 0) {
@@ -26,15 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssd", $nome_servico, $descricao, $preco);
+    // Inserção de serviço
+    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, categoria_id) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssdi", $nome_servico, $descricao, $preco, $categoria_servico);
     $stmt->execute();
 
     header("Location: servicos.php");
     exit;
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -44,49 +37,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
         function atualizarPreco() {
             var preco = 0;
+            var categoria = "outros"; // Categoria padrão
+
+            if (document.getElementById('servico_limpeza_casa').checked) {
+                preco += 100;
+                categoria = "Serviços de Limpeza"; // Alterando para Limpeza
+            }
+            if (document.getElementById('servico_limpeza_jardim').checked) {
+                preco += 500;
+                categoria = "Serviços de Limpeza"; // Alterando para Limpeza
+            }
             if (document.getElementById('servico_recepcao').checked) {
                 preco += 50;
-                document.getElementById('descricao').value = 'Recepção 24h: Atendimento ao cliente disponível 24 horas.';
+                categoria = "Serviços Básicos"; // Alterando para Serviços Básicos
             }
             if (document.getElementById('servico_concierge').checked) {
                 preco += 150;
-                document.getElementById('descricao').value = 'Serviço de Concierge: Reservas de restaurantes, passeios e mais.';
+                categoria = "Serviços de Luxo"; // Alterando para Serviços de Luxo
             }
             if (document.getElementById('servico_deposito_bagagem').checked) {
                 preco += 30;
-                document.getElementById('descricao').value = 'Depósito de Bagagens: Armazenamento seguro para sua bagagem.';
+                categoria = "Serviços Adicionais"; // Alterando para Serviços Adicionais
             }
             if (document.getElementById('servico_lavanderia').checked) {
                 preco += 80;
-                document.getElementById('descricao').value = 'Serviço de Lavanderia: Roupas lavadas e engomadas.';
+                categoria = "Serviços Adicionais"; // Alterando para Serviços Adicionais
             }
             if (document.getElementById('servico_caixa_segurança').checked) {
                 preco += 20;
-                document.getElementById('descricao').value = 'Caixa de Segurança: Proteja seus itens pessoais.';
+                categoria = "Serviços de Segurança"; // Alterando para Serviços de Segurança
             }
             if (document.getElementById('servico_wifi').checked) {
                 preco += 10;
-                document.getElementById('descricao').value = 'Wi-Fi Gratuito: Acesso à internet sem custo.';
+                categoria = "Tecnologia"; // Alterando para Tecnologia
             }
-            if (document.getElementById('servico_transfer').checked) {
-                preco += 60;
-                document.getElementById('descricao').value = 'Transfer para o aeroporto: Transporte para o aeroporto ou estação.';
-            }
-            if (document.getElementById('servico_quarto').checked) {
-                preco += 50;
-                document.getElementById('descricao').value = 'Serviço de Quarto: Refeições entregues diretamente no quarto.';
-            }
-            if (document.getElementById('servico_bicicleta').checked) {
-                preco += 40;
-                document.getElementById('descricao').value = 'Aluguel de Bicicleta: Explore a cidade de bicicleta.';
-            }
-            if (document.getElementById('servico_massage').checked) {
-                preco += 100;
-                document.getElementById('descricao').value = 'Massagem e Spa: Serviços de relaxamento no local.';
-            }
-            if (document.getElementById('servico_estacionamento').checked) {
-                preco += 30;
-                document.getElementById('descricao').value = 'Estacionamento Privado: Estacionamento seguro para veículos.';
+
+            // Atualiza a categoria no select
+            var categoriaSelect = document.getElementById("categoria_servico");
+            for (var i = 0; i < categoriaSelect.options.length; i++) {
+                if (categoriaSelect.options[i].text === categoria) {
+                    categoriaSelect.selectedIndex = i;
+                    break;
+                }
             }
 
             document.getElementById('preco').value = preco.toFixed(2);
@@ -98,29 +90,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
         <h1>Adicionar Serviço</h1>
     </div>
+
     <form method="post">
         Nome do Serviço: <input type="text" name="nome_servico" required><br><br>
-        Descrição: <textarea id="descricao" name="descricao" readonly></textarea><br><br>
+        Descrição: <textarea name="descricao"></textarea><br><br>
 
         <h3>Escolha os Serviços:</h3>
-        <label><input type="checkbox" id="servico_recepcao" onclick="atualizarPreco()"> <i class="fa-solid fa-clock"></i> Recepção 24h (50€)</label><br>
-        <label><input type="checkbox" id="servico_concierge" onclick="atualizarPreco()"> <i class="fa-solid fa-cogs"></i> Serviço de Concierge (150€)</label><br>
-        <label><input type="checkbox" id="servico_deposito_bagagem" onclick="atualizarPreco()"> <i class="fa-solid fa-archive"></i> Depósito de Bagagens (30€)</label><br>
-        <label><input type="checkbox" id="servico_lavanderia" onclick="atualizarPreco()"> <i class="fa-solid fa-tshirt"></i> Serviço de Lavanderia (80€)</label><br>
-        <label><input type="checkbox" id="servico_caixa_segurança" onclick="atualizarPreco()"> <i class="fa-solid fa-lock"></i> Caixa de Segurança (20€)</label><br>
-        <label><input type="checkbox" id="servico_wifi" onclick="atualizarPreco()"> <i class="fa-solid fa-wifi"></i> Wi-Fi Gratuito (10€)</label><br>
-        <label><input type="checkbox" id="servico_transfer" onclick="atualizarPreco()"> <i class="fa-solid fa-shuttle-van"></i> Transfer para o aeroporto (60€)</label><br>
-        <label><input type="checkbox" id="servico_quarto" onclick="atualizarPreco()"> <i class="fa-solid fa-utensils"></i> Serviço de Quarto (50€)</label><br>
-        <label><input type="checkbox" id="servico_bicicleta" onclick="atualizarPreco()"> <i class="fa-solid fa-bicycle"></i> Aluguel de Bicicleta (40€)</label><br>
-        <label><input type="checkbox" id="servico_massage" onclick="atualizarPreco()"> <i class="fa-solid fa-spa"></i> Massagem e Spa (100€)</label><br>
-        <label><input type="checkbox" id="servico_estacionamento" onclick="atualizarPreco()"> <i class="fa-solid fa-parking"></i> Estacionamento Privado (30€)</label><br><br>
+        <label><input type="checkbox" id="servico_limpeza_casa" onclick="atualizarPreco()"> Limpeza da Casa (100€)</label><br>
+        <label><input type="checkbox" id="servico_limpeza_jardim" onclick="atualizarPreco()"> Limpeza do Jardim (500€)</label><br>
+        <label><input type="checkbox" id="servico_recepcao" onclick="atualizarPreco()"> Recepção 24h (50€)</label><br>
+        <label><input type="checkbox" id="servico_concierge" onclick="atualizarPreco()"> Concierge (150€)</label><br>
+        <label><input type="checkbox" id="servico_deposito_bagagem" onclick="atualizarPreco()"> Depósito de Bagagens (30€)</label><br>
+        <label><input type="checkbox" id="servico_lavanderia" onclick="atualizarPreco()"> Lavanderia (80€)</label><br>
+        <label><input type="checkbox" id="servico_caixa_segurança" onclick="atualizarPreco()"> Caixa de Segurança (20€)</label><br>
+        <label><input type="checkbox" id="servico_wifi" onclick="atualizarPreco()"> Wi-Fi Gratuito (10€)</label><br><br>
 
-        Preço (€): <input type="number" step="0.01" id="preco" name="preco" value="0" readonly required><br><br>
-        <button type="submit">Salvar</button>
+        Categoria: 
+        <select name="categoria_servico" id="categoria_servico" required>
+            <?php while ($categoria = $categorias->fetch_assoc()): ?>
+                <option value="<?= $categoria['id'] ?>"><?= $categoria['nome'] ?></option>
+            <?php endwhile; ?>
+        </select><br><br>
+
+        Preço (€): <input type="number" step="0.01" id="preco" name="preco" readonly required><br><br>
+        <button type="submit">Adicionar Serviço</button>
     </form>
-    <a href="servicos.php">← Voltar</a>
 
-    <!-- Font Awesome CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <a href="servicos.php">← Voltar</a>
 </body>
 </html>

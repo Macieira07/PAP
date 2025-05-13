@@ -1,0 +1,276 @@
+:root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --danger-color: #e74a3b;
+            --warning-color: #f6c23e;
+            --info-color: #36b9cc;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.35rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+        }
+        
+        .card-dashboard {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 0.25rem solid;
+            height: 100%;
+        }
+        
+        .card-dashboard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-dashboard .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-dashboard-primary {
+            border-left-color: var(--primary-color);
+        }
+        
+        .card-dashboard-success {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .card-dashboard-danger {
+            border-left-color: var(--danger-color);
+        }
+        
+        .card-dashboard-warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .saldo-positivo {
+            color: var(--secondary-color);
+        }
+        
+        .saldo-negativo {
+            color: var(--danger-color);
+        }
+        
+        .badge-pendente {
+            background-color: var(--warning-color);
+            color: #212529;
+        }
+        
+        .badge-pago {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .badge-receita {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .badge-despesa {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .table-responsive {
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            background-color: #f8f9fc;
+            color: var(--dark-color);
+            font-weight: 600;
+            border-bottom-width: 1px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            background-color: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-color: transparent;
+            color: var(--primary-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: #212529;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .alert {
+            border-radius: 0.5rem;
+        }
+        
+        .display-4 {
+            font-weight: 600;
+        }
+        
+        .resumo-financeiro {
+            font-size: 1rem;
+        }
+        
+        .resumo-financeiro p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar {
+            background-color: #fff;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            min-height: 100vh;
+        }
+        
+        .sidebar .nav-link {
+            color: #d1d3e2;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link:hover {
+            color: #fff;
+        }
+        
+        .sidebar-heading {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 1.5rem 1rem 0.5rem;
+        }
+        
+        .content-wrapper {
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1rem;
+            }
+        }
+        
+        /* Gráficos e indicadores */
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .indicator-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .indicator-primary {
+            background-color: var(--primary-color);
+        }
+        
+        .indicator-success {
+            background-color: var(--secondary-color);
+        }
+        
+        .indicator-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .indicator-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .indicator-info {
+            background-color: var(--info-color);
+        }
+        
+        .indicator-text {
+            flex: 1;
+        }
+        
+        .indicator-title {
+            font-size: 0.875rem;
+            color: var(--dark-color);
+        }
+        
+        .indicator-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+  

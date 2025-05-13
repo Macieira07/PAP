@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" type="text/css" href="lermais.css">
+    <link rel="stylesheet" type="text/css" href="chatbot.css">
 </head>
 <body>
     <!-- Cabeçalho -->
@@ -365,9 +366,48 @@
             </div>
         </div>
     </section>
-    
-    <!-- Footer -->
-
+<!-- Chatbot  -->
+<div class="chatbot-container">
+    <div class="chatbot-button" id="chatbotButton">
+        <i class="ri-message-3-line"></i>
+    </div>
+    <div class="chatbot-box" id="chatbotBox">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <img src="../assets/logos/logotipo1.png" alt="Quinta Flores" class="chatbot-logo">
+                <span>Assistente Virtual da Quinta Flores</span>
+            </div>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <img src="../assets/logos/logotipo1.png" alt="Bot" class="message-avatar">
+                <div class="message-content">
+                    <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudá-lo hoje?</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Digite sua mensagem...">
+            <button id="chatbotSend" class="chatbot-send">
+                <i class="ri-send-plane-fill"></i>
+            </button>
+        </div>
+        <div class="chatbot-suggestions">
+            <button class="suggestion-button">Reservas</button>
+            <button class="suggestion-button">Acomodações</button>
+            <button class="suggestion-button">Serviços</button>
+            <button class="suggestion-button">Localização</button>
+            <button class="suggestion-button">Atividades</button>
+            <button class="suggestion-button">Preços</button>
+        </div>
+        <div class="chatbot-footer">
+            <span>Quinta Flores - Sentindo-se em casa, no coração do Minho</span>
+        </div>
+    </div>
+</div>       
 <!-- Footer -->
 <footer class="footer">
     <div class="section__container footer__container">
@@ -453,16 +493,13 @@
       Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
     </div>
   </footer>
-  
-  
-
->
     <!-- Botão de alternar tema -->
     <button class="theme-toggle" id="themeToggle">
         <i class="ri-sun-line"></i>
     </button>
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+     <script src="chatbot.js"></script>
     <script>
         // Inicializar AOS (Animate On Scroll)
         AOS.init({

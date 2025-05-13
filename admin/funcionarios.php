@@ -1,6 +1,63 @@
 <?php
 require '../conexao.php';
 
+// Verifica se existe uma mensagem na URL (passada pelo redirecionamento)
+if (isset($_GET['mensagem'])) {
+    $mensagem = $_GET['mensagem'];
+    $tipo = $_GET['tipo'];
+
+    echo "
+    <script>
+        window.onload = function() {
+            let tipo = '$tipo';
+            let mensagem = '$mensagem';
+
+            // Criando o elemento de notificação
+            let notification = document.createElement('div');
+            notification.classList.add('notification');
+            notification.classList.add(tipo);
+            notification.innerHTML = mensagem;
+
+            // Adicionando a notificação ao corpo da página
+            document.body.appendChild(notification);
+
+            // Remover a notificação após 5 segundos
+            setTimeout(function() {
+                notification.remove();
+            }, 5000);
+        };
+    </script>
+    ";
+
+    // Você pode incluir o estilo direto no HTML ou em um arquivo CSS separado
+    echo "
+    <style>
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .notification.erro {
+            background-color: #f44336; /* Cor para erro */
+        }
+
+        .notification.sucesso {
+            background-color: #4CAF50; /* Cor para sucesso */
+        }
+    </style>
+    ";
+}
+
+
 // Pegando os parâmetros de filtro
 $nomeFiltro = isset($_GET['nome']) ? $_GET['nome'] : '';
 $cargoFiltro = isset($_GET['cargo']) ? $_GET['cargo'] : '';

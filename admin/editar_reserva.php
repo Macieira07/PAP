@@ -1,131 +1,179 @@
 <?php
-require '../conexao.php';
-$id_reserva = $_GET['id'];
-$reserva = $conexao->query("SELECT * FROM reservas WHERE R_id_reserva = $id_reserva")->fetch_assoc();
+// Conexão com o banco de dados
+include('../conexao.php');
+
+// Obter o ID da reserva a ser editada
+$reserva_id = $_GET['id'] ?? null;
+
+if ($reserva_id === null) {
+    die("Reserva não encontrada.");
+}
+
+// Buscar detalhes da reserva
+$stmt = $conexao->prepare("SELECT R_id_casa, R_id_hospede, R_data_checkin, R_data_checkout, R_estado, R_num_hospedes FROM reservas WHERE R_id_reserva = ?");
+$stmt->bind_param("i", $reserva_id);
+$stmt->execute();
+$reserva = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$reserva) {
+    die("Reserva não encontrada.");
+}
+
+// Buscar casas e hóspedes
+$casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHERE C_estado = 'disponível'");
 $hospedes = $conexao->query("SELECT H_id_hospede, H_nome FROM hospedes");
-$casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_hospede = $_POST['id_hospede'];
-    $id_casa = $_POST['id_casa'];
-    $checkin = $_POST['checkin'];
-    $checkout = $_POST['checkout'];
-    $num_hospedes = $_POST['num_hospedes'];
-    $preco = $_POST['preco_total'];
-    $estado = $_POST['estado'];
-    $metodo_pagamento = $_POST['metodo_pagamento'];
-    $observacoes = $_POST['observacoes'];
-    $servicos = $_POST['servicos'];
-
-    // Verificar se o estado é válido
-    if (!in_array($estado, ['pendente', 'confirmada', 'cancelada', 'concluída'])) {
-        die("Estado inválido.");
-    }
-
-    // Iniciar transação
-    $conexao->begin_transaction();
-
-    try {
-        // Obter estado anterior
-        $estado_anterior = $reserva['R_estado'];
-
-        // Atualizar a reserva no banco de dados
-        $stmt = $conexao->prepare("UPDATE reservas SET 
-            R_id_hospede = ?, 
-            R_id_casa = ?, 
-            R_data_checkin = ?, 
-            R_data_checkout = ?, 
-            R_num_hospedes = ?, 
-            R_preco_total = ?, 
-            R_estado = ?, 
-            R_metodo_pagamento = ?, 
-            R_observacoes = ?, 
-            R_servicos = ? 
-            WHERE R_id_reserva = ?");
-        $stmt->bind_param("iissdsssssi", $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco, $estado, $metodo_pagamento, $observacoes, $servicos, $id_reserva);
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Erro ao atualizar reserva: " . $stmt->error);
-        }
-        $stmt->close();
-
-        // Verificar mudança de estado
-        if ($estado_anterior != $estado) {
-            if ($estado == 'confirmada') {
-                // Adicionar o valor ao saldo
-                $stmt = $conexao->prepare("UPDATE conta SET saldo = saldo + ? WHERE id_conta = 1");
-                $stmt->bind_param("d", $preco);
-                if (!$stmt->execute()) {
-                    throw new Exception("Erro ao atualizar saldo: " . $stmt->error);
-                }
-                $stmt->close();
-            } elseif ($estado_anterior == 'confirmada' && $estado != 'confirmada') {
-                // Remover o valor se estava confirmada e foi alterada para outro estado
-                $stmt = $conexao->prepare("UPDATE conta SET saldo = saldo - ? WHERE id_conta = 1");
-                $stmt->bind_param("d", $preco);
-                if (!$stmt->execute()) {
-                    throw new Exception("Erro ao atualizar saldo: " . $stmt->error);
-                }
-                $stmt->close();
-            }
-        }
-
-        // Confirmar todas as operações
-        $conexao->commit();
-
-        header("Location: reservas.php");
-        exit;
-
-    } catch (Exception $e) {
-        // Reverter em caso de erro
-        $conexao->rollback();
-        die($e->getMessage());
+// Buscar datas ocupadas
+$ocupadas = [];
+$stmt = $conexao->prepare("SELECT R_data_checkin, R_data_checkout FROM reservas WHERE R_estado != 'cancelada'");
+$stmt->execute();
+$stmt->bind_result($data_checkin, $data_checkout);
+while ($stmt->fetch()) {
+    $checkin = new DateTime($data_checkin);
+    $checkout = new DateTime($data_checkout);
+    while ($checkin <= $checkout) {
+        $ocupadas[] = $checkin->format('Y-m-d');
+        $checkin->modify('+1 day');
     }
 }
+$stmt->close();
 ?>
 
-<link rel="stylesheet" href="admin.css">
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admin.css">
+  <title>Editar Reserva</title>
+  <style>
+    .ocupada {
+      background-color: red !important;
+      color: white;
+    }
+  </style>
+</head>
+<body>
 <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
-        <h1>Editar Reserva</h1>
-    </div>
-<form method="post">
-    Hóspede:
-    <select name="id_hospede" required>
-        <?php while ($h = $hospedes->fetch_assoc()): ?>
-            <option value="<?= $h['H_id_hospede'] ?>" <?= $h['H_id_hospede'] == $reserva['R_id_hospede'] ? 'selected' : '' ?>><?= $h['H_nome'] ?></option>
-        <?php endwhile; ?>
-    </select><br><br>
+  <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Ícone Reservas" style="height: 50px;">
+  <h1>Editar Reserva</h1>
+</div>
 
-    Casa:
-    <select name="id_casa" required>
-        <?php while ($c = $casas->fetch_assoc()): ?>
-            <option value="<?= $c['C_id_casa'] ?>" <?= $c['C_id_casa'] == $reserva['R_id_casa'] ? 'selected' : '' ?>><?= $c['C_nome'] ?></option>
-        <?php endwhile; ?>
-    </select><br><br>
+<form method="POST" action="processar_edicao_reserva.php">
+  <input type="hidden" name="reserva_id" value="<?= $reserva['R_id_reserva'] ?>">
 
-    Check-in: <input type="date" name="checkin" value="<?= $reserva['R_data_checkin'] ?>"><br><br>
-    Check-out: <input type="date" name="checkout" value="<?= $reserva['R_data_checkout'] ?>"><br><br>
-    Nº Hóspedes: <input type="number" name="num_hospedes" value="<?= $reserva['R_num_hospedes'] ?>"><br><br>
-    Preço Total: <input type="number" step="0.01" name="preco_total" value="<?= $reserva['R_preco_total'] ?>"><br><br>
-    
-    Estado:
-    <select name="estado">
-        <option value="pendente" <?= $reserva['R_estado'] == 'pendente' ? 'selected' : '' ?>>Pendente</option>
-        <option value="confirmada" <?= $reserva['R_estado'] == 'confirmada' ? 'selected' : '' ?>>Confirmada</option>
-        <option value="cancelada" <?= $reserva['R_estado'] == 'cancelada' ? 'selected' : '' ?>>Cancelada</option>
-        <option value="concluída" <?= $reserva['R_estado'] == 'concluída' ? 'selected' : '' ?>>Concluída</option>
-    </select><br><br>
-    
-    Método de Pagamento: 
-    <input type="text" name="metodo_pagamento" value="<?= $reserva['R_metodo_pagamento'] ?>"><br><br>
-    
-    Observações:
-    <textarea name="observacoes"><?= $reserva['R_observacoes'] ?></textarea><br><br>
-    
-    Serviços Adicionais:
-    <input type="text" name="servicos" value="<?= $reserva['R_servicos'] ?>"><br><br>
+  <label for="data_checkin">
+    <i class="fa-solid fa-calendar-check"></i> Data de Check-in:
+  </label><br>
+  <input type="date" id="data_checkin" name="data_checkin" value="<?= $reserva['R_data_checkin'] ?>" required><br><br>
 
-    <button type="submit">Salvar Alterações</button>
+  <label for="data_checkout">
+    <i class="fa-solid fa-calendar-times"></i> Data de Check-out:
+  </label><br>
+  <input type="date" id="data_checkout" name="data_checkout" value="<?= $reserva['R_data_checkout'] ?>" required><br><br>
+
+  <label for="id_casa">
+    <i class="fa-solid fa-house"></i> Casa:
+  </label><br>
+  <select name="id_casa" id="id_casa" required>
+    <?php while ($c = $casas->fetch_assoc()): ?>
+      <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>" <?= $c['C_id_casa'] == $reserva['R_id_casa'] ? 'selected' : '' ?>>
+        <?= htmlspecialchars($c['C_nome']) ?> (<?= number_format($c['C_preco_noite'], 2) ?>€/noite)
+      </option>
+    <?php endwhile; ?>
+  </select><br><br>
+
+  <label for="id_hospede">
+    <i class="fa-solid fa-user"></i> Hóspede:
+  </label><br>
+  <select name="id_hospede" id="id_hospede" required>
+    <?php while ($h = $hospedes->fetch_assoc()): ?>
+      <option value="<?= $h['H_id_hospede'] ?>" <?= $h['H_id_hospede'] == $reserva['R_id_hospede'] ? 'selected' : '' ?>>
+        <?= htmlspecialchars($h['H_nome']) ?>
+      </option>
+    <?php endwhile; ?>
+  </select><br><br>
+
+  <label for="num_hospedes">
+    <i class="fa-solid fa-users"></i> Número de Hóspedes:
+  </label><br>
+  <input type="number" id="num_hospedes" name="num_hospedes" min="1" max="10" value="<?= $reserva['R_num_hospedes'] ?>" required><br><br>
+
+  <label for="metodo_pagamento">
+    <i class="fa-solid fa-credit-card"></i> Método de Pagamento:
+  </label><br>
+  <select name="metodo_pagamento" id="metodo_pagamento" required>
+    <option value="mbway">MB Way</option>
+    <option value="dinheiro">Dinheiro</option>
+    <option value="transferencia">Transferência</option>
+    <option value="cartao">Cartão de Crédito</option>
+  </select><br><br>
+
+  <label for="estado">
+    <i class="fa-solid fa-info-circle"></i> Estado:
+  </label><br>
+  <select name="estado" id="estado" required>
+    <option value="pendente" <?= $reserva['R_estado'] == 'pendente' ? 'selected' : '' ?>>Pendente</option>
+    <option value="confirmada" <?= $reserva['R_estado'] == 'confirmada' ? 'selected' : '' ?>>Confirmada</option>
+  </select><br><br>
+
+  <p><strong>Preço total estimado: <span id="preco_total">0.00€</span></strong></p>
+
+  <button type="submit">
+    <i class="fa-solid fa-check"></i> Atualizar Reserva
+  </button>
 </form>
-<a href="reservas.php">← Voltar</a>
+
+<a href="reservas.php">
+  <i class="fa-solid fa-arrow-left"></i> Voltar
+</a>
+
+<script>
+  // Atualizar preço total
+  const selectCasa = document.querySelector('select[name="id_casa"]');
+  const inputCheckin = document.querySelector('input[name="data_checkin"]');
+  const inputCheckout = document.querySelector('input[name="data_checkout"]');
+  const spanTotal = document.getElementById('preco_total');
+
+  function atualizarTotal() {
+    const opc = selectCasa.selectedOptions[0];
+    const precoNoite = parseFloat(opc.dataset.preco);
+    const ci = new Date(inputCheckin.value);
+    const co = new Date(inputCheckout.value);
+
+    let total = 0;
+    if (ci && co && co > ci) {
+      const dias = (co - ci) / (1000 * 60 * 60 * 24);
+      total = dias * precoNoite;
+    }
+
+    spanTotal.textContent = total.toFixed(2) + '€';
+  }
+
+  inputCheckin.addEventListener('change', atualizarTotal);
+  inputCheckout.addEventListener('change', atualizarTotal);
+  selectCasa.addEventListener('change', atualizarTotal);
+
+  // Marcar datas ocupadas
+  const ocupadas = <?php echo json_encode($ocupadas); ?>;
+  const dateInputs = [inputCheckin, inputCheckout];
+
+  dateInputs.forEach(input => {
+    input.addEventListener('focus', function () {
+      const inputDate = this;
+
+      inputDate.addEventListener('change', function () {
+        const selectedDate = this.value;
+
+        if (ocupadas.includes(selectedDate)) {
+          this.classList.add('ocupada');
+        } else {
+          this.classList.remove('ocupada');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

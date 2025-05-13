@@ -19,7 +19,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION[
             <h2 style="color: #f44336;">Erro no Processamento</h2>
             <p>Dados da reserva não encontrados. Por favor, inicie o processo novamente.</p>
             <div style="margin-top: 20px;">
-                <a href="../index.php" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar à nossa página inicial</a>
+                <a href="../index.html" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar à nossa página inicial</a>
             </div>
           </div>');
 }
@@ -47,10 +47,6 @@ $descricao_servicos = '';
 if (isset($_SESSION['servicos'])) {
     foreach ($_SESSION['servicos'] as $servico) {
         switch ($servico) {
-            case 'pequeno-almoco':
-                $preco_total += 15 * $num_noites;
-                $servicos_adicionais[] = 'Pequeno-Almoço (€15/noite)';
-                break;
             case 'decoracao':
                 $preco_total += 130;
                 $servicos_adicionais[] = 'Decoração Temática (€130)';
@@ -63,10 +59,6 @@ if (isset($_SESSION['servicos'])) {
             case 'cesto':
                 $preco_total += 10;
                 $servicos_adicionais[] = 'Cesto de Boas-Vindas (€10)';
-                break;
-            case 'jantar':
-                $preco_total += 15 * $num_noites;
-                $servicos_adicionais[] = 'Jantar (€15/noite)';
                 break;
         }
     }
@@ -118,7 +110,7 @@ $html = '
 <h1 style="color:'.EMAIL_COLOR.';">Detalhes da Reserva</h1>
 <table border="0" cellpadding="4">
     <tr><td width="40%"><strong>Nº Reserva:</strong></td><td>'.$reserva_id.'</td></tr>
-    <tr><td><strong>Nome:</strong></td><td>'.htmlspecialchars($_SESSION['nome'].' '.$_SESSION['apelido']).'</td></tr>
+    <tr><td><strong>Nome:</strong></td><td>'.htmlspecialchars($_SESSION['nome']).'</td></tr>
     <tr><td><strong>E-mail:</strong></td><td>'.htmlspecialchars($_SESSION['email']).'</td></tr>
     <tr><td><strong>Check-in:</strong></td><td>'.htmlspecialchars($checkin).' (a partir das 15:00)</td></tr>
     <tr><td><strong>Check-out:</strong></td><td>'.htmlspecialchars($checkout).' (até às 11:00)</td></tr>
@@ -179,7 +171,7 @@ try {
         ]
     ];
     $mail->setFrom(CONTACT_EMAIL, SITE_NAME);
-    $mail->addAddress($_SESSION['email'], $_SESSION['nome'].' '.$_SESSION['apelido']);
+    $mail->addAddress($_SESSION['email'], $_SESSION['nome']);
     $mail->addReplyTo(CONTACT_EMAIL, SITE_NAME);
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';
@@ -269,7 +261,7 @@ DTSTAMP:".gmdate('Ymd').'T'.gmdate('His')."Z
 DTSTART:".date('Ymd', strtotime($checkin))."T150000Z
 DTEND:".date('Ymd', strtotime($checkout))."T110000Z
 SUMMARY:Reserva ".SITE_NAME."
-DESCRIPTION:Reserva confirmada para ".$_SESSION['nome']." ".$_SESSION['apelido']."\\nCheck-in: ".$checkin."\\nCheck-out: ".$checkout."\\nHóspedes: ".$num_hospedes."\\nTotal: ".$preco_total." €
+DESCRIPTION:Reserva confirmada para ".$_SESSION['nome']."\\nCheck-in: ".$checkin."\\nCheck-out: ".$checkout."\\nHóspedes: ".$num_hospedes."\\nTotal: ".$preco_total." €
 LOCATION:".PROPERTY_ADDRESS."
 END:VEVENT
 END:VCALENDAR";

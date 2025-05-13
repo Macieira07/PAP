@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Função para verificar usuário - CORRIGIDA
+        // Função para verificar usuário
         function verificarUsuario($conexao, $email, $senha, $tabela, $emailCol, $senhaCol, $idCol, $nomeCol) {
             debug_log("Verificando usuário na tabela $tabela", ['email' => $email]);
             
@@ -87,20 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($sql_query->num_rows == 1) {
                 $usuario = $sql_query->fetch_assoc();
                 debug_log("Usuário encontrado, verificando senha");
-                
-                // LOG para depuração - mostra a senha armazenada
                 debug_log("DEBUG - Senha armazenada (hash)", $usuario[$senhaCol]);
-                
-                // Verificação melhorada de senha
+
                 $senha_correta = false;
-                
-                // Primeiro tenta com password_verify (caso seja bcrypt)
                 if (substr($usuario[$senhaCol], 0, 4) === '$2y$') {
                     $senha_correta = password_verify($senha, $usuario[$senhaCol]);
                     debug_log("Verificando com password_verify (bcrypt)", $senha_correta ? "Senha correta" : "Senha incorreta");
-                }
-                // Se não for bcrypt, compara diretamente (temporário, não recomendado para produção)
-                else {
+                } else {
                     $senha_correta = ($senha === $usuario[$senhaCol]);
                     debug_log("Verificando com comparação direta", $senha_correta ? "Senha correta" : "Senha incorreta");
                 }
@@ -192,8 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         sleep(min($_SESSION['login_attempts'], 5)); // antiflood com limite máximo
 
-        // Adicionando informações de debug na resposta para visualização no console
-        $debug_info = [
+        echo json_encode([
             'error' => 'Credenciais inválidas.',
             'debug' => [
                 'tempo' => date('Y-m-d H:i:s'),
@@ -201,15 +193,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'tipo_usuario_inferido' => $tipo,
                 'verificacao' => 'Falha na verificação de senha ou utilizador não encontrado'
             ]
-        ];
-        echo json_encode($debug_info);
+        ]);
     } catch (Exception $e) {
-        // Captura qualquer exceção não tratada
         debug_log("Erro não tratado durante o login", $e->getMessage());
         echo json_encode(['error' => 'Ocorreu um erro durante o processo de login. Por favor, tente novamente.']);
     }
     
-    // Limpa e encerra qualquer saída pendente
     ob_end_flush();
     exit;
 }

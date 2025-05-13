@@ -116,3 +116,15 @@ Stack trace:
 [12-May-2025 11:25:06 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 182
 [12-May-2025 11:25:06 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 272
 [12-May-2025 11:25:08 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[13-May-2025 11:23:03 UTC] Nova reserva criada: ID=3 para davidfloresmacieira@gmail.cm
+[13-May-2025 11:23:04 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 121
+[13-May-2025 11:23:04 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 182
+[13-May-2025 11:23:04 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 272
+[13-May-2025 11:23:06 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.cm
+[13-May-2025 12:41:01 UTC] Nova reserva criada: ID=5 para davidfloresmacieira@gmail.cm
+[13-May-2025 12:41:01 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 121
+[13-May-2025 12:41:01 UTC] PHP Warning:  Undefined array key "apelido" in /var/www/html/pagamento/confirmacao.php on line 272
+[13-May-2025 12:41:03 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.cm
+[13-May-2025 12:42:20 UTC] Erro: Dados da reserva não encontrados na sessão
+[13-May-2025 12:44:15 UTC] Nova reserva criada: ID=7 para davidfloresmacieira@gmail.cm
+[13-May-2025 12:44:17 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.cm

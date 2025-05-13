@@ -11,15 +11,13 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 // Verifica se os dados foram recebidos corretamente
 if (!$data) {
-    die('Erro ao ler os dados JSON: ' . json_last_error_msg());
+    echo json_encode(['error' => 'Erro ao ler os dados JSON.']);
+    exit;
 }
 
 // Extrai as variáveis de check-in e check-out
 $checkIn = $data['checkIn'];
 $checkOut = $data['checkOut'];
-
-// Exibe as variáveis recebidas para garantir que os dados estão certos
-echo "Check-In: $checkIn, Check-Out: $checkOut<br>";
 
 // Prepara a consulta SQL para verificar a disponibilidade
 $sql = "
@@ -33,7 +31,8 @@ $stmt = $conexao->prepare($sql);
 
 // Verifica se a preparação da consulta foi bem-sucedida
 if ($stmt === false) {
-    die("Erro na consulta SQL: " . $conexao->error);
+    echo json_encode(['error' => 'Erro na consulta SQL.']);
+    exit;
 }
 
 // Vincula os parâmetros de data (o formato deve ser YYYY-MM-DD)
@@ -46,14 +45,17 @@ $stmt->execute();
 $stmt->bind_result($reservas);
 $stmt->fetch();
 
-// Exibe a quantidade de reservas encontradas
-echo "Reservas encontradas: $reservas<br>";
-
 // Verifica se há reservas durante o período
 if ($reservas > 0) {
-    echo json_encode(['available' => false]);
+    echo json_encode([
+        'available' => false,
+        'message' => '<span style="color: red; font-weight: bold;">Lamentamos, mas as datas selecionadas já estão reservadas. Por favor, tente outras datas.</span>'
+    ]);
 } else {
-    echo json_encode(['available' => true]);
+    echo json_encode([
+        'available' => true,
+        'message' => '<span style="color: green; font-weight: bold;">As datas selecionadas estão disponíveis! <a href="#" style="color: darkgreen; text-decoration: underline; font-weight: bold;">Reservar Agora</a></span>'
+    ]);
 }
 
 // Fecha a declaração e a conexão
