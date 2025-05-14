@@ -2,8 +2,6 @@
   "home": "Bauernhof",
   "about": "Über Uns",
   "amenities": "Annehmlichkeiten",
-  "contacts": "Kontakte",
-  "make_reservation": "Reservierung",
   "tagline": "Gemütlich - Authentisch - Ruhig",
   "title_main": "Ruhe und Schönheit",
   "title_location": "Ponte de Lima",
@@ -26,5 +24,12 @@
   "games": "Spielzeug und Spiele für Kinder",
   "trails": "Wanderwege",
   "camping": "Campingbereich",
-  "copyright": "Copyright © 2025 QUINTA FLORES. Alle Rechte vorbehalten."
+  "copyright": "Copyright © 2025 QUINTA FLORES. Alle Rechte vorbehalten.",
+  "rooms": "Quartos",
+  "gallery": "Galeria",
+  "location": "Localização",
+  "contacts": "Contactos",
+  "make_reservation": "Reservar Agora",
+  "welcome": "Bem-vindo à"
+
 }

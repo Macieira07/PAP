@@ -1,0 +1,39 @@
+.reservation-summary {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--primary-color);
+  box-shadow: 0 1px 3px var(--card-shadow);
+}
+
+.reservation-summary__item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.reservation-summary__item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.reservation-summary__label {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.reservation-summary__total-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  text-align: right;
+  box-shadow: 0 1px 3px var(--card-shadow);
+}   

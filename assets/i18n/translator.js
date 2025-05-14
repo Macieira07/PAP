@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Carregar o idioma salvo no localStorage ou usar português como padrão
   const savedLanguage = localStorage.getItem('language') || 'pt';
   
-  // Selecionar todas as bandeiras de idioma
-  const languageFlags = document.querySelectorAll('.language-flag');
+  // Selecionar todos os seletores de idioma
+  const languageSelectors = document.querySelectorAll('.language-selector .language-flag');
   
   // Objeto para armazenar as traduções
   let translations = {};
@@ -12,8 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Função para carregar traduções
   async function loadTranslations(lang) {
     try {
-      // O caminho correto para os arquivos de tradução
-      const response = await fetch(`./translations/${lang}.json`);
+      const response = await fetch(`translations/${lang}.json`);
       if (!response.ok) {
         throw new Error(`Erro ao carregar traduções: ${response.status}`);
       }
@@ -67,12 +66,20 @@ document.addEventListener('DOMContentLoaded', function() {
         element.setAttribute('title', translations[key]);
       }
     });
+
+    // Traduzir labels de formulários
+    document.querySelectorAll('[data-translate-label]').forEach(element => {
+      const key = element.getAttribute('data-translate-label');
+      if (translations[key]) {
+        element.innerHTML = translations[key];
+      }
+    });
   }
   
   // Função para atualizar a bandeira ativa
   function updateActiveFlag(lang) {
-    languageFlags.forEach(flag => {
-      if (flag.getAttribute('alt').toLowerCase() === lang.toLowerCase()) {
+    languageSelectors.forEach(flag => {
+      if (flag.getAttribute('data-lang').toLowerCase() === lang.toLowerCase()) {
         flag.classList.add('active');
       } else {
         flag.classList.remove('active');
@@ -80,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Adicionar evento de clique às bandeiras
-  languageFlags.forEach(flag => {
+  // Adicionar evento de clique aos seletores de idioma
+  languageSelectors.forEach(flag => {
     flag.addEventListener('click', function() {
-      const lang = this.getAttribute('alt').toLowerCase();
+      const lang = this.getAttribute('data-lang').toLowerCase();
       loadTranslations(lang);
     });
   });

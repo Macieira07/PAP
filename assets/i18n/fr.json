@@ -2,8 +2,6 @@
   "home": "Ferme",
   "about": "À Propos",
   "amenities": "Commodités",
-  "contacts": "Contacts",
-  "make_reservation": "Réserver",
   "tagline": "Confortable - Authentique - Serein",
   "title_main": "Tranquillité et beauté",
   "title_location": "Ponte de Lima",
@@ -26,5 +24,11 @@
   "games": "Jouets et jeux pour enfants",
   "trails": "Sentiers de randonnée",
   "camping": "Zone de camping",
-  "copyright": "Copyright © 2025 QUINTA FLORES. Tous droits réservés."
+  "copyright": "Copyright © 2025 QUINTA FLORES. Tous droits réservés.",
+  "rooms": "Quartos",
+  "gallery": "Galeria",
+  "location": "Localização",
+  "contacts": "Contactos",
+  "make_reservation": "Reservar Agora",
+  "welcome": "Bem-vindo à"
 }

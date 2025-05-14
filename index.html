@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="index/style.css">
     <link rel="stylesheet" type="text/css" href="index/chatbot.css">
+    <link rel="stylesheet" type="text/css" href="assets/i18n/translator.css">
     <!-- Bibliotecas de Ícones -->
     <script src="https://kit.fontawesome.com/6dda5f6271.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
@@ -37,20 +38,12 @@
             <li><a href="#location" data-translate="location">Localização</a></li>
             <li><a href="#contacto" data-translate="contact">Contactos</a></li>
           </ul>
-                  <div class="language-selector">
-                    <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
-                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT
-                    </button>
-                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
-                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> EN
-                    </button>
-                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> ES
-                    </button>
-                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR
-                    </button>
-                </div>
+          <div class="language-selector">
+          <span class="language-flag active" data-lang="pt">PT</span>
+          <span class="language-flag" data-lang="en">EN</span>
+          <span class="language-flag" data-lang="de">DE</span>
+          <span class="language-flag" data-lang="fr">FR</span>
+        </div>
           <div class="theme-toggle">
             <i class="ri-sun-line theme-icon"></i>
             <label class="switch">
@@ -850,91 +843,10 @@
             showImage(currentImageIndex + 1);
           }
         }
-      });
-      //TRADUÇÃO 
-  // Configuração de idiomas
-  const languageFlags = document.querySelectorAll('.language-flag');
-  const currentLanguage = localStorage.getItem('language') || 'pt';
-  
-  // Ativar o idioma atual
-  document.querySelector(`.language-flag[alt="${currentLanguage}"]`).classList.add('active');
-  
-  // Carregar traduções
-  let translations = {};
-  
-  // Função para carregar o arquivo de tradução
-
-  
-  // Função para aplicar as traduções
-  function applyTranslations() {
-    document.querySelectorAll('[data-translate]').forEach(element => {
-      const key = element.getAttribute('data-translate');
-      if (translations[key]) {
-        element.textContent = translations[key];
-      }
-    });
-    
-    // Traduzir placeholders e outros atributos
-    document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
-      const key = element.getAttribute('data-translate-placeholder');
-      if (translations[key]) {
-        element.setAttribute('placeholder', translations[key]);
-      }
-    });
-  }
-  
-  // Event listeners para as bandeiras
-  languageFlags.forEach(flag => {
-    flag.addEventListener('click', () => {
-      const lang = flag.getAttribute('alt');
-      localStorage.setItem('language', lang);
-      
-      // Atualizar UI
-      languageFlags.forEach(f => f.classList.remove('active'));
-      flag.classList.add('active');
-      
-      // Carregar e aplicar traduções
-      loadTranslations(lang);
-    });
-  });
-  
-  // Carregar traduções no idioma atual ao iniciar
-  loadTranslations(currentLanguage);
-      // Animation on scroll
-      const animateOnScroll = () => {
-        const elements = document.querySelectorAll('.section__container, .room__card, .testimonial__card');
-        
-        elements.forEach(element => {
-          const elementPosition = element.getBoundingClientRect().top;
-          const screenPosition = window.innerHeight / 1.3;
-          
-          if (elementPosition < screenPosition) {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-          }
-        });
-      };
-      // Set initial state for animated elements
-      document.querySelectorAll('.section__container, .room__card, .testimonial__card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      });
-      window.addEventListener('scroll', animateOnScroll);
-      window.addEventListener('load', animateOnScroll);
-      // Booking form date restrictions
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('checkIn').min = today;
-      
-      document.getElementById('checkIn').addEventListener('change', function() {
-        const checkInDate = new Date(this.value);
-        checkInDate.setDate(checkInDate.getDate() + 1);
-        const nextDay = checkInDate.toISOString().split('T')[0];
-        document.getElementById('checkOut').min = nextDay;
-      });
+      })
     </script>
-   
     <script src="index/disponibilidade.js"></script>
     <script src="../index/chatbot.js"></script>
-  </body>
+    <script src="assets/i18n/translator.js"></script>
+  </body> 
 </html>

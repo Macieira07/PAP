@@ -347,6 +347,78 @@ $sql_resumo = "SELECT
                FROM movimentacoes";
 $resultado_resumo = $conexao->query($sql_resumo);
 $resumo = $resultado_resumo->fetch_assoc();
+
+
+
+// Adicione no processamento POST
+if (isset($_POST['nova_manutencao'])) {
+    try {
+        $id_casa = $_POST['casa'];
+        $tipo = $_POST['tipo'];
+        $descricao = $_POST['descricao'];
+        $data_inicio = $_POST['data_inicio'];
+        $data_fim = $_POST['data_fim'];
+        $custo = $_POST['custo'];
+
+        $stmt = $conexao->prepare("INSERT INTO manutencao 
+            (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
+            VALUES (?, ?, ?, ?, ?, ?, 0)");
+        
+        $stmt->bind_param("ssssdi", 
+            $tipo,
+            $data_inicio,
+            $data_fim,
+            $descricao,
+            $custo,
+            $id_casa
+        );
+
+        if ($stmt->execute()) {
+            $mensagem = "Manutenção registrada com sucesso!";
+            $tipo_mensagem = "success";
+        }
+        $stmt->close();
+        
+    } catch (Exception $e) {
+        $mensagem = "Erro ao registrar manutenção: " . $e->getMessage();
+        $tipo_mensagem = "danger";
+    }
+}
+
+// Adicione no processamento POST
+if (isset($_POST['nova_manutencao'])) {
+    try {
+        $id_casa = $_POST['casa'];
+        $tipo = $_POST['tipo'];
+        $descricao = $_POST['descricao'];
+        $data_inicio = $_POST['data_inicio'];
+        $data_fim = $_POST['data_fim'];
+        $custo = $_POST['custo'];
+
+        $stmt = $conexao->prepare("INSERT INTO manutencao 
+            (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
+            VALUES (?, ?, ?, ?, ?, ?, 0)");
+        
+        $stmt->bind_param("ssssdi", 
+            $tipo,
+            $data_inicio,
+            $data_fim,
+            $descricao,
+            $custo,
+            $id_casa
+        );
+
+        if ($stmt->execute()) {
+            $mensagem = "Manutenção registrada com sucesso!";
+            $tipo_mensagem = "success";
+        }
+        $stmt->close();
+        
+    } catch (Exception $e) {
+        $mensagem = "Erro ao registrar manutenção: " . $e->getMessage();
+        $tipo_mensagem = "danger";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -642,8 +714,8 @@ $resumo = $resultado_resumo->fetch_assoc();
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs" id="financasTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="movimentacoes-tab" data-bs-toggle="tab" data-bs-target="#movimentacoes" type="button" role="tab" aria-controls="movimentacoes" aria-selected="true">
-                                    <i class="fas fa-exchange-alt me-1"></i> Movimentações Recentes
+                                <button class="nav-link" id="reservas-tab" data-bs-toggle="tab" data-bs-target="#reservas" type="button" role="tab" aria-controls="reservas" aria-selected="false">
+                             <i class="fas fa-calendar-alt me-1"></i> Reservas Pendentes
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -663,8 +735,8 @@ $resumo = $resultado_resumo->fetch_assoc();
                             </li>
                         </ul>
                     </div>
-                    <div class="card-body">
-                        <div class="tab-content" id="financasTabContent">
+                <div class="card-body">
+        <div class="tab-content" id="financasTabContent">
                             <!-- Tab Movimentações Recentes -->
                             <div class="tab-pane fade show active" id="movimentacoes" role="tabpanel" aria-labelledby="movimentacoes-tab">
                                 <div class="table-responsive">
@@ -740,14 +812,15 @@ $resumo = $resultado_resumo->fetch_assoc();
                                     </table>
                                 </div>
                             </div>
-                            
-                            <!-- Tab Reservas Pendentes -->
-                           <div class="tab-pane fade" id="reservas" role="tabpanel" aria-labelledby="reservas-tab">
-    <div class="d-flex justify-content-end mb-3">
-        <a href="adicionar_reserva.php" class="btn btn-success">
-            <i class="fas fa-calendar-plus me-1"></i> Nova Reserva
-        </a>
-    </div>
+                             <!-- Na seção de Reservas Pendentes -->
+<div class="d-flex justify-content-end mb-3">
+</div>
+                                       <div class="tab-pane fade" id="reservas" role="tabpanel" aria-labelledby="reservas-tab">
+                                                        <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#novaReservaModal">
+                        <i class="fas fa-calendar-plus me-1"></i> Nova Reserva
+                    </button>
+                </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="tabelaReservasPendentes">
                                         <thead>
@@ -884,6 +957,12 @@ $resumo = $resultado_resumo->fetch_assoc();
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <form method="post">
+    <!-- Campos existentes -->
+    <div class="modal-footer">
+        <button type="submit" name="nova_manutencao" class="btn btn-warning">Registrar</button>
+    </div>
+</form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" name="nova_receita" class="btn btn-success">Registrar Receita</button>
                     </div>
@@ -891,86 +970,187 @@ $resumo = $resultado_resumo->fetch_assoc();
             </div>
         </div>
     </div>
-    
-    <!-- Modal Novo Serviço -->
-    <div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="novoServicoModalLabel">Registrar Novo Serviço</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nome" class="form-label">Nome do Serviço</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="preco" class="form-label">Preço (€)</label>
-                            <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" name="novo_servico" class="btn btn-primary">Registrar Serviço</button>
-                    </div>
-                </form>
+    <!-- Modal Nova Reserva -->
+<div class="modal fade" id="novaReservaModal" tabindex="-1" aria-labelledby="novaReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="novaReservaModalLabel">Nova Reserva</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form method="post" action="adicionar_reserva.php">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="casa_reserva" class="form-label">Casa</label>
+                        <select class="form-select" id="casa_reserva" name="casa" required>
+                            <?php
+                            $sql_casas = "SELECT C_id_casa, C_nome, C_preco_noite FROM casas";
+                            $resultado_casas = $conexao->query($sql_casas);
+                            while ($casa = $resultado_casas->fetch_assoc()) {
+                                echo "<option value='{$casa['C_id_casa']}' data-preco='{$casa['C_preco_noite']}'>{$casa['C_nome']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="checkin" class="form-label">Check-in</label>
+                            <input type="date" class="form-control" id="checkin" name="checkin" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="checkout" class="form-label">Check-out</label>
+                            <input type="date" class="form-control" id="checkout" name="checkout" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hospede" class="form-label">Hóspede</label>
+                        <select class="form-select" id="hospede" name="hospede" required>
+                            <?php
+                            $sql_hospedes = "SELECT H_id_hospede, H_nome FROM hospedes";
+                            $resultado_hospedes = $conexao->query($sql_hospedes);
+                            while ($hospede = $resultado_hospedes->fetch_assoc()) {
+                                echo "<option value='{$hospede['H_id_hospede']}'>{$hospede['H_nome']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="num_hospedes" class="form-label">Número de Hóspedes</label>
+                        <input type="number" min="1" class="form-control" id="num_hospedes" name="num_hospedes" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="total" class="form-label">Total (€)</label>
+                        <input type="text" class="form-control" id="total" name="total" readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="reservas.php" class="btn btn-secondary me-2">
+                        <i class="fas fa-list me-1"></i> Lista de Reservas
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success">Reservar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
     
-    <!-- Modal Nova Manutenção -->
-    <div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="novaManutencaoModalLabel">Registrar Nova Manutenção</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post" action="adicionar_manutencao.php">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="tipo" class="form-label">Tipo de Manutenção</label>
-                            <input type="text" class="form-control" id="tipo" name="tipo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="casa" class="form-label">Casa</label>
-                            <select class="form-select" id="casa" name="casa" required>
-                                <?php
-                                $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
-                                $resultado_casas = $conexao->query($sql_casas);
-                                while ($casa = $resultado_casas->fetch_assoc()) {
-                                    echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="data" class="form-label">Data</label>
-                            <input type="date" class="form-control" id="data" name="data" value="<?php echo date('Y-m-d'); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="custo" class="form-label">Custo (€)</label>
-                            <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-warning">Registrar Manutenção</button>
-                    </div>
-                </form>
+
+
+
+<!-- Modal Novo Serviço -->
+<div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Serviço</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select class="form-select" id="categoria" name="categoria" required>
+                            <option value="Limpeza">Limpeza</option>
+                            <option value="Manutenção">Manutenção</option>
+                            <option value="Hospedagem">Hospedagem</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preco" class="form-label">Preço (€)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="servicos.php" class="btn btn-secondary me-2">
+                        <i class="fas fa-list me-1"></i> Lista de Serviços
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" name="novo_servico" class="btn btn-primary">Registrar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+    
+
+     <!-- Modal Nova Manutenção -->
+<div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="novaManutencaoModalLabel">Nova Manutenção</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="adicionar_manutencao.php">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="casa" class="form-label">Casa</label>
+                        <select class="form-select" id="casa" name="casa" required>
+                            <?php
+                            $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
+                            $resultado_casas = $conexao->query($sql_casas);
+                            while ($casa = $resultado_casas->fetch_assoc()) {
+                                echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Manutenção</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="Canalizações">Canalizações</option>
+                            <option value="Elétrica">Elétrica</option>
+                            <option value="Pintura">Pintura</option>
+                            <option value="Jardinagem">Jardinagem</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="data_inicio" class="form-label">Data Início</label>
+                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="data_fim" class="form-label">Data Fim</label>
+                            <input type="date" class="form-control" id="data_fim" name="data_fim">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="custo" class="form-label">Custo (€)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="manutencao.php" class="btn btn-secondary me-2">
+                        <i class="fas fa-list me-1"></i> Lista de Manutenções
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-warning">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
     
     <!-- Bootstrap JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -983,6 +1163,33 @@ $resumo = $resultado_resumo->fetch_assoc();
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
+
+
+//calculo automatico
+
+// Cálculo automático do preço total
+document.addEventListener('DOMContentLoaded', function() {
+    const casaSelect = document.getElementById('casa_reserva');
+    const checkin = document.getElementById('checkin');
+    const checkout = document.getElementById('checkout');
+    const totalField = document.getElementById('total');
+
+    function calculateTotal() {
+        if (checkin.value && checkout.value && casaSelect.value) {
+            const precoNoite = parseFloat(casaSelect.options[casaSelect.selectedIndex].dataset.preco);
+            const diffTime = Math.abs(new Date(checkout.value) - new Date(checkin.value));
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            totalField.value = '€' + (precoNoite * diffDays).toFixed(2);
+        }
+    }
+
+    casaSelect.addEventListener('change', calculateTotal);
+    checkin.addEventListener('change', calculateTotal);
+    checkout.addEventListener('change', calculateTotal);
+});
+
+
+//termina codigo automatico
         // Inicializar DataTables
         $(document).ready(function() {
             $('#tabelaMovimentacoes').DataTable({

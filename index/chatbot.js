@@ -11,39 +11,32 @@
         // Banco de dados de respostas para o chatbot
         const responses = {
             // Saudações e despedidas
-            saudacao: "Olá! Bem-vindo à Quinta Flores! Como posso ajudar a tornar sua experiência mais agradável hoje?",
+            saudacao: "Bem-vindo! Como posso ser útil?",
             agradecimento: "É um prazer poder ajudar! Se surgir mais alguma dúvida sobre a Quinta Flores ou sobre a região de Ponte de Lima, estou à disposição. Desejamos uma estadia inesquecível!",
-            despedida: "Obrigado por entrar em contato com a Quinta Flores! Esperamos recebê-lo em breve para uma estadia inesquecível no coração do Minho. Tenha um ótimo dia!",
+            despedida: "Obrigado por entrar em contato conosco! Esperamos recebê-lo em breve para uma estadia inesquecível no nosso alojamento. Tenha um ótimo dia!",
             
             // Respostas para categorias principais
             reservas: {
-                geral: "Para fazer uma reserva na Quinta Flores, você tem várias opções:\n\n• Use o botão 'Reservar Agora' no topo da página\n• Entre em contato pelo telefone: +351 912 418 976\n• Envie um email para: quinta.flores2019@gmail.com\n• Faça sua reserva através do Booking.com ou Airbnb\n\nPrecisa de ajuda com uma data específica ou tipo de acomodação?",
-                cancelamento: "Nossa política de cancelamento é flexível. Cancelamentos feitos até 7 dias antes da data de chegada recebem reembolso total. Para cancelamentos entre 3-7 dias, há uma taxa de 30%. Cancelamentos com menos de 3 dias de antecedência estão sujeitos a uma taxa de 50% do valor total. Não comparecimentos (no-show) não têm direito a reembolso.",
+                geral: "Para fazer uma reserva na Quinta Flores, você tem várias opções:\n\n• Use o botão 'Reservar Agora' no topo da página\n• Entre em contato pelo telefone: +351 912 418 976\n Ou até precensialmente.",
+                cancelamento: "Nossa política de cancelamento é flexível. Cancelamentos feitos até 7 dias antes da data de chegada recebem reembolso total. Para cancelamentos entre 3-7 dias, há uma taxa de 30%. Cancelamentos com menos de 10 dias de antecedência estão sujeitos a uma taxa de 50% do valor total. Não comparecimentos não têm direito a reembolso.",
                 alteracao: "Alterações de reserva são possíveis mediante disponibilidade. Por favor, entre em contato conosco o quanto antes para verificarmos as possibilidades de mudança de data ou acomodação. Não cobramos taxa para alterações feitas com pelo menos 5 dias de antecedência.",
-                disponibilidade: "Para verificar a disponibilidade exata para suas datas, recomendamos utilizar o calendário de reservas no nosso site ou entrar em contato diretamente conosco. Nossos períodos de maior ocupação são entre junho e setembro e durante feriados importantes.",
+                disponibilidade: "Para verificar a disponibilidade exata para suas datas, recomendamos utilizar o formúlario da pagina inicial ou entrar em contato diretamente conosco. Nossos períodos de maior ocupação são entre junho e setembro e durante feriados importantes.",
                 antecedencia: "Recomendamos reservar com pelo menos 1-2 meses de antecedência durante a alta temporada (junho a setembro) e para feriados. Para o resto do ano, 2-3 semanas de antecedência normalmente é suficiente, mas sempre dependendo da disponibilidade."
             },
             
             acomodacoes: {
-                geral: "A Quinta Flores oferece várias opções de acomodação para atender diferentes necessidades:\n\n• Casa Principal: 3 quartos, ideal para famílias\n• Casa da Fonte: 2 quartos, perfeita para casais ou pequenas famílias\n• Estúdio Jardim: Aconchegante e ideal para casais\n• Suite Romântica: Nossa opção mais exclusiva com jacuzzi privativa\n\nTodas as acomodações incluem roupa de cama, toalhas, Wi-Fi e estacionamento gratuito. Posso dar mais detalhes sobre alguma acomodação específica?",
+                
                 casaprincipal: "A Casa Principal é nossa maior acomodação com 3 quartos, 2 banheiros, sala de estar espaçosa, cozinha completa e varanda com vista para os jardins. Comporta até 6 pessoas e é ideal para famílias ou grupos. Inclui acesso à piscina, jardins e todas as áreas comuns da propriedade.",
-                casafonte: "A Casa da Fonte possui 2 quartos, 1 banheiro, sala de estar confortável, cozinha equipada e pequeno terraço. É perfeita para até 4 pessoas e oferece uma mistura de conforto moderno com charme rústico. Possui vista para nossa fonte histórica e acesso a todas as comodidades.",
-                estudiojardim: "O Estúdio Jardim é uma acomodação aconchegante com quarto, área de estar, kitchenette e banheiro privativo. Comporta 2 pessoas e tem entrada independente com pequeno pátio privativo. É ideal para casais que buscam privacidade sem abrir mão do conforto.",
-                suiteromantica: "A Suíte Romântica é nossa opção mais exclusiva. Possui quarto amplo, banheiro com jacuzzi privativa, pequena sala de estar e varanda com vista panorâmica. Inclui serviços especiais como decoração com pétalas, espumante de boas-vindas e café da manhã no quarto (mediante solicitação)."
             },
-            
             precos: {
-                geral: "Nossos preços variam conforme a temporada, tipo de acomodação e número de pessoas. Na baixa temporada (outubro a abril, exceto feriados):\n\n• Casa Principal: a partir de €120/noite\n• Casa da Fonte: a partir de €90/noite\n• Estúdio Jardim: a partir de €70/noite\n• Suite Romântica: a partir de €110/noite\n\nNa alta temporada (maio a setembro e feriados) os valores aumentam aproximadamente 20-30%. Para cotações precisas, por favor, informe as datas desejadas.",
-                promocoes: "Oferecemos descontos especiais para reservas de longa duração (acima de 7 noites), pacotes românticos para casais e promoções sazonais. Também temos a promoção 'Reserve com Antecedência' com 10% de desconto para reservas feitas com mais de 60 dias de antecedência. Consulte nosso site ou entre em contato para conhecer as ofertas atuais.",
-                extras: "Serviços adicionais com custo extra incluem: traslado do aeroporto, passeios guiados pela região, experiências gastronômicas privadas, serviço de babá, massagens e tratamentos de bem-estar. Os preços variam conforme o serviço solicitado."
+                geral: "A Quinta Flores tem um preço fixo de 120€ por noite, com capacidade máxima até 10 pessoas. Se fazer uma festa ou algo que terá mais pessoas entre em contacto conosco."
             },
             servicos: {
-                geral: "A Quinta Flores oferece uma variedade de serviços para tornar sua estadia inesquecível:\n\n• Recepção disponível das 8h às 22h\n• Wi-Fi gratuito em toda a propriedade\n• Piscina exterior (aberta de maio a setembro)\n• Estacionamento privativo gratuito\n• Serviço de limpeza diário (mediante solicitação)\n• Café da manhã regional opcional\n• Jardins e áreas de lazer\n• Assistência para reserva de atividades locais\n\nHá algum serviço específico sobre o qual gostaria de saber mais?",
-                piscina: "Nossa piscina exterior está aberta de maio a setembro (dependendo das condições meteorológicas). Possui área de solário com espreguiçadeiras, toalhas disponíveis gratuitamente para os hóspedes e uma pequena área de bar sazonal. O horário de funcionamento é das 9h às 20h.",
+                geral: "A Quinta Flores oferece uma variedade de serviços para tornar sua estadia inesquecível:\n\n• Recepção disponível das 8h às 22h\n• Piscina exterior\n• Estacionamento privado\n• Jardins e áreas de lazer\nHá algum serviço específico sobre o qual gostaria de saber mais?",
+                piscina: " A nossa piscina exterior está sempre aberta Possui área de solário com espreguiçadeiras, toalhas disponíveis gratuitamente para os hóspedes.",
                 wifi: "Oferecemos Wi-Fi gratuito de alta velocidade em todas as áreas da propriedade, incluindo jardins e piscina. A senha é fornecida no momento do check-in.",
-                limpeza: "O serviço de limpeza padrão é realizado a cada 3 dias para estadias longas. Para serviço diário, há uma taxa adicional de €15 por dia. Troca de toalhas e roupa de cama sempre disponível mediante solicitação.",
-                pequeno_almoco: "Oferecemos café da manhã regional opcional por €12 por pessoa/dia (€6 para crianças até 10 anos). É servido entre 8h30 e 10h30 e inclui produtos regionais frescos, pães artesanais, frutas da época, sucos naturais, café e chás.",
-                recepcao: "Nossa recepção funciona das 8h às 22h para check-in, check-out e assistência aos hóspedes. Para chegadas fora deste horário, oferecemos sistema de check-in automatizado. Estamos sempre disponíveis por telefone para emergências 24 horas."
+                limpeza: "O serviço de limpeza padrão é realizado a cada 3 dias para estadias longas. Para serviço diário, há uma taxa adicional de €15 por dia. Troca de toalhas e lençois de cama sempre disponível mediante solicitação.",
+                recepcao: "Nossa recepção funciona das 8h às 22h. Para chegadas fora deste horário, oferecemos sistema de check-in automatizado. Estamos sempre disponíveis por telefone para emergências 24 horas."
             },
             
             localizacao: {
@@ -55,27 +48,19 @@
             
             atividades: {
                 geral: "A região do Minho oferece inúmeras atividades para todos os gostos:\n\n• Passeios de bicicleta pela Ecovia do Lima\n• Degustação de vinhos em quintas produtoras de Vinho Verde\n• Caminhadas em trilhas históricas\n• Passeios a cavalo\n• Canoagem no Rio Lima\n• Visitas culturais a aldeias históricas\n• Festivais e festas tradicionais\n• Gastronomia regional\n\nNa recepção, podemos ajudar a organizar qualquer uma destas atividades.",
-                cicloturismo: "Ponte de Lima é conhecida como um paraíso para ciclistas. A Ecovia do Lima oferece percursos planos ao longo do rio. Temos bicicletas disponíveis para aluguer (€15/dia) e podemos recomendar rotas adequadas ao seu nível de experiência. Também organizamos tours guiados de bicicleta mediante reserva prévia.",
-                vinhos: "A região é famosa pelo Vinho Verde. Organizamos visitas a produtores locais com degustação e possibilidade de compra diretamente nas quintas. Os tours têm duração de meio dia (€40/pessoa) ou dia completo (€70/pessoa), incluindo transporte e, no caso do tour completo, almoço regional.",
-                gastronomia: "O Minho é famoso por sua gastronomia. Recomendamos restaurantes autênticos nas proximidades e podemos fazer reservas para você. Para uma experiência especial, organizamos jantares privados na Quinta com chef local (mediante reserva com pelo menos 3 dias de antecedência).",
-                cultura: "Além de Ponte de Lima, recomendamos visitar Viana do Castelo, Braga, Guimarães e o Parque Nacional Peneda-Gerês. Podemos fornecer roteiros personalizados e, se necessário, organizar transporte privado para estas excursões.",
+                cicloturismo: " Dispomos ainda de várias rotas para descobrir as paisagens únicas da região ",
+                gastronomia: "O Minho é famoso por sua gastronomia. Recomendamos restaurantes autênticos nas proximidades.",
                 criancas: "Para famílias com crianças, recomendamos: caça ao tesouro em nossos jardins, visita ao parque aventura nas proximidades, piqueniques à beira-rio, passeios de barco no Rio Lima e visitas a quintas pedagógicas. Também temos jogos de tabuleiro e livros disponíveis para uso gratuito."
             },
-            
             // Respostas para temas específicos
-            quem_somos: "A Quinta Flores é um projeto familiar que nasceu em 2019, quando decidimos restaurar esta propriedade histórica do século XVIII para partilhar com nossos hóspedes a autenticidade do Minho. Somos uma pequena equipe dedicada a proporcionar experiências autênticas, com atendimento personalizado e respeito pelas tradições locais e pelo meio ambiente.",
-            
-            sustentabilidade: "Na Quinta Flores, a sustentabilidade é uma prioridade. Utilizamos energia solar, sistema de coleta de água da chuva, produtos de limpeza ecológicos e privilegiamos fornecedores locais. Nossa horta orgânica fornece produtos frescos sazonais para nossos hóspedes. Também participamos em iniciativas de conservação local e reflorestamento da região.",
-            
             historia_propriedade: "A Quinta Flores tem uma história rica que remonta ao século XVIII, quando era uma propriedade agrícola produtora de vinho e azeite. A casa principal ainda preserva elementos originais como a adega de pedra e a fonte que dá nome à Casa da Fonte. Durante a restauração, tivemos o cuidado de preservar o caráter histórico enquanto introduzimos confortos modernos.",
             
-            animais: "Aceitamos animais de estimação de pequeno e médio porte nas Casas Principal e da Fonte, mediante taxa adicional de €15/dia. Solicitamos que os animais não sejam deixados sozinhos nas acomodações e que sejam mantidos com guia nas áreas comuns. Fornecemos comedouros, bebedouros e informações sobre passeios adequados e serviços veterinários na região.",
+            animais: "Aceitamos animais de estimação de pequeno e médio porte  Solicitamos que os animais não sejam deixados sozinhos nas acomodações",
+            grupos: "A Quinta Flores é ideal para grupos de até 10 pessoas, utilizando todas as nossas acomodações. Oferecemos descontos especiais para reservas de grupo e podemos organizar atividades exclusivas como workshops gastronômicos, degustações de vinho ou eventos familiares. Para grupos maiores, trabalhamos com propriedades parceiras nas proximidades.",
             
-            grupos: "A Quinta Flores é ideal para grupos de até 14 pessoas, utilizando todas as nossas acomodações. Oferecemos descontos especiais para reservas de grupo e podemos organizar atividades exclusivas como workshops gastronômicos, degustações de vinho ou eventos familiares. Para grupos maiores, trabalhamos com propriedades parceiras nas proximidades.",
+            casamentos: "Realizamos pequenos eventos como casamentos íntimos, aniversários especiais e reuniões familiares . Nossos jardins e áreas exteriores oferecem um cenário romântico e autêntico. Trabalhamos com fornecedores locais para catering, decoração e outros serviços. Entre em contacto conosco para mais informações e preços.",
             
-            casamentos: "Realizamos pequenos eventos como casamentos íntimos, aniversários especiais e reuniões familiares para até 40 pessoas. Nossos jardins e áreas exteriores oferecem um cenário romântico e autêntico. Trabalhamos com fornecedores locais para catering, decoração e outros serviços. Solicite nosso dossiê de eventos para mais informações e preços.",
-            
-            clima: "A região do Minho tem um clima ameno, influenciado pelo Atlântico. Os verões são quentes mas não excessivamente (20-30°C), e os invernos são suaves (5-15°C) com alguma precipitação. A melhor época para visitar é entre maio e outubro. A primavera traz flores exuberantes e o outono cores deslumbrantes às vinhas e florestas.",
+            clima: "A região do Minho tem um clima ameno, influenciado pelo Atlântico. Os verões são quentes mas não excessivamente (20-30°C), e os invernos são suaves (5-15°C) com alguma precipitação. A primavera traz flores exuberantes e o outono cores deslumbrantes às vinhas e florestas.",
             
             // Fallback (resposta padrão quando não entende a pergunta)
             fallback: "Peço desculpa, mas não tenho certeza se compreendi corretamente sua pergunta. Posso ajudar com informações sobre nossas acomodações, serviços, reservas, localização, atividades na região ou preços. Poderia reformular sua pergunta?"

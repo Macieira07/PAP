@@ -39,6 +39,29 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
 $h = $resultado->fetch_assoc();
+
+
+// Após atualizar o hóspede
+if ($stmt->execute()) {
+    // Registrar no histórico
+    $detalhes = "Alterações: ";
+    $campos = ['nome', 'email', 'telefone', 'documento', 'morada'];
+    foreach ($campos as $campo) {
+        if ($h["H_$campo"] != $_POST[$campo]) {
+            $detalhes .= "$campo: {$h["H_$campo"]} → {$_POST[$campo]}, ";
+        }
+    }
+    $detalhes = rtrim($detalhes, ', ');
+
+    $stmt_hist = $conexao->prepare("INSERT INTO historico_hospedes 
+        (H_id_hospede, acao, detalhes, usuario) 
+        VALUES (?, 'Edição', ?, ?)");
+    $stmt_hist->bind_param("iss", $id, $detalhes, $_SESSION['usuario_nome']);
+    $stmt_hist->execute();
+    
+    header("Location: hospedes.php?sucesso=Atualizado");
+}
+
 ?>
 
 <h2>Editar Hóspede</h2>

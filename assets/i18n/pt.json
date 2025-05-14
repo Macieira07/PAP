@@ -2,8 +2,6 @@
   "home": "Quinta",
   "about": "Sobre Nós",
   "amenities": "Comodidades",
-  "contacts": "Contactos",
-  "make_reservation": "Fazer Reserva",
   "tagline": "Aconchegante - Autêntico - Sereno",
   "title_main": "Sossego e beleza",
   "title_location": "Ponte de Lima",
@@ -26,5 +24,12 @@
   "games": "Brinquedos e jogos para crianças",
   "trails": "Trilhos para caminhadas",
   "camping": "Área para acampar",
-  "copyright": "Copyright © 2025 QUINTA FLORES. Todos os direitos reservados."
+  "copyright": "Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.",
+  "rooms": "Quartos",
+  "gallery": "Galeria",
+  "location": "Localização",
+  "contacts": "Contactos",
+  "make_reservation": "Reservar Agora",
+  "welcome": "Bem-vindo à"
+  
 }

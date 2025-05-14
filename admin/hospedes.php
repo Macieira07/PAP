@@ -18,6 +18,7 @@ if ($filtro_verificado === 'Sim' || $filtro_verificado === 'Não') {
 }
 
 $resultado = $conexao->query($sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -83,6 +84,33 @@ $resultado = $conexao->query($sql);
         </tr>
         <?php endwhile; ?>
     </table>
+    <?php
+if (isset($_GET['exportar'])) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="hospedes.csv"');
+    
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ['ID', 'Nome', 'Email', 'Telefone', 'Documento', 'Verificado']);
+    
+    $result = $conexao->query("SELECT * FROM hospedes");
+    while ($row = $result->fetch_assoc()) {
+        fputcsv($output, [
+            $row['H_id_hospede'],
+            $row['H_nome'],
+            $row['H_email'],
+            $row['H_telefone'],
+            $row['H_documento_ident'],
+            $row['H_verificado_email']
+        ]);
+    }
+    fclose($output);
+    exit;
+
+    
+}
+?>
+<!-- Botão de exportação -->
+<a href="hospedes.php?exportar=1" class="botao-exportar">Exportar CSV</a>
     
     <a href="admin.php">← Voltar</a>
 </body>
