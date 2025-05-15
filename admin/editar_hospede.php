@@ -63,7 +63,8 @@ if ($stmt->execute()) {
 }
 
 ?>
-
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 <h2>Editar Hóspede</h2>
 <link rel="stylesheet" href="admin.css">
 

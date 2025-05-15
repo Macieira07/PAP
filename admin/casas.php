@@ -27,6 +27,9 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+
     <link rel="stylesheet" href="admin.css">
     <meta charset="UTF-8">
     <title>Casas</title>

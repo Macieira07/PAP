@@ -46,6 +46,8 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <title>Adicionar Manutenção</title>
     <link rel="stylesheet" href="admin.css">
     <script>

@@ -13,602 +13,133 @@ $csrf_token = $_SESSION['csrf_token'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Página de login e registro do sistema">
+    <title>Acesso ao Sistema</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css"/>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Página de Login</title>
-    <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
-    <style>
-        :root {
-            --primary-color: #10B981;
-            --primary-color-dark: #047857;
-            --text-dark: #111827;
-            --text-light: #6B7280;
-            --white: #F9FAFB;
-            --max-width: 1200px;
-            --font-family: "Inter", sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-family);
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
-            overflow: hidden;
-        }
-
-        .container {
-            position: relative;
-            width: 900px;
-            height: 550px;
-            background: var(--white);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .form-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-        }
-
-        .form-section {
-            position: relative;
-            width: 50%;
-            height: 100%;
-            padding: 40px;
-            transition: 0.5s;
-        }
-
-        .sign-in {
-            background: var(--white);
-            z-index: 2;
-        }
-
-        .sign-up {
-            background: var(--primary-color);
-            color: var(--white);
-            left: 50%;
-            z-index: 1;
-            opacity: 0;
-        }
-
-        .title {
-            font-size: 32px;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .sign-up .title {
-            color: var(--white);
-        }
-
-        .input-group {
-            position: relative;
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 10px 0;
-            font-size: 16px;
-            color: var(--text-dark);
-            border: none;
-            border-bottom: 2px solid var(--text-light);
-            outline: none;
-            background: transparent;
-        }
-
-        .sign-up .input-group input {
-            color: var(--white);
-            border-bottom-color: rgba(255,255,255,0.5);
-        }
-
-        .input-group label {
-            position: absolute;
-            left: 0;
-            top: 10px;
-            font-size: 16px;
-            color: var(--text-light);
-            pointer-events: none;
-            transition: 0.3s;
-        }
-
-        .sign-up .input-group label {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .input-group input:focus ~ label,
-        .input-group input:valid ~ label {
-            top: -12px;
-            font-size: 12px;
-            color: var(--primary-color);
-        }
-
-        .sign-up .input-group input:focus ~ label,
-        .sign-up .input-group input:valid ~ label {
-            color: var(--white);
-        }
-
-        .btn {
-            position: relative;
-            display: inline-block;
-            padding: 12px 30px;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
-        .sign-up .btn {
-            background: var(--white);
-            color: var(--primary-color);
-        }
-
-        .btn:hover {
-            background: var(--primary-color-dark);
-        }
-
-        .sign-up .btn:hover {
-            background: #f0f0f0;
-        }
-
-        .link {
-            margin-top: 20px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .sign-up .link a {
-            color: var(--white);
-            text-decoration: underline;
-        }
-
-        .error-message {
-            color: #ff3860;
-            font-size: 14px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #ffebee;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .sign-up .error-message {
-            background: rgba(255, 0, 0, 0.1);
-        }
-
-        .success-message {
-            color: #23d160;
-            font-size: 14px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #effaf3;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .toggle-container {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            transition: 0.5s;
-            z-index: 10;
-        }
-
-        .toggle {
-            position: relative;
-            width: 200%;
-            height: 100%;
-            left: -100%;
-            transition: 0.5s;
-        }
-
-        .toggle-panel {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .toggle-left {
-            left: 0;
-            background: var(--primary-color);
-            color: var(--white);
-        }
-
-        .toggle-right {
-            right: 0;
-            background: var(--primary-color-dark);
-            color: var(--white);
-        }
-
-        .toggle-btn {
-            padding: 12px 30px;
-            background: transparent;
-            color: var(--white);
-            border: 2px solid var(--white);
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 20px;
-            font-weight: 500;
-        }
-
-        .toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .terms-container {
-            margin: 15px 0;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            color: var(--white);
-        }
-
-        .terms-container input {
-            margin-right: 10px;
-        }
-
-        .terms-container label a {
-            color: var(--white);
-            text-decoration: underline;
-        }
-
-        /* Efeito ativo */
-        .container.active .sign-in {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-
-        .container.active .sign-up {
-            transform: translateX(-100%);
-            opacity: 1;
-            z-index: 5;
-        }
-
-        .container.active .toggle-container {
-            left: 0;
-        }
-
-        .container.active .toggle {
-            left: 0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-                height: auto;
-                min-height: 500px;
-            }
-
-            .form-section {
-                width: 100%;
-                padding: 30px;
-            }
-
-            .toggle-container {
-                display: none;
-            }
-
-            .container.active .sign-in {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            .container.active .sign-up {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="login.css">
 </head>
 <body>
-    <div class="container" id="container">
-        <div class="form-container">
-            <!-- Formulário de Login -->
-            <div class="form-section sign-in">
-                <form method="POST" action="login.php" id="loginForm">
-                    <h2 class="title">Bem-vindo</h2>
-                    <div id="loginError" class="error-message" style="display:none;"></div>
-                    <div class="input-group">
-                        <input type="email" id="loginEmail" name="email" required>
-                        <label>Email</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="loginPassword" name="senha" required>
-                        <label>Senha</label>
-                    </div>
-                    <a href="recuperar_senha.php" class="link">Esqueceu sua senha?</a>
-                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                    <button type="submit" class="btn">Entrar</button>
-                    <div class="link">
-                        Não tem conta? <a onclick="switchForm()">Criar conta</a>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Formulário de Registro -->
-            <div class="form-section sign-up">
-                <form method="POST" action="registar.php" id="registerForm">
-                    <h2 class="title">Criar Conta</h2>
-                    <div id="registerError" class="error-message" style="display:none;"></div>
-                    <div id="registerSuccess" class="success-message" style="display:none;"></div>
-                    <div class="input-group">
-                        <input type="text" id="registerName" name="nome" required>
-                        <label>Nome Completo</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" id="registerEmail" name="email" required>
-                        <label>Email</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="registerPassword" name="password" required 
-                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
-                               title="Deve conter pelo menos 8 caracteres, incluindo uma maiúscula, uma minúscula e um número">
-                        <label>Senha</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="tel" id="registerPhone" name="telefone" required>
-                        <label>Telefone</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="registerDocument" name="documento" required>
-                        <label>Documento de Identificação</label>
-                    </div>
-                    <div class="terms-container">
-                        <input type="checkbox" id="acceptTerms" name="aceitar_termos" required>
-                        <label for="acceptTerms">Aceito os <a href="termos.html" target="_blank">termos de uso</a> e a <a href="privacidade.html" target="_blank">política de privacidade</a></label>
-                    </div>
-                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                    <button type="submit" class="btn">Registrar</button>
-                    <div class="link">
-                        Já tem conta? <a onclick="switchForm()">Fazer Login</a>
-                    </div>
-                </form>
-            </div>
+    <div class="container">
+        <div class="card-header">
+            <h1 class="card-title" id="headerTitle">Entrar</h1>
+            <p class="card-subtitle" id="headerSubtitle">Acesse sua conta para continuar</p>
         </div>
+        <div class="card-body">
+            <!-- Formulário de Login -->
+            <form id="loginForm" method="POST" action="login.php" class="form-section active">
+                <div id="loginError" class="message error-message"></div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" name="email" class="form-control" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" name="senha" class="form-control" placeholder="••••••••" required>
+                </div>
+                <a href="recuperar_senha.php" class="extra-link">Esqueceu sua senha?</a>
+                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+                <div class="form-footer">
+                    Não tem conta? <a href="#" id="showRegister">Criar conta</a>
+                </div>
+            </form>
+            <!-- Formulário de Registro -->
+            <form id="registerForm" method="POST" action="registar.php" class="form-section">
+                <div id="registerError" class="message error-message"></div>
+                <div id="registerSuccess" class="message success-message"></div>
+                
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="registerName" name="nome" class="form-control" placeholder="Seu nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="registerEmail" name="email" class="form-control" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="registerPassword" name="password" class="form-control" placeholder="••••••••" required
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                           title="Deve conter pelo menos 8 caracteres, incluindo uma maiúscula, uma minúscula e um número">
+                </div>
+<div class="form-group">
+    <label for="registerPhone">Telefone</label>
+    <div class="phone-input-container">
+        <select id="countryCode" class="country-code-select">
+            <option value="+351" selected>Portugal (+351)</option>
+            <option value="+55">Brasil (+55)</option>
+            <option value="+1">Estados Unidos/Canadá (+1)</option>
+            <option value="+44">Reino Unido (+44)</option>
+            <option value="+34">Espanha (+34)</option>
+            <option value="+33">França (+33)</option>
+            <option value="+49">Alemanha (+49)</option>
+            <option value="+244">Angola (+244)</option>
+            <option value="+258">Moçambique (+258)</option>
+            <option value="+238">Cabo Verde (+238)</option>
+            <option value="+239">São Tomé e Príncipe (+239)</option>
+            <option value="+245">Guiné-Bissau (+245)</option>
+            <option value="+240">Guiné Equatorial (+240)</option>
+            <option value="+670">Timor-Leste (+670)</option>
+            <option value="+853">Macau (+853)</option>
+            <!-- Mais países podem ser adicionados aqui -->
+        </select>
+        <i class="fas fa-phone"></i>
+        <input type="tel" id="registerPhone" name="telefone" class="form-control phone-with-code" placeholder="Seu número" required>
+    </div>
+</div>
 
-        <!-- Painel de Alternância -->
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Bem-vindo de Volta!</h1>
-                    <p>Entre com seus dados para aceder a sua conta</p>
-                    <button class="toggle-btn" id="loginToggle">Entrar</button>
+                <div class="form-group">
+                    <label for="registerDocument">Documento de Identificação</label>
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="registerDocument" name="documento" class="form-control" placeholder="NIF " required>
                 </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Olá, Visitante!</h1>
-                    <p>Registre-se para começar sua jornada conosco</p>
-                    <button class="toggle-btn" id="registerToggle">Registrar</button>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="acceptTerms" name="aceitar_termos" required>
+                    <label for="acceptTerms">
+                        Aceito os <a href="termos.html" target="_blank">termos de uso</a> e a 
+                        <a href="privacidade.html" target="_blank">política de privacidade</a>
+                    </label>
                 </div>
-            </div>
+                
+                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                <button type="submit" class="btn">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+                
+                <div class="form-footer">
+                    Já tem conta? <a href="#" id="showLogin">Fazer Login</a>
+                </div>
+            </form>
         </div>
     </div>
+<script src="login.js"></script>
+<script>
+    const input = document.querySelector("#registerPhone");
+    const iti = window.intlTelInput(input, {
+        initialCountry: "pt", // Portugal por defeito
+        preferredCountries: ["pt", "br", "us", "gb", "es", "fr", "de"],
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js"
+    });
 
-    <script>
-        // Função para alternar entre login e registro
-        function switchForm() {
-            const container = document.getElementById('container');
-            container.classList.toggle('active');
-        }
+    // Opcional: envia o número completo no formato internacional
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        const numeroFormatado = iti.getNumber(); // exemplo: +351912345678
+        input.value = numeroFormatado;
+    });
+</script>
 
-        // Event listeners para os botões de toggle
-        document.getElementById('registerToggle').addEventListener('click', switchForm);
-        document.getElementById('loginToggle').addEventListener('click', switchForm);
-
-        // Validação e envio do formulário de login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const csrfToken = this.querySelector('input[name="csrf_token"]').value;
-            const errorElement = document.getElementById('loginError');
-            
-            console.log('Tentativa de login:', { email, csrfToken: csrfToken.substring(0, 5) + '...' });
-            
-            hideError(errorElement);
-            
-            if (!validateEmail(email)) {
-                showError(errorElement, 'Por favor, insira um email válido.');
-                console.log('Erro: Email inválido');
-                return;
-            }
-            
-            if (password.length < 8) {
-                showError(errorElement, 'A senha deve ter pelo menos 8 caracteres.');
-                console.log('Erro: Senha muito curta');
-                return;
-            }
-            
-            console.log('Validação passou, enviando requisição...');
-            
-            const formData = new FormData();
-            formData.append('email', email);
-            formData.append('senha', password);
-            formData.append('csrf_token', csrfToken);
-            
-            fetch('login.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => {
-                console.log('Resposta recebida:', res.status, res.statusText);
-                return res.json().catch(error => {
-                    console.error('Erro ao processar JSON:', error);
-                    throw new Error('Erro ao processar resposta do servidor');
-                });
-            })
-            .then(data => {
-                console.log('Dados recebidos:', data);
-                if (data.redirect) {
-                    console.log('Redirecionando para:', data.redirect);
-                    window.location.href = data.redirect;
-                } else if (data.error) {
-                    console.error('Erro retornado pelo servidor:', data.error);
-                    
-                    // Adicionando visualização das informações de debug
-                    if (data.debug) {
-                        console.log('===== INFORMAÇÕES DE DEBUG =====');
-                        console.log('Email tentativa:', data.debug.email_tentativa);
-                        console.log('Tempo:', data.debug.tempo);
-                        console.log('Tipo de usuário inferido:', data.debug.tipo_usuario_inferido);
-                        
-                        if (data.debug.senha_info && typeof data.debug.senha_info === 'object') {
-                            console.log('===== INFORMAÇÕES DE SENHA =====');
-                            console.log('Senha digitada:', data.debug.senha_info.senha_digitada);
-                            console.log('Hash no banco:', data.debug.senha_info.senha_hash_db);
-                            console.log('Resultado password_verify():', data.debug.senha_info.password_verify_result);
-                            console.log('Resultado comparação direta:', data.debug.senha_info.match_direto);
-                            console.log('Formato do hash:', data.debug.senha_info.formato_hash);
-                        }
-                    }
-                    
-                    showError(errorElement, data.error);
-                } else {
-                    console.error('Resposta sem formato esperado:', data);
-                    showError(errorElement, 'Erro inesperado.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro na requisição:', error);
-                showError(errorElement, 'Erro ao conectar com o servidor.');
-            });
-        });
-
-        // Validação e envio do formulário de registro
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const phone = document.getElementById('registerPhone').value;
-            const documentId = document.getElementById('registerDocument').value;
-            const acceptTerms = document.getElementById('acceptTerms').checked;
-            const csrfToken = this.querySelector('input[name="csrf_token"]').value;
-            const errorElement = document.getElementById('registerError');
-            const successElement = document.getElementById('registerSuccess');
-            
-            hideError(errorElement);
-            hideError(successElement);
-            
-            if (!validateEmail(email)) {
-                showError(errorElement, 'Por favor, insira um email válido.');
-                return;
-            }
-            
-            if (password.length < 8 || !/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
-                showError(errorElement, 'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula e um número.');
-                return;
-            }
-            
-            if (!acceptTerms) {
-                showError(errorElement, 'Você deve aceitar os termos de uso e política de privacidade.');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('nome', name);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('telefone', phone);
-            formData.append('documento', documentId);
-            formData.append('aceitar_termos', 'on');
-            formData.append('csrf_token', csrfToken);
-            
-            fetch('registar.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showError(successElement, data.success);
-                    this.reset();
-                } else if (data.error) {
-                    showError(errorElement, data.error);
-                } else {
-                    showError(errorElement, 'Erro inesperado.');
-                }
-            })
-            .catch(() => {
-                showError(errorElement, 'Erro ao conectar com o servidor.');
-            });
-        });
-
-        // Funções auxiliares
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(String(email).toLowerCase());
-        }
-
-        function showError(element, message) {
-            if (element) {
-                element.textContent = message;
-                element.style.display = 'block';
-            }
-        }
-
-        function hideError(element) {
-            if (element) {
-                element.textContent = '';
-                element.style.display = 'none';
-            }
-        }
-
-        // Efeito de label flutuante
-        document.querySelectorAll('.input-group input').forEach(input => {
-            input.addEventListener('input', () => {
-                const label = input.previousElementSibling;
-                if (input.value.trim() !== '') {
-                    label.style.top = '-12px';
-                    label.style.fontSize = '12px';
-                    label.style.color = input.parentElement.parentElement.classList.contains('sign-up') ? 'var(--white)' : 'var(--primary-color)';
-                } else {
-                    label.style.top = '10px';
-                    label.style.fontSize = '16px';
-                    label.style.color = input.parentElement.parentElement.classList.contains('sign-up') ? 'rgba(255,255,255,0.7)' : 'var(--text-light)';
-                }
-            });
-        });
-    </script>
 </body>
 </html>

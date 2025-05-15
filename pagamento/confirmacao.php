@@ -23,7 +23,6 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION[
             </div>
           </div>');
 }
-
 $checkin = filter_var($_SESSION['checkin'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $checkout = filter_var($_SESSION['checkout'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -88,9 +87,9 @@ require_once('tcpdf/tcpdf.php');
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->SetCreator(SITE_NAME);
 $pdf->SetAuthor(SITE_NAME);
-$pdf->SetTitle('Comprovante de Reserva');
+$pdf->SetTitle('Comprovativo de Reserva');
 $pdf->SetSubject('Reserva ' . SITE_NAME);
-$pdf->SetKeywords('Reserva, ' . SITE_NAME . ', Comprovante');
+$pdf->SetKeywords('Reserva, ' . SITE_NAME . ', Comprovantivo');
 // Remover cabeçalho e rodapé padrões
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
@@ -101,7 +100,7 @@ $pdf->SetFont('helvetica', 'B', 22);
 $pdf->SetY(15);
 $pdf->Cell(0, 10, SITE_NAME, 0, 1, 'C');
 $pdf->SetFont('helvetica', '', 12);
-$pdf->Cell(0, 5, 'Comprovante de Reserva', 0, 1, 'C');
+$pdf->Cell(0, 5, 'Comprovativo de Reserva', 0, 1, 'C');
 $pdf->Line(10, 35, 200, 35);
 $pdf->SetY(45);
 // Conteúdo principal do PDF
@@ -251,7 +250,7 @@ try {
     </html>
     ';
     $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nIMPORTANTE: Traga este comprovativo quando chegar à Quinta.\n\nAtenciosamente,\nQuinta  Flores";
-    $mail->addStringAttachment($pdfContent, 'Comprovante_Reserva_'.$reserva_id.'.pdf');
+    $mail->addStringAttachment($pdfContent, 'Comprovativo da Reserva.pdf');
     $ical = "BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//".SITE_NAME."//Reserva//PT

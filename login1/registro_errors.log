@@ -1446,3 +1446,233 @@
     [csrf_token] => f37a3663fa2d5a46416ebea267da08da383af3ac818b109af2340c03f271d646
 )
 
+[15-May-2025 08:01:41 UTC] Início do processamento de registro
+[15-May-2025 08:01:42 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 234242424
+    [aceitar_termos] => on
+    [csrf_token] => 87168bea8e5fb001f528bfbcba7ddb831e52e06828cfdc15dad99f60e0115bd1
+)
+
+[15-May-2025 08:02:33 UTC] Início do processamento de registro
+[15-May-2025 08:02:33 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 234242424
+    [aceitar_termos] => on
+    [csrf_token] => 87168bea8e5fb001f528bfbcba7ddb831e52e06828cfdc15dad99f60e0115bd1
+)
+
+[15-May-2025 08:02:33 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[15-May-2025 08:02:33 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:33 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[15-May-2025 08:02:34 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Thu, 15 May 2025 08:02:33 +0000
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <t17pMPvNZc13028poSMQaRLq0ly1sA9rRHuEJQIY@localhost>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='verify.php'>Verificar Email</a></p>
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[15-May-2025 08:02:34 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747296157 ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:34 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[15-May-2025 08:02:34 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a1f57de100sm21662422f8f.2 - gsmtp
+
+[15-May-2025 08:02:34 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[15-May-2025 14:30:39 UTC] Início do processamento de registro
+[15-May-2025 14:30:40 UTC] POST recebido: Array
+(
+    [nome] => wgduya
+    [email] => teste@gmail.com
+    [password] => Testet1234
+    [telefone] => 99191919919191
+    [documento] => 1999999999999
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:30:40 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:30:47 UTC] Início do processamento de registro
+[15-May-2025 14:30:47 UTC] POST recebido: Array
+(
+    [nome] => wgduya
+    [email] => teste@gmail.com
+    [password] => Testet1234
+    [telefone] => 99191919919191
+    [documento] => 99
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:30:47 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:31:02 UTC] Início do processamento de registro
+[15-May-2025 14:31:02 UTC] POST recebido: Array
+(
+    [nome] => wgduya
+    [email] => teste@gmail.com
+    [password] => Testet1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:31:02 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:31:09 UTC] Início do processamento de registro
+[15-May-2025 14:31:09 UTC] POST recebido: Array
+(
+    [nome] => wgduya
+    [email] => teste@gmail.com
+    [password] => Testet1234
+    [telefone] => 919241123
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:31:09 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:31:16 UTC] Início do processamento de registro
+[15-May-2025 14:31:16 UTC] POST recebido: Array
+(
+    [nome] => testets
+    [email] => teste@gmail.com
+    [password] => Testet1234
+    [telefone] => 919241123
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:31:16 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:31:56 UTC] Início do processamento de registro
+[15-May-2025 14:31:56 UTC] POST recebido: Array
+(
+    [nome] => teste teste 
+    [email] => teste@gmail.com
+    [password] => Teste1234
+    [telefone] => 919241169
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:31:56 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 14:32:09 UTC] Início do processamento de registro
+[15-May-2025 14:32:09 UTC] POST recebido: Array
+(
+    [nome] => teste teste 
+    [email] => teste@gmail.com
+    [password] => Teste1234
+    [telefone] => (+351)919241169
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 2d85aa5438e4f6783e398bbd03af85882b45f96b51cbb3ae98139a86514f10ae
+)
+
+[15-May-2025 14:32:09 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[15-May-2025 15:42:31 UTC] Início do processamento de registro
+[15-May-2025 15:42:31 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 56fc194036edea7fd7374e0644bd3e2cdb0b98d1d889da4368efea7853183686
+)
+
+[15-May-2025 15:42:31 UTC] Telefone formatado: 919919919
+[15-May-2025 15:42:45 UTC] Início do processamento de registro
+[15-May-2025 15:42:45 UTC] POST recebido: Array
+(
+    [nome] => teste
+    [email] => teste@gmail.com
+    [password] => David1234
+    [telefone] => +351919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 56fc194036edea7fd7374e0644bd3e2cdb0b98d1d889da4368efea7853183686
+)
+
+[15-May-2025 15:42:45 UTC] Telefone formatado: +351919919919
+[15-May-2025 15:42:45 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1

@@ -90,6 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 <div style="display: flex; align-items: center; gap: 10px;">
     <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
     <h2>Adicionar um novo Hóspede</h2>

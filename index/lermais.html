@@ -2,17 +2,25 @@
 <html lang="pt" data-theme="light">
 <head>
     <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quinta Flores | Experiência Única em Ponte de Lima</title>
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" type="text/css" href="lermais.css">
     <link rel="stylesheet" type="text/css" href="chatbot.css">
 </head>
+
+
+
+
 <body>
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho/Header  -->
     <header class="header" id="header">
         <div class="nav__container">
             <div class="logo">
@@ -46,6 +54,12 @@
             </button>
         </div>
     </header>
+
+
+
+
+
+    
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">
@@ -57,6 +71,11 @@
             <i class="ri-arrow-down-s-line"></i>
         </a>
     </section>
+
+
+
+
+
     <!-- About Section -->
     <section class="section" id="about">
         <div class="section__container">
@@ -81,6 +100,9 @@
             </div>
         </div>
     </section>
+
+
+
     <!-- Accommodation Section -->
     <section class="section" id="accommodation" style="background-color: var(--gray-light);">
         <div class="section__container">
@@ -126,6 +148,9 @@
             </div>
         </div>
     </section>
+
+
+
     <!-- Activities Section -->
     <section class="section" id="activities">
         <div class="section__container">
@@ -159,6 +184,9 @@
             </div>
         </div>
     </section>
+
+
+
     <!-- Gallery Section -->
     <section class="section gallery-section" id="gallery">
         <div class="section__container">
@@ -200,6 +228,9 @@
             </div>
         </div>
     </section>
+
+
+
     <!-- Testimonials Section -->
     <section class="section" id="testimonials">
         <div class="section__container">
@@ -215,6 +246,9 @@
             </div>
         </div>
     </section>
+
+
+
     <!-- FAQ Section -->
     <section class="section" style="background-color: var(--gray-light);">
         <div class="section__container">
@@ -257,6 +291,10 @@
             </div>
         </div>
     </section>
+
+
+
+
     <!-- Location Section -->
     <section class="section">
         <div class="section__container">
@@ -301,6 +339,10 @@
             </div>
         </div>
     </section>
+
+
+
+
     <!-- Contact Section -->
     <section class="section contact-section" id="contact">
         <div class="section__container">
@@ -343,30 +385,83 @@
                     
                 </div>
                 <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
-  <form id="contactForm" action="send_message.php" method="POST">
-    <div class="form-group">
-        <label for="name" class="form-label">Nome</label>
-        <input type="text" id="name" name="name" class="form-input" required>
-    </div>
-    <div class="form-group">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" class="form-input" required>
-    </div>
-    <div class="form-group">
-        <label for="subject" class="form-label">Assunto</label>
-        <input type="text" id="subject" name="subject" class="form-input" required>
-    </div>
-    <div class="form-group">
-        <label for="message" class="form-label">Mensagem</label>
-        <textarea id="message" name="message" class="form-textarea" required></textarea>
-    </div>
-    <button type="submit" class="form-button">Enviar Mensagem</button>
+<form id="contactForm" action="send_message.php" method="POST">
+  <div class="form-group">
+    <label for="name" class="form-label">
+      Nome <i class="ri-user-line"></i>
+    </label>
+    <input 
+      type="text" 
+      id="name" 
+      name="name" 
+      class="form-input" 
+      required 
+      placeholder="Seu nome completo" 
+      autocomplete="name" 
+      title="Introduza o seu nome completo"
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="email" class="form-label">
+      Email <i class="ri-mail-line"></i>
+    </label>
+    <input 
+      type="email" 
+      id="email" 
+      name="email" 
+      class="form-input" 
+      required 
+      placeholder="seuemail@gmail.com" 
+      autocomplete="email" 
+      title="Introduza o seu email, ex: exemplo@gmail.com"
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="subject" class="form-label">
+      Assunto <i class="ri-pencil-line"></i>
+    </label>
+    <input 
+      type="text" 
+      id="subject" 
+      name="subject" 
+      class="form-input" 
+      required 
+      placeholder="Resumo do assunto" 
+      title="Introduza o assunto da sua mensagem"
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="message" class="form-label">
+      Mensagem <i class="ri-message-line"></i>
+    </label>
+    <textarea 
+      id="message" 
+      name="message" 
+      class="form-textarea" 
+      required 
+      placeholder="Escreva a sua mensagem aqui" 
+      title="Introduza a sua mensagem"
+      rows="5"
+    ></textarea>
+  </div>
+
+  <button type="submit" class="form-button">Enviar Mensagem</button>
 </form>
+
+
 
                 </div>
             </div>
         </div>
     </section>
+
+
+
+
+
 <!-- Chatbot  -->
 <div class="chatbot-container">
     <div class="chatbot-button" id="chatbotButton">
@@ -396,20 +491,36 @@
                 <i class="ri-send-plane-fill"></i>
             </button>
         </div>
-        <div class="chatbot-suggestions">
-            <button class="suggestion-button">Reservas</button>
-            <button class="suggestion-button">Acomodações</button>
-            <button class="suggestion-button">Serviços</button>
-            <button class="suggestion-button">Localização</button>
-            <button class="suggestion-button">Atividades</button>
-            <button class="suggestion-button">Preços</button>
-        </div>
+<div class="chatbot-suggestions">
+  <button class="suggestion-button">
+    <i class="fa-solid fa-calendar-check"></i> Reservas
+  </button>
+  <button class="suggestion-button">
+    <i class="fa-solid fa-bed"></i> Acomodações
+  </button>
+  <button class="suggestion-button">
+    <i class="fa-solid fa-bell-concierge"></i> Serviços
+  </button>
+  <button class="suggestion-button">
+    <i class="fa-solid fa-map-location-dot"></i> Localização
+  </button>
+  <button class="suggestion-button">
+    <i class="fa-solid fa-person-hiking"></i> Atividades
+  </button>
+  <button class="suggestion-button">
+    <i class="fa-solid fa-euro-sign"></i> Preços
+  </button>
+</div>
+
         <div class="chatbot-footer">
             <span>Quinta Flores - Sentindo-se em casa, no coração do Minho</span>
         </div>
     </div>
-</div>       
-<!-- Footer -->
+</div> 
+
+
+
+<!-- Rodapé/Footer -->
 <footer class="footer">
     <div class="section__container footer__container">
   

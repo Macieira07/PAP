@@ -866,3 +866,22 @@
         display: block;
     }
 }
+
+
+
+
+
+
+.form-label {
+  font-weight: 600;
+  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; /* espaço entre texto e ícone */
+  font-size: 16px;
+}
+
+.form-label i {
+  font-size: 18px;
+  color: var(--primary-color);
+}

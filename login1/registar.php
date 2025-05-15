@@ -55,7 +55,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim(htmlspecialchars($_POST['nome'], ENT_QUOTES));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $senha = $_POST['password'];
-    $telefone = preg_replace('/[^0-9]/', '', $_POST['telefone']);
+    // Preserva o sinal de + apenas no início do número
+$telefone = $_POST['telefone'];
+if (substr($telefone, 0, 1) === '+') {
+    // Remove todos os caracteres não numéricos, exceto o + inicial
+    $telefone = '+' . preg_replace('/[^0-9]/', '', substr($telefone, 1));
+} else {
+    // Remove todos os caracteres não numéricos
+    $telefone = preg_replace('/[^0-9]/', '', $telefone);
+}
+
+// Debug (opcional - remova em produção)
+error_log("Telefone formatado: " . $telefone);
     $documento = trim(htmlspecialchars($_POST['documento'], ENT_QUOTES));
     $token = bin2hex(random_bytes(32));
     $token_expira = date('Y-m-d H:i:s', strtotime('+1 day'));
