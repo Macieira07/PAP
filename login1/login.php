@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // Função para registrar logs no arquivo de erro do PHP
 function debug_log($message, $data = null) {
     $log_message = date('[Y-m-d H:i:s]') . " - " . $message;
@@ -9,7 +8,6 @@ function debug_log($message, $data = null) {
     }
     error_log($log_message);
 }
-
 // Evita que qualquer saída seja enviada antes dos cabeçalhos
 ob_start();
 

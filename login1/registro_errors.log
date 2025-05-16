@@ -1676,3 +1676,530 @@
 
 [15-May-2025 15:42:45 UTC] Telefone formatado: +351919919919
 [15-May-2025 15:42:45 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[16-May-2025 07:26:55 UTC] Início do processamento de registro
+[16-May-2025 07:26:56 UTC] POST recebido: Array
+(
+    [nome] => teste teste
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919241169
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 19e4979b6271e3b5b2a361346214207d03ea89edd0f00dcfe790112fe8d8c8db
+)
+
+[16-May-2025 07:26:56 UTC] Telefone formatado: 919241169
+[16-May-2025 07:26:56 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[16-May-2025 07:52:10 UTC] Início do processamento de registro
+[16-May-2025 07:52:10 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 07:52:11 UTC] Erro no registro: Incorrect integer value: 'Não' for column 'H_verificado_email' at row 1
+[16-May-2025 07:54:29 UTC] Início do processamento de registro
+[16-May-2025 07:54:29 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 07:54:29 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[16-May-2025 07:54:29 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:29 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[16-May-2025 07:54:30 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:30 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[16-May-2025 07:54:31 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Fri, 16 May 2025 07:54:29 +0000
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <bXkcJZ8S0n1NpMWJXzLoW05tI9AUER4LTToj2fTFBZM@localhost>
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/PAP/login/verify.php?token=917adec2466e2232e329542c11501b81a1c1c7c1f888584d4753d8cd2d79f3c3'>Verificar Email</a></p>
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[16-May-2025 07:54:31 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747382075 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:31 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[16-May-2025 07:54:31 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-442fd59704esm23758865e9.36 - gsmtp
+
+[16-May-2025 07:54:31 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[16-May-2025 07:57:59 UTC] Início do processamento de registro
+[16-May-2025 07:58:00 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 07:58:00 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:58:00 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[16-May-2025 07:58:00 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:58:01 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[16-May-2025 07:58:01 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Fri, 16 May 2025 07:58:00 +0000
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <h4Kk9RQU2y2kJECpVB2TOMp3FjKbEQ0LgXw8NbhSPk@localhost>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/login/verify.php?token=37cce7094cb1df8b157dbb4896fa848427455ecb0e3376f24d83300f67684c8e'>Verificar Email</a></p>
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[16-May-2025 07:58:01 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747382285 ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:01 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[16-May-2025 07:58:02 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a35ca88957sm1975281f8f.75 - gsmtp
+
+[16-May-2025 07:58:02 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[16-May-2025 07:59:43 UTC] Início do processamento de registro
+[16-May-2025 07:59:43 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 07:59:43 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 07:59:43 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[16-May-2025 07:59:43 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[16-May-2025 07:59:44 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Fri, 16 May 2025 07:59:43 +0000
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <K07M3R9dULaWJpxA3nbBtSKNSR7i6hthLvCW1hefGpM@localhost>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/login/verify.php?token=c738ba2b1d126cf9c2f2c3471063a0ba23d689eefc111838dd97fd48a4249566'>Verificar Email</a></p>
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[16-May-2025 07:59:44 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747382388 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:44 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[16-May-2025 07:59:44 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-44300160fd0sm9051325e9.4 - gsmtp
+
+[16-May-2025 07:59:44 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[16-May-2025 08:01:41 UTC] Início do processamento de registro
+[16-May-2025 08:01:41 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 08:01:41 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[16-May-2025 08:01:41 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:41 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 08:01:41 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 08:01:41 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[16-May-2025 08:01:41 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[16-May-2025 08:01:42 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Fri, 16 May 2025 08:01:41 +0000
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <AxOZmsep6nE2lBs8iGH5taHPYiMMqgxawgvr5GsUUg@localhost>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/login1/verify.php?token=e9e9b2353f0108d5017c3dc379de5c4de7c70898f42d33b3eccf043ba64fae76'>Verificar Email</a></p>
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 08:01:42 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[16-May-2025 08:01:43 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747382506 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:43 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[16-May-2025 08:01:43 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-442f33804d9sm96629585e9.12 - gsmtp
+
+[16-May-2025 08:01:43 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[16-May-2025 08:03:54 UTC] Início do processamento de registro
+[16-May-2025 08:03:54 UTC] POST recebido: Array
+(
+    [nome] => David Flores Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [telefone] => 919919919
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => d34e3f1775a8c7397759e194675bacc755d72d4254e9477a94d4c8ba3ef9e798
+)
+
+[16-May-2025 08:03:54 UTC] Tentando enviar email para davidfloresmacieira@gmail.com...
+[16-May-2025 08:03:54 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:54 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 08:03:54 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 08:03:54 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[16-May-2025 08:03:54 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<davidfloresmacieira@gmail.com>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[16-May-2025 08:03:55 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Fri, 16 May 2025 08:03:54 +0000
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: To: davidfloresmacieira@gmail.com
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <WAmNd9DY3N8csKrUQfJEVcwfIW69mm2oDF9T3H5E@localhost>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/login1/verify.php?token=5d2520a0d359b9b9e45553178f79a2840e94c78b3d5f01c05bde8e0a56d211d0'>Verificar Email</a></p>
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[16-May-2025 08:03:55 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[16-May-2025 08:03:57 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1747382640 ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:57 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[16-May-2025 08:03:57 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
+
+[16-May-2025 08:03:57 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com

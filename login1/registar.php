@@ -18,7 +18,7 @@ session_set_cookie_params([
 session_start();
 
 // Inclui arquivos necessários
-require 'email_functions.php';
+require_once 'email_functions.php';
 require_once '../conexao.php';
 
 // Verifica conexão com o banco
@@ -41,7 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Campos obrigatórios
     $requiredFields = ['nome', 'email', 'password', 'telefone', 'documento'];
-    $missingFields = array_diff($requiredFields, array_keys(array_filter($_POST)));
+    $missingFields = [];
+    
+    foreach ($requiredFields as $field) {
+        if (!isset($_POST[$field]) || empty($_POST[$field])) {
+            $missingFields[] = $field;
+        }
+    }
     
     if (!empty($missingFields)) {
         die(json_encode(['error' => 'Por favor, preencha todos os campos obrigatórios: ' . implode(', ', $missingFields)]));
@@ -55,18 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim(htmlspecialchars($_POST['nome'], ENT_QUOTES));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $senha = $_POST['password'];
-    // Preserva o sinal de + apenas no início do número
-$telefone = $_POST['telefone'];
-if (substr($telefone, 0, 1) === '+') {
-    // Remove todos os caracteres não numéricos, exceto o + inicial
-    $telefone = '+' . preg_replace('/[^0-9]/', '', substr($telefone, 1));
-} else {
-    // Remove todos os caracteres não numéricos
-    $telefone = preg_replace('/[^0-9]/', '', $telefone);
-}
-
-// Debug (opcional - remova em produção)
-error_log("Telefone formatado: " . $telefone);
+    
+    // Formatação do telefone
+    $telefone = $_POST['telefone'];
+    
+    // Preserva o formato internacional do telefone
+    if (strpos($telefone, '+') !== 0) {
+        // Se não tem +, considera que é um número local e adiciona o código do país (Portugal por padrão)
+        $telefone = '+351' . preg_replace('/[^0-9]/', '', $telefone);
+    }
+    
     $documento = trim(htmlspecialchars($_POST['documento'], ENT_QUOTES));
     $token = bin2hex(random_bytes(32));
     $token_expira = date('Y-m-d H:i:s', strtotime('+1 day'));
@@ -83,6 +87,12 @@ error_log("Telefone formatado: " . $telefone);
     // Verifica se email já existe
     $sql_check = "SELECT H_id_hospede FROM hospedes WHERE H_email = ?";
     $stmt_check = $conexao->prepare($sql_check);
+    
+    if (!$stmt_check) {
+        error_log("Erro ao preparar consulta de verificação: " . $conexao->error);
+        die(json_encode(['error' => 'Erro no sistema. Por favor, tente novamente mais tarde.']));
+    }
+    
     $stmt_check->bind_param("s", $email);
     $stmt_check->execute();
     
@@ -97,11 +107,12 @@ error_log("Telefone formatado: " . $telefone);
         $conexao->begin_transaction();
         
         // Query atualizada para a estrutura da tabela
-        $sql = "INSERT INTO hospedes (
-            H_nome, H_email, H_senha, H_telefone, 
-            H_documento_ident, H_token_verificacao, H_token_expira,
-            H_verificado_email, H_aceitou_termos_uso
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Não', 'Sim')";
+       $sql = "INSERT INTO hospedes (
+    H_nome, H_email, H_senha, H_telefone, 
+    H_documento_ident, H_token_verificacao, H_token_expira,
+    H_verificado_email, H_aceitou_termos_uso
+) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)";
+
         
         $stmt = $conexao->prepare($sql);
         if (!$stmt) {
@@ -118,27 +129,37 @@ error_log("Telefone formatado: " . $telefone);
             throw new Exception("Erro ao executar a consulta: " . $stmt->error);
         }
         
-        // Link de verificação
-        $verification_link = "http://" . $_SERVER['HTTP_HOST'] . "/PAP/login/verify.php?token=$token";
+        // Link de verificação CORRETO com o token
+        $verification_url = "http://" . $_SERVER['HTTP_HOST'] . "/login1/verify.php?token=" . urlencode($token);
         
         // Email de verificação
         $subject = "Verifique seu email - Quinta Flores";
         $body = "<h2>Bem-vindo à Quinta Flores!</h2>
                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
-                <p><a href='verify.php'>Verificar Email</a></p>";
+                <p><a href='" . $verification_url . "'>Verificar Email</a></p>";
         
         $conexao->commit();
         
-        if (enviarEmail($email, $subject, $body)) {
+        // Tentativa de enviar email
+        $email_sent = false;
+        try {
+            $email_sent = enviarEmail($email, $subject, $body);
+        } catch (Exception $e) {
+            error_log("Erro ao enviar email: " . $e->getMessage());
+        }
+        
+        if ($email_sent) {
             echo json_encode(['success' => 'Registro bem-sucedido! Verifique seu email para confirmar a conta.']);
         } else {
-            echo json_encode(['warning' => 'Registro concluído, mas houve um problema ao enviar o email de verificação.']);
+            echo json_encode([
+                'warning' => 'Registro concluído, mas houve um problema ao enviar o email de verificação. Por favor, entre em contato com o suporte.'
+            ]);
         }
         
     } catch (Exception $e) {
         $conexao->rollback();
         error_log("Erro no registro: " . $e->getMessage());
-        die(json_encode(['error' => 'Ocorreu um erro durante o registro. Por favor, tente novamente.']));
+        die(json_encode(['error' => 'Ocorreu um erro durante o registro: ' . $e->getMessage()]));
     }
 } else {
     header("Location: pagina_login.php");

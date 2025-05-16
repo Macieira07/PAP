@@ -93,7 +93,6 @@ $csrf_token = $_SESSION['csrf_token'];
             <option value="+240">Guiné Equatorial (+240)</option>
             <option value="+670">Timor-Leste (+670)</option>
             <option value="+853">Macau (+853)</option>
-            <!-- Mais países podem ser adicionados aqui -->
         </select>
         <i class="fas fa-phone"></i>
         <input type="tel" id="registerPhone" name="telefone" class="form-control phone-with-code" placeholder="Seu número" required>

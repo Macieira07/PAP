@@ -275,7 +275,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
 <body>
     <div class="container">
         <h1 class="fade-in">Pagamento</h1>
-        
         <div class="progress-steps">
             <div class="progress-step completed">
                 <span>Datas</span>
@@ -290,7 +289,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                 <span>Confirmação</span>
             </div>
         </div>
-        
         <?php if (!empty($mensagem_erro)): ?>
             <div class="error-message" style="display: block;">
                 <i class="fas fa-exclamation-circle"></i> <?= $mensagem_erro ?>
@@ -334,7 +332,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
         <div class="preco-total">
             Total a Pagar: €<?= number_format($preco_total, 2, ',', '.') ?>
         </div>
-        
         <form action="pagina3.php" method="POST" id="pagamentoForm" class="fade-in" enctype="multipart/form-data">
             <h3><i class="fas fa-credit-card"></i> Método de Pagamento</h3>
             
@@ -347,7 +344,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
                         <span>Cartão de Crédito</span>
                     </label>
                 </div>
-                
                 <div class="metodo-option">
                     <input type="radio" id="mbway_radio" name="pagamento" value="MB WAY" 
                            <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'MB WAY') ? 'checked' : '' ?>>

@@ -283,7 +283,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <button type="submit">Enviar Link de Recuperação</button>
         </form>
-        
         <div class="text-center mt-3">
             <a href="login.php">Voltar para o login</a>
         </div>
