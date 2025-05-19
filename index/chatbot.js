@@ -7,6 +7,27 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const chatbotMessages = document.getElementById('chatbotMessages');
         const suggestionButtons = document.querySelectorAll('.suggestion-button');
+
+
+        
+        // Adicione após a declaração de chatbotMessages
+const feedbackButtons = document.createElement('div');
+feedbackButtons.className = 'message-feedback';
+feedbackButtons.innerHTML = '<button class="feedback-btn positive"><i class="ri-thumb-up-line"></i></button><button class="feedback-btn negative"><i class="ri-thumb-down-line"></i></button>';
+
+// Na função addMessage, adicione após contentDiv
+if (sender === 'bot') {
+  const feedbackClone = feedbackButtons.cloneNode(true);
+  contentDiv.appendChild(feedbackClone);
+  
+  // Adicione event listeners para os botões de feedback
+  feedbackClone.querySelectorAll('.feedback-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.classList.add('active');
+      // Aqui você pode adicionar código para enviar o feedback
+    });
+  });
+}
         
         // Banco de dados de respostas para o chatbot
         const responses = {

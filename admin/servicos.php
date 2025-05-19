@@ -41,3 +41,32 @@ $resultado = $conexao->query("SELECT * FROM servicos");
 </body>
 <a href="admin.php">← Voltar</a>
 </html>
+
+<?php
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $valor = $conexao->query("SELECT S_preco FROM servicos WHERE S_id_servico = $id")->fetch_assoc()['S_preco'];
+    $saldo = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1")->fetch_assoc()['saldo'];
+
+    if ($saldo >= $valor) {
+        // Atualizar saldo
+        $conexao->query("UPDATE conta_virtual SET saldo = saldo - $valor WHERE id = 1");
+
+        // Registrar movimentação
+        $descricao = "Pagamento de serviço #$id";
+        $conexao->query("INSERT INTO movimentacoes (tipo, descricao, valor, origem, origem_id)
+                         VALUES ('despesa', '$descricao', $valor, 'servico', $id)");
+
+        // Registrar receita
+        $conexao->query("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id)
+                         VALUES ('Receita de serviço #$id', $valor, NOW(), 'Serviço', 'servico', $id)");
+
+        // Marcar como pago
+        $conexao->query("UPDATE servicos SET S_pago = 1 WHERE S_id_servico = $id");
+
+        header('Location: despesas.php?msg=Serviço pago com sucesso');
+    } else {
+        echo "Saldo insuficiente.";
+    }
+}
+?>

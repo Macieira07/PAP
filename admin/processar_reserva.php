@@ -5,6 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die('Método inválido');
 }
 
+// Verificar se o formulário já foi processado
+if (isset($_SESSION['reserva_processada']) && $_SESSION['reserva_processada'] === true) {
+    header('Location: reservas.php');
+    exit();
+}
+
 // Capturar dados
 $data_checkin = $_POST['data_checkin'];
 $data_checkout = $_POST['data_checkout'];
@@ -52,5 +58,9 @@ $stmt->execute();
 $reserva_id = $stmt->insert_id;
 $stmt->close();
 
+// Marcar como processado para evitar duplicação
+$_SESSION['reserva_processada'] = true;
+
+// Redirecionar para a página de sucesso
 header("Location: reserva_sucesso.php?id=$reserva_id");
 exit;

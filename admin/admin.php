@@ -71,7 +71,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             padding: 20px;
         }
 
-        /* Cabeçalho */
+        /* Cabeçalho - Nova estrutura com 3 colunas */
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -81,10 +81,32 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             border-bottom: 1px solid #e0e0e0;
         }
 
-        .admin-header h1 {
+        /* Três seções do header: esquerda (perfil), meio (título) e direita (saldo e notificações) */
+        .header-left {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-center h1 {
             color: #2e5090;
             margin: 0;
             font-size: 28px;
+            text-align: center;
+        }
+
+        .header-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
         }
 
         /* Conta do Usuário - Agora à esquerda */
@@ -93,7 +115,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             display: flex;
             align-items: center;
             gap: 10px;
-            order: 1;
         }
 
         .conta-avatar {
@@ -108,7 +129,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             display: none;
             position: absolute;
             top: 50px;
-            left: 0; /* Alterado para left em vez de right */
+            left: 0;
             background: white;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
@@ -138,57 +159,64 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
         .conta-dropdown a:hover {
             background-color: #f0f4ff;
         }
-        /* Saldo - Estilo mais formal e sério */
-.saldo-disponivel {
-    border: 1px solid #e0e0e0;
-    background-color: #f8f9fa;
-    padding: 10px 15px;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 14px;
-    order: 2;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    min-width: 120px;
-}
 
-.indicator-title {
-    font-size: 12px;
-    color: #505050;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
+        /* Saldo - Design simplificado */
+        .saldo-disponivel {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
 
-.indicator-value {
-    font-size: 16px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 3px;
-    display: inline-block;
-}
+        .saldo-valor {
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            font-weight: 600;
+        }
 
-.saldo-positivo {
-    color: #006E33;
-    background-color: #E6F4EA;
-    border-left: 3px solid #0D8843;
-}
+        .saldo-positivo {
+            color: #28a745;
+        }
 
-.saldo-negativo {
-    color: #AF1C1C;
-    background-color: #FDECEA;
-    border-left: 3px solid #D93025;
-}
+        .saldo-negativo {
+            color: #dc3545;
+        }
 
-.saldo-neutro {
-    color: #915D10;
-    background-color: #FEF7E0;
-    border-left: 3px solid #F29900;
-}
+        /* Notificações */
+        .icone-notificacao {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
+        .icone-notificacao img {
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
 
+        .icone-notificacao:hover img {
+            opacity: 1;
+        }
+
+        .contador-notificacoes {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-weight: bold;
+        }
 
         /* Menu de Cards */
         .menu-cards {
@@ -233,7 +261,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             font-weight: 600;
         }
 
-        /* Notificações - Agora à direita */
+        /* Container de Notificações */
         .notificacoes-container {
             position: fixed;
             top: 70px;
@@ -350,61 +378,20 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             font-size: 14px;
         }
 
-        .icone-notificacao {
-            position: relative;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            order: 3;
-        }
-
-        .icone-notificacao img {
-            width: 24px;
-            height: 24px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .icone-notificacao:hover img {
-            opacity: 1;
-        }
-
-        .contador-notificacoes {
-            background-color: #dc3545;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            font-weight: bold;
-        }
-
-        /* Barra de Ações - Nova organização */
-        .acoes-superiores {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
         /* Responsividade */
         @media (max-width: 768px) {
             .admin-header {
                 flex-direction: column;
-                align-items: flex-start;
                 gap: 15px;
             }
             
-            .acoes-superiores {
+            .header-left, .header-center, .header-right {
+                justify-content: center;
                 width: 100%;
-                justify-content: space-between;
-                flex-direction: row;
+            }
+            
+            .header-center {
+                order: -1; /* Posicionar o título no topo em telas menores */
             }
             
             .menu-cards {
@@ -422,9 +409,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 grid-template-columns: 1fr;
             }
             
-            .acoes-superiores {
+            .header-right {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
                 gap: 10px;
             }
         }
@@ -434,10 +421,8 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
 <body>
     <div class="admin-container">
         <div class="admin-header">
-            <h1>Painel de Administração</h1>
-            
-            <div class="acoes-superiores">
-                <!-- Conta do Usuário - Agora à esquerda -->
+            <!-- Seção Esquerda - Perfil do Usuário -->
+            <div class="header-left">
                 <div class="conta-usuario">
                     <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Conta" class="conta-avatar">
                     <div class="conta-dropdown">
@@ -446,16 +431,24 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                         <a href="../login1/pagina_login.php">Terminar Sessão</a>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Seção Central - Título -->
+            <div class="header-center">
+                <h1>Painel de Administração</h1>
+            </div>
+            
+            <!-- Seção Direita - Saldo e Notificações -->
+            <div class="header-right">
+                <!-- Saldo Simplificado -->
+                <div class="saldo-disponivel">
+                    Saldo: 
+                    <span class="saldo-valor <?= $saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'; ?>">
+                        €<?= number_format($saldoAtual, 2, ',', '.'); ?>
+                    </span>
+                </div>
                 
-                <!-- Saldo Disponível - Agora no meio -->
-<div class="saldo-disponivel">
-    <div class="indicator-title">Saldo Atual</div>
-    <div class="indicator-value <?= $saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'; ?>">
-        €<?= number_format($saldoAtual, 2, ',', '.'); ?>
-    </div>
-</div>
-                
-                <!-- Ícone de Notificações - Agora à direita -->
+                <!-- Ícone de Notificações -->
                 <div class="icone-notificacao" onclick="mostrarNotificacoes()">
                     <img src="https://cdn-icons-png.flaticon.com/512/565/565422.png" alt="Notificações">
                     <?php if ($total_notificacoes > 0): ?>
@@ -495,13 +488,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Manutenções">
                 <h3>Gerir Manutenções</h3>
             </a>
-            <a class="card-opcao" href="receitas.php">
+            <a class="card-opcao" href="listar_receitas.php">
                 <img src="https://img.icons8.com/?size=100&id=24836&format=png&color=000000" alt="Receitas">
                 <h3>Gerir Receitas</h3>
-            </a>
-            <a class="card-opcao" href="relatorio_gastos_ganhos.php">
-                <img src="https://img.icons8.com/?size=100&id=57714&format=png&color=000000" alt="Relatórios">
-                <h3>Relatório Ganhos vs Gastos</h3>
             </a>
         </div>
     </div>

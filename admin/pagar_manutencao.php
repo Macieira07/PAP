@@ -15,12 +15,16 @@ if (isset($_GET['id'])) {
     if ($saldo >= $valor) {
         // Atualizar saldo
         $conexao->query("UPDATE conta_virtual SET saldo = saldo - $valor WHERE id = 1");
-        
+
         // Registrar movimentação
         $descricao = "Pagamento de manutenção #$id";
         $conexao->query("INSERT INTO movimentacoes (tipo, descricao, valor, origem, origem_id)
                          VALUES ('despesa', '$descricao', $valor, 'manutencao', $id)");
-        
+
+        // Registrar receita
+        $conexao->query("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id)
+                         VALUES ('Receita de manutenção #$id', $valor, NOW(), 'Manutenção', 'manutencao', $id)");
+
         // Marcar como pago
         $conexao->query("UPDATE manutencao SET M_pago = 1 WHERE M_id_manutencao = $id");
         

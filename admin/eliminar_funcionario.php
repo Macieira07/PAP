@@ -4,16 +4,21 @@ require '../conexao.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
+    // Excluindo registros dependentes na tabela turnos
+    $stmt_turnos = $conexao->prepare("DELETE FROM turnos WHERE F_id_funcionario=?");
+    $stmt_turnos->bind_param("i", $id);
+    $stmt_turnos->execute();
+
     // Excluindo registros dependentes na tabela ferias_ausencias
-    $stmt1 = $conexao->prepare("DELETE FROM ferias_ausencias WHERE F_id_funcionario=?");
-    $stmt1->bind_param("i", $id);
-    $stmt1->execute();
+    $stmt_ferias = $conexao->prepare("DELETE FROM ferias_ausencias WHERE F_id_funcionario=?");
+    $stmt_ferias->bind_param("i", $id);
+    $stmt_ferias->execute();
 
     // Preparando a consulta para excluir o funcionário
-    $stmt2 = $conexao->prepare("DELETE FROM funcionarios WHERE F_id_funcionario=?");
-    $stmt2->bind_param("i", $id);
+    $stmt_funcionario = $conexao->prepare("DELETE FROM funcionarios WHERE F_id_funcionario=?");
+    $stmt_funcionario->bind_param("i", $id);
     
-    if ($stmt2->execute()) {
+    if ($stmt_funcionario->execute()) {
         // Mensagem de sucesso
         $mensagem = "Funcionário excluído com sucesso!";
         $tipo = "sucesso";  // Sucesso

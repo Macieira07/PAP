@@ -78,6 +78,17 @@ if ($resultado_ferias->num_rows > 0) {
     $data_fim_ausencia = "";
 }
 
+// Buscar o turno atual do funcionário
+$stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario = ?");
+$stmt_turno->bind_param("i", $id);
+$stmt_turno->execute();
+$resultado_turno = $stmt_turno->get_result();
+$turno = $resultado_turno->fetch_assoc();
+
+// Garantir que os valores de horário estejam definidos
+$horario_inicio = $turno['T_inicio'] ?? '';
+$horario_fim = $turno['T_fim'] ?? '';
+
 // Verificar se o formulário de férias foi enviado
 if (isset($_POST['atualizar_ferias'])) {
     $tipo_ausencia = $_POST['tipo_ausencia'];
@@ -111,6 +122,7 @@ if (isset($_POST['atualizar_ferias'])) {
 
     <!-- Formulário de Edição de Funcionário -->
     <form method="post">
+        <!-- Dados do Funcionário -->
         Nome: <input type="text" name="nome" value="<?= $f['F_nome'] ?>" required><br><br>
         Email: <input type="email" name="email" value="<?= $f['F_email'] ?>" required><br><br>
         Senha: <input type="password" name="senha"><br><br> <!-- A senha agora é opcional para edição -->
@@ -123,6 +135,14 @@ if (isset($_POST['atualizar_ferias'])) {
             <option value="contabilista" <?= $f['F_cargo'] == 'contabilista' ? 'selected' : '' ?>>Contabilista</option>
         </select><br><br>
         Telefone: <input type="text" name="telefone" value="<?= $f['F_telefone'] ?>"><br><br>
+
+        <!-- Dados do Turno -->
+        <h3>Turno</h3>
+        <label for="horario_inicio">Horário de Início:</label>
+        <input type="time" id="horario_inicio" name="horario_inicio" value="<?= $horario_inicio ?>" required><br><br>
+
+        <label for="horario_fim">Horário de Fim:</label>
+        <input type="time" id="horario_fim" name="horario_fim" value="<?= $horario_fim ?>" required><br><br>
 
         <button type="submit">Atualizar Funcionário</button>
     </form>
@@ -146,3 +166,57 @@ if (isset($_POST['atualizar_ferias'])) {
     <?php if (isset($erro)) { echo "<p style='color: red;'>$erro</p>"; } ?>
 </body>
 </html>
+
+<?php
+// Processar o formulário de edição
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Atualizar funcionário
+    if (!empty($nome) && !empty($email)) {
+        // Se a senha não foi informada, manter a senha atual
+        if (empty($senha)) {
+            $stmt = $conexao->prepare("UPDATE funcionarios SET F_nome=?, F_email=?, F_cargo=?, F_telefone=? WHERE F_id_funcionario=?");
+            $stmt->bind_param("ssssi", $nome, $email, $cargo, $telefone, $id);
+            $stmt->execute();
+        } else {
+            $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+            $stmt = $conexao->prepare("UPDATE funcionarios SET F_nome=?, F_email=?, F_senha=?, F_cargo=?, F_telefone=? WHERE F_id_funcionario=?");
+            $stmt->bind_param("sssssi", $nome, $email, $senha_hash, $cargo, $telefone, $id);
+            $stmt->execute();
+        }
+    }
+
+    // Atualizar turno
+    if (isset($_POST['horario_inicio']) && isset($_POST['horario_fim'])) {
+        $horario_inicio = $_POST['horario_inicio'];
+        $horario_fim = $_POST['horario_fim'];
+
+        // Validar a duração do turno
+        $inicio = new DateTime($horario_inicio);
+        $fim = new DateTime($horario_fim);
+        $intervalo = $inicio->diff($fim);
+        $horas = $intervalo->h + ($intervalo->days * 24);
+
+        if ($horas != 8) {
+            $erro = "O turno deve ter exatamente 8 horas.";
+        } else {
+            if ($turno) {
+                // Atualizar turno existente
+                $stmt_turno_update = $conexao->prepare("UPDATE turnos SET T_inicio = ?, T_fim = ? WHERE F_id_funcionario = ?");
+                $stmt_turno_update->bind_param("ssi", $horario_inicio, $horario_fim, $id);
+                $stmt_turno_update->execute();
+            } else {
+                // Inserir novo turno
+                $stmt_turno_insert = $conexao->prepare("INSERT INTO turnos (F_id_funcionario, T_inicio, T_fim) VALUES (?, ?, ?)");
+                $stmt_turno_insert->bind_param("iss", $id, $horario_inicio, $horario_fim);
+                $stmt_turno_insert->execute();
+            }
+        }
+    }
+
+    // Redirecionar após a atualização
+    if (!isset($erro)) {
+        header("Location: funcionarios.php?mensagem=Funcionário atualizado com sucesso!&tipo=sucesso");
+        exit;
+    }
+}
+?>

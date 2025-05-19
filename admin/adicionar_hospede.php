@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefone = $_POST['telefone'];
     $documento = $_POST['documento'];
     $morada = $_POST['morada'];
-    $verificado = $_POST['verificado'];
-    $aceitou = $_POST['aceitou'];
+    $verificado = ($_POST['verificado'] === 'Sim') ? 1 : 0;
+    $aceitou = ($_POST['aceitou'] === 'Sim') ? 1 : 0;
     
     // Coletar as opções de notas selecionadas
     $notas = [];
@@ -83,7 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: hospedes.php?sucesso=Hóspede adicionado com sucesso! Código de verificação enviado.");
         exit;
     } else {
-        header("Location: hospedes.php?erro=Erro ao adicionar hóspede.");
+        header("Locatio
+        n: hospedes.php?erro=Erro ao adicionar hóspede.");
         exit;
     }
 }
@@ -156,3 +157,5 @@ function gerarSenha() {
 }
 
 </script>
+
+<!-- Certifique-se de que a coluna H_valor_notas existe na tabela hospedes no banco de dados. -->

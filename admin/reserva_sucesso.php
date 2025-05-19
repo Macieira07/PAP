@@ -21,6 +21,28 @@ if ($res->num_rows === 0) {
 $r = $res->fetch_assoc();
 $stmt->close();
 
+// Registrar receita
+$query = "INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id)
+          VALUES (?, ?, NOW(), ?, ?, ?)";
+$stmt = $conexao->prepare($query);
+if (!$stmt) {
+    die("Erro ao preparar consulta: " . $conexao->error);
+}
+
+$descricao = "Receita de reserva #" . $r['R_id_reserva'];
+$valor = $r['R_preco_total'];
+$tipo = "Reserva";
+$origem = "reserva";
+$origem_id = $r['R_id_reserva'];
+
+$stmt->bind_param("sdssi", $descricao, $valor, $tipo, $origem, $origem_id);
+
+if (!$stmt->execute()) {
+    die("Erro ao registrar receita: " . $stmt->error);
+}
+
+$stmt->close();
+
 $noites = (new DateTime($r['R_data_checkout']))->diff(new DateTime($r['R_data_checkin']))->days;
 ?>
 <!DOCTYPE html>
