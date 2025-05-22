@@ -5,15 +5,14 @@ $id = $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipo = $_POST['tipo'];
-    $descricao = $_POST['descricao'];
     $data_inicio = $_POST['data_inicio'];
     $data_fim = $_POST['data_fim'];
     $custo = $_POST['custo'];
     $id_casa = $_POST['id_casa'];
 
     // Atualizar a manutenção no banco de dados
-    $stmt = $conexao->prepare("UPDATE manutencao SET M_tipo=?, M_descricao=?, M_data_inicio=?, M_data_fim=?, M_custo=?, M_id_casa=? WHERE M_id_manutencao=?");
-    $stmt->bind_param("ssssdii", $tipo, $descricao, $data_inicio, $data_fim, $custo, $id_casa, $id);
+    $stmt = $conexao->prepare("UPDATE manutencao SET M_tipo=?, M_data_inicio=?, M_data_fim=?, M_custo=?, M_id_casa=? WHERE M_id_manutencao=?");
+    $stmt->bind_param("sssdii", $tipo,$data_inicio, $data_fim, $custo, $id_casa, $id);
     $stmt->execute();
 
     header("Location: manutencao.php");
@@ -68,7 +67,6 @@ $casas_resultado = $conexao->query("SELECT * FROM casas");
             <option value="Testes de funcionamento" <?= $manutencao['M_tipo'] == 'Testes de funcionamento' ? 'selected' : '' ?>>Testes de funcionamento geral antes da chegada de hóspedes</option>
         </select><br><br>
 
-        Descrição: <textarea name="descricao" required><?= $manutencao['M_descricao'] ?></textarea><br><br>
 
         Data de Início: <input type="date" name="data_inicio" value="<?= $manutencao['M_data_inicio'] ?>" required><br><br>
 

@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $custo = $_POST['custo'];
 
     // Corrigido para utilizar o nome correto da tabela 'manutencao'
-    $stmt = $conexao->prepare("INSERT INTO manutencao (M_id_casa, M_tipo, M_descricao, M_data_inicio, M_data_fim, M_custo) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssd", $id_casa, $tipo, $descricao, $data_inicio, $data_fim, $custo);
+    $stmt = $conexao->prepare("INSERT INTO manutencao (M_id_casa, M_tipo, M_descricao, M_data_inicio, M_data_fim, M_custo) VALUES (?, ?, ?, , ?, ?)");
+    $stmt->bind_param("isssd", $id_casa, $tipo, $data_inicio, $data_fim, $custo);
     $stmt->execute();
 
     header("Location: manutencao.php");
@@ -82,9 +82,6 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
                     <option value="<?= htmlspecialchars($tipo) ?>"><?= htmlspecialchars($tipo) ?></option>
                 <?php endforeach; ?>
             </select><br><br>
-
-            <label>Descrição: <i class="fa-solid fa-pen"></i></label><br>
-            <textarea name="descricao" id="descricao" rows="4" cols="50"></textarea><br><br>
 
             <label>Data Início: <i class="fa-solid fa-calendar-alt"></i></label>
             <input type="date" name="data_inicio" required><br><br>

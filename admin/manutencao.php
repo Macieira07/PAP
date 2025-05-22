@@ -30,7 +30,6 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'];
             <th>ID</th>
             <th>Casa</th>
             <th>Tipo de Manutenção</th>
-            <th>Descrição</th>
             <th>Data Início</th>
             <th>Data Fim</th>
             <th>Custo (€)</th>
@@ -41,7 +40,6 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'];
                 <td><?= $manutencao['M_id_manutencao'] ?></td>
                 <td><?= htmlspecialchars($manutencao['C_nome']) ?></td>
                 <td><?= htmlspecialchars($manutencao['M_tipo']) ?></td>
-                <td><?= htmlspecialchars($manutencao['M_descricao']) ?></td>
                 <td><?= $manutencao['M_data_inicio'] ?></td>
                 <td><?= $manutencao['M_data_fim'] ? $manutencao['M_data_fim'] : 'Não definida' ?></td> <!-- Exibe data de fim -->
                 <td><?= $manutencao['M_custo'] ?>€</td>

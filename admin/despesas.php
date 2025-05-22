@@ -7,6 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+
 // Função para obter o saldo atual
 function obterSaldoAtual() {
     global $conexao;
@@ -117,7 +118,7 @@ function pagarManutencao($id_manutencao) {
         
         // Registrar movimentação
         $descricao = "Pagamento de manutenção #" . $id_manutencao . ": " . $manutencao['M_tipo'];
-        registrarMovimentacao('despesa', $descricao, $manutencao['M_custo'], 'manutencao', $id_manutencao);
+        registrarMovimentacao('despesa', $manutencao['M_custo'], 'manutencao', $id_manutencao);
         
         // Confirmar transação
         $conexao->commit();
@@ -206,12 +207,12 @@ function registrarReceita($descricao, $valor, $data, $tipo, $observacoes, $metod
 }
 
 // Função para registrar um novo serviço
-function registrarServico($nome, $descricao, $preco) {
+function registrarServico($nome, $descricao, $preco, $categoria_id) {
     global $conexao;
     
-    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco) 
-                              VALUES (?, ?, ?)");
-    $stmt->bind_param("ssd", $nome, $descricao, $preco);
+    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id, S_pago) 
+                              VALUES (?, ?, ?, ?, 0)");
+    $stmt->bind_param("ssdi", $nome, $descricao, $preco, $categoria_id);
     
     $resultado = $stmt->execute();
     $stmt->close();
@@ -219,21 +220,21 @@ function registrarServico($nome, $descricao, $preco) {
     return $resultado;
 }
 
-// Função para registrar nova manutenção
-function registrarManutencao($id_casa, $tipo, $descricao, $data_inicio, $data_fim, $custo) {
+function registrarManutencao($id_casa, $tipo, $data_inicio, $data_fim, $custo) {
     global $conexao;
-    
+
     $stmt = $conexao->prepare("INSERT INTO manutencao 
-        (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
-        VALUES (?, ?, ?, ?, ?, ?, 0)");
-    
-    $stmt->bind_param("ssssdi", $tipo, $data_inicio, $data_fim, $descricao, $custo, $id_casa);
-    
+        (M_tipo, M_data_inicio, M_data_fim, M_custo, M_id_casa, M_pago) 
+        VALUES (?, ?, ?, ?, ?, 0)");
+
+    $stmt->bind_param("sssdi", $tipo, $data_inicio, $data_fim, $custo, $id_casa);
+
     $resultado = $stmt->execute();
     $stmt->close();
-    
+
     return $resultado;
 }
+
 
 // Processar formulários
 $mensagem = "";
@@ -303,33 +304,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Processar novo serviço
-    if (isset($_POST['novo_servico'])) {
-        try {
-            $nome = $_POST['nome'];
-            $descricao = $_POST['descricao'];
-            $preco = $_POST['preco'];
-            
-            if (registrarServico($nome, $descricao, $preco)) {
-                $mensagem = "Serviço registrado com sucesso!";
-                $tipo_mensagem = "success";
-            }
-        } catch (Exception $e) {
-            $mensagem = "Erro ao registrar serviço: " . $e->getMessage();
-            $tipo_mensagem = "danger";
+if (isset($_POST['novo_servico'])) {
+    try {
+        $nome = $_POST['nome'];
+        $descricao = $_POST['descricao'];
+        $preco = $_POST['preco'];
+        $categoria_id = $_POST['categoria'];
+        
+        if (registrarServico($nome, $descricao, $preco, $categoria_id)) {
+            $mensagem = "Serviço registrado com sucesso!";
+            $tipo_mensagem = "success";
         }
+    } catch (Exception $e) {
+        $mensagem = "Erro ao registrar serviço: " . $e->getMessage();
+        $tipo_mensagem = "danger";
     }
+}
     
     // Processar nova manutenção
     if (isset($_POST['nova_manutencao'])) {
         try {
             $id_casa = $_POST['casa'];
             $tipo = $_POST['tipo'];
-            $descricao = $_POST['descricao'];
             $data_inicio = $_POST['data_inicio'];
             $data_fim = $_POST['data_fim'];
             $custo = $_POST['custo'];
             
-            if (registrarManutencao($id_casa, $tipo, $descricao, $data_inicio, $data_fim, $custo)) {
+            if (registrarManutencao($id_casa, $tipo, $data_inicio, $data_fim, $custo)) {
                 $mensagem = "Manutenção registrada com sucesso!";
                 $tipo_mensagem = "success";
             }
@@ -607,8 +608,6 @@ for ($i = 5; $i >= 0; $i--) {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Gráficos e Detalhes -->
                 <div class="row mb-4">
                     <!-- Gráfico de Receitas x Despesas -->
                     <div class="col-lg-8 mb-4">
@@ -623,7 +622,6 @@ for ($i = 5; $i >= 0; $i--) {
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Resumo Financeiro -->
                     <div class="col-lg-4 mb-4">
                         <div class="card">
@@ -707,7 +705,6 @@ for ($i = 5; $i >= 0; $i--) {
                         </div>
                     </div>
                 </div>
-                
                 <!-- Abas de Conteúdo -->
                 <div class="card mb-4">
                     <div class="card-header">
@@ -818,44 +815,78 @@ for ($i = 5; $i >= 0; $i--) {
                                     </table>
                                 </div>
                             </div>
-                            
                             <!-- Tab Serviços -->
-                            <div class="tab-pane fade" id="servicos" role="tabpanel" aria-labelledby="servicos-tab">
-                                <div class="d-flex justify-content-end mb-3">
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
-                                        <i class="fas fa-plus me-1"></i> Novo Serviço
-                                    </button>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="tabelaServicos">
-                                        <thead>
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>Descrição</th>
-                                                <th>Preço</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($servicos as $servico): ?>
-                                            <tr>
-                                                <td><?php echo $servico['S_nome']; ?></td>
-                                                <td><?php echo $servico['S_descricao']; ?></td>
-                                                <td class="text-danger">€<?php echo number_format($servico['S_preco'], 2, ',', '.'); ?></td>
-                                                <td>
-                                                    <form method="post" class="d-inline">
-                                                        <input type="hidden" name="id_servico" value="<?php echo $servico['S_id_servico']; ?>">
-                                                        <button type="submit" name="pagar_servico" class="btn btn-success btn-sm" onclick="return confirm('Confirma o pagamento deste serviço?')">
-                                                            <i class="fas fa-check me-1"></i> Pagar
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+<!-- Tab Serviços -->
+<div class="tab-pane fade" id="servicos" role="tabpanel" aria-labelledby="servicos-tab">
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
+                <i class="fas fa-plus me-1"></i> Novo Serviço
+            </button>
+        </div>
+        <div>
+            <select class="form-select" id="filtroCategoria" style="width: 200px;">
+                <option value="">Todas as Categorias</option>
+                <?php
+                $sql_categorias = "SELECT * FROM categorias_servico";
+                $resultado_categorias = $conexao->query($sql_categorias);
+                while ($categoria = $resultado_categorias->fetch_assoc()) {
+                    echo "<option value='{$categoria['id']}'>{$categoria['nome']}</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover" id="tabelaServicos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                // Modificar a query para incluir a categoria
+                $sql_servicos = "SELECT s.*, cs.nome as categoria_nome 
+                               FROM servicos s
+                               LEFT JOIN categorias_servico cs ON s.S_categoria_id = cs.id
+                               ORDER BY s.S_nome ASC";
+                $resultado_servicos = $conexao->query($sql_servicos);
+                $servicos = $resultado_servicos->fetch_all(MYSQLI_ASSOC);
+                
+                foreach ($servicos as $servico): 
+                ?>
+                <tr>
+                    <td><?php echo $servico['S_nome']; ?></td>
+                    <td><?php echo $servico['S_descricao']; ?></td>
+                    <td><?php echo $servico['categoria_nome']; ?></td>
+                    <td class="text-danger">€<?php echo number_format($servico['S_preco'], 2, ',', '.'); ?></td>
+                    <td>
+                        <span class="badge <?php echo $servico['S_pago'] == 1 ? 'bg-success' : 'bg-warning'; ?>">
+                            <?php echo $servico['S_pago'] == 1 ? 'Pago' : 'Pendente'; ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?php if ($servico['S_pago'] == 0): ?>
+                        <form method="post" class="d-inline">
+                            <input type="hidden" name="id_servico" value="<?php echo $servico['S_id_servico']; ?>">
+                            <button type="submit" name="pagar_servico" class="btn btn-success btn-sm" onclick="return confirm('Confirma o pagamento deste serviço?')">
+                                <i class="fas fa-check me-1"></i> Pagar
+                            </button>
+                        </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
                             
                             <!-- Tab Manutenções -->
                             <div class="tab-pane fade" id="manutencoes" role="tabpanel" aria-labelledby="manutencoes-tab">
@@ -871,7 +902,6 @@ for ($i = 5; $i >= 0; $i--) {
                                                 <th>Data</th>
                                                 <th>Casa</th>
                                                 <th>Tipo</th>
-                                                <th>Descrição</th>
                                                 <th>Custo</th>
                                                 <th>Status</th>
                                                 <th>Ações</th>
@@ -883,7 +913,6 @@ for ($i = 5; $i >= 0; $i--) {
                                                 <td><?php echo date('d/m/Y', strtotime($manutencao['M_data_inicio'])); ?></td>
                                                 <td><?php echo $manutencao['nome_casa']; ?></td>
                                                 <td><?php echo $manutencao['M_tipo']; ?></td>
-                                                <td><?php echo substr($manutencao['M_descricao'], 0, 50) . (strlen($manutencao['M_descricao']) > 50 ? '...' : ''); ?></td>
                                                 <td class="text-danger">€<?php echo number_format($manutencao['M_custo'], 2, ',', '.'); ?></td>
                                                 <td>
                                                     <span class="badge <?php echo $manutencao['M_pago'] == 1 ? 'bg-success' : 'bg-warning'; ?>">
@@ -924,10 +953,6 @@ for ($i = 5; $i >= 0; $i--) {
                 <form method="post">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <input type="text" class="form-control" id="descricao" name="descricao" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="valor" class="form-label">Valor (€)</label>
                             <input type="number" step="0.01" min="0" class="form-control" id="valor" name="valor" required>
                         </div>
@@ -965,100 +990,161 @@ for ($i = 5; $i >= 0; $i--) {
             </div>
         </div>
     </div>
-    
-    <!-- Modal Novo Serviço -->
-    <div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nome" class="form-label">Nome do Serviço</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="preco" class="form-label">Preço (€)</label>
-                            <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" name="novo_servico" class="btn btn-primary">Registrar Serviço</button>
-                    </div>
-                </form>
+<div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form method="post">
+                <div class="modal-body">
+
+                    <!-- Nome do Serviço (Dropdown) -->
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Serviço</label>
+                        <select class="form-select" id="nome" name="nome" required onchange="atualizarCamposServico()">
+                            <option value="">Selecione um serviço</option>
+                            <?php
+                            $servicos = [
+                                ['S_id_servico'=>1, 'S_nome'=>'Limpeza da Casa', 'S_preco'=>100, 'S_categoria'=>'Limpeza'],
+                                ['S_id_servico'=>2, 'S_nome'=>'Limpeza do Jardim', 'S_preco'=>500, 'S_categoria'=>'Limpeza'],
+                                ['S_id_servico'=>3, 'S_nome'=>'Recepção 24h', 'S_preco'=>50, 'S_categoria'=>'Recepção'],
+                                ['S_id_servico'=>4, 'S_nome'=>'Concierge', 'S_preco'=>150, 'S_categoria'=>'Recepção'],
+                                ['S_id_servico'=>5, 'S_nome'=>'Depósito de Bagagens', 'S_preco'=>30, 'S_categoria'=>'Recepção'],
+                                ['S_id_servico'=>6, 'S_nome'=>'Lavanderia', 'S_preco'=>80, 'S_categoria'=>'Recepção'],
+                                ['S_id_servico'=>7, 'S_nome'=>'Caixa de Segurança', 'S_preco'=>20, 'S_categoria'=>'Tecnologia'],
+                                ['S_id_servico'=>8, 'S_nome'=>'Wi-Fi Gratuito', 'S_preco'=>10, 'S_categoria'=>'Tecnologia'],
+                            ];
+
+                            foreach ($servicos as $servico) {
+                                echo "<option 
+                                    value='{$servico['S_nome']}'
+                                    data-descricao='Descrição automática de {$servico['S_nome']}'
+                                    data-preco='{$servico['S_preco']}'
+                                    data-categoria='{$servico['S_categoria']}'
+                                >{$servico['S_nome']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Categoria (automática) -->
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" readonly required>
+                    </div>
+
+                    <!-- Descrição (automática) -->
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" readonly required></textarea>
+                    </div>
+
+                    <!-- Preço (automático) -->
+                    <div class="mb-3">
+                        <label for="preco" class="form-label">Preço (€)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" readonly required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="novo_servico" class="btn btn-primary">Registrar Serviço</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<!-- JavaScript para preencher automaticamente os campos -->
+<script>
+function atualizarCamposServico() {
+    const select = document.getElementById('nome');
+    const selectedOption = select.options[select.selectedIndex];
+
+    const categoria = selectedOption.getAttribute('data-categoria') || '';
+    const descricao = selectedOption.getAttribute('data-descricao') || '';
+    const preco = selectedOption.getAttribute('data-preco') || '';
+
+    document.getElementById('categoria').value = categoria;
+    document.getElementById('descricao').value = descricao;
+    document.getElementById('preco').value = preco;
+}
+</script>
+
+
     
-    <!-- Modal Nova Manutenção -->
-    <div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="novaManutencaoModalLabel">Nova Manutenção</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="casa" class="form-label">Casa</label>
-                            <select class="form-select" id="casa" name="casa" required>
-                                <?php
-                                $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
-                                $resultado_casas = $conexao->query($sql_casas);
-                                while ($casa = $resultado_casas->fetch_assoc()) {
-                                    echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tipo" class="form-label">Tipo de Manutenção</label>
-                            <select class="form-select" id="tipo" name="tipo" required>
-                                <option value="Canalizações (canos, torneiras, autoclismo)">Canalizações (canos, torneiras, autoclismo)</option>
-                                <option value="Instalações elétricas (lâmpadas, tomadas, quadro elétrico)">Instalações elétricas (lâmpadas, tomadas, quadro elétrico)</option>
-                                <option value="Pintura">Pintura</option>
-                                <option value="Jardinagem">Jardinagem</option>
-                                <option value="Limpeza">Limpeza</option>
-                                <option value="Outros">Outros</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="data_inicio" class="form-label">Data Início</label>
-                                <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="data_fim" class="form-label">Data Fim</label>
-                                <input type="date" class="form-control" id="data_fim" name="data_fim">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="custo" class="form-label">Custo (€)</label>
-                            <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" name="nova_manutencao" class="btn btn-warning">Registrar Manutenção</button>
-                    </div>
-                </form>
+
+     <!-- Modal Nova Manutenção -->
+<div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="novaManutencaoModalLabel">Nova Manutenção</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="casa" class="form-label">Casa:</label>
+                        <select class="form-select" id="casa" name="casa" required>
+                            <option value="">Selecione...</option>
+                            <?php
+                            $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
+                            $resultado_casas = $conexao->query($sql_casas);
+                            while ($casa = $resultado_casas->fetch_assoc()) {
+                                echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Manutenção:</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="Canalizações (canos, torneiras, autoclismo)">Canalizações (canos, torneiras, autoclismo)</option>
+                            <option value="Instalações elétricas (lâmpadas, tomadas, quadro elétrico)">Instalações elétricas (lâmpadas, tomadas, quadro elétrico)</option>
+                            <option value="Eletrodomésticos (frigorífico, máquina de lavar, micro-ondas)">Eletrodomésticos (frigorífico, máquina de lavar, micro-ondas)</option>
+                            <option value="Ar-condicionado e aquecimento">Ar-condicionado e aquecimento</option>
+                            <option value="Fechaduras e chaves (portas e janelas)">Fechaduras e chaves (portas e janelas)</option>
+                            <option value="Pintura e retoques nas paredes">Pintura e retoques nas paredes</option>
+                            <option value="Mobiliário (reparação ou substituição de peças danificadas)">Mobiliário (reparação ou substituição de peças danificadas)</option>
+                            <option value="Jardinagem (relva, arbustos, rega)">Jardinagem (relva, arbustos, rega)</option>
+                            <option value="Piscina (tratamento da água, limpeza de filtros)">Piscina (tratamento da água, limpeza de filtros)</option>
+                            <option value="Churrasqueira (limpeza e manutenção da estrutura)">Churrasqueira (limpeza e manutenção da estrutura)</option>
+                            <option value="Iluminação exterior">Iluminação exterior</option>
+                            <option value="Extintores e detetores de fumo/gás">Extintores e detetores de fumo/gás</option>
+                            <option value="Câmaras de segurança e sistemas de alarme">Câmaras de segurança e sistemas de alarme</option>
+                            <option value="Grades ou vedações de segurança">Grades ou vedações de segurança</option>
+                            <option value="Verificações periódicas agendadas (mensais ou trimestrais)">Verificações periódicas agendadas (mensais ou trimestrais)</option>
+                            <option value="Substituição de baterias (comando de portão, detetores de fumo, etc.)">Substituição de baterias (comando de portão, detetores de fumo, etc.)</option>
+                            <option value="Testes de funcionamento geral antes da chegada de hóspedes">Testes de funcionamento geral antes da chegada de hóspedes</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="data_inicio" class="form-label">Data Início:</label>
+                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="data_fim" class="form-label">Data Fim:</label>
+                            <input type="date" class="form-control" id="data_fim" name="data_fim">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="custo" class="form-label">Custo:</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="nova_manutencao" class="btn btn-warning">Registrar Manutenção</button>
+                </div>
+            </form>
         </div>
     </div>
-    
+</div>
     <!-- Bootstrap JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
@@ -1068,8 +1154,40 @@ for ($i = 5; $i >= 0; $i--) {
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script>
+
+        $(document).ready(function() {
+    // Quando um serviço existente for selecionado
+    $('#servico_existente').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        
+        if (selectedOption.val() !== "") {
+            // Preencher os campos com os dados do serviço selecionado
+            $('#nome').val(selectedOption.data('nome'));
+            $('#descricao').val(selectedOption.data('descricao'));
+            $('#preco').val(selectedOption.data('preco'));
+            
+            // Selecionar a categoria correta
+            $('#categoria').val(selectedOption.data('categoria'));
+            
+            // Opcional: mostrar o nome da categoria (se você quiser feedback visual)
+            // Você pode adicionar um span para mostrar isso
+        } else {
+            // Limpar os campos se "Selecione um serviço existente" for escolhido
+            $('#nome').val('');
+            $('#descricao').val('');
+            $('#preco').val('');
+            $('#categoria').val('');
+        }
+    });
+    });
+        // Filtro por categoria
+$(document).ready(function() {
+    $('#filtroCategoria').change(function() {
+        var categoria = $(this).val();
+        $('#tabelaServicos').DataTable().column(2).search(categoria).draw();
+    });
+});
         // Inicializar DataTables
         $(document).ready(function() {
             $('#tabelaMovimentacoes').DataTable({
@@ -1078,14 +1196,12 @@ for ($i = 5; $i >= 0; $i--) {
                 },
                 order: [[0, 'desc']]
             });
-            
             $('#tabelaServicos').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json'
                 },
                 order: [[0, 'asc']]
             });
-            
             $('#tabelaReservasPendentes').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json'
@@ -1100,7 +1216,6 @@ for ($i = 5; $i >= 0; $i--) {
                 order: [[0, 'desc']]
             });
         });
-        
         // Gráfico de Receitas vs Despesas
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('receitasDespesasChart').getContext('2d');
