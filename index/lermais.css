@@ -632,9 +632,8 @@
 
         /* Theme Toggle */
         .theme-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
+            position: relative;
+            margin-left: 15px;
             background: var(--primary-color);
             border: none;
             border-radius: 50%;

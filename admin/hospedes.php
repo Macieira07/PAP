@@ -49,12 +49,10 @@ $resultado = $conexao->query($sql);
         <button type="submit">Filtrar</button>
         <a href="hospedes.php" style="margin-left: 10px;">Limpar Filtros</a>
     </form>
-
-    <!-- Tabela de hóspedes -->
     <table border="1" cellpadding="10">
         <tr>
             <th>ID</th>
-            <th>Nome Completo</th> <!-- atualizado -->
+            <th>Nome Completo</th>
             <th>Email</th>
             <th>Telefone</th>
             <th>Documento</th>

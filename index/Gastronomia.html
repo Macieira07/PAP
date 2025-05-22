@@ -362,9 +362,8 @@
 
         /* Theme Toggle */
         .theme-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
+            position: relative;
+            margin-left: 15px;
             background: var(--primary-color);
             border: none;
             border-radius: 50%;
@@ -608,6 +607,9 @@
                 <li><a href="#sobre" class="nav__link">Tesouros Gastronómicos</a></li>
                 <li><a href="#galeria" class="nav__link">Galeria</a></li>
                 <li><a href="../login1/pagina_login.php" class="nav__link nav__cta">Reservar</a></li>
+                        <button class="theme-toggle" id="themeToggle">
+            <i class="ri-sun-line"></i>
+        </button>
                 <div class="language-dropdown-content" id="langDropdown">
                     <button onclick="changeLanguage('pt')" class="language-btn" data-lang="pt">
                         <img src="https://flagcdn.com/w20/pt.png" alt="Português"> Português
@@ -872,10 +874,6 @@
 
 
 
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="ri-moon-line" id="themeIcon"></i>
-    </button>
 
 
 

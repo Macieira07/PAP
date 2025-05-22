@@ -219,6 +219,22 @@ function registrarServico($nome, $descricao, $preco) {
     return $resultado;
 }
 
+// Função para registrar nova manutenção
+function registrarManutencao($id_casa, $tipo, $descricao, $data_inicio, $data_fim, $custo) {
+    global $conexao;
+    
+    $stmt = $conexao->prepare("INSERT INTO manutencao 
+        (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
+        VALUES (?, ?, ?, ?, ?, ?, 0)");
+    
+    $stmt->bind_param("ssssdi", $tipo, $data_inicio, $data_fim, $descricao, $custo, $id_casa);
+    
+    $resultado = $stmt->execute();
+    $stmt->close();
+    
+    return $resultado;
+}
+
 // Processar formulários
 $mensagem = "";
 $tipo_mensagem = "";
@@ -302,6 +318,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $tipo_mensagem = "danger";
         }
     }
+    
+    // Processar nova manutenção
+    if (isset($_POST['nova_manutencao'])) {
+        try {
+            $id_casa = $_POST['casa'];
+            $tipo = $_POST['tipo'];
+            $descricao = $_POST['descricao'];
+            $data_inicio = $_POST['data_inicio'];
+            $data_fim = $_POST['data_fim'];
+            $custo = $_POST['custo'];
+            
+            if (registrarManutencao($id_casa, $tipo, $descricao, $data_inicio, $data_fim, $custo)) {
+                $mensagem = "Manutenção registrada com sucesso!";
+                $tipo_mensagem = "success";
+            }
+        } catch (Exception $e) {
+            $mensagem = "Erro ao registrar manutenção: " . $e->getMessage();
+            $tipo_mensagem = "danger";
+        }
+    }
 }
 
 // Obter dados para exibição
@@ -348,88 +384,41 @@ $sql_resumo = "SELECT
 $resultado_resumo = $conexao->query($sql_resumo);
 $resumo = $resultado_resumo->fetch_assoc();
 
+// Obter dados para o gráfico (últimos 6 meses)
+$meses_labels = [];
+$dados_receitas = [];
+$dados_despesas = [];
 
-
-// Adicione no processamento POST
-if (isset($_POST['nova_manutencao'])) {
-    try {
-        $id_casa = $_POST['casa'];
-        $tipo = $_POST['tipo'];
-        $descricao = $_POST['descricao'];
-        $data_inicio = $_POST['data_inicio'];
-        $data_fim = $_POST['data_fim'];
-        $custo = $_POST['custo'];
-
-        $stmt = $conexao->prepare("INSERT INTO manutencao 
-            (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
-            VALUES (?, ?, ?, ?, ?, ?, 0)");
-        
-        $stmt->bind_param("ssssdi", 
-            $tipo,
-            $data_inicio,
-            $data_fim,
-            $descricao,
-            $custo,
-            $id_casa
-        );
-
-        if ($stmt->execute()) {
-            $mensagem = "Manutenção registrada com sucesso!";
-            $tipo_mensagem = "success";
-        }
-        $stmt->close();
-        
-    } catch (Exception $e) {
-        $mensagem = "Erro ao registrar manutenção: " . $e->getMessage();
-        $tipo_mensagem = "danger";
-    }
-}
-
-// Adicione no processamento POST
-if (isset($_POST['nova_manutencao'])) {
-    try {
-        $id_casa = $_POST['casa'];
-        $tipo = $_POST['tipo'];
-        $descricao = $_POST['descricao'];
-        $data_inicio = $_POST['data_inicio'];
-        $data_fim = $_POST['data_fim'];
-        $custo = $_POST['custo'];
-
-        $stmt = $conexao->prepare("INSERT INTO manutencao 
-            (M_tipo, M_data_inicio, M_data_fim, M_descricao, M_custo, M_id_casa, M_pago) 
-            VALUES (?, ?, ?, ?, ?, ?, 0)");
-        
-        $stmt->bind_param("ssssdi", 
-            $tipo,
-            $data_inicio,
-            $data_fim,
-            $descricao,
-            $custo,
-            $id_casa
-        );
-
-        if ($stmt->execute()) {
-            $mensagem = "Manutenção registrada com sucesso!";
-            $tipo_mensagem = "success";
-        }
-        $stmt->close();
-        
-    } catch (Exception $e) {
-        $mensagem = "Erro ao registrar manutenção: " . $e->getMessage();
-        $tipo_mensagem = "danger";
-    }
+for ($i = 5; $i >= 0; $i--) {
+    $mes = date('m', strtotime("-$i month"));
+    $ano = date('Y', strtotime("-$i month"));
+    $nome_mes = date('M', strtotime("-$i month"));
+    
+    $meses_labels[] = $nome_mes;
+    
+    // Receitas do mês
+    $sql_receitas_mes = "SELECT COALESCE(SUM(valor), 0) as total FROM movimentacoes 
+                        WHERE tipo = 'receita' AND MONTH(data) = $mes AND YEAR(data) = $ano";
+    $res_receitas_mes = $conexao->query($sql_receitas_mes);
+    $dados_receitas[] = $res_receitas_mes->fetch_assoc()['total'];
+    
+    // Despesas do mês
+    $sql_despesas_mes = "SELECT COALESCE(SUM(valor), 0) as total FROM movimentacoes 
+                        WHERE tipo = 'despesa' AND MONTH(data) = $mes AND YEAR(data) = $ano";
+    $res_despesas_mes = $conexao->query($sql_despesas_mes);
+    $dados_despesas[] = $res_despesas_mes->fetch_assoc()['total'];
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="despesas.css">
-    <title>Serviços e Finanças</title>
+    <title>Gestão Financeira - Quinta Flores</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -438,6 +427,10 @@ if (isset($_POST['nova_manutencao'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+    <style>
+        <?php include 'despesas.css'; ?>
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -445,45 +438,49 @@ if (isset($_POST['nova_manutencao'])) {
             <!-- Sidebar -->
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-dark">
                 <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">Quinta Flores</h4>
+                    </div>
                     <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-chart-line me-2"></i>
-                            Dashboard Financeiro
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="reservas.php">
-                            <i class="fas fa-calendar-check me-2"></i>
-                            Reservas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="manutencao.php">
-                            <i class="fas fa-tools me-2"></i>
-                            Manutenções
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="servicos.php">
-                            <i class="fas fa-concierge-bell me-2"></i>
-                            Serviços
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="receitas.php">
-                            <i class="fas fa-euro-sign me-2"></i>
-                            Receitas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin.php">
-                            <i class="fas fa-house-user me-2"></i>
-                            Página Inicial
-                        </a>
-                    </li>
-                </ul>
-                    <div class="sidebar-heading mt-4">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-chart-line me-2"></i>
+                                Dashboard Financeiro
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="reservas.php">
+                                <i class="fas fa-calendar-check me-2"></i>
+                                Reservas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manutencao.php">
+                                <i class="fas fa-tools me-2"></i>
+                                Manutenções
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="servicos.php">
+                                <i class="fas fa-concierge-bell me-2"></i>
+                                Serviços
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="receitas.php">
+                                <i class="fas fa-euro-sign me-2"></i>
+                                Receitas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin.php">
+                                <i class="fas fa-house-user me-2"></i>
+                                Página Inicial
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="sidebar-heading mt-4 text-white">
                         Relatórios
                     </div>
                     <ul class="nav flex-column mb-2">
@@ -508,24 +505,26 @@ if (isset($_POST['nova_manutencao'])) {
                     </ul>
                 </div>
             </nav>
+            
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Finanças</h1>
+                    <h1 class="h2">Gestão Financeira</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-calendar me-1"></i> Este Mês
+                                <i class="fas fa-calendar me-1"></i> <?php echo date('F Y'); ?>
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">
                                 <i class="fas fa-download me-1"></i> Exportar
                             </button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-primary">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.location.reload();">
                             <i class="fas fa-sync-alt me-1"></i> Atualizar
                         </button>
                     </div>
                 </div>
+                
                 <?php if (!empty($mensagem)): ?>
                     <div class="alert alert-<?php echo $tipo_mensagem; ?> alert-dismissible fade show" role="alert">
                         <i class="fas <?php echo $tipo_mensagem == 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'; ?> me-2"></i>
@@ -600,11 +599,7 @@ if (isset($_POST['nova_manutencao'])) {
                                     <div class="indicator-text">
                                         <div class="indicator-title">Reservas Pendentes</div>
                                         <div class="indicator-value">
-                                            <?php
-                                            $sql_reservas_pendentes = "SELECT COUNT(*) as total FROM reservas WHERE R_valor_pago < R_preco_total";
-                                            $res_reservas_pendentes = $conexao->query($sql_reservas_pendentes);
-                                            echo $res_reservas_pendentes->fetch_assoc()['total'];
-                                            ?>
+                                            <?php echo count($reservas); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -612,6 +607,7 @@ if (isset($_POST['nova_manutencao'])) {
                         </div>
                     </div>
                 </div>
+                
                 <!-- Gráficos e Detalhes -->
                 <div class="row mb-4">
                     <!-- Gráfico de Receitas x Despesas -->
@@ -657,7 +653,7 @@ if (isset($_POST['nova_manutencao'])) {
                                         <div class="progress mt-1" style="height: 5px;">
                                             <div class="progress-bar bg-success" role="progressbar" 
                                                  style="width: <?php echo $resumo['total_receitas'] > 0 ? ($resumo['receitas_extras'] / $resumo['total_receitas'] * 100) : 0; ?>%" 
-                                                 ariaaria-valuenow="<?php echo $resumo['total_receitas'] > 0 ? ($resumo['receitas_extras'] / $resumo['total_receitas'] * 100) : 0; ?>" 
+                                                 aria-valuenow="<?php echo $resumo['total_receitas'] > 0 ? ($resumo['receitas_extras'] / $resumo['total_receitas'] * 100) : 0; ?>" 
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
@@ -711,23 +707,24 @@ if (isset($_POST['nova_manutencao'])) {
                         </div>
                     </div>
                 </div>
+                
                 <!-- Abas de Conteúdo -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs" id="financasTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="reservas-tab" data-bs-toggle="tab" data-bs-target="#reservas" type="button" role="tab" aria-controls="reservas" aria-selected="false">
-                             <i class="fas fa-calendar-alt me-1"></i> Reservas Pendentes
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="servicos-tab" data-bs-toggle="tab" data-bs-target="#servicos" type="button" role="tab" aria-controls="servicos" aria-selected="false">
-                                    <i class="fas fa-concierge-bell me-1"></i> Serviços
+                                <button class="nav-link active" id="movimentacoes-tab" data-bs-toggle="tab" data-bs-target="#movimentacoes" type="button" role="tab" aria-controls="movimentacoes" aria-selected="true">
+                                    <i class="fas fa-exchange-alt me-1"></i> Movimentações
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="reservas-tab" data-bs-toggle="tab" data-bs-target="#reservas" type="button" role="tab" aria-controls="reservas" aria-selected="false">
                                     <i class="fas fa-calendar-alt me-1"></i> Reservas Pendentes
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="servicos-tab" data-bs-toggle="tab" data-bs-target="#servicos" type="button" role="tab" aria-controls="servicos" aria-selected="false">
+                                    <i class="fas fa-concierge-bell me-1"></i> Serviços
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -737,8 +734,8 @@ if (isset($_POST['nova_manutencao'])) {
                             </li>
                         </ul>
                     </div>
-                <div class="card-body">
-        <div class="tab-content" id="financasTabContent">
+                    <div class="card-body">
+                        <div class="tab-content" id="financasTabContent">
                             <!-- Tab Movimentações Recentes -->
                             <div class="tab-pane fade show active" id="movimentacoes" role="tabpanel" aria-labelledby="movimentacoes-tab">
                                 <div class="table-responsive">
@@ -755,10 +752,10 @@ if (isset($_POST['nova_manutencao'])) {
                                         <tbody>
                                             <?php foreach ($movimentacoes as $movimentacao): ?>
                                             <tr>
-                                                <td><?php echo date('d/m/Y', strtotime($movimentacao['data'])); ?></td>
+                                                <td><?php echo date('d/m/Y H:i', strtotime($movimentacao['data'])); ?></td>
                                                 <td><?php echo $movimentacao['descricao']; ?></td>
                                                 <td>
-                                                    <span class="badge badge-<?php echo $movimentacao['tipo'] == 'receita' ? 'receita' : 'despesa'; ?>">
+                                                    <span class="badge <?php echo $movimentacao['tipo'] == 'receita' ? 'bg-success' : 'bg-danger'; ?>">
                                                         <?php echo ucfirst($movimentacao['tipo']); ?>
                                                     </span>
                                                 </td>
@@ -776,53 +773,13 @@ if (isset($_POST['nova_manutencao'])) {
                                 </div>
                             </div>
                             
-                            <!-- Tab Serviços -->
-<div class="tab-pane fade" id="servicos" role="tabpanel" aria-labelledby="servicos-tab">
-    <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
-            <i class="fas fa-plus me-1"></i> Novo Serviço
-        </button>
-    </div>
-</div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="tabelaServicos">
-                                        <thead>
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>Descrição</th>
-                                                <th>Preço</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($servicos as $servico): ?>
-                                            <tr>
-                                                <td><?php echo $servico['S_nome']; ?></td>
-                                                <td><?php echo $servico['S_descricao']; ?></td>
-                                                <td class="text-danger">€<?php echo number_format($servico['S_preco'], 2, ',', '.'); ?></td>
-                                                <td>
-                                                    <form method="post" class="d-inline">
-                                                        <input type="hidden" name="id_servico" value="<?php echo $servico['S_id_servico']; ?>">
-                                                        <button type="submit" name="pagar_servico" class="btn btn-success btn-sm" onclick="return confirm('Confirma o pagamento deste serviço?')">
-                                                            <i class="fas fa-check me-1"></i> Pagar
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                            <!-- Tab Reservas Pendentes -->
+                            <div class="tab-pane fade" id="reservas" role="tabpanel" aria-labelledby="reservas-tab">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novaReceitaModal">
+                                        <i class="fas fa-plus me-1"></i> Nova Receita
+                                    </button>
                                 </div>
-                            </div>
-                             <!-- Na seção de Reservas Pendentes -->
-<div class="d-flex justify-content-end mb-3">
-</div>
-                                       <div class="tab-pane fade" id="reservas" role="tabpanel" aria-labelledby="reservas-tab">
-                                                        <div class="d-flex justify-content-end mb-3">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#novaReservaModal">
-                        <i class="fas fa-calendar-plus me-1"></i> Nova Reserva
-                    </button>
-                </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="tabelaReservasPendentes">
                                         <thead>
@@ -862,6 +819,44 @@ if (isset($_POST['nova_manutencao'])) {
                                 </div>
                             </div>
                             
+                            <!-- Tab Serviços -->
+                            <div class="tab-pane fade" id="servicos" role="tabpanel" aria-labelledby="servicos-tab">
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
+                                        <i class="fas fa-plus me-1"></i> Novo Serviço
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="tabelaServicos">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Descrição</th>
+                                                <th>Preço</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($servicos as $servico): ?>
+                                            <tr>
+                                                <td><?php echo $servico['S_nome']; ?></td>
+                                                <td><?php echo $servico['S_descricao']; ?></td>
+                                                <td class="text-danger">€<?php echo number_format($servico['S_preco'], 2, ',', '.'); ?></td>
+                                                <td>
+                                                    <form method="post" class="d-inline">
+                                                        <input type="hidden" name="id_servico" value="<?php echo $servico['S_id_servico']; ?>">
+                                                        <button type="submit" name="pagar_servico" class="btn btn-success btn-sm" onclick="return confirm('Confirma o pagamento deste serviço?')">
+                                                            <i class="fas fa-check me-1"></i> Pagar
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
                             <!-- Tab Manutenções -->
                             <div class="tab-pane fade" id="manutencoes" role="tabpanel" aria-labelledby="manutencoes-tab">
                                 <div class="d-flex justify-content-end mb-3">
@@ -876,6 +871,7 @@ if (isset($_POST['nova_manutencao'])) {
                                                 <th>Data</th>
                                                 <th>Casa</th>
                                                 <th>Tipo</th>
+                                                <th>Descrição</th>
                                                 <th>Custo</th>
                                                 <th>Status</th>
                                                 <th>Ações</th>
@@ -883,25 +879,28 @@ if (isset($_POST['nova_manutencao'])) {
                                         </thead>
                                         <tbody>
                                             <?php foreach ($manutencoes as $manutencao): ?>
-                                            <?php if ($manutencao['M_pago'] == 0): ?>
                                             <tr>
                                                 <td><?php echo date('d/m/Y', strtotime($manutencao['M_data_inicio'])); ?></td>
                                                 <td><?php echo $manutencao['nome_casa']; ?></td>
                                                 <td><?php echo $manutencao['M_tipo']; ?></td>
+                                                <td><?php echo substr($manutencao['M_descricao'], 0, 50) . (strlen($manutencao['M_descricao']) > 50 ? '...' : ''); ?></td>
                                                 <td class="text-danger">€<?php echo number_format($manutencao['M_custo'], 2, ',', '.'); ?></td>
                                                 <td>
-                                                    <span class="badge badge-pendente">Pendente</span>
+                                                    <span class="badge <?php echo $manutencao['M_pago'] == 1 ? 'bg-success' : 'bg-warning'; ?>">
+                                                        <?php echo $manutencao['M_pago'] == 1 ? 'Pago' : 'Pendente'; ?>
+                                                    </span>
                                                 </td>
                                                 <td>
+                                                    <?php if ($manutencao['M_pago'] == 0): ?>
                                                     <form method="post" class="d-inline">
                                                         <input type="hidden" name="id_manutencao" value="<?php echo $manutencao['M_id_manutencao']; ?>">
                                                         <button type="submit" name="pagar_manutencao" class="btn btn-success btn-sm" onclick="return confirm('Confirma o pagamento desta manutenção?')">
                                                             <i class="fas fa-check me-1"></i> Pagar
                                                         </button>
                                                     </form>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
-                                            <?php endif; ?>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -939,18 +938,18 @@ if (isset($_POST['nova_manutencao'])) {
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo de Receita</label>
                             <select class="form-select" id="tipo" name="tipo" required>
-                                <option value="serviço adicional">Serviço Adicional</option>
-                                <option value="taxa de limpeza">Taxa de Limpeza</option>
-                                <option value="outros">Outros</option>
+                                <option value="Serviço">Serviço</option>
+                                <option value="Reserva">Reserva</option>
+                                <option value="Outros">Outros</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="metodo_pagamento" class="form-label">Método de Pagamento</label>
                             <select class="form-select" id="metodo_pagamento" name="metodo_pagamento" required>
-                                <option value="transferência">Transferência Bancária</option>
-                                <option value="cartão">Cartão de Crédito</option>
-                                <option value="dinheiro">Dinheiro</option>
-                                <option value="outro">Mbway</option>
+                                <option value="Transferência">Transferência Bancária</option>
+                                <option value="Cartão">Cartão de Crédito</option>
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="MB WAY">MB WAY</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -959,12 +958,6 @@ if (isset($_POST['nova_manutencao'])) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <form method="post">
-    <!-- Campos existentes -->
-    <div class="modal-footer">
-        <button type="submit" name="nova_manutencao" class="btn btn-warning">Registrar</button>
-    </div>
-</form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" name="nova_receita" class="btn btn-success">Registrar Receita</button>
                     </div>
@@ -972,187 +965,99 @@ if (isset($_POST['nova_manutencao'])) {
             </div>
         </div>
     </div>
-    <!-- Modal Nova Reserva -->
-<div class="modal fade" id="novaReservaModal" tabindex="-1" aria-labelledby="novaReservaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="novaReservaModalLabel">Nova Reserva</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post" action="adicionar_reserva.php">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="casa_reserva" class="form-label">Casa</label>
-                        <select class="form-select" id="casa_reserva" name="casa" required>
-                            <?php
-                            $sql_casas = "SELECT C_id_casa, C_nome, C_preco_noite FROM casas";
-                            $resultado_casas = $conexao->query($sql_casas);
-                            while ($casa = $resultado_casas->fetch_assoc()) {
-                                echo "<option value='{$casa['C_id_casa']}' data-preco='{$casa['C_preco_noite']}'>{$casa['C_nome']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="checkin" class="form-label">Check-in</label>
-                            <input type="date" class="form-control" id="checkin" name="checkin" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="checkout" class="form-label">Check-out</label>
-                            <input type="date" class="form-control" id="checkout" name="checkout" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hospede" class="form-label">Hóspede</label>
-                        <select class="form-select" id="hospede" name="hospede" required>
-                            <?php
-                            $sql_hospedes = "SELECT H_id_hospede, H_nome FROM hospedes";
-                            $resultado_hospedes = $conexao->query($sql_hospedes);
-                            while ($hospede = $resultado_hospedes->fetch_assoc()) {
-                                echo "<option value='{$hospede['H_id_hospede']}'>{$hospede['H_nome']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="num_hospedes" class="form-label">Número de Hóspedes</label>
-                        <input type="number" min="1" class="form-control" id="num_hospedes" name="num_hospedes" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="total" class="form-label">Total (€)</label>
-                        <input type="text" class="form-control" id="total" name="total" readonly>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="reservas.php" class="btn btn-secondary me-2">
-                        <i class="fas fa-list me-1"></i> Lista de Reservas
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-success">Reservar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
     
-
-
-
-<!-- Modal Novo Serviço -->
-<div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal Novo Serviço -->
+    <div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome do Serviço</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preco" class="form-label">Preço (€)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="novo_servico" class="btn btn-primary">Registrar Serviço</button>
+                    </div>
+                </form>
             </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nome" class="form-label">Nome do Serviço</label>
-                        <input type="text" class="form-control" id="nome" name="nome" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoria" class="form-label">Categoria</label>
-                        <select class="form-select" id="categoria" name="categoria" required>
-                            <option value="Limpeza">Limpeza</option>
-                            <option value="Manutenção">Manutenção</option>
-                            <option value="Hospedagem">Hospedagem</option>
-                            <option value="Outros">Outros</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="preco" class="form-label">Preço (€)</label>
-                        <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="servicos.php" class="btn btn-secondary me-2">
-                        <i class="fas fa-list me-1"></i> Lista de Serviços
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" name="novo_servico" class="btn btn-primary">Registrar</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
     
-
-     <!-- Modal Nova Manutenção -->
-<div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title" id="novaManutencaoModalLabel">Nova Manutenção</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal Nova Manutenção -->
+    <div class="modal fade" id="novaManutencaoModal" tabindex="-1" aria-labelledby="novaManutencaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="novaManutencaoModalLabel">Nova Manutenção</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="casa" class="form-label">Casa</label>
+                            <select class="form-select" id="casa" name="casa" required>
+                                <?php
+                                $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
+                                $resultado_casas = $conexao->query($sql_casas);
+                                while ($casa = $resultado_casas->fetch_assoc()) {
+                                    echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Manutenção</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="Canalizações (canos, torneiras, autoclismo)">Canalizações (canos, torneiras, autoclismo)</option>
+                                <option value="Instalações elétricas (lâmpadas, tomadas, quadro elétrico)">Instalações elétricas (lâmpadas, tomadas, quadro elétrico)</option>
+                                <option value="Pintura">Pintura</option>
+                                <option value="Jardinagem">Jardinagem</option>
+                                <option value="Limpeza">Limpeza</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="data_inicio" class="form-label">Data Início</label>
+                                <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="data_fim" class="form-label">Data Fim</label>
+                                <input type="date" class="form-control" id="data_fim" name="data_fim">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="custo" class="form-label">Custo (€)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="nova_manutencao" class="btn btn-warning">Registrar Manutenção</button>
+                    </div>
+                </form>
             </div>
-            <form method="post" action="adicionar_manutencao.php">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="casa" class="form-label">Casa</label>
-                        <select class="form-select" id="casa" name="casa" required>
-                            <?php
-                            $sql_casas = "SELECT C_id_casa, C_nome FROM casas";
-                            $resultado_casas = $conexao->query($sql_casas);
-                            while ($casa = $resultado_casas->fetch_assoc()) {
-                                echo "<option value='{$casa['C_id_casa']}'>{$casa['C_nome']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tipo" class="form-label">Tipo de Manutenção</label>
-                        <select class="form-select" id="tipo" name="tipo" required>
-                            <option value="Canalizações">Canalizações</option>
-                            <option value="Elétrica">Elétrica</option>
-                            <option value="Pintura">Pintura</option>
-                            <option value="Jardinagem">Jardinagem</option>
-                            <option value="Outros">Outros</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="data_inicio" class="form-label">Data Início</label>
-                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="data_fim" class="form-label">Data Fim</label>
-                            <input type="date" class="form-control" id="data_fim" name="data_fim">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="custo" class="form-label">Custo (€)</label>
-                        <input type="number" step="0.01" min="0" class="form-control" id="custo" name="custo" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="manutencao.php" class="btn btn-secondary me-2">
-                        <i class="fas fa-list me-1"></i> Lista de Manutenções
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-warning">Registrar</button>
-                </div>
-            </form>
         </div>
     </div>
-
-
-
-
-
-</div>
-
     
     <!-- Bootstrap JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1165,33 +1070,6 @@ if (isset($_POST['nova_manutencao'])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-
-
-//calculo automatico
-
-// Cálculo automático do preço total
-document.addEventListener('DOMContentLoaded', function() {
-    const casaSelect = document.getElementById('casa_reserva');
-    const checkin = document.getElementById('checkin');
-    const checkout = document.getElementById('checkout');
-    const totalField = document.getElementById('total');
-
-    function calculateTotal() {
-        if (checkin.value && checkout.value && casaSelect.value) {
-            const precoNoite = parseFloat(casaSelect.options[casaSelect.selectedIndex].dataset.preco);
-            const diffTime = Math.abs(new Date(checkout.value) - new Date(checkin.value));
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            totalField.value = '€' + (precoNoite * diffDays).toFixed(2);
-        }
-    }
-
-    casaSelect.addEventListener('change', calculateTotal);
-    checkin.addEventListener('change', calculateTotal);
-    checkout.addEventListener('change', calculateTotal);
-});
-
-
-//termina codigo automatico
         // Inicializar DataTables
         $(document).ready(function() {
             $('#tabelaMovimentacoes').DataTable({
@@ -1225,33 +1103,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Gráfico de Receitas vs Despesas
         document.addEventListener('DOMContentLoaded', function() {
-            <?php
-            // Obter dados dos últimos 6 meses para o gráfico
-            $meses_labels = [];
-            $dados_receitas = [];
-            $dados_despesas = [];
-            
-            for ($i = 5; $i >= 0; $i--) {
-                $mes = date('m', strtotime("-$i month"));
-                $ano = date('Y', strtotime("-$i month"));
-                $nome_mes = date('M', strtotime("-$i month"));
-                
-                $meses_labels[] = $nome_mes;
-                
-                // Receitas do mês
-                $sql_receitas_mes = "SELECT COALESCE(SUM(valor), 0) as total FROM movimentacoes 
-                                    WHERE tipo = 'receita' AND MONTH(data) = $mes AND YEAR(data) = $ano";
-                $res_receitas_mes = $conexao->query($sql_receitas_mes);
-                $dados_receitas[] = $res_receitas_mes->fetch_assoc()['total'];
-                
-                // Despesas do mês
-                $sql_despesas_mes = "SELECT COALESCE(SUM(valor), 0) as total FROM movimentacoes 
-                                    WHERE tipo = 'despesa' AND MONTH(data) = $mes AND YEAR(data) = $ano";
-                $res_despesas_mes = $conexao->query($sql_despesas_mes);
-                $dados_despesas[] = $res_despesas_mes->fetch_assoc()['total'];
-            }
-            ?>
-            
             const ctx = document.getElementById('receitasDespesasChart').getContext('2d');
             const receitasDespesasChart = new Chart(ctx, {
                 type: 'bar',
@@ -1299,6 +1150,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+        
+        // Configurar data de hoje como padrão para os campos de data
+        document.getElementById('data_inicio').valueAsDate = new Date();
     </script>
 </body>
 </html>

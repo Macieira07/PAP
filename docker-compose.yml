@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.txt
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: pap
     ports:
@@ -13,6 +13,8 @@ services:
       - ./:/var/www/html
     depends_on:
       - db
+    dns:
+      - 8.8.8.8
 
   db:
     image: mysql:5.7
