@@ -2,17 +2,7 @@
 session_start();
 require_once '../conexao.php';
 
-// Configurações
-define('SITE_NAME', 'Quinta das Flores');
-define('PRIMARY_COLOR', '#6A0DAD');
-define('SECONDARY_COLOR', '#A56EFF');
-define('BACKGROUND_COLOR', '#f8f9fa');
-define('TEXT_COLOR', '#333333');
-define('LIGHT_COLOR', '#f8f8ff');
-
-if ($conexao->connect_error) {
-    die('<div class="error-container">Falha na conexão: ' . $conexao->connect_error . '</div>');
-}
+$page_title = 'Faça sua Reserva';
 
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
@@ -33,37 +23,30 @@ while ($row = $resultado->fetch_assoc()) {
     ];
 }
 
-// Função para gerar todas as datas entre check-in e check-out
 function gerarDatasEntre($start, $end) {
     $dates = [];
     $current = strtotime($start);
     $end = strtotime($end);
-    
-    while($current < $end) { // Note que usamos < em vez de <= para não incluir o último dia
+    while ($current < $end) {
         $dates[] = date('Y-m-d', $current);
         $current = strtotime('+1 day', $current);
     }
-    
     return $dates;
 }
 
-// Gera todas as datas ocupadas
 $todasDatasOcupadas = [];
 foreach ($periodosOcupados as $periodo) {
-    $todasDatasOcupadas = array_merge($todasDatasOcupadas, 
-        gerarDatasEntre($periodo['from'], $periodo['to']));
+    $todasDatasOcupadas = array_merge($todasDatasOcupadas, gerarDatasEntre($periodo['from'], $periodo['to']));
 }
-
-// Remove duplicatas e ordena
 $todasDatasOcupadas = array_unique($todasDatasOcupadas);
 sort($todasDatasOcupadas);
 
+// PROCESSAMENTO DO FORMULÁRIO
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $checkin = isset($_POST['checkin']) ? trim($_POST['checkin']) : '';
-    $checkout = isset($_POST['checkout']) ? trim($_POST['checkout']) : '';
-    $num_hospedes = isset($_POST['num_hospedes']) ? intval($_POST['num_hospedes']) : 2;
+    $checkin = $_POST['checkin'] ?? '';
+    $checkout = $_POST['checkout'] ?? '';
+    $num_hospedes = intval($_POST['num_hospedes'] ?? 2);
 
-    // Validação das datas
     $hoje = new DateTime();
     $amanha = (new DateTime())->modify('+1 day');
     $dataLimite = (new DateTime())->modify('+2 years');
@@ -78,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($dataCheckin > $dataLimite || $dataCheckout > $dataLimite) {
         $erro = 'Reservas só são permitidas até ' . $dataLimite->format('d/m/Y') . '.';
     } else {
-        // Verifica disponibilidade da casa
         $query = "SELECT * FROM reservas 
                   WHERE (R_data_checkin <= ? AND R_data_checkout > ?) 
                   OR (R_data_checkin < ? AND R_data_checkout >= ?)";
@@ -88,9 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $resultado = $stmt->get_result();
 
         if ($resultado->num_rows > 0) {
-            $erro = 'A casa já está reservada para as datas selecionadas. Escolha outras datas.';
+            $erro = 'A casa já está reservada para as datas selecionadas.';
         } else {
-            // Define os dados na sessão
             $_SESSION['checkin'] = $checkin;
             $_SESSION['checkout'] = $checkout;
             $_SESSION['num_hospedes'] = $num_hospedes;
@@ -100,14 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Calcula número de noites se datas existirem
 $num_noites = 0;
-if (isset($_POST['checkin']) && isset($_POST['checkout'])) {
+if (!empty($_POST['checkin']) && !empty($_POST['checkout'])) {
     $checkin_date = new DateTime($_POST['checkin']);
     $checkout_date = new DateTime($_POST['checkout']);
     $num_noites = $checkin_date->diff($checkout_date)->days;
 }
+
+// SÓ AQUI carregas o header.php, depois de todos os headers e validações
+require_once 'header.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -310,5 +294,6 @@ if (isset($_POST['checkin']) && isset($_POST['checkout'])) {
             return `${dia}/${mes}/${ano}`;
         }
     </script>
+    <?php require_once 'footer.php'; ?>
 </body>
 </html>

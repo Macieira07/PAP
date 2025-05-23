@@ -1,15 +1,12 @@
 <?php
-// Ativar exibição de erros
+// Ativar exibição de erros (para desenvolvimento)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-session_start();
+session_start(); // garante que a sessão está ativa
 
-// Configurações
-define('SITE_NAME', 'Quinta das Flores');
-define('PRIMARY_COLOR', '#6A0DAD');
-define('SECONDARY_COLOR', '#A56EFF');
+// Configurações fixas
 define('BACKGROUND_COLOR', '#f8f9fa');
 define('TEXT_COLOR', '#333333');
 define('LIGHT_COLOR', '#f8f8ff');
@@ -40,6 +37,7 @@ try {
     header('Location: pagina1.php');
     exit();
 }
+
 $id_hospede = $_SESSION['id'];
 
 // Lista de países com códigos de telefone e regras de validação
@@ -53,11 +51,13 @@ $paises = [
     "IT" => ["nome" => "Itália", "codigo" => "+39", "regex" => "/^\d{9,10}$/"],
 ];
 
-// Calcula número de noites
+// Recalcula número de noites só por precaução
 $checkin = new DateTime($_SESSION['checkin']);
 $checkout = new DateTime($_SESSION['checkout']);
 $num_noites = $checkin->diff($checkout)->days;
 
+// Processar formulário
+$mensagem_erro = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome_completo = isset($_POST['nome_completo']) ? trim(htmlspecialchars($_POST['nome_completo'])) : '';
     $email = isset($_POST['email']) ? filter_var($_POST['email'], FILTER_SANITIZE_EMAIL) : '';
@@ -88,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $erros[] = "Número de telefone inválido para o país selecionado.";
         }
     }
-    // Validação da descrição da decoração se o serviço foi selecionado
     if (isset($_POST['servicos']) && in_array('decoracao', $_POST['servicos']) && empty($descricao_decoracao)) {
         $erros[] = "Por favor, descreva o tema desejado para a decoração.";
     }
@@ -103,10 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['confirmacao_digital'] = $confirmacao_digital;
         $_SESSION['cancelamento'] = $cancelamento;
 
-        // Armazenar serviços adicionais na sessão
         if (isset($_POST['servicos'])) {
             $_SESSION['servicos'] = $_POST['servicos'];
-            // Armazena também a descrição da decoração se o serviço foi selecionado
             if (in_array('decoracao', $_POST['servicos'])) {
                 $_SESSION['descricao_decoracao'] = $descricao_decoracao;
             }
@@ -114,14 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['servicos'] = [];
         }
 
-        // Atualizar o nome do hóspede na tabela hospedes
+        // Atualizar nome do hóspede no BD
         $sql = "UPDATE hospedes SET H_nome = ? WHERE H_id_hospede = ?";
         $stmt = $conexao->prepare($sql);
         $stmt->bind_param("si", $nome_completo, $id_hospede);
         $stmt->execute();
         $stmt->close();
 
-        // Redireciona para a próxima página
+        // Redirecionar para próxima página
         header('Location: pagina3.php');
         exit();
     } else {
@@ -129,10 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Calcula preço base
+// Calcular preço base e total
 $preco_base = 120 * $num_noites;
 $preco_total = $preco_base;
-// Calcula serviços adicionais se existirem
 if (isset($_SESSION['servicos'])) {
     foreach ($_SESSION['servicos'] as $servico) {
         switch ($servico) {
@@ -148,6 +144,11 @@ if (isset($_SESSION['servicos'])) {
         }
     }
 }
+
+
+$page_title = 'Faça sua Reserva';
+require_once 'header.php';
+
 
 ?>
 <!DOCTYPE html>
@@ -471,5 +472,6 @@ if (isset($_SESSION['servicos'])) {
             document.getElementById('preco-total').textContent = precoTotal;
         }
     </script>
+    <?php require_once 'footer.php'; ?>
 </body>
 </html>

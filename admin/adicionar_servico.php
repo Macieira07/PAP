@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Inserção de serviço
-    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, categoria_id) VALUES (?, ?, ?, ?)");
+    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssdi", $nome_servico, $descricao, $preco, $categoria_servico);
     $stmt->execute();
 
@@ -31,60 +31,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="admin.css">
     <meta charset="UTF-8">
     <title>Adicionar Serviço</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    
     <script>
-        function atualizarPreco() {
-            var preco = 0;
-            var categoria = "outros"; // Categoria padrão
-
-            if (document.getElementById('servico_limpeza_casa').checked) {
-                preco += 100;
-                categoria = "Serviços de Limpeza"; // Alterando para Limpeza
-            }
-            if (document.getElementById('servico_limpeza_jardim').checked) {
-                preco += 500;
-                categoria = "Serviços de Limpeza"; // Alterando para Limpeza
-            }
-            if (document.getElementById('servico_recepcao').checked) {
-                preco += 50;
-                categoria = "Serviços Básicos"; // Alterando para Serviços Básicos
-            }
-            if (document.getElementById('servico_concierge').checked) {
-                preco += 150;
-                categoria = "Serviços de Luxo"; // Alterando para Serviços de Luxo
-            }
-            if (document.getElementById('servico_deposito_bagagem').checked) {
-                preco += 30;
-                categoria = "Serviços Adicionais"; // Alterando para Serviços Adicionais
-            }
-            if (document.getElementById('servico_lavanderia').checked) {
-                preco += 80;
-                categoria = "Serviços Adicionais"; // Alterando para Serviços Adicionais
-            }
-            if (document.getElementById('servico_caixa_segurança').checked) {
-                preco += 20;
-                categoria = "Serviços de Segurança"; // Alterando para Serviços de Segurança
-            }
-            if (document.getElementById('servico_wifi').checked) {
-                preco += 10;
-                categoria = "Tecnologia"; // Alterando para Tecnologia
-            }
-
-            // Atualiza a categoria no select
-            var categoriaSelect = document.getElementById("categoria_servico");
-            for (var i = 0; i < categoriaSelect.options.length; i++) {
-                if (categoriaSelect.options[i].text === categoria) {
-                    categoriaSelect.selectedIndex = i;
-                    break;
-                }
-            }
-
-            document.getElementById('preco').value = preco.toFixed(2);
+    const servicos = {
+        servico_limpeza_casa: {
+            nome: "Limpeza da Casa",
+            preco: 100,
+            descricao: "Serviço completo de limpeza da casa.",
+            categoria: "Serviços de Limpeza"
+        },
+        servico_limpeza_jardim: {
+            nome: "Limpeza do Jardim",
+            preco: 500,
+            descricao: "Manutenção e limpeza do jardim.",
+            categoria: "Serviços de Limpeza"
+        },
+        servico_recepcao: {
+            nome: "Recepção 24h",
+            preco: 50,
+            descricao: "Atendimento disponível 24 horas por dia.",
+            categoria: "Serviços Básicos"
+        },
+        servico_concierge: {
+            nome: "Concierge",
+            preco: 150,
+            descricao: "Serviço de apoio personalizado para hóspedes.",
+            categoria: "Serviços de Luxo"
+        },
+        servico_deposito_bagagem: {
+            nome: "Depósito de Bagagens",
+            preco: 30,
+            descricao: "Guarda segura de bagagens.",
+            categoria: "Serviços Adicionais"
+        },
+        servico_lavanderia: {
+            nome: "Lavanderia",
+            preco: 80,
+            descricao: "Serviço de lavagem e secagem de roupas.",
+            categoria: "Serviços Adicionais"
+        },
+        servico_caixa_segurança: {
+            nome: "Caixa de Segurança",
+            preco: 20,
+            descricao: "Armazenamento seguro de objetos de valor.",
+            categoria: "Serviços de Segurança"
+        },
+        servico_wifi: {
+            nome: "Wi-Fi Gratuito",
+            preco: 10,
+            descricao: "Acesso gratuito à internet sem fios.",
+            categoria: "Tecnologia"
         }
+    };
+
+    function atualizarPreco() {
+        let precoTotal = 0;
+        let nomesSelecionados = [];
+        let descricoesSelecionadas = [];
+        let ultimaCategoria = "outros";
+
+        for (let id in servicos) {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                const servico = servicos[id];
+                precoTotal += servico.preco;
+                nomesSelecionados.push(servico.nome);
+                descricoesSelecionadas.push(servico.descricao);
+                ultimaCategoria = servico.categoria;
+            }
+        }
+
+        document.getElementById('nome_servico').value = nomesSelecionados.join(" + ");
+        document.getElementById('descricao').value = descricoesSelecionadas.join("\n");
+        document.getElementById('preco').value = precoTotal.toFixed(2);
+
+        const categoriaSelect = document.getElementById("categoria_servico");
+        for (let i = 0; i < categoriaSelect.options.length; i++) {
+            if (categoriaSelect.options[i].text === ultimaCategoria) {
+                categoriaSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
     </script>
 </head>
 <body>
@@ -94,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <form method="post">
-        Nome do Serviço: <input type="text" name="nome_servico" required><br><br>
-        Descrição: <textarea name="descricao"></textarea><br><br>
+        Nome do Serviço: <input type="text" id="nome_servico" name="nome_servico" required><br><br>
+        Descrição: <textarea id="descricao" name="descricao"></textarea><br><br>
 
         <h3>Escolha os Serviços:</h3>
         <label><input type="checkbox" id="servico_limpeza_casa" onclick="atualizarPreco()"> Limpeza da Casa (100€)</label><br>

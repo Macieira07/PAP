@@ -43,13 +43,17 @@ $csrf_token = $_SESSION['csrf_token'];
                     <i class="fas fa-lock"></i>
                     <input type="password" id="loginPassword" name="senha" class="form-control" placeholder="••••••••" required>
                 </div>
+                
+
                 <a href="recuperar_senha.php" class="extra-link">Esqueceu sua senha?</a>
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 <button type="submit" class="btn">
                     <i class="fas fa-sign-in-alt"></i> Entrar
                 </button>
+                
                 <div class="form-footer">
                     Não tem conta? <a href="#" id="showRegister">Criar conta</a>
+                    <a href="../index.html" class="extra-link">Voltar</a>
                 </div>
             </form>
             <!-- Formulário de Registro -->
@@ -120,6 +124,7 @@ $csrf_token = $_SESSION['csrf_token'];
                 
                 <div class="form-footer">
                     Já tem conta? <a href="#" id="showLogin">Fazer Login</a>
+                    <a href="../index.html" class="extra-link">Voltar</a>
                 </div>
             </form>
         </div>

@@ -17,6 +17,8 @@
   font-family: 'Inter', sans-serif;
 }
 
+
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -354,7 +356,6 @@ nav {
   transition: var(--transition);
 }
 
-.gallery__filter.active,
 .gallery__filter:hover {
   background-color: var(--primary-color);
   color: var(--white);

@@ -4,12 +4,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-session_start();
 
 // Configurações
-define('SITE_NAME', 'Quinta das Flores');
-define('PRIMARY_COLOR', '#6A0DAD');
-define('SECONDARY_COLOR', '#A56EFF');
 define('BACKGROUND_COLOR', '#f8f9fa');
 define('TEXT_COLOR', '#333333');
 define('LIGHT_COLOR', '#f8f8ff');
@@ -259,6 +255,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Obtém os dados bancários para o país selecionado
 $pais = $_SESSION['pais_regiao'] ?? 'PT';
 $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
+
+$page_title = 'Faça sua Reserva'; // Altere para cada página
+require_once 'header.php'; 
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -624,5 +623,6 @@ $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
             }
         });
     </script>
+    <?php require_once 'footer.php'; ?>
 </body>
 </html>
