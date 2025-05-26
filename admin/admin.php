@@ -11,26 +11,15 @@ if (!isset($_SESSION['id']) || $_SESSION['tipo'] !== 'funcionario') {
 // Função para obter o saldo atual (igual à usada em despesas.php)
 function obterSaldoAtual() {
     global $conexao;
-    
-    // Obter total de receitas
-    $sql_receitas = "SELECT COALESCE(SUM(m.valor), 0) as total 
-                     FROM movimentacoes m 
-                     WHERE m.tipo = 'receita'";
-    $resultado_receitas = $conexao->query($sql_receitas);
-    $total_receitas = $resultado_receitas->fetch_assoc()['total'];
-    
-    // Obter total de despesas
-    $sql_despesas = "SELECT COALESCE(SUM(m.valor), 0) as total 
-                    FROM movimentacoes m 
-                    WHERE m.tipo = 'despesa'";
-    $resultado_despesas = $conexao->query($sql_despesas);
-    $total_despesas = $resultado_despesas->fetch_assoc()['total'];
-    
-    // Calcular saldo (receitas - despesas)
-    $saldo = $total_receitas - $total_despesas;
-    
-    return $saldo;
+
+    $resultado = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1");
+    if ($resultado && $resultado->num_rows > 0) {
+        return (float) $resultado->fetch_assoc()['saldo'];
+    } else {
+        return 0;
+    }
 }
+
 
 $id = $_SESSION['id'];  
 $stmt = $conexao->prepare("SELECT F_nome, F_email FROM funcionarios WHERE F_id_funcionario = ?");
@@ -57,7 +46,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
     <style>
         /* Estilos Gerais */
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'lufga';
             background: #f8f9fa;
             color: #343a40;
             margin: 0;

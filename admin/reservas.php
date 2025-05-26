@@ -8,6 +8,14 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     $where .= " AND r.R_estado = '$status'";
 }
 
+// Mensagem flash
+if (isset($_SESSION['flash'])) {
+    echo "<div class='flash-message {$_SESSION['flash']['type']}'>{$_SESSION['flash']['msg']}</div>";
+    unset($_SESSION['flash']);
+}
+
+
+
 if (isset($_GET['busca']) && $_GET['busca'] !== '') {
     $busca = $conexao->real_escape_string($_GET['busca']);
     $where .= " AND (h.H_nome LIKE '%$busca%' OR c.C_nome LIKE '%$busca%')";
@@ -40,10 +48,27 @@ $paginas = ceil($total_reservas / $por_pagina);
     <meta charset="UTF-8">
     <link rel="stylesheet" href="admin.css">
     <title>Gestão de Reservas</title>
+        <style>
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+        }
+        .flash-message.success { background-color: #4CAF50; }
+        .flash-message.error { background-color: #f44336; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    </style>
 </head>
 <body>
-    <h1>Gestão de Reservas</h1>
     
+    <h1>Gestão de Reservas</h1>
+    <a href="admin.php">← Voltar</a>
     <div class="filter-form">
         <form method="get">
             <label for="status">Status:</label>
@@ -109,4 +134,5 @@ $paginas = ceil($total_reservas / $por_pagina);
         <?php endfor; ?>
     </div>
 </body>
+<a href="admin.php">← Voltar</a>
 </html>

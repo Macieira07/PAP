@@ -3,9 +3,30 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
+require_once '../conexao.php';
 
 session_start(); // garante que a sessão está ativa
+// No início do arquivo, após verificar a sessão e conectar ao banco:
+$id_hospede = $_SESSION['id'];
+$query_hospede = "SELECT H_nome, H_email, H_telefone, H_documento_ident FROM hospedes WHERE H_id_hospede = ?";
+$stmt_hospede = $conexao->prepare($query_hospede);
+$stmt_hospede->bind_param("i", $id_hospede);
+$stmt_hospede->execute();
+$resultado_hospede = $stmt_hospede->get_result();
 
+if ($resultado_hospede->num_rows > 0) {
+    $hospede = $resultado_hospede->fetch_assoc();
+    
+    // Define os valores padrão para o formulário
+    $nome_padrao = $hospede['H_nome'];
+    $email_padrao = $hospede['H_email'];
+    $telefone_padrao = $hospede['H_telefone'];
+    $documento_padrao = $hospede['H_documento_ident'];
+} else {
+    // Redireciona se não encontrar o hóspede
+    header('Location: pagina1.php');
+    exit();
+}
 // Configurações fixas
 define('BACKGROUND_COLOR', '#f8f9fa');
 define('TEXT_COLOR', '#333333');
@@ -208,22 +229,24 @@ require_once 'header.php';
             <h3><i class="fas fa-user-circle"></i> Dados Pessoais</h3>
             <div class="form-group">
                 <label for="nome_completo"><i class="fas fa-user"></i> Nome Completo</label>
-                <input type="text" id="nome_completo" name="nome_completo" class="form-control" value="<?= isset($_POST['nome_completo']) ? htmlspecialchars($_POST['nome_completo']) : '' ?>" required minlength="2">
+                <input type="text" id="nome_completo" name="nome_completo" class="form-control" 
+                value="<?= isset($_POST['nome_completo']) ? htmlspecialchars($_POST['nome_completo']) : htmlspecialchars($nome_padrao) ?>" 
+                required minlength="2">
             </div>
             
             <div class="form-group">
                 <label for="email"><i class="fas fa-envelope"></i> E-mail</label>
                 <input type="email" id="email" name="email" class="form-control" 
-                       value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" 
-                       required>
+                value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : htmlspecialchars($email_padrao) ?>" 
+                required>
                 <div id="erro-email" class="error-message"></div>
             </div>
             
             <div class="form-group">
                 <label for="documento"><i class="fas fa-id-card"></i> Identificação Civil (9 dígitos)</label>
                 <input type="text" id="documento" name="documento" class="form-control" 
-                       value="<?= isset($_POST['documento']) ? htmlspecialchars($_POST['documento']) : '' ?>" 
-                       required pattern="\d{9}" maxlength="9">
+                value="<?= isset($_POST['documento']) ? htmlspecialchars($_POST['documento']) : htmlspecialchars($documento_padrao) ?>" 
+                required pattern="\d{9}" maxlength="9">
             </div>
             
             <div class="form-group">

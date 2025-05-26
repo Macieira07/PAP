@@ -1,4 +1,4 @@
-    :root {
+ :root {
             --primary-color: #10B981;
             --primary-color-dark: #047857;
             --primary-color-light: #D1FAE5;
@@ -12,6 +12,7 @@
             --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
             --border-radius: 12px;
         }
+
 
         * {
             margin: 0;

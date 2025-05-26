@@ -107,8 +107,8 @@ define('SECONDARY_COLOR', '#A56EFF');
                             <i class="fas fa-caret-down"></i>
                         </button>
                         <div class="dropdown-content" id="user-menu" role="menu" aria-hidden="true">
-                            <a href="../perfil.php" role="menuitem">Perfil</a>
-                            <a href="../logout.php" role="menuitem">Sair</a>
+                            <a href="perfil.php" role="menuitem">Perfil</a>
+                            <a href="logout.php" role="menuitem">Sair</a>
                         </div>
                     </div>
                 </nav>

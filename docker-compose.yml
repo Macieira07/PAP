@@ -44,3 +44,5 @@ services:
 
 volumes:
   db_data:
+  - ./:/var/www/html
+

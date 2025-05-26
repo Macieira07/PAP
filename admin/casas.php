@@ -3,7 +3,11 @@ require '../conexao.php';
 
 // Pesquisa
 $pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
-
+// Mensagem flash
+if (isset($_SESSION['flash'])) {
+    echo "<div class='flash-message {$_SESSION['flash']['type']}'>{$_SESSION['flash']['msg']}</div>";
+    unset($_SESSION['flash']);
+}
 // Paginação
 $casas_por_pagina = 10;
 $página_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
@@ -34,6 +38,22 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <meta charset="UTF-8">
     <title>Casas</title>
 </head>
+    <style>
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+        }
+        .flash-message.success { background-color: #4CAF50; }
+        .flash-message.error { background-color: #f44336; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    </style>
 <body>
     <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">

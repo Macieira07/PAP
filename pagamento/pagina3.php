@@ -191,71 +191,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        if (empty($erros)) {
-            // Seleciona uma casa disponível
-            try {
-                $query = "SELECT C_id_casa FROM casas 
-                          WHERE C_id_casa NOT IN (
-                              SELECT R_id_casa FROM reservas 
-                              WHERE (R_data_checkin < ? AND R_data_checkout > ?) 
-                              OR (R_data_checkin < ? AND R_data_checkout >= ?)
-                          ) 
-                          AND C_estado = 'disponível'
-                          LIMIT 1";
-                $stmt = $conexao->prepare($query);
-                $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkin'], $_SESSION['checkout']);
-                $stmt->execute();
-                $resultado = $stmt->get_result();
+    if (empty($erros)) {
+        // Seleciona uma casa disponível
+        try {
+            $query = "SELECT C_id_casa FROM casas 
+                      WHERE C_id_casa NOT IN (
+                          SELECT R_id_casa FROM reservas 
+                          WHERE (R_data_checkin < ? AND R_data_checkout > ?) 
+                          OR (R_data_checkin < ? AND R_data_checkout >= ?)
+                          AND R_estado NOT IN ('cancelada', 'concluída')
+                      ) 
+                      AND C_estado = 'disponível'
+                      LIMIT 1";
+            $stmt = $conexao->prepare($query);
+            $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkin'], $_SESSION['checkout']);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            
+            if ($resultado->num_rows > 0) {
+                $casa = $resultado->fetch_assoc();
+                $id_casa = $casa['C_id_casa'];
+                    
+                // Define o estado da reserva - apenas UMA inserção
+                $status_reserva = ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') 
+                                  ? 'pendente' : 'confirmada';
                 
-                if ($resultado->num_rows > 0) {
-                    $casa = $resultado->fetch_assoc();
-                    $id_casa = $casa['C_id_casa'];
+                // Insere a reserva - APENAS UMA VEZ
+                $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 
+                          R_num_hospedes, R_preco_total, R_estado, R_metodo_pagamento, R_dados_pagamento)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $stmt = $conexao->prepare($query);
                     
-                    // Define o estado da reserva de acordo com o método de pagamento
-                    $status_reserva = ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') 
-                                      ? 'Pendente' : 'Confirmada';
-                    
-                    // Insere a reserva
-                    $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 
-                              R_num_hospedes, R_preco_total, R_estado, R_metodo_pagamento, R_dados_pagamento)
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    $stmt = $conexao->prepare($query);
-                    
-                    $dados_pagamento_json = json_encode($dados_pagamento);
-                    $stmt->bind_param("iissidsss", $_SESSION['id'], $id_casa, $_SESSION['checkin'], 
-                                     $_SESSION['checkout'], $_SESSION['num_hospedes'], $preco_total, 
-                                     $status_reserva, $metodo_pagamento, $dados_pagamento_json);
-                    
-                    if ($stmt->execute()) {
-                        $reserva_id = $conexao->insert_id;
-                        $_SESSION['reserva_id'] = $reserva_id;
-                        $_SESSION['preco_total'] = $preco_total;
-                        $_SESSION['metodo_pagamento'] = $metodo_pagamento;
+                $dados_pagamento_json = json_encode($dados_pagamento);
+                $stmt->bind_param("iissidsss", $_SESSION['id'], $id_casa, $_SESSION['checkin'], 
+                                 $_SESSION['checkout'], $_SESSION['num_hospedes'], $preco_total, 
+                                 $status_reserva, $metodo_pagamento, $dados_pagamento_json);
+                if ($stmt->execute()) {
+                    $reserva_id = $conexao->insert_id;
+                    $_SESSION['reserva_id'] = $reserva_id;
+                    $_SESSION['preco_total'] = $preco_total;
+                    $_SESSION['metodo_pagamento'] = $metodo_pagamento;
                         
-                        // Redireciona para confirmação
-                        header('Location: confirmacao.php');
-                        exit();
-                    } else {
-                        $erros[] = "Erro ao processar reserva. Por favor, tente novamente. Erro: " . $stmt->error;
-                    }
+                    // Redireciona para confirmação
+                    header('Location: confirmacao.php');
+                    exit();
                 } else {
-                    $erros[] = "Nenhuma casa disponível para as datas selecionadas.";
+                    $erros[] = "Erro ao processar reserva. Por favor, tente novamente. Erro: " . $stmt->error;
                 }
-            } catch (Exception $e) {
-                $erros[] = "Ocorreu um erro ao processar a sua reserva: " . $e->getMessage();
+            } else {
+                $erros[] = "Nenhuma casa disponível para as datas selecionadas.";
             }
+        } catch (Exception $e) {
+            $erros[] = "Ocorreu um erro ao processar a sua reserva: " . $e->getMessage();
         }
     }
-    
+}
     if (!empty($erros)) {
         $mensagem_erro = implode("<br>", $erros);
     }
 }
-
 // Obtém os dados bancários para o país selecionado
 $pais = $_SESSION['pais_regiao'] ?? 'PT';
 $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];
-
 $page_title = 'Faça sua Reserva'; // Altere para cada página
 require_once 'header.php'; 
 ?>
@@ -293,7 +290,6 @@ require_once 'header.php';
                 <i class="fas fa-exclamation-circle"></i> <?= $mensagem_erro ?>
             </div>
         <?php endif; ?>
-        
         <div class="resumo-reserva">
             <h3><i class="fas fa-calendar-check"></i> Resumo da Reserva</h3>
             <div class="resumo-item">
@@ -327,7 +323,6 @@ require_once 'header.php';
                 </div>
             <?php endif; ?>
         </div>
-        
         <div class="preco-total">
             Total a Pagar: €<?= number_format($preco_total, 2, ',', '.') ?>
         </div>

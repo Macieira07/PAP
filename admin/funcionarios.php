@@ -36,6 +36,11 @@ if (isset($_GET['mensagem'])) {
     ";
 }
 
+if (isset($_SESSION['flash'])) {
+    echo "<div class='flash-message {$_SESSION['flash']['type']}'>{$_SESSION['flash']['msg']}</div>";
+    unset($_SESSION['flash']);
+}
+
 $nomeFiltro = $_GET['nome'] ?? '';
 $cargoFiltro = $_GET['cargo'] ?? '';
 $porPagina = 10;
@@ -64,6 +69,20 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="../assets/logos/favicon-32x32.png" sizes="32x32">
     <style>
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+        }
+        .flash-message.success { background-color: #4CAF50; }
+        .flash-message.error { background-color: #f44336; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
         .top-bar {
             position: sticky;
             top: 0;
