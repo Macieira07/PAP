@@ -19,27 +19,50 @@ function show_flash() {
 $saldoQuery = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1");
 $saldoAtual = $saldoQuery->fetch_assoc()['saldo'] ?? 0;
 
-// --- Adicionar gorjeta ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_gorjeta'])) {
+// Obter lista de hóspedes para dropdown
+$hospedesResult = $conexao->query("SELECT H_id_hospede AS id, H_nome AS nome FROM hospedes ORDER BY H_nome ASC");
+$hospedes = [];
+if ($hospedesResult) {
+    while ($row = $hospedesResult->fetch_assoc()) {
+        $hospedes[] = $row;
+    }
+}
+
+// --- Adicionar receita manual ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita'])) {
     $descricao = trim($_POST['descricao']);
     $valor = floatval($_POST['valor']);
+    $tipo = $_POST['tipo'] ?? '';
+    $origem = $_POST['origem'] ?? '';
+    $id_hospede = $_POST['hospede'] ?? null;
+
+    // Validar inputs básicos
+    $tipos_validos = ['gorjeta', 'reembolso', 'outro'];
+    $origens_validas = ['dinheiro', 'mbway', 'transferencia bancaria'];
 
     if ($descricao === '' || $valor <= 0) {
-        set_flash("Por favor preencha a descrição e um valor válido para a gorjeta.", 'error');
+        set_flash("Por favor preencha a descrição e um valor válido para a receita.", 'error');
+    } elseif (!in_array($tipo, $tipos_validos)) {
+        set_flash("Tipo de receita inválido.", 'error');
+    } elseif (!in_array($origem, $origens_validas)) {
+        set_flash("Origem da receita inválida.", 'error');
     } else {
-        // Inserir receita de gorjeta
-        $stmt = $conexao->prepare("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id) VALUES (?, ?, CURDATE(), 'gorjeta', 'manual', 0)");
-        $stmt->bind_param('sd', $descricao, $valor);
+        // Inserir receita na base de dados
+        $stmt = $conexao->prepare("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id) VALUES (?, ?, CURDATE(), ?, ?, ?)");
+        // Se não escolheram hóspede, usar 0
+        $origem_id = is_numeric($id_hospede) ? intval($id_hospede) : 0;
+        $stmt->bind_param('sdssi', $descricao, $valor, $tipo, $origem, $origem_id);
+
         if ($stmt->execute()) {
-            // Atualizar saldo (acrescentar gorjeta)
+            // Atualizar saldo (acrescentar valor da receita)
             $stmt2 = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo + ? WHERE id = 1");
             $stmt2->bind_param('d', $valor);
             $stmt2->execute();
             $stmt2->close();
 
-            set_flash("Gorjeta adicionada com sucesso!");
+            set_flash("Receita adicionada com sucesso!");
         } else {
-            set_flash("Erro ao adicionar gorjeta.", 'error');
+            set_flash("Erro ao adicionar receita.", 'error');
         }
         $stmt->close();
         header("Location: receitas.php");
@@ -73,13 +96,40 @@ if ($result) {
 
 <a href="admin.php">← Voltar</a>
 
-<h3>Adicionar Gorjeta</h3>
+<h3>Adicionar Receita Manual</h3>
 <form method="post" action="receitas.php" style="margin-bottom: 20px;">
     <label>Descrição: <input type="text" name="descricao" required></label>
     &nbsp;&nbsp;
     <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" required></label>
+    <br><br>
+    <label>Tipo:
+        <select name="tipo" required>
+            <option value="">-- Selecionar --</option>
+            <option value="gorjeta">Gorjeta</option>
+            <option value="reembolso">Reembolso</option>
+            <option value="outro">Outro</option>
+        </select>
+    </label>
     &nbsp;&nbsp;
-    <button type="submit" name="adicionar_gorjeta">Adicionar Gorjeta</button>
+    <label>Origem:
+        <select name="origem" required>
+            <option value="">-- Selecionar --</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="mbway">MB Way</option>
+            <option value="transferencia bancaria">Transferência Bancária</option>
+        </select>
+    </label>
+    <br><br>
+    <label>Hóspede (opcional):
+        <select name="hospede">
+            <option value="0">Nenhum</option>
+            <?php foreach ($hospedes as $h): ?>
+                <option value="<?= $h['id'] ?>"><?= htmlspecialchars($h['nome']) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </label>
+    &nbsp;&nbsp;
+    <button type="submit" name="adicionar_receita">Adicionar Receita</button>
 </form>
 
 <h3>Lista de Receitas</h3>
@@ -92,12 +142,20 @@ if ($result) {
             <th>Data</th>
             <th>Tipo</th>
             <th>Origem</th>
+            <th>Hóspede Associado</th>
         </tr>
     </thead>
     <tbody>
         <?php if (empty($receitas)): ?>
-            <tr><td colspan="6" style="text-align:center;">Nenhuma receita encontrada.</td></tr>
+            <tr><td colspan="7" style="text-align:center;">Nenhuma receita encontrada.</td></tr>
         <?php else: ?>
+            <?php
+            // Para mostrar nome do hóspede associado, vamos buscar a lista dos hóspedes num array para acesso rápido
+            $hospedesMap = [];
+            foreach ($hospedes as $h) {
+                $hospedesMap[$h['id']] = $h['nome'];
+            }
+            ?>
             <?php foreach ($receitas as $r): ?>
                 <tr>
                     <td><?= htmlspecialchars($r['R_id_receita']) ?></td>
@@ -106,6 +164,9 @@ if ($result) {
                     <td><?= date('d/m/Y', strtotime($r['R_data'])) ?></td>
                     <td><?= htmlspecialchars($r['R_tipo']) ?></td>
                     <td><?= htmlspecialchars($r['R_origem']) ?></td>
+                    <td>
+                        <?= isset($hospedesMap[$r['R_origem_id']]) ? htmlspecialchars($hospedesMap[$r['R_origem_id']]) : '-' ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>

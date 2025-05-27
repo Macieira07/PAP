@@ -32,8 +32,8 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="admin.css">
     <title>Adicionar Reserva</title>
@@ -47,7 +47,7 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
             text-decoration: line-through;
             position: relative;
         }
-        
+
         .flatpickr-day.flatpickr-disabled.ocupada::after {
             content: '\f057'; /* Ícone X círculo */
             font-family: 'Font Awesome 6 Free';
@@ -59,22 +59,22 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
             transform: translate(-50%, -50%);
             opacity: 0.5;
         }
-        
+
         .form-group {
             margin-bottom: 15px;
         }
-        
+
         .form-group label {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
         }
-        
+
         .form-group label i {
             margin-right: 8px;
             width: 16px;
         }
-        
+
         .total-box {
             background-color: #f9f9f9;
             border: 1px solid #ddd;
@@ -83,21 +83,21 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .total-box h3 {
             margin-top: 0;
             color: #333;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
         }
-        
+
         button.button {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
-        
+
         .button-small {
             display: inline-flex;
             align-items: center;
@@ -109,7 +109,7 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
             border-radius: 4px;
             margin-left: 10px;
         }
-        
+
         .button-small i {
             margin-right: 4px;
         }
@@ -124,7 +124,7 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
     <form method="POST" action="processar_reserva.php" id="reservaForm">
         <div class="form-group">
             <label for="id_casa"><i class="fas fa-home"></i> Casa:</label>
-            <select name="id_casa" id="id_casa" required onchange="atualizarPreco(); atualizarDatas();">
+            <select name="id_casa" id="id_casa" required onchange="atualizarPreco(); atualizarDatas(); calcularTotal();">
                 <option value="">-- Selecione --</option>
                 <?php while ($c = $casas->fetch_assoc()): ?>
                     <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>">
@@ -162,10 +162,38 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
             <input type="number" id="num_hospedes" name="num_hospedes" min="1" value="1" required>
         </div>
 
+        <!-- Serviços adicionais -->
+        <fieldset style="margin-bottom:15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            <legend><i class="fas fa-concierge-bell"></i> Serviços Adicionais</legend>
+
+            <div class="form-group">
+                <label for="decoracao_tematica"><i class="fas fa-palette"></i> Decoração Temática (130€):</label>
+                <select id="decoracao_tematica" name="decoracao_tematica">
+                    <option value="">Selecione um tema</option>
+                    <option value="Romântico">Romântico</option>
+                    <option value="Aniversário">Aniversário</option>
+                    <option value="Natal">Natal</option>
+                    <option value="Lua de Mel">Lua de Mel</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-broom"></i> Limpeza Diária (15€/noite):</label>
+                <input type="checkbox" id="limpeza_diaria" name="limpeza_diaria">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-gift"></i> Cesto de Boas-Vindas (10€):</label>
+                <input type="checkbox" id="cesto_boas_vindas" name="cesto_boas_vindas">
+            </div>
+        </fieldset>
+
         <div class="total-box">
             <h3><i class="fas fa-receipt"></i> Total Estimado</h3>
             <p><i class="fas fa-tag"></i> Preço por noite: <span id="preco_noite">0.00</span>€</p>
             <p><i class="fas fa-moon"></i> Noites: <span id="noites">0</span></p>
+            <p><i class="fas fa-concierge-bell"></i> Serviços adicionais: <span id="preco_servicos">0.00</span>€</p>
             <p><strong><i class="fas fa-money-bill-wave"></i> Total: <span id="preco_total">0.00</span>€</strong></p>
         </div>
 
@@ -174,79 +202,111 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        const datasOcupadas = <?= $ocupadas_json ?>;
+        const casasOcupadas = <?= $ocupadas_json ?>;
+        const checkinPicker = flatpickr("#data_checkin", {
+            dateFormat: "Y-m-d",
+            minDate: "<?= $hoje ?>",
+            disable: [],
+            onChange: function(selectedDates, dateStr, instance) {
+                atualizarDatas();
+                calcularTotal();
+            }
+        });
 
-        let checkinPicker;
-        let checkoutPicker;
+        const checkoutPicker = flatpickr("#data_checkout", {
+            dateFormat: "Y-m-d",
+            minDate: "<?= $amanha ?>",
+            disable: [],
+            onChange: function(selectedDates, dateStr, instance) {
+                calcularTotal();
+            }
+        });
 
         function atualizarDatas() {
-            const casaId = document.getElementById('id_casa').value;
-            const datasDesativadas = datasOcupadas[casaId] || [];
+            const casaSelect = document.getElementById('id_casa');
+            const idCasa = casaSelect.value;
+            if (!idCasa || !casasOcupadas[idCasa]) {
+                checkinPicker.set('disable', []);
+                checkoutPicker.set('disable', []);
+                return;
+            }
 
-            if (checkinPicker) checkinPicker.destroy();
-            if (checkoutPicker) checkoutPicker.destroy();
+            const datasOcupadasCasa = casasOcupadas[idCasa];
+            checkinPicker.set('disable', datasOcupadasCasa);
+            checkoutPicker.set('disable', datasOcupadasCasa);
 
-            // Opções comuns para ambos os pickers
-            const configComum = {
-                dateFormat: "Y-m-d",
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    // Marca visualmente as datas ocupadas
-                    const dataFormatada = dayElem.dateObj.getFullYear() + '-' + 
-                                         String(dayElem.dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
-                                         String(dayElem.dateObj.getDate()).padStart(2, '0');
-                    
-                    if (datasDesativadas.includes(dataFormatada)) {
-                        dayElem.classList.add('ocupada');
-                    }
-                }
-            };
-
-            checkinPicker = flatpickr("#data_checkin", {
-                ...configComum,
-                minDate: "today",
-                disable: datasDesativadas,
-                onChange: function (selectedDates, dateStr) {
-                    if (selectedDates.length > 0) {
-                        const minCheckout = new Date(selectedDates[0]);
-                        minCheckout.setDate(minCheckout.getDate() + 1);
-                        checkoutPicker.set("minDate", minCheckout);
-                        calcularTotal();
-                    }
-                }
-            });
-
-            checkoutPicker = flatpickr("#data_checkout", {
-                ...configComum,
-                minDate: "tomorrow",
-                disable: datasDesativadas,
-                onChange: calcularTotal
-            });
+            // Atualizar minDate do checkout para o dia seguinte ao checkin escolhido
+            if (checkinPicker.selectedDates.length > 0) {
+                let novaMinDate = new Date(checkinPicker.selectedDates[0]);
+                novaMinDate.setDate(novaMinDate.getDate() + 1);
+                checkoutPicker.set('minDate', novaMinDate);
+            } else {
+                checkoutPicker.set('minDate', "<?= $amanha ?>");
+            }
         }
 
         function atualizarPreco() {
             const casaSelect = document.getElementById('id_casa');
-            const precoNoite = casaSelect.options[casaSelect.selectedIndex]?.dataset.preco || 0;
-            document.getElementById('preco_noite').textContent = parseFloat(precoNoite).toFixed(2);
-            calcularTotal();
+            const precoNoite = parseFloat(casaSelect.options[casaSelect.selectedIndex]?.dataset.preco || 0);
+            document.getElementById('preco_noite').textContent = precoNoite.toFixed(2);
         }
 
         function calcularTotal() {
             const casaSelect = document.getElementById('id_casa');
             const precoNoite = parseFloat(casaSelect.options[casaSelect.selectedIndex]?.dataset.preco || 0);
-            const checkin = checkinPicker?.selectedDates[0];
-            const checkout = checkoutPicker?.selectedDates[0];
+            const checkin = checkinPicker.selectedDates[0];
+            const checkout = checkoutPicker.selectedDates[0];
 
             let noites = 0;
             if (checkin && checkout) {
-                noites = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                const checkinDia = new Date(checkin.getFullYear(), checkin.getMonth(), checkin.getDate());
+                const checkoutDia = new Date(checkout.getFullYear(), checkout.getMonth(), checkout.getDate());
+                noites = Math.round((checkoutDia - checkinDia) / (1000 * 60 * 60 * 24));
+                if (noites < 0) noites = 0;
+            }
+            document.getElementById('noites').textContent = noites;
+
+            let servicosTotal = 0;
+
+            // Decoração temática 130€
+            const decoracaoTema = document.getElementById('decoracao_tematica').value;
+            if (decoracaoTema) {
+                servicosTotal += 130;
             }
 
-            document.getElementById('noites').textContent = noites;
-            document.getElementById('preco_total').textContent = (noites * precoNoite).toFixed(2);
+            // Limpeza diária 15€/noite
+            const limpezaDiaria = document.getElementById('limpeza_diaria').checked;
+            if (limpezaDiaria && noites > 0) {
+                servicosTotal += 15 * noites;
+            }
+
+            // Cesto boas-vindas 10€
+            const cestoBoasVindas = document.getElementById('cesto_boas_vindas').checked;
+            if (cestoBoasVindas) {
+                servicosTotal += 10;
+            }
+
+            document.getElementById('preco_servicos').textContent = servicosTotal.toFixed(2);
+
+            const total = (noites * precoNoite) + servicosTotal;
+            document.getElementById('preco_total').textContent = total.toFixed(2);
         }
 
-        // Inicialização base
+        // Event listeners para recalcular ao mudar inputs
+        document.getElementById('id_casa').addEventListener('change', () => {
+            atualizarPreco();
+            atualizarDatas();
+            calcularTotal();
+        });
+
+        document.getElementById('decoracao_tematica').addEventListener('change', calcularTotal);
+        document.getElementById('limpeza_diaria').addEventListener('change', calcularTotal);
+        document.getElementById('cesto_boas_vindas').addEventListener('change', calcularTotal);
+
+        // Inicia valores
+        atualizarPreco();
         atualizarDatas();
+        calcularTotal();
     </script>
 </body>
 </html>

@@ -25,13 +25,11 @@ $tipos_manutencao = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_casa = $_POST['id_casa'];
     $tipo = $_POST['tipo'];
-    $descricao = $_POST['descricao'];
     $data_inicio = $_POST['data_inicio'];
-    $data_fim = $_POST['data_fim'];  // Novo campo
+    $data_fim = $_POST['data_fim'];
     $custo = $_POST['custo'];
 
-    // Corrigido para utilizar o nome correto da tabela 'manutencao'
-    $stmt = $conexao->prepare("INSERT INTO manutencao (M_id_casa, M_tipo, M_descricao, M_data_inicio, M_data_fim, M_custo) VALUES (?, ?, ?, , ?, ?)");
+    $stmt = $conexao->prepare("INSERT INTO manutencao (M_id_casa, M_tipo, M_data_inicio, M_data_fim, M_custo) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("isssd", $id_casa, $tipo, $data_inicio, $data_fim, $custo);
     $stmt->execute();
 
@@ -46,9 +44,9 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <title>Adicionar Manutenção</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link rel="stylesheet" href="admin.css">
     <script>
         function atualizarDescricao() {
@@ -82,6 +80,9 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
                     <option value="<?= htmlspecialchars($tipo) ?>"><?= htmlspecialchars($tipo) ?></option>
                 <?php endforeach; ?>
             </select><br><br>
+
+            <label>Descrição:</label>
+            <textarea id="descricao" readonly rows="4" style="width: 100%;"></textarea><br><br>
 
             <label>Data Início: <i class="fa-solid fa-calendar-alt"></i></label>
             <input type="date" name="data_inicio" required><br><br>

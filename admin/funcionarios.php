@@ -81,52 +81,6 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         }
         .flash-message.success { background-color: #4CAF50; }
         .flash-message.error { background-color: #f44336; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        .top-bar {
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ccc;
-            z-index: 100;
-        }
-        .top-bar a {
-            text-decoration: none;
-            font-weight: bold;
-            color: black;
-        }
-        .top-bar .back-icon {
-            font-size: 1.2rem;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-        table th, table td {
-            padding: 10px;
-            text-align: left;
-        }
-        .input-icon {
-            padding-left: 25px;
-            background-repeat: no-repeat;
-            background-position: 5px center;
-            background-size: 16px;
-        }
-        .btn-adicionar {
-            float: right;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>

@@ -54,7 +54,7 @@ if ($reservas > 0) {
 } else {
     echo json_encode([
         'available' => true,
-        'message' => '<span style="color: green; font-weight: bold;">As datas selecionadas estão disponíveis! <a href="#" style="color: darkgreen; text-decoration: underline; font-weight: bold;">Reservar Agora</a></span>'
+        'message' => '<span style="color: green; font-weight: bold;">As datas selecionadas estão disponíveis! <a href="login1/pagina_login.php" style="color: darkgreen; text-decoration: underline; font-weight: bold;">Reservar Agora</a></span>'
     ]);
 }
 

@@ -383,40 +383,34 @@ $termos_html = '
         • Documento de identificação válido de todos os hóspedes<br>
         • Cartão de cidadão ou passaporte (obrigatório por lei)
     </div>
-    
     <div class="termo-item">
         <span class="termo-title">❌ Política de Cancelamento:</span><br>
         • Cancelamento gratuito até 10 dias antes da chegada<br>
         • Cancelamento entre 10-3 dias: retenção de 50% do valor<br>
         • Cancelamento com menos de 3 dias: retenção de 100%
     </div>
-    
     <div class="termo-item">
         <span class="termo-title">💳 Pagamento:</span><br>
         • Sinal de 30% pago na reserva<br>
         • Restante valor a liquidar no check-in<br>
         • Aceitos: Dinheiro, MB Way, Cartão de Débito/Crédito
     </div>
-    
     <div class="termo-item">
         <span class="termo-title">🏠 Regras da Casa:</span><br>
         • Não fumadores • Animais mediante consulta prévia<br>
         • Silêncio após as 22h • Capacidade máxima respeitada
     </div>
 </div>
-
 <div class="important-note">
     <strong>⚠️ IMPORTANTE:</strong> Em caso de não comparência (no-show) sem aviso prévio, 
     o valor total da reserva será retido. Para alterações contacte-nos com pelo menos 48h de antecedência.
 </div>';
-
 $pdf->writeHTML($termos_html, true, false, true, false, '');
 // === CONTACTOS E LOCALIZAÇÃO ===
 $pdf->SetY($pdf->GetY() + 5);
 $pdf->SetFont('helvetica', 'B', 12);
 $pdf->SetTextColor($primary_rgb[0], $primary_rgb[1], $primary_rgb[2]);
 $pdf->Cell(0, 8, 'Contactos e Como Chegar', 0, 1, 'L');
-
 $contactos_html = '
 <style>
     .contactos-grid {
@@ -449,7 +443,6 @@ $contactos_html = '
         color: #495057;
     }
 </style>
-
 <div class="contactos-grid">
     <div class="contacto-col">
         <div class="contacto-box">
@@ -472,27 +465,21 @@ $contactos_html = '
         </div>
     </div>
 </div>';
-
 $pdf->writeHTML($contactos_html, true, false, true, false, '');
-
 // === RODAPÉ PROFISSIONAL ===
 $pdf->SetY(-35);
-
 // Linha decorativa
 $pdf->SetDrawColor($primary_rgb[0], $primary_rgb[1], $primary_rgb[2]);
 $pdf->SetLineWidth(0.5);
 $pdf->Line(15, $pdf->GetY(), 195, $pdf->GetY());
-
 $pdf->SetY(-30);
 $pdf->SetFont('helvetica', 'B', 9);
 $pdf->SetTextColor($primary_rgb[0], $primary_rgb[1], $primary_rgb[2]);
 $pdf->Cell(0, 5, 'Obrigado por escolher a Quinta das Flores!', 0, 1, 'C');
-
 $pdf->SetFont('helvetica', '', 8);
 $pdf->SetTextColor(100, 100, 100);
 $pdf->Cell(0, 4, 'Documento gerado automaticamente em ' . date('d/m/Y \à\s H:i') . ' • Válido sem assinatura', 0, 1, 'C');
 $pdf->Cell(0, 4, CONTACT_PHONE . ' • ' . CONTACT_EMAIL . ' • ' . PROPERTY_ADDRESS, 0, 1, 'C');
-
 // Output do PDF
 $filename = 'Comprovativo_Reserva_' . str_pad($reserva_id, 5, '0', STR_PAD_LEFT) . '_' . date('Ymd') . '.pdf';
 $pdf->Output($filename, 'I');
