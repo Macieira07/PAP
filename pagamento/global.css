@@ -946,3 +946,35 @@
       width: 40%;
     }
   }
+
+
+
+  
+
+  /* Estilos para ofertas */
+.oferta-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.alert {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+/* Adicione ao seu arquivo CSS */
+select:disabled, input[readonly] {
+    background-color: #f5f5f5;
+    color: #666;
+    cursor: not-allowed;
+    border-color: #ddd;
+}

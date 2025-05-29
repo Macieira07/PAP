@@ -2203,3 +2203,103 @@
 [16-May-2025 08:03:57 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a35ca8cb2dsm1980563f8f.84 - gsmtp
 
 [16-May-2025 08:03:57 UTC] Email enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 15:55:01 UTC] Início do processamento de registro
+[29-May-2025 15:55:02 UTC] POST recebido: Array
+(
+    [nome] => Ema Viana
+    [email] => emavianaa8@gmail.com
+    [password] => EmaViana123
+    [telefone] => 919111999
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 45567955fdcc21733c94eddbb197c50dc44b80849c4be8dfab7a05bb25dbb052
+)
+
+[29-May-2025 15:55:02 UTC] Tentando enviar email para emavianaa8@gmail.com...
+[29-May-2025 15:55:02 UTC] PHPMailer (2): SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:02 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[29-May-2025 15:55:02 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[29-May-2025 15:55:02 UTC] PHPMailer (1): CLIENT -> SERVER: STARTTLS
+
+[29-May-2025 15:55:02 UTC] PHPMailer (2): SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: EHLO localhost
+
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 250-smtp.gmail.com at your service, [161.230.207.113]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: AUTH LOGIN
+
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: [credentials hidden]
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: MAIL FROM:<quinta.flores2019@gmail.com>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: RCPT TO:<emavianaa8@gmail.com>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: DATA
+
+[29-May-2025 15:55:03 UTC] PHPMailer (2): SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: Date: Thu, 29 May 2025 15:55:02 +0000
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: To: emavianaa8@gmail.com
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: From: Quinta Flores <quinta.flores2019@gmail.com>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: Subject: Verifique seu email - Quinta Flores
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: Message-ID: <pzPYhzkqualZAMu1Teq4QIbnDxVVKeAyVM0QJILc@localhost>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: MIME-Version: 1.0
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: <h2>Bem-vindo à Quinta Flores!</h2>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER:                 <p><a href='http://localhost:8080/login1/verify.php?token=8531561fdb826d61ddb101f72c1e21cbb6f4a9f4d09ae93ba6503e40a2435cb2'>Verificar Email</a></p>
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: 
+
+[29-May-2025 15:55:03 UTC] PHPMailer (1): CLIENT -> SERVER: .
+
+[29-May-2025 15:55:04 UTC] PHPMailer (2): SERVER -> CLIENT: 250 2.0.0 OK  1748534104 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:04 UTC] PHPMailer (1): CLIENT -> SERVER: QUIT
+
+[29-May-2025 15:55:04 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-450d63fe2b4sm2107405e9.30 - gsmtp
+
+[29-May-2025 15:55:04 UTC] Email enviado com sucesso para emavianaa8@gmail.com

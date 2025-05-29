@@ -25,15 +25,11 @@ $origemFilter = $_GET['origem'] ?? '';
 $estadoFilter = $_GET['estado'] ?? '';
 $searchTerm = trim($_GET['search'] ?? '');
 
-// Construir condições SQL
 $where = [];
-$params = [];
-$param_types = '';
 
 if ($origemFilter && in_array($origemFilter, ['manutencao', 'servico', 'despesa'])) {
-    $where[] = "origem = ?";
-    $params[] = $origemFilter;
-    $param_types .= 's';
+    $origemEscaped = $conexao->real_escape_string($origemFilter);
+    $where[] = "origem = '$origemEscaped'";
 }
 
 if ($estadoFilter && in_array($estadoFilter, ['pago', 'por_pagar'])) {
@@ -45,15 +41,11 @@ if ($estadoFilter && in_array($estadoFilter, ['pago', 'por_pagar'])) {
 }
 
 if ($searchTerm !== '') {
-    $where[] = "nome LIKE ?";
-    $params[] = "%$searchTerm%";
-    $param_types .= 's';
+    $searchEscaped = $conexao->real_escape_string($searchTerm);
+    $where[] = "nome LIKE '%$searchEscaped%'";
 }
 
-$whereSql = '';
-if (count($where) > 0) {
-    $whereSql = 'WHERE ' . implode(' AND ', $where);
-}
+$whereSql = count($where) > 0 ? 'WHERE ' . implode(' AND ', $where) : '';
 
 // --- PAGINAÇÃO ---
 $itemsPerPage = 10;
@@ -74,7 +66,6 @@ $sql = "
     LIMIT $itemsPerPage OFFSET $offset
 ";
 
-// Preparar e executar query (sem prepared para UNION, aplicamos filtro depois)
 $despesas = [];
 $result = $conexao->query($sql);
 if ($result) {
@@ -83,7 +74,7 @@ if ($result) {
     }
 }
 
-// Contar total para paginação (simplificado, sem filtro aplicado para não complicar)
+// Contar total para paginação (sem filtros)
 $totalResult = $conexao->query("
     SELECT COUNT(*) AS total FROM (
         SELECT M_id_manutencao AS id FROM manutencao
@@ -114,23 +105,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
         exit;
     }
 
-    // Usar prepared statements para evitar injeção
+    // Atualizar estado de pagamento
     if ($origem === 'manutencao') {
         $stmt = $conexao->prepare("UPDATE manutencao SET M_pago = 1 WHERE M_id_manutencao = ?");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
     } elseif ($origem === 'servico') {
         $stmt = $conexao->prepare("UPDATE servicos SET S_pago = 1 WHERE S_id_servico = ?");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
     } else {
         $stmt = $conexao->prepare("UPDATE despesas SET D_pago = 1, D_data_pagamento = CURDATE() WHERE id = ?");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
     }
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->close();
 
     // Registar movimentação
     $descricao = "Pagamento de $origem: $id";
@@ -149,8 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
     header("Location: despesas.php");
     exit;
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-PT">

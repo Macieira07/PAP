@@ -70,6 +70,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita']))
     }
 }
 
+// --- Recolher dinheiro ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recolher_dinheiro'])) {
+    $valor = floatval($_POST['valor_recolher']);
+    
+    if ($valor <= 0) {
+        set_flash("Por favor insira um valor válido para recolher.", 'error');
+    } elseif ($valor > $saldoAtual) {
+        set_flash("Não pode recolher mais dinheiro do que o saldo disponível.", 'error');
+    } else {
+        // Atualizar saldo (subtrair valor recolhido)
+        $stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo - ? WHERE id = 1");
+        $stmt->bind_param('d', $valor);
+        
+        if ($stmt->execute()) {
+            // Registrar a movimentação
+            $descricao = "Recolha de dinheiro";
+            $stmt2 = $conexao->prepare("INSERT INTO movimentacoes (tipo, descricao, valor, origem, data) VALUES ('despesa', ?, ?, 'recolha', NOW())");
+            $stmt2->bind_param('sd', $descricao, $valor);
+            $stmt2->execute();
+            $stmt2->close();
+            
+            set_flash("Recolheu €" . number_format($valor, 2, ',', '.') . " com sucesso!");
+        } else {
+            set_flash("Erro ao recolher dinheiro.", 'error');
+        }
+        $stmt->close();
+        header("Location: receitas.php");
+        exit;
+    }
+}
+
+// --- Recolher tudo ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recolher_tudo'])) {
+    if ($saldoAtual <= 0) {
+        set_flash("Não há dinheiro disponível para recolher.", 'error');
+    } else {
+        // Atualizar saldo (zerar)
+        $stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = 0 WHERE id = 1");
+        
+        if ($stmt->execute()) {
+            // Registrar a movimentação
+            $descricao = "Recolha total de dinheiro";
+            $stmt2 = $conexao->prepare("INSERT INTO movimentacoes (tipo, descricao, valor, origem, data) VALUES ('despesa', ?, ?, 'recolha', NOW())");
+            $stmt2->bind_param('sd', $descricao, $saldoAtual);
+            $stmt2->execute();
+            $stmt2->close();
+            
+            set_flash("Recolheu todo o dinheiro (€" . number_format($saldoAtual, 2, ',', '.') . ") com sucesso!");
+        } else {
+            set_flash("Erro ao recolher todo o dinheiro.", 'error');
+        }
+        $stmt->close();
+        header("Location: receitas.php");
+        exit;
+    }
+}
+
 // --- Buscar receitas da tabela receitas ---
 $sql = "SELECT * FROM receitas ORDER BY R_data DESC, R_id_receita DESC";
 $result = $conexao->query($sql);
@@ -87,6 +144,24 @@ if ($result) {
     <meta charset="UTF-8" />
     <title>Receitas</title>
     <link rel="stylesheet" href="admin.css" />
+    <style>
+        .saldo-positivo { color: green; }
+        .saldo-negativo { color: red; }
+        .recolher-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .recolher-container input {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        .recolher-container button {
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -95,6 +170,18 @@ if ($result) {
 <?php show_flash(); ?>
 
 <a href="admin.php">← Voltar</a>
+
+<!-- Formulário para recolher dinheiro -->
+<div class="recolher-container">
+    <h3>Recolher Dinheiro</h3>
+    <form method="post" action="receitas.php">
+        <label>Valor a recolher (€): 
+            <input type="number" step="0.01" min="0.01" name="valor_recolher" value="<?= number_format($saldoAtual, 2, '.', '') ?>" required>
+        </label>
+        <button type="submit" name="recolher_dinheiro">Recolher</button>
+        <button type="submit" name="recolher_tudo">Recolher Tudo</button>
+    </form>
+</div>
 
 <h3>Adicionar Receita Manual</h3>
 <form method="post" action="receitas.php" style="margin-bottom: 20px;">

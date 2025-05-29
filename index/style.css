@@ -533,10 +533,7 @@ nav {
     font-weight: 700;
   }
 
-/* Nova Galeria */
-/* Substituir a seção de galeria existente por este novo código */
-/* Nova Galeria Moderna */
-/* Adicione isto ao CSS */
+/* Galeria */
 .gallery-reveal {
   text-align: center;
   margin-top: 2rem;
@@ -1387,9 +1384,6 @@ input:checked + .theme-slider:before {
     transform: translateX(-50%);
   }
 }
-
-
-
     /*linguagens traduções*/
         /* Language Selector Styles */
 .language-selector {

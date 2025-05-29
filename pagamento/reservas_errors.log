@@ -144,3 +144,22 @@ Stack trace:
 [19-May-2025 11:00:54 UTC] E-mail enviado com sucesso para catarinamacieira@gmail.com
 [19-May-2025 11:07:54 UTC] Nova reserva criada: ID=13 para davidfloresmacieira@gmail.com
 [19-May-2025 11:07:56 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[28-May-2025 08:57:11 UTC] Nova reserva criada: ID=25 para davidfloresmacieira@gmail.com
+[28-May-2025 08:57:15 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[28-May-2025 09:59:33 UTC] Nova reserva criada: ID=27 para davidfloresmacieira@gmail.com
+[28-May-2025 09:59:36 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 09:01:55 UTC] Nova reserva criada: ID=29 para davidfloresmacieira@gmail.com
+[29-May-2025 09:01:58 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 09:03:34 UTC] PHP Warning:  Undefined array key "codigo_oferta" in /var/www/html/pagamento/confirmacao.php on line 25
+[29-May-2025 09:03:34 UTC] Nova reserva criada: ID=31 para davidfloresmacieira@gmail.com
+[29-May-2025 09:03:37 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 15:34:27 UTC] Nova reserva criada: ID=33 para davidfloresmacieira@gmail.com
+[29-May-2025 15:34:29 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 15:38:00 UTC] Nova reserva criada: ID=35 para davidfloresmacieira@gmail.com
+[29-May-2025 15:38:02 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 15:52:12 UTC] Nova reserva criada: ID=37 para davidfloresmacieira@gmail.com
+[29-May-2025 15:52:14 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[29-May-2025 15:56:00 UTC] Nova reserva criada: ID=39 para emavianaa8@gmail.com
+[29-May-2025 15:56:03 UTC] E-mail enviado com sucesso para emavianaa8@gmail.com
+[29-May-2025 15:56:39 UTC] Nova reserva criada: ID=41 para davidfloresmacieira@gmail.com
+[29-May-2025 15:56:42 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com

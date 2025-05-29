@@ -5,13 +5,26 @@ require_once '../conexao.php';
 // Configurações globais
 define('SITE_NAME', 'Quinta das Flores');
 define('PRIMARY_COLOR', '#4a8f29');
-define('EMAIL_COLOR', '#4a8f29'); // Alterado para verde como solicitado
+define('EMAIL_COLOR', '#4a8f29');
 define('CONTACT_PHONE', '+351 912 418 976');
 define('CONTACT_EMAIL', 'quinta.flores2019@gmail.com');
 define('PROPERTY_ADDRESS', 'Travessa da Seara 265-Calheiros, Ponte de Lima');
+define('RNAL', 'AL123456'); // Número de registo de alojamento local
 
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__.'/reservas_errors.log');
+
+// Verificar oferta
+$oferta_info = '';
+if (isset($_SESSION['codigo_oferta'])) {
+    $codigos_oferta = [
+        'LOVE260' => 'Pacote Amor (2 noites - €260)',
+        'PARTY260' => 'Pacote Festa com Amigos (2 noites - €260)',
+        'RETIRO240' => 'Pacote Retiro na Catequese (2 noites - €240)'
+    ];
+    $codigo = $_SESSION['codigo_oferta'];
+    $oferta_info = isset($codigos_oferta[$codigo]) ? $codigos_oferta[$codigo] : $codigo;
+}
 
 if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION['checkout']) || !isset($_SESSION['num_hospedes'])) {
     error_log("Erro: Dados da reserva não encontrados na sessão");
@@ -23,9 +36,9 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION[
             </div>
           </div>');
 }
+
 $checkin = filter_var($_SESSION['checkin'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $checkout = filter_var($_SESSION['checkout'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
 $num_hospedes = filter_var($_SESSION['num_hospedes'], FILTER_VALIDATE_INT);
 
 if (!strtotime($checkin) || !strtotime($checkout)) {
@@ -62,14 +75,33 @@ if (isset($_SESSION['servicos'])) {
         }
     }
 }
-$query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_servicos)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+// Aplicar desconto da oferta se existir
+if (isset($_SESSION['codigo_oferta'])) {
+    switch ($_SESSION['codigo_oferta']) {
+        case 'LOVE260':
+        case 'PARTY260':
+            $preco_total = 260;
+            break;
+        case 'RETIRO240':
+            $preco_total = 240;
+            break;
+    }
+}
+
+$query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_servicos, R_metodo_pagamento)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conexao->prepare($query);
 $id_hospede = $_SESSION['id'];
 $id_casa = 1;
 $estado = 'confirmada';
 $servicos_texto = !empty($servicos_adicionais) ? implode(', ', $servicos_adicionais) : 'Nenhum serviço adicional';
-$stmt->bind_param('iissidss', $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco_total, $estado, $servicos_texto);
+if (!empty($oferta_info)) {
+    $servicos_texto .= ($servicos_texto ? ', ' : '') . $oferta_info;
+}
+$metodo_pagamento = isset($_SESSION['metodo_pagamento']) ? $_SESSION['metodo_pagamento'] : 'Não especificado';
+$stmt->bind_param('iissidsss', $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco_total, $estado, $servicos_texto, $metodo_pagamento);
+
 if (!$stmt->execute()) {
     error_log("Erro ao salvar reserva: " . $stmt->error);
     die('<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
@@ -80,79 +112,132 @@ if (!$stmt->execute()) {
             </div>
           </div>');
 }
+
 $reserva_id = $conexao->insert_id;
 error_log("Nova reserva criada: ID=$reserva_id para {$_SESSION['email']}");
-// Gerar PDF atualizado
+
+// Gerar PDF
 require_once('tcpdf/tcpdf.php');
-$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 $pdf->SetCreator(SITE_NAME);
 $pdf->SetAuthor(SITE_NAME);
-$pdf->SetTitle('Comprovativo de Reserva');
-$pdf->SetSubject('Reserva ' . SITE_NAME);
-$pdf->SetKeywords('Reserva, ' . SITE_NAME . ', Comprovantivo');
-// Remover cabeçalho e rodapé padrões
-$pdf->setPrintHeader(false);
-$pdf->setPrintFooter(false);
+$pdf->SetTitle('Fatura #' . $reserva_id);
+$pdf->SetSubject('Fatura de Alojamento Local');
+$pdf->SetMargins(15, 15, 15);
+$pdf->SetAutoPageBreak(TRUE, 15);
 $pdf->AddPage();
-// Cabeçalho personalizado
-$pdf->Image('../assets/logos/logotipo1.png', 15, 10, 30, 0, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-$pdf->SetFont('helvetica', 'B', 22);
-$pdf->SetY(15);
-$pdf->Cell(0, 10, SITE_NAME, 0, 1, 'C');
-$pdf->SetFont('helvetica', '', 12);
-$pdf->Cell(0, 5, 'Comprovativo de Reserva', 0, 1, 'C');
-$pdf->Line(10, 35, 200, 35);
-$pdf->SetY(45);
-// Conteúdo principal do PDF
-$pdf->SetFont('helvetica', '', 12);
-$html = '
-<h1 style="color:'.EMAIL_COLOR.';">Detalhes da Reserva</h1>
-<table border="0" cellpadding="4">
-    <tr><td width="40%"><strong>Nº Reserva:</strong></td><td>'.$reserva_id.'</td></tr>
-    <tr><td><strong>Nome:</strong></td><td>'.htmlspecialchars($_SESSION['nome']).'</td></tr>
-    <tr><td><strong>E-mail:</strong></td><td>'.htmlspecialchars($_SESSION['email']).'</td></tr>
-    <tr><td><strong>Check-in:</strong></td><td>'.htmlspecialchars($checkin).' (a partir das 15:00)</td></tr>
-    <tr><td><strong>Check-out:</strong></td><td>'.htmlspecialchars($checkout).' (até às 11:00)</td></tr>
-    <tr><td><strong>Hóspedes:</strong></td><td>'.$num_hospedes.'</td></tr>
-    <tr><td><strong>Noites:</strong></td><td>'.$num_noites.'</td></tr>';
+
+// Cabeçalho
+$pdf->SetFont('helvetica', 'B', 16);
+$pdf->Cell(0, 8, SITE_NAME, 0, 1, 'L');
+$pdf->SetFont('helvetica', '', 10);
+$pdf->Cell(0, 5, 'Alojamento Local • RNAL: ' . RNAL, 0, 1, 'L');
+$pdf->Cell(0, 5, 'Telefone: ' . CONTACT_PHONE . ' • Email: ' . CONTACT_EMAIL, 0, 1, 'L');
+
+// Linha divisória
+$pdf->SetDrawColor(74, 143, 41);
+$pdf->SetLineWidth(0.5);
+$pdf->Line(15, $pdf->GetY()+3, 195, $pdf->GetY()+3);
+$pdf->Ln(8);
+
+// Título
+$pdf->SetFont('helvetica', 'B', 14);
+$pdf->Cell(0, 8, 'FATURA/RECIBO', 0, 1, 'L');
+$pdf->SetFont('helvetica', '', 10);
+$pdf->Cell(100, 5, 'Número: ' . str_pad($reserva_id, 5, '0', STR_PAD_LEFT), 0, 0, 'L');
+$pdf->Cell(0, 5, 'Data: ' . date('d/m/Y'), 0, 1, 'R');
+$pdf->Ln(5);
+
+// Dados do cliente
+$pdf->SetFont('helvetica', 'B', 11);
+$pdf->Cell(0, 6, 'Cliente:', 0, 1, 'L');
+$pdf->SetFont('helvetica', '', 10);
+$pdf->Cell(0, 5, $_SESSION['nome'], 0, 1, 'L');
+$pdf->Cell(0, 5, 'Contacto: ' . (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : 'Não informado'), 0, 1, 'L');
+$pdf->Cell(0, 5, 'Email: ' . $_SESSION['email'], 0, 1, 'L');
+$pdf->Ln(8);
+
+// Detalhes da reserva - Lista no lado esquerdo
+$pdf->SetFont('helvetica', 'B', 11);
+$pdf->Cell(0, 6, 'Detalhes da Estadia:', 0, 1, 'L');
+$pdf->SetFont('helvetica', '', 10);
+
+// Lista de detalhes
+$detalhes = [
+    'Alojamento' => 'Quinta Flores',
+    'Check-in' => $checkin_date->format('d/m/Y') . ' (a partir das 15:00)',
+    'Check-out' => $checkout_date->format('d/m/Y') . ' (até às 11:00)',
+    'Nº de Noites' => $num_noites,
+    'Nº de Hóspedes' => $num_hospedes,
+    'Método de Pagamento' => $metodo_pagamento
+];
+
+foreach ($detalhes as $label => $value) {
+    $pdf->Cell(50, 5, $label . ':', 0, 0, 'L');
+    $pdf->Cell(0, 5, $value, 0, 1, 'L');
+}
+
+// Adicionar oferta se existir
+if (!empty($oferta_info)) {
+    $pdf->Cell(50, 5, 'Oferta Especial:', 0, 0, 'L');
+    $pdf->Cell(0, 5, $oferta_info, 0, 1, 'L');
+}
+
+$pdf->Ln(5);
+
+// Tabela de valores
+$pdf->SetFont('helvetica', 'B', 10);
+$pdf->Cell(120, 7, 'Descrição', 1, 0, 'L');
+$pdf->Cell(30, 7, 'Qtd', 1, 0, 'C');
+$pdf->Cell(30, 7, 'Valor', 1, 1, 'R');
+
+$pdf->SetFont('helvetica', '', 10);
+
+// Mostrar oferta ou hospedagem normal
+if (!empty($oferta_info)) {
+    $pdf->Cell(120, 7, 'Pacote Promocional (' . $oferta_info . ')', 1, 0, 'L');
+    $pdf->Cell(30, 7, '1', 1, 0, 'C');
+    $pdf->Cell(30, 7, '€' . number_format($preco_total, 2, ',', '.'), 1, 1, 'R');
+} else {
+    $pdf->Cell(120, 7, 'Hospedagem (Casa de Campo)', 1, 0, 'L');
+    $pdf->Cell(30, 7, $num_noites . ' noite' . ($num_noites > 1 ? 's' : ''), 1, 0, 'C');
+    $pdf->Cell(30, 7, '€' . number_format($preco_por_noite * $num_noites, 2, ',', '.'), 1, 1, 'R');
+}
+
+// Serviços adicionais (se existirem)
 if (!empty($servicos_adicionais)) {
-    $html .= '<tr><td><strong>Serviços Adicionais:</strong></td><td>'.implode('<br>', $servicos_adicionais).'</td></tr>';
-    if (!empty($descricao_servicos)) {
-        $html .= '<tr><td><strong>Detalhes Decoração:</strong></td><td>'.$descricao_servicos.'</td></tr>';
+    foreach ($servicos_adicionais as $servico) {
+        $pdf->Cell(120, 7, 'Serviço: ' . trim($servico), 1, 0, 'L');
+        $pdf->Cell(30, 7, '1', 1, 0, 'C');
+        
+        // Extrair valor do serviço
+        preg_match('/€(\d+)/', $servico, $matches);
+        $valor_servico = isset($matches[1]) ? $matches[1] : '0';
+        $pdf->Cell(30, 7, '€' . number_format($valor_servico, 2, ',', '.'), 1, 1, 'R');
     }
 }
-$html .= '
-    <tr><td><strong>Total:</strong></td><td>'.$preco_total.' €</td></tr>
-    <tr><td><strong>Morada:</strong></td><td>'.PROPERTY_ADDRESS.'</td></tr>
-    <tr><td><strong>Telefone:</strong></td><td>'.CONTACT_PHONE.'</td></tr>
-</table>
-<h2 style="color:'.EMAIL_COLOR.';">Informações Importantes</h2>
-<ul>
-    <li>Check-in a partir das 15:00 horas.</li>
-    <li>Check-out até às 11:00 horas.</li>
-    <li>Traga este comprovativo imprimido quando chegar ao nosso alojamento.</li>
-    <li>Taxa adicional para check-out atrasado</li>
-    <li>Para cancelar a sua reserva, é necessário ligar para o número +351 912 418 976 com 10 dias de antecedência. Caso a anulação seja feita dentro de um prazo inferior, será cobrado 50% do valor da reserva. Pedimos que esteja atento às condições e prazos para evitar custos adicionais.</li>
-    <li>Proibido fumar dentro da nossa propriedade.</li>
-    <li>Em caso de danos à propriedade durante a sua estadia, solicitamos que informe imediatamente a nossa equipa de recepção para que possamos resolver a situação o mais rápido possível. Dependendo da gravidade do dano, pode haver custos adicionais associados. Pedimos aos nossos hóspedes que cuidem do alojamento com o mesmo zelo com que cuidam da sua própria casa. Se houver problemas durante a estadia, nossa equipa está disponível 24 horas por dia para ajudá-lo a resolver qualquer questão de forma rápida e eficiente.</li>
-</ul>
-<p style="text-align:center;margin-top:30px;">Obrigado por escolher '.SITE_NAME.'! Esperamos proporcionar-lhe uma estadia memorável e repleta de momentos especiais.</p>
-';
-$pdf->writeHTML($html, true, false, true, false, '');
-// Rodapé personalizado
-$pdf->SetY(-30);
-$pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
-$pdf->SetY(-25);
-$pdf->SetFont('helvetica', 'B', 12);
-$pdf->Cell(0, 10, SITE_NAME, 0, 1, 'C');
-$pdf->SetFont('helvetica', '', 10);
-$pdf->Cell(0, 5, CONTACT_EMAIL . ' | ' . CONTACT_PHONE, 0, 1, 'C');
+
+// Total
+$pdf->SetFont('helvetica', 'B', 11);
+$pdf->Cell(120, 8, 'TOTAL', 1, 0, 'R');
+$pdf->Cell(60, 8, '€' . number_format($preco_total, 2, ',', '.'), 1, 1, 'R');
+$pdf->Ln(10);
+
+// Informações adicionais
+$pdf->SetFont('helvetica', 'I', 8);
+$pdf->MultiCell(0, 4, 'Este documento serve como fatura-recibo nos termos do artigo 42.º do Código do IVA. Isento de IVA - alínea 14 do artigo 9.º do Código do IVA.', 0, 'L');
+$pdf->Ln(5);
+$pdf->Cell(0, 4, 'Processado por sistema automático em ' . date('d/m/Y H:i'), 0, 1, 'L');
+
 $pdfContent = $pdf->Output('', 'S');
+
+// Envio de email
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
@@ -175,6 +260,7 @@ try {
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';
     $mail->Subject = '✅ Reserva #'.$reserva_id.' Confirmada - '.SITE_NAME.' | '.$checkin.' a '.$checkout;
+    
     $servicos_email = '';
     if (!empty($servicos_adicionais)) {
         $servicos_email = '<div style="margin: 15px 0;">
@@ -183,16 +269,28 @@ try {
         foreach ($servicos_adicionais as $servico) {
             $servicos_email .= '<li>'.$servico.'</li>';
         }
-        
         $servicos_email .= '</ul>';
-        
         if (!empty($descricao_servicos)) {
             $servicos_email .= '<p><strong>Detalhes da Decoração:</strong> '.$descricao_servicos.'</p>';
         }
-        
         $servicos_email .= '</div>';
     }
-    // Email body atualizado conforme solicitado
+    
+    // Adicionar oferta ao email se existir
+    $oferta_email = '';
+    if (!empty($oferta_info)) {
+        $oferta_email = '<div style="margin: 15px 0;">
+            <h3 style="color:'.EMAIL_COLOR.'; margin-bottom: 10px;">Oferta Especial</h3>
+            <p>'.$oferta_info.'</p>
+        </div>';
+    }
+    
+    // Adicionar método de pagamento
+    $pagamento_email = '<div style="margin: 15px 0;">
+        <h3 style="color:'.EMAIL_COLOR.'; margin-bottom: 10px;">Método de Pagamento</h3>
+        <p>'.$metodo_pagamento.'</p>
+    </div>';
+    
     $mail->Body = '
     <!DOCTYPE html>
     <html lang="pt">
@@ -200,7 +298,6 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Confirmação de Reserva - '.SITE_NAME.'</title>
-        <link rel="icon" type="image/x-icon" href="../logotipos/logotipo1.jpg">
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background-color: '.EMAIL_COLOR.'; color: white; padding: 25px; text-align: center; border-radius: 5px 5px 0 0; }
@@ -231,14 +328,16 @@ try {
                     <div class="details-item"><strong>Check-out:</strong> '.htmlspecialchars($checkout).' (até às 11:00)</div>
                     <div class="details-item"><strong>Nº de Hóspedes:</strong> '.$num_hospedes.'</div>
                     <div class="details-item"><strong>Nº de Noites:</strong> '.$num_noites.'</div>
+                    '.$oferta_email.'
                     '.$servicos_email.'
+                    '.$pagamento_email.'
                     <div class="details-item"><strong>Detalhes do Alojamento:</strong> Casa de campo com todas as comodidades</div>
                     <div class="details-item"><strong>Morada:</strong> '.PROPERTY_ADDRESS.'</div>
                     <div class="details-item"><strong>Telefone:</strong> '.CONTACT_PHONE.'</div>
-                    <div class="details-item"><strong>Preço Total:</strong> '.$preco_total.' €</div>
+                    <div class="details-item"><strong>Preço Total:</strong> '.number_format($preco_total, 2, ',', '.').' €</div>
                 </div>
             </div>
-            <p>Em anexo, você encontrará o comprovativo da sua reserva em PDF.</p>
+            <p>Em anexo, você encontrará a fatura/recibo da sua reserva em PDF.</p>
             
             <p>Atenciosamente,<br>Quinta Flores</p>
         </div>
@@ -249,8 +348,10 @@ try {
     </body>
     </html>
     ';
-    $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nIMPORTANTE: Traga este comprovativo quando chegar à Quinta.\n\nAtenciosamente,\nQuinta  Flores";
-    $mail->addStringAttachment($pdfContent, 'Comprovativo da Reserva.pdf');
+    
+    $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nOferta: {$oferta_info}\n\nMétodo de Pagamento: {$metodo_pagamento}\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nAtenciosamente,\nQuinta Flores";
+    $mail->addStringAttachment($pdfContent, 'Fatura_Reserva_'.str_pad($reserva_id, 5, '0', STR_PAD_LEFT).'.pdf');
+    
     $ical = "BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//".SITE_NAME."//Reserva//PT
@@ -265,16 +366,16 @@ LOCATION:".PROPERTY_ADDRESS."
 END:VEVENT
 END:VCALENDAR";
     $mail->addStringAttachment($ical, 'evento.ics');
+    
     if ($mail->send()) {
         error_log("E-mail enviado com sucesso para {$_SESSION['email']}");
-        // Página de confirmação atualizada
         echo '<div style="text-align: center; padding: 40px 20px; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
                 <img src="../assets/logos/logotipo1.png" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
                 <svg width="100" height="100" viewBox="0 0 24 24" style="fill:'.PRIMARY_COLOR.';margin:0 auto 25px;">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
                 <h2 style="color:'.PRIMARY_COLOR.'; font-size: 28px; margin-bottom: 15px;">Reserva Confirmada com Sucesso!</h2>
-                <p style="font-size: 18px; margin-bottom: 10px;">O comprovativo foi enviado para:</p>
+                <p style="font-size: 18px; margin-bottom: 10px;">A fatura/recibo foi enviada para:</p>
                 <p style="font-size: 18px; font-weight: bold; margin: 0 0 30px;">'.htmlspecialchars($_SESSION['email']).'</p>
                 
                 <p style="font-size: 16px; margin-bottom: 30px;"><strong>Por favor, traga o comprovativo imprimido quando chegar ao alojamento.</strong></p>
@@ -286,7 +387,7 @@ END:VCALENDAR";
     } else {
         error_log("Erro ao enviar e-mail: " . $mail->ErrorInfo);
         echo '<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
-                <img src="../logotipos/logotipo1.jpg" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
+                <img src="../assets/logos/logotipo1.png" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
                 <h2 style="color: #f44336;">Reserva Confirmada!</h2>
                 <p style="font-size: 16px;">Sua reserva foi registrada com sucesso (Nº '.$reserva_id.'), mas houve um problema ao enviar o e-mail de confirmação.</p>
                 <p style="font-size: 16px;">Por favor, entre em contato conosco pelo e-mail '.CONTACT_EMAIL.' para obter os detalhes.</p>
@@ -299,7 +400,7 @@ END:VCALENDAR";
 } catch (Exception $e) {
     error_log("Exception ao enviar e-mail: " . $e->getMessage());
     echo '<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
-            <img src="../logotipos/logotipo1.jpg" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
+            <img src="../assets/logos/logotipo1.png" alt="'.SITE_NAME.'" style="max-width: 150px; margin-bottom: 20px;">
             <h2 style="color: #f44336;">Erro no Processamento</h2>
             <p style="font-size: 16px;">Ocorreu um erro ao processar sua reserva. Por favor, tente novamente.</p>
             <p style="font-size: 14px; color: #666;">Detalhes: '.htmlspecialchars($e->getMessage()).'</p>
@@ -309,5 +410,6 @@ END:VCALENDAR";
             </div>
           </div>';
 }
+
 session_destroy();
 ?>
