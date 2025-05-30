@@ -1,8 +1,9 @@
 <?php
 session_start();
 require_once '../conexao.php';
+require_once 'i18n.php';
 
-$page_title = 'Faça sua Reserva';
+$page_title = I18n::get('make_reservation');
 
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
@@ -55,11 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dataCheckout = DateTime::createFromFormat('Y-m-d', $checkout);
 
     if (!$dataCheckin || !$dataCheckout) {
-        $erro = 'Datas inválidas!';
+        $erro = I18n::get('invalid_dates');
     } elseif ($dataCheckin < $amanha || $dataCheckout <= $dataCheckin) {
-        $erro = 'Datas inválidas! O check-in deve ser a partir de amanhã e o check-out depois do check-in.';
+        $erro = I18n::get('invalid_dates') . ' ' . I18n::get('checkin_after_tomorrow');
     } elseif ($dataCheckin > $dataLimite || $dataCheckout > $dataLimite) {
-        $erro = 'Reservas só são permitidas até ' . $dataLimite->format('d/m/Y') . '.';
+        $erro = I18n::get('reservation_limit') . ' ' . $dataLimite->format(I18n::get('date_format')) . '.';
     } else {
         $query = "SELECT * FROM reservas 
                   WHERE (R_data_checkin <= ? AND R_data_checkout > ?) 
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $resultado = $stmt->get_result();
 
         if ($resultado->num_rows > 0) {
-            $erro = 'A casa já está reservada para as datas selecionadas.';
+            $erro = I18n::get('dates_already_reserved');
         } else {
             $_SESSION['checkin'] = $checkin;
             $_SESSION['checkout'] = $checkout;
@@ -88,17 +89,16 @@ if (!empty($_POST['checkin']) && !empty($_POST['checkout'])) {
     $num_noites = $checkin_date->diff($checkout_date)->days;
 }
 
-// SÓ AQUI carregas o header.php, depois de todos os headers e validações
 require_once 'header.php';
 ?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="<?= I18n::getCurrentLanguage() ?>">
 <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva - <?= SITE_NAME ?></title>
+    <title><?= I18n::get('reservation') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="global.css">
@@ -107,24 +107,24 @@ require_once 'header.php';
 </head>
 <body>
     <div class="container">
-        <h1 class="fade-in">Faça sua Reserva</h1>
+        <h1 class="fade-in"><?= I18n::get('make_reservation') ?></h1>
         
         <div class="progress-steps">
             <div class="progress-step active">
-                <span>Datas</span>
+                <span><?= I18n::get('dates') ?></span>
             </div>
             <div class="progress-step">
-                <span>Dados Pessoais</span>
+                <span><?= I18n::get('personal_info') ?></span>
             </div>
             <div class="progress-step">
-                <span>Pagamento</span>
+                <span><?= I18n::get('payment') ?></span>
             </div>
             <div class="progress-step">
-                <span>Confirmação</span>
+                <span><?= I18n::get('confirmation') ?></span>
             </div>
         </div>
-        
-        <?php if (!empty($erro)): ?>
+
+                <?php if (!empty($erro)): ?>
             <div class="error-message" style="display: block;">
                 <i class="fas fa-exclamation-circle"></i> <?= $erro ?>
             </div>
@@ -132,18 +132,18 @@ require_once 'header.php';
         
         <form action="pagina1.php" method="POST" id="reservaForm" class="fade-in">
             <div class="resumo-reserva">
-                <h3><i class="fas fa-calendar-check"></i> Resumo da Reserva</h3>
+                <h3><i class="fas fa-calendar-check"></i> <?= I18n::get('reservation_summary') ?></h3>
                 <div class="resumo-item">
-                    <span>Check-in:</span>
-                    <span id="display-checkin"><?= isset($_POST['checkin']) ? date('d/m/Y', strtotime($_POST['checkin'])) : '--/--/----' ?></span>
+                    <span><?= I18n::get('check_out') ?>:</span>
+                    <span id="display-checkout"><?= isset($_POST['checkout']) ? date(I18n::get('date_format'), strtotime($_POST['checkout'])) : '--/--/----' ?></span>
                 </div>
                 <div class="resumo-item">
-                    <span>Check-out:</span>
-                    <span id="display-checkout"><?= isset($_POST['checkout']) ? date('d/m/Y', strtotime($_POST['checkout'])) : '--/--/----' ?></span>
-                </div>
-                <div class="resumo-item">
-                    <span>Noites:</span>
+                    <span><?= I18n::get('nights') ?>:</span>
                     <span id="display-noites"><?= $num_noites > 0 ? $num_noites : '--' ?></span>
+                </div>
+                <div class="resumo-item">
+                    <span><?= I18n::get('guests') ?>:</span>
+                    <span id="display-hospedes"><?= $_POST['num_hospedes'] ?? '--' ?></span>
                 </div>
                 <div class="resumo-item">
                     <span>Hóspedes:</span>
@@ -151,136 +151,129 @@ require_once 'header.php';
                 </div>
             </div>
             <div class="oferta-container">
-    <h3><i class="fas fa-gift"></i> Código de Oferta</h3>
-    <div class="form-group">
-        <label for="codigo_oferta"><i class="fas fa-tag"></i> Tem um código promocional?</label>
-        <input type="text" id="codigo_oferta" name="codigo_oferta" class="form-control" 
-               placeholder="Digite seu código aqui" 
-               value="<?= isset($_POST['codigo_oferta']) ? htmlspecialchars($_POST['codigo_oferta']) : '' ?>">
-    </div>
-    <div id="detalhes-oferta" style="display: none; margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
-        <h4 id="titulo-oferta"></h4>
-        <p id="descricao-oferta"></p>
-        <p id="condicoes-oferta" style="font-weight: bold;"></p>
-    </div>
-</div>
-
-            <div class="form-group">
-                <label for="checkin"><i class="far fa-calendar-alt"></i> Data de Check-in</label>
-                <input type="text" id="checkin" name="checkin" class="form-control" placeholder="Selecione a data" required>
+                <h3><i class="fas fa-gift"></i> <?= I18n::get('promo_code') ?></h3>
+                <div class="form-group">
+                    <label for="codigo_oferta"><i class="fas fa-tag"></i> <?= I18n::get('have_promo_code') ?></label>
+                    <input type="text" id="codigo_oferta" name="codigo_oferta" class="form-control" 
+                           placeholder="<?= I18n::get('enter_promo_code') ?>" 
+                           value="<?= isset($_POST['codigo_oferta']) ? htmlspecialchars($_POST['codigo_oferta']) : '' ?>">
+                </div>
+                <div id="detalhes-oferta" style="display: none; margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                    <h4 id="titulo-oferta"></h4>
+                    <p id="descricao-oferta"></p>
+                    <p id="condicoes-oferta" style="font-weight: bold;"></p>
+                </div>
             </div>
-
             <div class="form-group">
-                <label for="checkout"><i class="far fa-calendar-alt"></i> Data de Check-out</label>
-                <input type="text" id="checkout" name="checkout" class="form-control" placeholder="Selecione a data" required>
+                <label for="checkin"><i class="far fa-calendar-alt"></i> <?= I18n::get('check_in_date') ?></label>
+                <input type="text" id="checkin" name="checkin" class="form-control" placeholder="<?= I18n::get('select_date') ?>" required>
             </div>
-
             <div class="form-group">
-                <label for="num_hospedes"><i class="fas fa-users"></i> Número de Hóspedes</label>
+                <label for="checkout"><i class="far fa-calendar-alt"></i> <?= I18n::get('check_out_date') ?></label>
+                <input type="text" id="checkout" name="checkout" class="form-control" placeholder="<?= I18n::get('select_date') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="num_hospedes"><i class="fas fa-users"></i> <?= I18n::get('number_of_guests') ?></label>
                 <select id="num_hospedes" name="num_hospedes" class="form-control" required>
                     <?php for($i=1; $i<=10; $i++): ?>
                         <option value="<?= $i ?>" <?= ($i == ($_POST['num_hospedes'] ?? 2)) ? 'selected' : '' ?>>
-                            <?= $i ?> <?= $i === 1 ? 'pessoa' : 'pessoas' ?>
+                            <?= $i ?> <?= $i === 1 ? I18n::get('person') : I18n::get('people') ?>
                         </option>
                     <?php endfor; ?>
                 </select>
             </div>
-            
-
             <div class="form-actions">
                 <a href="../index.html" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Voltar
+                    <i class="fas fa-arrow-left"></i> <?= I18n::get('back') ?>
                 </a>
                 <button type="submit" class="btn btn-primary pulse">
-                    Continuar <i class="fas fa-arrow-right"></i>
+                    <?= I18n::get('continue') ?> <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
         </form>
-        
-<div class="chatbot-container">
-    <div class="chatbot-button" id="chatbotButton">
-        <i class="fa-solid fa-comment-dots"></i>
-    </div>
-    <div class="chatbot-box" id="chatbotBox">
-        <div class="chatbot-header">
-            <div class="chatbot-title">
-                <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chatbot-logo">
-                <span>Assistente Virtual da Quinta Flores</span>
+        <div class="chatbot-container">
+            <div class="chatbot-button" id="chatbotButton">
+                <i class="fa-solid fa-comment-dots"></i>
             </div>
-            <button class="chatbot-close" id="chatbotClose">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div class="chatbot-messages" id="chatbotMessages">
-            <div class="message bot-message">
-                <img src="assets/logos/logotipo1.png" alt="Bot" class="message-avatar">
-                <div class="message-content">
-                    <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudá-lo hoje?</p>
+            <div class="chatbot-box" id="chatbotBox">
+                <div class="chatbot-header">
+                    <div class="chatbot-title">
+                        <img src="assets/logos/logotipo1.png" alt="<?= SITE_NAME ?>" class="chatbot-logo">
+                        <span><?= I18n::get('virtual_assistant') ?> <?= SITE_NAME ?></span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
-            </div>
-        </div>
-        <div class="chatbot-input-container">
-            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Digite sua mensagem...">
-            <button id="chatbotSend" class="chatbot-send">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-        <div class="chatbot-suggestions">
-            <button class="suggestion-button">
-                <i class="fa-solid fa-calendar-check"></i> Reservas
-            </button>
-            <button class="suggestion-button">
-                <i class="fa-solid fa-bed"></i> Acomodações
-            </button>
-            <button class="suggestion-button">
-                <i class="fa-solid fa-bell-concierge"></i> Serviços
-            </button>
-            <button class="suggestion-button">
-                <i class="fa-solid fa-map-location-dot"></i> Localização
-            </button>
-            <button class="suggestion-button">
-                <i class="fa-solid fa-person-hiking"></i> Atividades
-            </button>
-            <button class="suggestion-button">
-                <i class="fa-solid fa-euro-sign"></i> Preços
-            </button>
-        </div>
-        <div class="chatbot-footer">
-            <span>Quinta Flores - ChatBot</span>
-        </div>
-    </div>
+                <div class="chatbot-messages" id="chatbotMessages">
+                    <div class="message bot-message">
+                        <img src="assets/logos/logotipo1.png" alt="Bot" class="message-avatar">
+                        <div class="message-content">
+                            <p><?= I18n::get('welcome_chatbot_message') ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chatbot-input-container">
+                    <input type="text" id="chatbotInput" class="chatbot-input" placeholder="<?= I18n::get('type_your_message') ?>">
+                    <button id="chatbotSend" class="chatbot-send">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+
+                <div class="chatbot-suggestions">
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-calendar-check"></i> <?= I18n::get('reservations') ?>
+                    </button>
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-bed"></i> <?= I18n::get('accommodation') ?>
+                    </button>
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-bell-concierge"></i> <?= I18n::get('services') ?>
+                    </button>
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-map-location-dot"></i> <?= I18n::get('location') ?>
+                    </button>
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-person-hiking"></i> <?= I18n::get('activities') ?>
+                    </button>
+                    <button class="suggestion-button">
+                        <i class="fa-solid fa-euro-sign"></i> <?= I18n::get('prices') ?>
+                    </button>
+                </div>
+                                <div class="chatbot-footer">
+                    <span><?= SITE_NAME ?> - <?= I18n::get('chatbot') ?></span>
+                </div>
 </div>
 
 <script>
-    // Ofertas disponíveis
-// Ofertas disponíveis - MODIFICADO
-const ofertas = {
-    'LOVE260': {
-        nome: 'Pacote Amor',
-        descricao: '2 noites por €260 - Inclui cesto de piquenique, pequeno-almoço no 1º dia e jantar na 2ª noite.',
-        condicoes: 'Obrigatório: 2 noites e 2 pessoas',
-        noites: 2,
-        hospedes: 2,
-        preco: 260
-    },
-    'PARTY260': {  // MODIFICADO
-        nome: 'Pacote Festa com Amigos',
-        descricao: '2 noites por €260 - Inclui kit inicial com snacks, bebidas alcoólicas, decoração e coluna Bluetooth.',
-        condicoes: 'Obrigatório: 4 noites e mínimo 4 pessoas (máximo 10)',
-        noites: 2,
-        hospedes: 4,
-        preco: 260,
-        max_hospedes: 10  // Novo campo para máximo de hóspedes
-    },
-    'RETIRO240': {
-        nome: 'Pacote Retiro na Catequese',
-        descricao: '4 noites por €240 - Inclui velas decorativas, fotógrafo e materiais (lápis, canetas, papéis, cadernos) em ambiente acolhedor e silencioso.',
-        condicoes: 'Obrigatório: 2 noites e máximo 10 pessoas(Caso nao forem 10 pessoas não se preocupem porque o preço não é por hóspede).',
-        noites: 4,
-        hospedes: 10,
-        preco: 240
-    }
-};
+            // Ofertas disponíveis
+            const ofertas = {
+                'LOVE260': {
+                    nome: "<?= I18n::get('love_package') ?>",
+                    descricao: "<?= I18n::get('love_package_description') ?>",
+                    condicoes: "<?= I18n::get('love_package_conditions') ?>",
+                    noites: 2,
+                    hospedes: 2,
+                    preco: 260
+                },
+                'PARTY260': {
+                    nome: "<?= I18n::get('party_package') ?>",
+                    descricao: "<?= I18n::get('party_package_description') ?>",
+                    condicoes: "<?= I18n::get('party_package_conditions') ?>",
+                    noites: 2,
+                    hospedes: 4,
+                    preco: 260,
+                    max_hospedes: 10
+                },
+                'RETIRO240': {
+                    nome: "<?= I18n::get('retreat_package') ?>",
+                    descricao: "<?= I18n::get('retreat_package_description') ?>",
+                    condicoes: "<?= I18n::get('retreat_package_conditions') ?>",
+                    noites: 4,
+                    hospedes: 10,
+                    preco: 240
+                }
+            };
 
 // Verificar código de oferta
 // No JavaScript, modifique a parte do código que lida com as ofertas:
@@ -297,7 +290,7 @@ document.getElementById('codigo_oferta').addEventListener('change', function() {
     const checkoutInput = document.getElementById('checkout');
     
     if (ofertas[codigo]) {
-        const oferta = ofertas[codigo];
+        const oferta =  ofertas[codigo];
         tituloOferta.textContent = oferta.nome;
         descricaoOferta.textContent = oferta.descricao;
         condicoesOferta.textContent = oferta.condicoes;
@@ -718,7 +711,7 @@ document.getElementById('codigo_oferta').addEventListener('change', function() {
         document.addEventListener('DOMContentLoaded', function() {
             // Configuração do Flatpickr
             const checkinPicker = flatpickr("#checkin", {
-                locale: "pt",
+                locale: "<?= I18n::getCurrentLanguage() ?>",
                 minDate: "today",
                 dateFormat: "Y-m-d",
                 disable: datasOcupadas,
@@ -792,18 +785,15 @@ document.getElementById('codigo_oferta').addEventListener('change', function() {
                     errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Datas inválidas! O check-in deve ser a partir de amanhã e o check-out depois do check-in.';
                     return false;
                 }
-                
                 if (dataCheckin > dataLimite || dataCheckout > dataLimite) {
                     e.preventDefault();
                     errorElement.style.display = 'block';
                     errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Reservas só são permitidas até ' + formatarData(dataLimite.toISOString().split('T')[0]) + '.';
                     return false;
                 }
-                
                 return true;
             });
         });
-        
         function atualizarResumo() {
             const checkin = document.getElementById('checkin').value;
             const checkout = document.getElementById('checkout').value;
@@ -814,7 +804,6 @@ document.getElementById('codigo_oferta').addEventListener('change', function() {
                 document.getElementById('display-noites').textContent = diffDays;
             }
         }
-        
         function formatarData(dataStr) {
             if (!dataStr) return '--/--/----';
             const [ano, mes, dia] = dataStr.split('-');

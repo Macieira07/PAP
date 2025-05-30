@@ -84,10 +84,8 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     </style>
 </head>
 <body>
-
 <div class="top-bar">
-    <a href="admin.php"><i class="fa-solid fa-arrow-left back-icon"></i></a>
-    <a href="adicionar_funcionario.php" class="btn-adicionar"><i class="fa-solid fa-user-plus"></i> Adicionar Funcionário</a>
+    <a href="admin.php">← Voltar</a>
 </div>
 
 <div style="display: flex; align-items: center; gap: 10px;">
@@ -101,7 +99,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     <input type="text" name="cargo" placeholder="Filtrar por cargo" value="<?= $cargoFiltro ?>">
     <button type="submit"><i class="fa-solid fa-filter"></i> Filtrar</button>
 </form>
-
+<a href="adicionar_funcionario.php" class="btn-adicionar"><i class="fa-solid fa-user-plus"></i> Adicionar Funcionário</a>
 <!-- Tabela de Funcionários -->
 <table border="1">
     <tr>
@@ -189,6 +187,6 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         <a href="?pagina=<?= $paginaAtual + 1 ?>&nome=<?= $nomeFiltro ?>&cargo=<?= $cargoFiltro ?>">Próximo →</a>
     <?php endif; ?>
 </div>
-
+<a href="admin.php">← Voltar</a>
 </body>
 </html>

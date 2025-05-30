@@ -1,20 +1,12 @@
 <?php
-// marcar_como_lida.php
-session_start();
-require __DIR__ . '/../conexao.php';
-
-// Verificar se o usuário está logado e é um funcionário
-if (!isset($_SESSION['id']) || $_SESSION['tipo'] !== 'funcionario') {
-    echo 'erro_autenticacao';
-    exit;
-}
+require '../conexao.php';
 
 if (isset($_GET['id'])) {
-    $idNotificacao = (int)$_GET['id'];
+    $id = (int)$_GET['id'];
     
-    // Marcar a notificação como lida
+    // Marcar notificação como lida
     $stmt = $conexao->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ?");
-    $stmt->bind_param("i", $idNotificacao);
+    $stmt->bind_param("i", $id);
     
     if ($stmt->execute()) {
         echo 'sucesso';
@@ -22,6 +14,6 @@ if (isset($_GET['id'])) {
         echo 'erro';
     }
 } else {
-    echo 'id_nao_fornecido';
+    echo 'erro';
 }
 ?>

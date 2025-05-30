@@ -1,19 +1,21 @@
 <?php
 require_once '../conexao.php';
 require_once 'header.php';
-
-// Buscar dados do usuário
+// Prepara a consulta SQL para buscar os dados do hóspede atual (com base no ID da sessão)
 $query = "SELECT * FROM hospedes WHERE H_id_hospede = ?";
 $stmt = $conexao->prepare($query);
+// Liga o parâmetro (ID do hóspede) à consulta
 $stmt->bind_param("i", $_SESSION['id']);
+// Executa a consulta
 $stmt->execute();
+// Obtém o resultado da consulta
 $resultado = $stmt->get_result();
+// Pega a primeira linha (dados do usuário)
 $usuario = $resultado->fetch_assoc();
 ?>
 <link rel="stylesheet" href="../index/chatbot.css">
 <div class="profile-container">
     <h1><i class="fas fa-user"></i> Meu Perfil</h1>
-    
     <div class="profile-section">
         <h2><i class="fas fa-id-card"></i> Informações Pessoais</h2>
         <div class="profile-info">
@@ -80,26 +82,7 @@ $usuario = $resultado->fetch_assoc();
             </a>
         </div>
     </div>
-    
-    <div class="profile-section">
-        <h2><i class="fas fa-history"></i> Histórico Recente</h2>
-        <div class="recent-activity">
-            <!-- Aqui você pode mostrar as últimas atividades -->
-            <div class="activity-item">
-                <i class="fas fa-calendar-check"></i>
-                <span>Último login: 
-  <?php
-    if (!empty($usuario['H_ultimo_login'])) {
-        echo date('d/m/Y H:i', strtotime($usuario['H_ultimo_login']));
-    } else {
-        echo "Sem dados de último login";
-    }
-  ?>
-</span>
-    
-            </div>
         </div>
-        
 <div class="chatbot-container">
     <div class="chatbot-button" id="chatbotButton">
         <i class="fa-solid fa-comment-dots"></i>
@@ -153,8 +136,8 @@ $usuario = $resultado->fetch_assoc();
         </div>
     </div>
 </div>
-
 <script>
+     // Quando a página terminar de carregar, adicionar os event listeners para o chatbot
     document.addEventListener('DOMContentLoaded', function() {
         const chatbotButton = document.getElementById('chatbotButton');
         const chatbotBox = document.getElementById('chatbotBox');
@@ -164,29 +147,29 @@ $usuario = $resultado->fetch_assoc();
         const chatbotMessages = document.getElementById('chatbotMessages');
         const suggestionButtons = document.querySelectorAll('.suggestion-button');
 
-        // Mostrar chatbot box
+        // Mostrar chatbot box ao clicar no botão 
         chatbotButton.addEventListener('click', function() {
             chatbotBox.style.display = 'flex';
             chatbotButton.style.display = 'none';
         });
 
-        // Fechar chatbot box
+        // Fechar chatbot box ou clicar no X
         chatbotClose.addEventListener('click', function() {
             chatbotBox.style.display = 'none';
             chatbotButton.style.display = 'flex';
         });
 
-        // Enviar mensagem ao pressionar Enter
+        // Enviar mensagem ao pressionar Enter na caixa de texto
         chatbotInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        // Enviar mensagem ao clicar no botão
+        // Enviar mensagem ao clicar no botão de enviar
         chatbotSend.addEventListener('click', sendMessage);
 
-        // Botões de sugestão
+         // Quando clicar numa sugestão, preenche a caixa de texto e envia a mensagem
         suggestionButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const text = this.textContent.trim();
@@ -235,17 +218,17 @@ $usuario = $resultado->fetch_assoc();
             },
             fallback: "Sou um assistente virtual da Quinta Flores. Peço desculpa, mas não consegui compreender corretamente a sua pergunta. Poderia reformulá-la ou especificar melhor, por favor?"
         };
-
-        // Função principal para enviar mensagem
+         // Função principal que envia a mensagem do utilizador e processa a resposta do bot
         function sendMessage() {
             const message = chatbotInput.value.trim();
-            if (message === '') return;
+            if (message === '') return; // não envia se a mensagem estiver vazia
 
-            // Adicionar mensagem do usuário
+            // Adiciona mensagem do utilizador ao chat
             addMessage(message, 'user');
+            // Limpa a caixa de texto
             chatbotInput.value = '';
 
-            // Simular digitação do bot
+             // Adiciona resposta do bot após um curto atraso para parecer mais natural
             showTypingIndicator();
 
             // Processar resposta com um pequeno delay
@@ -256,8 +239,7 @@ $usuario = $resultado->fetch_assoc();
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }, 1000 + Math.random() * 1000);
         }
-
-        // Função para adicionar mensagem à conversa
+        // Função para adicionar uma mensagem ao chat
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
@@ -291,6 +273,7 @@ $usuario = $resultado->fetch_assoc();
                 messageDiv.appendChild(avatar);
                 messageDiv.appendChild(contentDiv);
             }
+            
 
             chatbotMessages.appendChild(messageDiv);
         }
@@ -299,7 +282,6 @@ $usuario = $resultado->fetch_assoc();
         function formatMessageText(text) {
             return text.replace(/\n/g, '<br>');
         }
-
         // Função para mostrar indicador de digitação
         function showTypingIndicator() {
             const typingDiv = document.createElement('div');
@@ -316,10 +298,10 @@ $usuario = $resultado->fetch_assoc();
                 const dot = document.createElement('span');
                 typingIndicator.appendChild(dot);
             }
-            
             typingDiv.appendChild(avatar);
             typingDiv.appendChild(typingIndicator);
             chatbotMessages.appendChild(typingDiv);
+            // Scroll para o fim da conversa
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
         }
 
@@ -330,7 +312,6 @@ $usuario = $resultado->fetch_assoc();
                 typingMessage.remove();
             }
         }
-
         // Função para determinar a resposta adequada (versão corrigida)
         function getResponse(message) {
             const lowercaseMessage = message.toLowerCase();
@@ -427,17 +408,14 @@ $usuario = $resultado->fetch_assoc();
 </script>
     </div>
 </div>
-
 <script>
 document.getElementById('editProfileBtn').addEventListener('click', function() {
     document.querySelector('.profile-info').style.display = 'none';
     document.getElementById('editProfileForm').style.display = 'block';
 });
-
 document.getElementById('cancelEditBtn').addEventListener('click', function() {
     document.querySelector('.profile-info').style.display = 'block';
     document.getElementById('editProfileForm').style.display = 'none';
 });
 </script>
-
 <?php require_once 'footer.php'; ?>
