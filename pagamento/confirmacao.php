@@ -244,7 +244,7 @@ try {
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = CONTACT_EMAIL;
-    $mail->Password = 'kgre oqhy kxcn grid';
+    $mail->Password = 'cbra fjzb nizo lilw';
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->SMTPOptions = [

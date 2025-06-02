@@ -5,6 +5,10 @@ class I18n {
     private static $translations = [];
     
     public static function init() {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        
         if (isset($_SESSION['language'])) {
             self::$language = $_SESSION['language'];
         } elseif (isset($_COOKIE['language'])) {
@@ -21,7 +25,7 @@ class I18n {
             self::$translations = include $langFile;
         } else {
             // Fallback para português se o arquivo de idioma não existir
-            self::$translations = include __DIR__ . '/lang/pt.php';
+            self::$translations = include __DIR__ . 'lang/pt.php';
         }
     }
     

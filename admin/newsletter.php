@@ -7,12 +7,15 @@ require '../vendor/autoload.php';
 
 $mensagem_envio = '';
 
+// Buscar modelos da BD para mostrar
+$modelos_result = $conexao->query("SELECT * FROM modelos_newsletter ORDER BY MN_id DESC");
+if (!$modelos_result) {
+    die("Erro ao buscar modelos: " . $conexao->error);
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enviar_newsletter'])) {
     $assunto = $_POST['assunto'] ?? '';
     $mensagem = $_POST['mensagem'] ?? '';
-   
-
 
     if (!$assunto || !$mensagem) {
         $mensagem_envio = '<p style="color:red;">Assunto e mensagem são obrigatórios.</p>';
@@ -31,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enviar_newsletter']))
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
                 $mail->Username = 'quinta.flores2019@gmail.com';
-                $mail->Password = 'kgre oqhy kxcn grid';
+                $mail->Password = 'cbra fjzb nizo lilw'; // Atenção à segurança disto
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
 
@@ -40,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enviar_newsletter']))
 
                 $mail->isHTML(true);
                 $mail->Subject = $assunto;
-                $mail->Body = $mensagem; // mensagem já em HTML
+                $mail->Body = $mensagem;
 
                 $mail->send();
             } catch (Exception $e) {
@@ -67,9 +70,8 @@ if (!$resultado) {
 <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="admin.css">
-    <title>Newsletter com Editor Rich Text</title>
+    <title>Newsletter - Quinta Flores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
     <!-- TinyMCE -->
     <script src="https://cdn.tiny.cloud/1/mktwxkq2t7w5yim7b7gqo3ndcmusjcxuwkqkuhi8mwa08ux2/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
@@ -79,12 +81,43 @@ if (!$resultado) {
             toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | image link media emoticons | code',
             menubar: false,
             height: 300,
-            /* Configuração para upload local de imagens ficaria aqui */
         });
     </script>
+    <style>
+        /* Só para dar destaque aos modelos e facilitar o drag/drop */
+        #modelos-newsletter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .modelo {
+            border: 1px solid #aaa;
+            padding: 10px;
+            width: 200px;
+            cursor: grab;
+            background: #f9f9f9;
+            user-select: none;
+            border-radius: 5px;
+        }
+        .modelo strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .modelo small {
+            color: #666;
+        }
+        #form-newsletter {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 700px;
+        }
+    </style>
 </head>
 <body>
     <h2>Hóspedes Subscritos</h2>
+    <a href="admin.php">← Voltar</a>
     <table>
         <thead>
             <tr>
@@ -106,6 +139,19 @@ if (!$resultado) {
 
     <button id="btn-toggle-form">Enviar Newsletter</button>
 
+    <h3>Modelos de Newsletter (Arraste para o formulário para carregar)</h3>
+    <div id="modelos-newsletter">
+        <?php while ($modelo = $modelos_result->fetch_assoc()): ?>
+            <div class="modelo" draggable="true"
+                data-assunto="<?= htmlspecialchars($modelo['MN_titulo']) ?>"
+                data-mensagem="<?= htmlspecialchars($modelo['MN_conteudo']) ?>"
+                title="<?= htmlspecialchars($modelo['MN_descricao']) ?>">
+                <strong><?= htmlspecialchars($modelo['MN_titulo']) ?></strong>
+                <small><?= htmlspecialchars($modelo['MN_descricao']) ?></small>
+            </div>
+        <?php endwhile; ?>
+    </div>
+
     <div id="form-newsletter" style="display:none;">
         <?= $mensagem_envio ?>
         <form method="POST" action="">
@@ -116,12 +162,12 @@ if (!$resultado) {
             </div>
             <div class="form-group">
                 <label for="mensagem"><i class="fa-solid fa-message"></i> Mensagem</label>
-                <textarea id="mensagem" name="mensagem" required></textarea>
+                <!-- REMOVIDO required daqui para evitar erro de validação -->
+                <textarea id="mensagem" name="mensagem"></textarea>
             </div>
             <button type="submit" name="enviar_newsletter" value="1">
-    <i class="fa-solid fa-paper-plane"></i> Enviar
-</button>
-
+                <i class="fa-solid fa-paper-plane"></i> Enviar
+            </button>
         </form>
     </div>
 
@@ -147,6 +193,63 @@ if (!$resultado) {
         // Sincroniza o conteúdo do TinyMCE com o textarea antes de enviar o formulário
         document.querySelector('form').addEventListener('submit', function(e) {
             tinymce.triggerSave();
+
+            // Validação manual para a mensagem
+            const conteudo = tinymce.get('mensagem').getContent({ format: 'text' }).trim();
+            if (!conteudo) {
+                e.preventDefault();
+                alert('Por favor, preencha a mensagem.');
+                return false;
+            }
+        });
+
+        // Drag & Drop para modelos de newsletter
+        const modelos = document.querySelectorAll('.modelo');
+        const dropZone = document.getElementById('form-newsletter');
+
+        modelos.forEach(modelo => {
+            modelo.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', ''); // necessário para Firefox
+                e.dataTransfer.setData('assunto', modelo.getAttribute('data-assunto'));
+                e.dataTransfer.setData('mensagem', modelo.getAttribute('data-mensagem'));
+            });
+
+            // Também permite clicar para carregar
+            modelo.addEventListener('click', () => {
+                document.getElementById('assunto').value = modelo.getAttribute('data-assunto');
+                tinymce.get('mensagem').setContent(modelo.getAttribute('data-mensagem'));
+                if (formNewsletter.style.display === 'none' || formNewsletter.style.display === '') {
+                    formNewsletter.style.display = 'block';
+                    btnToggle.textContent = 'Cancelar Envio';
+                }
+            });
+        });
+
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.style.border = '2px dashed #aaa';
+        });
+
+        dropZone.addEventListener('dragleave', e => {
+            e.preventDefault();
+            dropZone.style.border = '1px solid #ccc';
+        });
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.style.border = '1px solid #ccc';
+
+            const assunto = e.dataTransfer.getData('assunto');
+            const mensagem = e.dataTransfer.getData('mensagem');
+
+            if (assunto && mensagem) {
+                document.getElementById('assunto').value = assunto;
+                tinymce.get('mensagem').setContent(mensagem);
+                if (formNewsletter.style.display === 'none' || formNewsletter.style.display === '') {
+                    formNewsletter.style.display = 'block';
+                    btnToggle.textContent = 'Cancelar Envio';
+                }
+            }
         });
     </script>
 </body>

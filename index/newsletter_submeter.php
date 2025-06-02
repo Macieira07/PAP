@@ -1,6 +1,5 @@
 <?php
-include '../conexao.php';
-
+include '../conexao.php';   
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -10,7 +9,6 @@ header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST['email']);
-
     // Validação
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['mensagem' => 'Email inválido.', 'tipo' => 'erro']);
@@ -40,20 +38,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'quinta.flores2019@gmail.com';
-            $mail->Password   = 'kgre oqhy kxcn grid';
+            $mail->Password   = 'cbra fjzb nizo lilw';
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
 
             $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
             $mail->addAddress($email);
 
-            $mail->isHTML(true);
-            $mail->Subject = 'Obrigado por subscrever a nossa newsletter!';
-            $mail->Body    = '
-                <h2>Obrigado pela sua subscrição!</h2>
-                <p>Ficamos felizes por tê-lo connosco. Em breve receberá novidades e ofertas especiais.</p>
-                <p>Até breve,<br>Quinta Flores</p>
-            ';
+$mail->AddEmbeddedImage('../assets/logos/logotipo1.png', 'logotipo');
+
+$mail->isHTML(true);
+$mail->Subject = '🎉 Bem-vindo à Quinta Flores!';
+$mail->Body = '
+    <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
+        <div style="text-align: center;">
+            <img src="cid:logotipo" alt="Quinta Flores" style="max-width: 200px; margin-bottom: 20px;">
+            <h2 style="color: #2d8659;">Obrigado por subscrever a nossa newsletter</h2>
+        </div>
+
+        <p style="font-size: 16px; color: #333;">
+            É com muito gosto que o(a) recebemos na comunidade Quinta Flores.<br><br>
+            A partir de agora, receberá no seu e-mail informações relevantes sobre o nosso alojamento, novidades exclusivas e campanhas especiais para os nossos subscritores.
+        </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="https://www.instagram.com/quintaflores19/?utm_source=ig_web_button_share_sheet" style="background-color: #2d8659; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                Siga-nos no Instagram
+            </a>
+        </div>
+
+        <p style="font-size: 14px; color: #666; text-align: center;">
+            Com os melhores cumprimentos,<br>
+            <strong>Quinta Flores</strong><br>
+            📞 919 241 169 · ✉️ quinta.flores2019@gmail.com
+        </p>
+    </div>
+';
 
             $mail->send();
             echo json_encode(['mensagem' => 'Subscreveste com sucesso! Verifica o teu email.', 'tipo' => 'sucesso']);
