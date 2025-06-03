@@ -1,0 +1,1034 @@
+<?php 
+$nav_links = [
+    ['href' => '#about', 'text' => 'Sobre'],
+    ['href' => '#accommodation', 'text' => 'Acomodações'],
+    ['href' => '#activities', 'text' => 'Experiências'],
+    ['href' => '#gallery', 'text' => 'Galeria'],
+    ['href' => '#testimonials', 'text' => 'Avaliações'],
+    ['href' => '#localizacao', 'text' => 'Localização'],
+    ['href' => '../login1/pagina_login.php', 'text' => 'Reservar', 'class' => 'nav__cta'],
+];
+include '../components/header.php'; ?>
+<!DOCTYPE html>
+<html lang="pt" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quinta Flores | Experiência Única em Ponte de Lima</title>
+    <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" type="text/css" href="lermais.css">
+    <link rel="stylesheet" href="../components/header.css">
+    <link rel="stylesheet" href="../components/footer.css">
+    <link rel="stylesheet" href="../components/bas.css"
+    <link rel="stylesheet" type="text/css" href="chatbot.css">
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero__content">
+            <h1 class="hero__title">Descubra Mais Sobre o Nosso Alojamento e a Região </h1>
+            <p class="hero__subtitle">Explore os encantos do nosso espaço e deixe-se surpreender por Ponte de Lima</p>
+            <a href="../login1/pagina_login.php" class="hero__cta">Reservar Agora</a>
+        </div>
+        <a href="#about" class="scroll-down">
+            <i class="ri-arrow-down-s-line"></i>
+        </a>
+    </section>
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Nossa História</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Descubra a história e os valores que tornam a Quinta Flores um destino especial em Ponte de Lima</p>
+            <div class="content-grid">
+                <div class="info-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="ri-book-open-line info-card__icon"></i>
+                    <h3>Nossa História</h3>
+                    <p>A Quinta Flores é um projeto familiar que tem crescido graças aos elogios e apoio dos nossos hóspedes. Ao longo dos anos, a família Flores tem investido na melhoria e valorização do alojamento, tornando-o num espaço cada vez mais acolhedor e confortável.
+                    Aqui, juntamos esforço e dedicação para proporcionar uma experiência única, num ambiente tranquilo e em contacto com a natureza.</p>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="ri-focus-3-line info-card__icon"></i>
+                    <h3>Nossa Missão</h3>
+                    <p>Proporcionar aos nossos hóspedes uma estadia inesquecível, onde possam criar memórias duradouras e desfrutar de momentos de qualidade e paz.
+                    Na Quinta Flores, dedicamo-nos a oferecer um ambiente acolhedor e confortável, para que cada visita seja uma experiência única e relaxante, valorizando o bem-estar de todos que nos escolhem.</p>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="400">
+                    <i class="ri-heart-line info-card__icon"></i>
+                    <h3>Nossos Valores</h3>
+                    <p>Na Quinta Flores, valorizamos a hospitalidade, o conforto e o cuidado em cada detalhe. Priorizamos o ambiente familiar e o respeito pela natureza, criando um espaço de tranquilidade. O nosso objetivo é proporcionar experiências memoráveis que os hóspedes levem consigo para sempre.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Accommodation Section -->
+    <section class="section" id="accommodation" style="background-color: var(--gray-light);">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Nossas Acomodações</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Conforto e charme em cada detalhe, proporcionando uma estadia inesquecível</p>
+
+            <div class="content-grid">
+                <div class="info-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="ri-hotel-bed-line info-card__icon"></i>
+                    <h3>Quartos</h3>
+                    <ul class="features-list">
+                        <li>Quartos espaçosos com vista para o jardim</li>
+                        <li>Ar condicionado e aquecimento</li>
+                        <li>Casa de banho privada com equipamentos de qualidade</li>
+                        <li>Wi-Fi de alta velocidade</li>
+                        <li>Decoração tradicional portuguesa com toques contemporâneos</li>
+                    </ul>
+                </div>
+
+                <div class="info-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="ri-community-line info-card__icon"></i>
+                    <h3>Áreas Comuns</h3>
+                    <ul class="features-list">
+                        <li>Piscina ao ar livre com espreguiçadeiras</li>
+                        <li>Jardins exuberantes para relaxar</li>
+                        <li>Área de churrasco totalmente equipada</li>
+                        <li>Espaço para camping</li>
+                        <li>Estacionamento privado </li>
+                        <li>Terraço panorâmico com vista para as montanhas</li>
+                    </ul>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="400">
+                    <i class="ri-home-heart-line info-card__icon"></i>
+                    <h3>Suítes Especiais</h3>
+                    <ul class="features-list">
+                        <li>Suítes familiares espaçosas</li>
+                        <li>Unidades com cozinha equipada</li>
+                        <li>Decoração de luxo nas suítes</li>
+                        <li>Opções de acomodação para grupos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Activities Section -->
+    <section class="section" id="activities">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Experiências & Atividades</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Descubra o melhor da região com nossas experiências cuidadosamente selecionadas</p>
+            <div class="activities-grid">
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/gastronomia.jpg" alt="Experiência Gastronômica" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Experiência Gastronômica</h3>
+                        <p class="activity-card__text">Desfrute de uma experiência gastronómica única no coração do Minho, com a oportunidade de saborear pratos tradicionais da região. Participe em workshops culinários e degustações de produtos típicos, incluindo os reconhecidos vinhos verdes, que irão enriquecer a sua estadia com os sabores autênticos do nosso território</p>
+                        <a href="gastronomia.php" class="activity-card__link">Explore mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../assets/images/trilhos_e_natureza.avif" alt="Trilhas e Natureza" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Trilhas e Natureza</h3>
+                        <p class="activity-card__text">Explore as belas trilhas da região e conheça as maravilhas naturais do Minho. Descubra detalhes sobre a fauna, flora e a rica paisagem local, enquanto passeia por caminhos tranquilos e desfruta da serenidade da natureza.</p>
+                        <a href="trilhos.php" class="activity-card__link">Explore mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+                <div class="activity-card" data-aos="fade-up" data-aos-delay="400">
+                    <img src="../assets/images/passeios_culturais.avif" alt="Passeios Culturais" class="activity-card__image">
+                    <div class="activity-card__content">
+                        <h3 class="activity-card__title">Passeios Culturais</h3>
+                        <p class="activity-card__text">Descubra os monumentos históricos, as festas tradicionais e as feiras de artesanato que celebram a rica cultura de Ponte de Lima, oferecendo-lhe uma verdadeira imersão nas tradições locais e no património da região.</p>
+                        <a href="passeios_culturais.php" class="activity-card__link">Explore mais <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ <!-- Secção da Galeria -->
+<section class="section gallery-section" id="gallery">
+    <div class="section__container">
+        <h2 class="section-title" data-aos="fade-up">A Nossa Galeria</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+            Imagens que capturam a essência e a beleza da Quinta Flores
+        </p>
+        <div class="gallery">
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                <img src="../assets/images/entrada_3.jpg" alt="Entrada da Quinta">
+                <div class="gallery-caption">Entrada Principal</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                <img src="../assets/images/19.png" alt="Vista Principal">
+                <div class="gallery-caption">Vista Panorâmica</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                <img src="../assets/images/churrasco.jpg" alt="Área Externa">
+                <div class="gallery-caption">Área de Churrasco</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
+                <img src="../assets/images/natureza19.jpg" alt="Jardim">
+                <div class="gallery-caption">Jardins Floridos</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
+                <img src="../assets/images/piscina2.jpg" alt="Piscina">
+                <div class="gallery-caption">Piscina Exterior</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
+                <img src="../assets/images/14.png" alt="Área de Lazer">
+                <div class="gallery-caption">Entrada Acolhedora para os Quartos</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
+                <img src="../assets/images/11.png" alt="Quarto">
+                <div class="gallery-caption">Suite</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
+                <img src="../assets/images/casa_de_banho_7.jpg" alt="Casa de Banho">
+                <div class="gallery-caption">Casa de Banho (Suite)</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="900">
+                <img src="../assets/images/17.png" alt="Sala de Estar">
+                <div class="gallery-caption">Sala de Estar Aconchegante</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1000">
+                <img src="../assets/images/13.png" alt="Cozinha Equipada">
+                <div class="gallery-caption">Cozinha Totalmente Equipada</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1100">
+                <img src="../assets/images/entrada_2.jpg" alt="Espaço Infantil">
+                <div class="gallery-caption">Espaço Ajardinado com Esculturas</div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1200">
+                <img src="../assets/images/natureza_2.jpg" alt="Pôr-do-Sol na Quinta">
+                <div class="gallery-caption">Pôr-do-Sol na Quinta</div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Testimonials Section -->
+    <section class="section" id="testimonials">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">O Que Dizem Nossos Hóspedes</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Experiências autênticas compartilhadas por quem já se hospedou na Quinta Flores</p>
+            <div class="testimonials-slider" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial">
+                    <img src="../Flux_Dev_A_casually_dressed_woman_in_her_midtwenties_to_early__3.jpg" alt="Maria Silva" class="testimonial__image">
+                    <p class="testimonial__text">"Uma experiência incrível! A hospitalidade da equipe da Quinta Flores é incomparável. Os quartos são espaçosos e confortáveis, e as áreas comuns são perfeitas para relaxar. Voltaremos com certeza!"</p>
+                    <p class="testimonial__author">Maria Silva</p>
+                    <div class="testimonial__rating">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ Section -->
+    <section class="section" style="background-color: var(--gray-light);">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Perguntas Frequentes</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Respostas para as dúvidas mais comuns sobre a Quinta Flores</p>
+
+            <div class="faq-container">
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        O que acontece em caso de danos na propriedade ou problemas durante a estadia? <i class="ri-arrow-down-s-line faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Em caso de danos à propriedade durante a sua estadia, solicitamos que nos informe imediatamente para que possamos tomar as devidas providências. Dependendo da gravidade do dano, poderá ser cobrada uma taxa adicional para reparação. Caso haja qualquer problema durante a sua estadia, a nossa equipa está disponível 24 horas por dia para garantir que tudo seja resolvido rapidamente e com a máxima eficiência.
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        Qual é a política de cancelamento? <i class="ri-arrow-down-s-line faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Para cancelar a sua reserva, é necessário ligar para o número +351 912 418 976 com 10 dias de antecedência. Caso a anulação seja feita dentro de um prazo inferior, será cobrado 50% do valor da reserva. Pedimos que esteja atento às condições e prazos para evitar custos adicionais.
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="faq-question">
+                        O que acontece em caso de danos na propriedade ou problemas durante a estadia? <i class="ri-arrow-down-s-line faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Em caso de danos à propriedade durante a sua estadia, solicitamos que informe imediatamente a nossa equipa de recepção para que possamos resolver a situação o mais rápido possível. Dependendo da gravidade do dano, pode haver custos adicionais associados. Pedimos aos nossos hóspedes que cuidem do alojamento com o mesmo zelo com que cuidam da sua própria casa. Se houver problemas durante a estadia, nossa equipa está disponível 24 horas por dia para ajudá-lo a resolver qualquer questão de forma rápida e eficiente.
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="faq-question">
+                        Aceitam animais de estimação? <i class="ri-arrow-down-s-line faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Aceitamos animais de porte pequeno apenas. Para garantir a sua estadia confortável e sem imprevistos, recomendamos que entre em contacto conosco com antecedência para confirmar a disponibilidade e as condições específicas para o seu animal.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  <!-- Location Section -->
+    <section class="section" id='localizacao'>
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up">Localização Privilegiada</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Descubra por que nossa localização é perfeita para explorar o melhor do Norte de Portugal</p>
+
+            <div class="content-grid">
+                <div class="info-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="ri-map-pin-line info-card__icon"></i>
+                    <h3>Pontos de Interesse Próximos</h3>
+                    <ul class="features-list">
+                        <li>Centro histórico de Ponte de Lima (5 min)</li>
+                        <li>Praia fluvial (10 min)</li>
+                        <li>Ecovia do Lima para caminhadas e ciclismo</li>
+                        <li>Área de Paisagem Protegida das Lagoas</li>
+                        <li>Festival Internacional de Jardins</li>
+                    </ul>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="ri-route-line info-card__icon"></i>
+                    <h3>Como Chegar</h3>
+                    <ul class="features-list">
+                        <li>45 minutos do Aeroporto do Porto</li>
+                        <li>30 minutos de Viana do Castelo</li>
+                        <li>20 minutos de Braga</li>
+                        <li>Coordenadas GPS disponíveis</li>
+                        <li>Fácil acesso pela autoestrada A3</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Mapa do Google -->
+            <div class="map-container" data-aos="fade-up" data-aos-delay="400">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47893.81180278912!2d-8.614690644970705!3d41.76716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd25a6e2139e817f%3A0x400ebbde490c450!2sPonte%20de%20Lima!5e0!3m2!1spt-PT!2spt!4v1708106431705!5m2!1spt-PT!2spt" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+<!-- Contact Section -->
+<section class="section contact-section" id="contact">
+    <!-- Flash Message Container -->
+    <div id="flash-message" class="flash-message" style="display: none;"></div>
+    
+    <div class="section__container">
+        <h2 class="section-title" data-aos="fade-up">Entre em Contacto</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Estamos sempre disponíveis para ajudar e responder suas perguntas</p>
+        <div class="contact-grid">
+            <div class="contact-info" data-aos="fade-up" data-aos-delay="200">
+                <h3>Informações de Contato</h3>
+                <ul class="contact-details">
+                    <li>
+                        <i class="ri-map-pin-line contact-icon"></i>
+                        <div>
+                            <p>Travessa da seara 265 Calheiros</p>
+                            <p>4990-575 Ponte de Lima Viana do Castelo, Portugal</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-phone-line contact-icon"></i>
+                        <div>
+                            <p>+351 912 418 976</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-mail-line contact-icon"></i>
+                        <div>
+                            <p>quinta.flores2019@gmail.com</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-time-line contact-icon"></i>
+                        <div>
+                            <p>Check-in: 15:00 </p>
+                            <p>Check-out: até 11:00</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/quintaflores19/?utm_source=ig_web_button_share_sheet" class="social-icon"><i class="ri-instagram-fill"></i></a>
+                </div>
+                
+            </div>
+            <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
+                <form id="contactForm" action="send_message.php" method="POST">
+                    <div class="form-group">
+                        <label for="name" class="form-label">
+                            Nome <i class="ri-user-line"></i>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            class="form-input" 
+                            required 
+                            placeholder="Seu nome completo" 
+                            autocomplete="name" 
+                            title="Introduza o seu nome completo"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            Email <i class="ri-mail-line"></i>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            required 
+                            placeholder="seuemail@gmail.com" 
+                            autocomplete="email" 
+                            title="Introduza o seu email, ex: exemplo@gmail.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject" class="form-label">
+                            Assunto <i class="ri-pencil-line"></i>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="subject" 
+                            name="subject" 
+                            class="form-input" 
+                            required 
+                            placeholder="Resumo do assunto" 
+                            title="Introduza o assunto da sua mensagem"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="form-label">
+                            Mensagem <i class="ri-message-line"></i>
+                        </label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            class="form-textarea" 
+                            required 
+                            placeholder="Escreva a sua mensagem aqui" 
+                            title="Introduza a sua mensagem"
+                            rows="5"
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="form-button">
+                        <span class="button-text">Enviar Mensagem</span>
+                        <span class="button-loading" style="display: none;">
+                            <i class="ri-loader-4-line"></i> Enviando...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Flash Messages Styles */
+.flash-message {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    border-left: 4px solid;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    animation: slideDown 0.5s ease-out;
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left-color: #28a745;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left-color: #dc3545;
+    border: 1px solid #f5c6cb;
+}
+
+.flash-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left-color: #ffc107;
+    border: 1px solid #ffeaa7;
+}
+
+.flash-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left-color: #17a2b8;
+    border: 1px solid #bee5eb;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Button Animation */
+.form-button {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.form-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.button-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Dark theme support for flash messages */
+[data-theme="dark"] .flash-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #90ee90;
+    border-color: #28a745;
+}
+
+[data-theme="dark"] .flash-error {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #ff9999;
+    border-color: #dc3545;
+}
+
+[data-theme="dark"] .flash-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffeb3b;
+    border-color: #ffc107;
+}
+
+[data-theme="dark"] .flash-info {
+    background-color: rgba(23, 162, 184, 0.2);
+    color: #87ceeb;
+    border-color: #17a2b8;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar flash messages via URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const flashMessage = urlParams.get('flash_message');
+    const flashType = urlParams.get('flash_type');
+
+    if (flashMessage) {
+        showFlashMessage(decodeURIComponent(flashMessage), flashType || 'info');
+        // Limpar os parâmetros da URL
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    }
+
+    // Função para mostrar flash messages
+    function showFlashMessage(message, type) {
+        const flashDiv = document.getElementById('flash-message');
+        flashDiv.innerHTML = message;
+        flashDiv.className = `flash-message flash-${type}`;
+        flashDiv.style.display = 'block';
+        
+        // Scroll suave para a mensagem
+        flashDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Auto-hide após 7 segundos
+        setTimeout(() => {
+            flashDiv.style.opacity = '0';
+            setTimeout(() => {
+                flashDiv.style.display = 'none';
+                flashDiv.style.opacity = '1';
+            }, 300);
+        }, 7000);
+    }
+
+    // Melhorar o formulário de contacto
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            const submitButton = this.querySelector('.form-button');
+            const buttonText = submitButton.querySelector('.button-text');
+            const buttonLoading = submitButton.querySelector('.button-loading');
+            
+            // Mostrar loading
+            buttonText.style.display = 'none';
+            buttonLoading.style.display = 'inline-flex';
+            submitButton.disabled = true;
+            
+            // Validação básica no frontend
+            let nome = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let assunto = document.getElementById("subject").value.trim();
+            let mensagem = document.getElementById("message").value.trim();
+
+            if (!nome || !email || !assunto || !mensagem) {
+                e.preventDefault();
+                showFlashMessage("Por favor, preencha todos os campos obrigatórios.", "error");
+                
+                // Restaurar botão
+                buttonText.style.display = 'inline';
+                buttonLoading.style.display = 'none';
+                submitButton.disabled = false;
+                return;
+            }
+
+            // Validação de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showFlashMessage("Por favor, introduza um endereço de email válido.", "error");
+                
+                // Restaurar botão
+                buttonText.style.display = 'inline';
+                buttonLoading.style.display = 'none';
+                submitButton.disabled = false;
+                return;
+            }
+        });
+    }
+    // Adicionar funcionalidade de fechar flash message clicando
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.flash-message')) {
+            const flashMessage = e.target.closest('.flash-message');
+            flashMessage.style.opacity = '0';
+            setTimeout(() => {
+                flashMessage.style.display = 'none';
+                flashMessage.style.opacity = '1';
+            }, 300);
+        }
+    });
+});
+</script>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Chatbot  -->
+<div class="chatbot-container">
+    <div class="chatbot-button" id="chatbotButton">
+        <i class="fa-solid fa-comment-dots"></i>
+    </div>
+    <div class="chatbot-box" id="chatbotBox">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <img src="assets/logos/logotipo1.png" alt="Quinta Flores" class="chatbot-logo">
+                <span>Assistente Virtual da Quinta Flores</span>
+            </div>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <img src="assets/logos/logotipo1.png" alt="Bot" class="message-avatar">
+                <div class="message-content">
+                    <p>Olá! Bem-vindo à Quinta Flores. Como posso ajudá-lo hoje?</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Digite sua mensagem...">
+            <button id="chatbotSend" class="chatbot-send">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+        <div class="chatbot-suggestions">
+            <button class="suggestion-button">
+                <i class="fa-solid fa-calendar-check"></i> Reservas
+            </button>
+            <button class="suggestion-button">
+                <i class="fa-solid fa-bed"></i> Acomodações
+            </button>
+            <button class="suggestion-button">
+                <i class="fa-solid fa-bell-concierge"></i> Serviços
+            </button>
+            <button class="suggestion-button">
+                <i class="fa-solid fa-map-location-dot"></i> Localização
+            </button>
+            <button class="suggestion-button">
+                <i class="fa-solid fa-person-hiking"></i> Atividades
+            </button>
+            <button class="suggestion-button">
+                <i class="fa-solid fa-euro-sign"></i> Preços
+            </button>
+        </div>
+        <div class="chatbot-footer">
+            <span>Quinta Flores - ChatBot</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatbotButton = document.getElementById('chatbotButton');
+        const chatbotBox = document.getElementById('chatbotBox');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const suggestionButtons = document.querySelectorAll('.suggestion-button');
+
+        // Mostrar chatbot box
+        chatbotButton.addEventListener('click', function() {
+            chatbotBox.style.display = 'flex';
+            chatbotButton.style.display = 'none';
+        });
+
+        // Fechar chatbot box
+        chatbotClose.addEventListener('click', function() {
+            chatbotBox.style.display = 'none';
+            chatbotButton.style.display = 'flex';
+        });
+
+        // Enviar mensagem ao pressionar Enter
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Enviar mensagem ao clicar no botão
+        chatbotSend.addEventListener('click', sendMessage);
+
+        // Botões de sugestão
+        suggestionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                chatbotInput.value = text;
+                sendMessage();
+            });
+        });
+
+        // Respostas do chatbot
+        const responses = {
+            saudacao: "Bem-vindo à Quinta Flores. Em que podemos ser úteis?",
+            agradecimento: "Obrigado pelo seu contacto. Ficamos ao dispor para qualquer questão relacionada com a Quinta Flores ou com a região de Ponte de Lima. Desejamos-lhe uma excelente estadia connosco.",
+            despedida: "Agradecemos o seu contacto. Esperamos ter o prazer de o receber brevemente na Quinta Flores. Votos de um excelente dia.",
+            reservas: {
+                geral: "Para efetuar uma reserva na Quinta Flores, dispõe das seguintes opções:\n\n• Utilize o botão 'Reservar Agora' disponível no topo da página\n• Contacte-nos através do número: +351 912 418 976\n• Ou visite-nos presencialmente mediante agendamento.",
+                cancelamento: "A nossa política de cancelamento é flexível:\n\n• Cancelamentos até 7 dias antes da data de chegada – reembolso total\n• Cancelamentos entre 3 e 7 dias – taxa de 30%\n• Cancelamentos com menos de 3 dias – taxa de 50% do valor total da reserva.",
+                alteracao: "As alterações à reserva estão sujeitas a disponibilidade. Recomendamos que entre em contacto connosco com a maior antecedência possível para verificarmos as alternativas disponíveis.",
+                disponibilidade: "Para consultar a disponibilidade para datas específicas, utilize o formulário na página inicial ou contacte-nos diretamente.",
+                antecedencia: "Durante a época alta (junho a setembro) e em períodos festivos, recomendamos que efetue a sua reserva com 1 a 2 meses de antecedência."
+            },
+            acomodacoes: {
+                casaprincipal: "A Casa Principal é nossa maior acomodação com 3 quartos com 5 camas de casal, 3 casas de banho, sala de estar espaçosa, cozinha completa e varanda com vista para os jardins.",
+                geral: "Oferecemos acomodações confortáveis e bem equipadas. A Casa Principal comporta até 10 pessoas com todos os confortos necessários para uma estadia perfeita."
+            },
+            precos: {
+                geral: "A Quinta Flores apresenta um valor fixo de 120€ por noite, com capacidade máxima até 10 pessoas. Para eventos ou ocasiões especiais com número superior de participantes, solicitamos que entre em contacto connosco previamente."
+            },
+            servicos: {
+                geral: "A Quinta Flores disponibiliza diversos serviços pensados para proporcionar uma estadia confortável e memorável:\n\n• Receção disponível das 08h00 às 22h00\n• Piscina exterior com zona de solário\n• Estacionamento privativo gratuito\n• Jardins e zonas de lazer",
+                piscina: "A nossa piscina exterior encontra-se acessível diariamente. Dispõe de zona de solário com espreguiçadeiras e toalhas disponibilizadas gratuitamente aos hóspedes.",
+                wifi: "Disponibilizamos Wi-Fi gratuito de alta velocidade em toda a propriedade, incluindo nas zonas exteriores. A palavra-passe será fornecida no momento do check-in.",
+                limpeza: "O serviço de limpeza é sempre feito antes e depois da estadia. Caso pretenda limpeza diária, poderá ser solicitado por um valor adicional de 15€ por dia.",
+                recepcao: "A receção está disponível entre as 08h00 e as 22h00. Para chegadas fora deste horário, temos ao dispor um sistema de check-in automatizado, mediante pedido prévio."
+            },
+            localizacao: {
+                geral: "A Quinta Flores está situada a cerca de 3 km do centro histórico de Ponte de Lima, oferecendo um ambiente calmo e campestre com fácil acesso às principais atrações da região.",
+                como_chegar: "Como chegar à Quinta Flores:\n\n• De carro: pela A3, tome a saída para Ponte de Lima e siga em direção a Arcozelo. Após aproximadamente 2,5 km, encontrará sinalização com a nossa identificação à direita.",
+                arredores: "Nas proximidades da Quinta Flores poderá explorar vinícolas de Vinho Verde, percursos pedestres, atividades no Rio Lima e restaurantes típicos da gastronomia minhota.",
+                estacionamento: "Disponibilizamos estacionamento privado e gratuito dentro da propriedade, com capacidade para todos os nossos hóspedes."
+            },
+            atividades: {
+                geral: "A região do Minho oferece inúmeras atividades: passeios de bicicleta, degustação de vinhos, caminhadas, passeios a cavalo, canoagem no Rio Lima e visitas culturais. Se tiver interesse pode ver no nosso site mais atividades que pode fazer perto da Quinta Flores.",
+                cicloturismo: "Dispomos ainda de várias rotas para descobrir as paisagens únicas da região.",
+                gastronomia: "O Minho é famoso por sua gastronomia. Recomendamos restaurantes autênticos nas proximidades.",
+                criancas: "Para famílias com crianças, recomendamos: caça ao tesouro em nossos jardins, visita ao parque aventura, piqueniques à beira-rio e passeios de barco no Rio Lima."
+            },
+            fallback: "Sou um assistente virtual da Quinta Flores. Peço desculpa, mas não consegui compreender corretamente a sua pergunta. Poderia reformulá-la ou especificar melhor, por favor?"
+        };
+
+        // Função principal para enviar mensagem
+        function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message === '') return;
+
+            // Adicionar mensagem do usuário
+            addMessage(message, 'user');
+            chatbotInput.value = '';
+
+            // Simular digitação do bot
+            showTypingIndicator();
+
+            // Processar resposta com um pequeno delay
+            setTimeout(() => {
+                removeTypingIndicator();
+                const response = getResponse(message);
+                addMessage(response, 'bot');
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }, 1000 + Math.random() * 1000);
+        }
+        // Função para adicionar mensagem à conversa
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            let avatar;
+            if (sender === 'bot') {
+                avatar = document.createElement('img');
+                avatar.src = 'assets/logos/logotipo1.png';
+                avatar.alt = 'Bot';
+                avatar.className = 'message-avatar';
+            } else {
+                avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.style.backgroundColor = '#8CB58E';
+                avatar.style.display = 'flex';
+                avatar.style.justifyContent = 'center';
+                avatar.style.alignItems = 'center';
+                avatar.style.color = 'white';
+                avatar.style.fontWeight = 'bold';
+                avatar.textContent = 'EU';
+            }
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formatMessageText(text);
+            if (sender === 'user') {
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(avatar);
+            } else {
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(contentDiv);
+            }
+            chatbotMessages.appendChild(messageDiv);
+        }
+        // Função para formatar o texto da mensagem
+        function formatMessageText(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+        // Função para mostrar indicador de digitação
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing-message';
+            const avatar = document.createElement('img');
+            avatar.src = 'assets/logos/logotipo1.png';
+            avatar.alt = 'Bot';
+            avatar.className = 'message-avatar';
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('span');
+                typingIndicator.appendChild(dot);
+            }
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(typingIndicator);
+            chatbotMessages.appendChild(typingDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        // Função para remover indicador de digitação
+        function removeTypingIndicator() {
+            const typingMessage = document.querySelector('.typing-message');
+            if (typingMessage) {
+                typingMessage.remove();
+            }
+        }
+        // Função para determinar a resposta adequada (versão corrigida)
+        function getResponse(message) {
+            const lowercaseMessage = message.toLowerCase();
+            // 1. Verificar despedidas (mais específico)
+            if (/(adeus|tchau|até logo|até mais|até breve|goodbye|bye|até à próxima|ate a proxima)/i.test(lowercaseMessage)) {
+                return responses.despedida;
+            }
+            // 2. Verificar agradecimentos explícitos
+            if (/(obrigado|obrigada|agradecido|agradecida|thanks|thank you|grato|grata|muito obrigado|muito obrigada)\b/i.test(lowercaseMessage)) {
+                return responses.agradecimento;
+            }
+            // 3. Verificar saudações
+            if (/(olá|ola|oi|bom dia|boa tarde|boa noite|hello|hi|hey|saudações|saudacoes)\b/i.test(lowercaseMessage)) {
+                return responses.saudacao;
+            }
+            // 4. Verificar reservas
+            if (/(reserva|reservar|booking|alugar|disponibilidade|marcar|fazer reserva|agendar|quero reservar)\b/i.test(lowercaseMessage)) {
+                if (/(cancelar|cancelamento|anular|desmarcar|cancelada|cancelar reserva)\b/i.test(lowercaseMessage)) {
+                    return responses.reservas.cancelamento;
+                } else if (/(alterar|alteração|mudar|modificar|trocar|alterar reserva)\b/i.test(lowercaseMessage)) {
+                    return responses.reservas.alteracao;
+                } else if (/(disponível|disponibilidade|tem vaga|vagas|datas livres|datas disponíveis)\b/i.test(lowercaseMessage)) {
+                    return responses.reservas.disponibilidade;
+                } else if (/(antecedência|antecedencia|com antecedência|quando reservar|prazo para reservar|tempo antes)\b/i.test(lowercaseMessage)) {
+                    return responses.reservas.antecedencia;
+                } else {
+                    return responses.reservas.geral;
+                }
+            } 
+            // 5. Verificar acomodações
+            if (/(acomodação|acomodacoes|quarto|quartos|casa|alojamento|hospedagem|suite|suíte)\b/i.test(lowercaseMessage)) {
+                if (/(casa principal|principal|casa mãe|principal casa)\b/i.test(lowercaseMessage)) {
+                    return responses.acomodacoes.casaprincipal;
+                } else {
+                    return responses.acomodacoes.geral;
+                }
+            }
+            // 6. Verificar preços
+            if (/(preço|preco|preços|precos|valor|valores|custo|quanto custa|tarifa|taxa|preço por noite)\b/i.test(lowercaseMessage)) {
+                return responses.precos.geral;
+            } 
+            // 7. Verificar serviços
+            if (/(serviço|servico|facilidade|comodidade|serviços|comodidades|infraestrutura)\b/i.test(lowercaseMessage)) {
+                if (/(piscina|nadar|piscinas|área de lazer aquática)\b/i.test(lowercaseMessage)) {
+                    return responses.servicos.piscina;
+                } else if (/(wifi|internet|wi-fi|rede|conexão|conexao)\b/i.test(lowercaseMessage)) {
+                    return responses.servicos.wifi;
+                } else if (/(limpeza|arrumação|arrumacao|faxina|serviço de limpeza)\b/i.test(lowercaseMessage)) {
+                    return responses.servicos.limpeza;
+                } else if (/(recepção|recepcao|atendimento|balcão|front desk)\b/i.test(lowercaseMessage)) {
+                    return responses.servicos.recepcao;
+                } else {
+                    return responses.servicos.geral;
+                }
+            }           
+            // 8. Verificar localização
+            if (/(localização|localizacao|endereço|endereco|onde fica|como chegar|morada|situação|direção|direcao)\b/i.test(lowercaseMessage)) {
+                if (/(como chegar|chegar|direções|direcoes|rota|caminho|instruções|instrucoes|acesso)\b/i.test(lowercaseMessage)) {
+                    return responses.localizacao.como_chegar;
+                } else if (/(arredores|proximidade|perto|próximo|proximo|vizinhança|vizinhanca|área|região|regiao)\b/i.test(lowercaseMessage)) {
+                    return responses.localizacao.arredores;
+                } else if (/(estacionamento|parque|carro|vaga|garagem|parking)\b/i.test(lowercaseMessage)) {
+                    return responses.localizacao.estacionamento;
+                } else {
+                    return responses.localizacao.geral;
+                }
+            }            
+            // 9. Verificar atividades
+            if (/(atividade|atividades|fazer|lazer|passeio|passeios|entretenimento|diversão|diversao|programa)\b/i.test(lowercaseMessage)) {
+                if (/(bicicleta|bike|cicloturismo|bicicletas|ciclismo|andar de bicicleta)\b/i.test(lowercaseMessage)) {
+                    return responses.atividades.cicloturismo;
+                } else if (/(comida|gastronomia|comer|restaurante|culinária|culinaria|prato|refeição|refeicao)\b/i.test(lowercaseMessage)) {
+                    return responses.atividades.gastronomia;
+                } else if (/(criança|criancas|família|familia|kids|crianças|famílias|familias|filhos|filha|filho)\b/i.test(lowercaseMessage)) {
+                    return responses.atividades.criancas;
+                } else {
+                    return responses.atividades.geral;
+                }
+            }
+            
+            // 10. Se nenhuma das condições acima for atendida
+            return responses.fallback;
+        }
+    });
+</script>
+
+ 
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+     <script src="traduzir_lermais.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        //Menu móvel
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar flash messages via URL params
+const urlParams = new URLSearchParams(window.location.search);
+const flashMessage = urlParams.get('flash_message');
+const flashType = urlParams.get('flash_type');
+if (flashMessage) {
+    showFlashMessage(flashMessage, flashType);
+}
+function showFlashMessage(message, type) {
+    const flashDiv = document.getElementById('flash-message');
+    flashDiv.textContent = message;
+    flashDiv.className = `flash-message flash-${type}`;
+    flashDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        flashDiv.style.display = 'none';
+    }, 5000);
+}
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const header = document.getElementById('header');
+            const navItems = document.querySelectorAll('.nav__link');
+
+            // Função para controlar o menu
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                hamburger.innerHTML = navLinks.classList.contains('active') 
+                    ? '<i class="ri-close-line"></i>' 
+                    : '<i class="ri-menu-line"></i>';
+            });
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.innerHTML = '<i class="ri-menu-line"></i>';
+                });
+            });
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+            function toggleTheme() {
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                const currentTheme = html.getAttribute('data-theme');
+                const icon = themeToggle.querySelector('i');
+                
+                if (currentTheme === 'light') {
+                    html.setAttribute('data-theme', 'dark');
+                    icon.className = 'ri-moon-line';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.setAttribute('data-theme', 'light');
+                    icon.className = 'ri-sun-line';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            themeToggle.addEventListener('click', toggleTheme);
+            // Formulário de contato
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Aqui você adicionaria a lógica para enviar o formulário
+                    alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+                    contactForm.reset();
+                });
+            }
+        });
+        //enviar emails
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+    let nome = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let assunto = document.getElementById("subject").value;
+    let mensagem = document.getElementById("message").value;
+    if (!nome || !email || !assunto || !mensagem) {
+        alert("Por favor, preencha todos os campos.");
+        event.preventDefault();  // Impede o envio do formulário
+    }
+});
+    </script>
+    <?php include '../components/footer.php'; ?>
+</body>
+</html>

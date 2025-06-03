@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-// Conexão com a base de dados
 require_once '../conexao.php';
 
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -11,7 +9,7 @@ if (!$email) {
     exit;
 }
 
-// Verifica se já está inscrito
+// Verifica se já existe
 $query = "SELECT id FROM newsletter WHERE email = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $email);
@@ -25,7 +23,7 @@ if ($stmt->num_rows > 0) {
 
 $stmt->close();
 
-// Insere o email
+// Inserir
 $query = "INSERT INTO newsletter (email) VALUES (?)";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $email);

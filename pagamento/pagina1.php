@@ -8,7 +8,7 @@ if (!isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
 }
-if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'es','fr'])) {
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr','es'])) {
     I18n::setLanguage($_GET['lang']);
     // Recarrega a página para aplicar as mudanças
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));

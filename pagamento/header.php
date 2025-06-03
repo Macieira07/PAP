@@ -12,8 +12,8 @@ if (!isset($_SESSION['id'])) {
 }
 
 define('SITE_NAME', I18n::get('site_name'));
-define('PRIMARY_COLOR', '#6A0DAD');
-define('SECONDARY_COLOR', '#A56EFF');
+define('PRIMARY_COLOR', '#10B981');
+define('SECONDARY_COLOR', '#047857');
 ?>
 <!DOCTYPE html>
 <html lang="<?= I18n::getCurrentLanguage() ?>">
@@ -134,16 +134,16 @@ define('SECONDARY_COLOR', '#A56EFF');
                         </button>
                         <div class="language-dropdown">
                             <a href="?lang=pt" class="<?= I18n::getCurrentLanguage() === 'pt' ? 'active' : '' ?>">
-                                <img src="../assets/flags/pt.png" alt="Português"> Português
+                                <img src="../assets/flags/portugal.png" alt="Português"> Português
                             </a>
                             <a href="?lang=en" class="<?= I18n::getCurrentLanguage() === 'en' ? 'active' : '' ?>">
-                                <img src="../assets/flags/en.png" alt="English"> English
+                                <img src="../assets/flags/reino-unido.png" alt="English"> English
                             </a>
                                                         <a href="?lang=fr" class="<?= I18n::getCurrentLanguage() === 'fr' ? 'active' : '' ?>">
-                                <img src="../assets/flags/fr.png" alt="Francais"> Français
+                                <img src="../assets/flags/franca.png" alt="Francais"> Français
                             </a>
-                                                        <a href="?lang=en" class="<?= I18n::getCurrentLanguage() === 'en' ? 'active' : '' ?>">
-                                <img src="../assets/flags/gb.png" alt="English"> Español
+                                                        <a href="?lang=es" class="<?= I18n::getCurrentLanguage() === 'es' ? 'active' : '' ?>">
+                                <img src="../assets/flags/espanha.png" alt="Espanol"> Espanol   
                             </a>
                         </div>
                     </div>
