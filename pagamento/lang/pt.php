@@ -833,5 +833,103 @@ return [
 'select_date' => 'Selecione a data',
 'invalid_code' => 'Código inválido',
 'invalid_code_message' => 'O código digitado não é válido.',
-'check_code_try_again' => 'Por favor, verifique o código e tente novamente.'
+'check_code_try_again' => 'Por favor, verifique o código e tente novamente.',
+
+//PAGINA 3.PHP
+    // Página de Pagamento
+    'payment' => 'Pagamento',
+    'make_reservation' => 'Faça sua Reserva',
+    // Progress Steps
+    'dates' => 'Datas',
+    'personal_data' => 'Dados Pessoais',
+    'payment' => 'Pagamento',
+    'confirmation' => 'Confirmação',
+    // Resumo da Reserva
+    'reservation_summary' => 'Resumo da Reserva',
+    'nights' => 'Noites',
+    'guests' => 'Hóspedes',
+    'person' => 'pessoa',
+    'people' => 'pessoas',
+    'services' => 'Serviços',
+    'total_to_pay' => 'Total a Pagar',
+    // Serviços
+    'thematic_decoration' => 'Decoração Temática',
+    'daily_cleaning' => 'Limpeza Diária',
+    'welcome_basket' => 'Cesto de Boas-Vindas',
+    'breakfast' => 'Pequeno-almoço',
+    'dinner' => 'Jantar',
+    // Métodos de Pagamento
+    'payment_method' => 'Método de Pagamento',
+    'credit_card' => 'Cartão de Crédito',
+    'mb_way' => 'MB WAY',
+    'bank_transfer' => 'Transferência Bancária',
+    'cash' => 'Dinheiro',
+    
+    // Dados do Cartão
+    'card_data' => 'Dados do Cartão',
+    'card_name' => 'Nome no Cartão',
+    'card_number' => 'Número do Cartão',
+    'expiry_date' => 'Validade',
+    'cvc_code' => 'Código CVC',
+    
+    // MB WAY
+    'mbway_data' => 'Dados MB WAY',
+    'mobile_number' => 'Número de Telemóvel',
+    'mbway_notification' => 'Irá receber uma notificação no seu telemóvel para confirmar o pagamento.',
+    
+    // Transferência Bancária
+    'bank_transfer_data' => 'Dados para Transferência Bancária',
+    'bank_info' => 'Informações Bancárias',
+    'bank' => 'Banco',
+    'holder' => 'Titular',
+    'amount' => 'Valor',
+    'transfer_receipt' => 'Comprovativo de Transferência',
+    'accepted_formats' => 'Formatos aceites: PDF, JPG, PNG (max. 5MB)',
+    'transfer_confirmation' => 'A sua reserva será confirmada após a validação do comprovativo. Envie o comprovativo com o número da reserva como referência.',
+    
+    // Pagamento em Dinheiro
+    'cash_payment' => 'Pagamento em Dinheiro',
+    'cash_payment_info' => 'O pagamento em dinheiro deve ser efetuado no momento do check-in. A sua reserva será mantida como pendente até a confirmação do pagamento.',
+    
+    // Botões
+    'back' => 'Voltar',
+    'confirm_reservation' => 'Confirmar Reserva',
+    
+   // Payment page translations
+'select_payment_method' => 'Selecione um método de pagamento',
+'card_name_required' => 'Nome do titular do cartão é obrigatório',
+'invalid_card_number' => 'Número do cartão inválido',
+'card_expiry_required' => 'Data de validade do cartão é obrigatória',
+'invalid_cvc' => 'Código CVC inválido',
+'invalid_mbway' => 'Número MB WAY inválido',
+'upload_transfer_proof' => 'Por favor, envie o comprovativo de transferência',
+'invalid_file_format' => 'Formato de ficheiro inválido. Use PDF, JPG ou PNG',
+'file_too_large' => 'Ficheiro muito grande. Tamanho máximo: 5MB',
+'upload_error' => 'Erro ao enviar comprovativo. Por favor, tente novamente',
+'reservation_error' => 'Erro ao processar reserva. Por favor, tente novamente. Erro: ',
+'no_available_houses' => 'Nenhuma casa disponível para as datas selecionadas',
+'processing_error' => 'Ocorreu um erro ao processar a sua reserva: ',
+'fill_all_card_fields' => 'Por favor, preencha todos os campos do cartão',
+'card_details' => 'Dados do Cartão',
+'card_name' => 'Nome no Cartão',
+'card_number' => 'Número do Cartão',
+'expiry_date' => 'Validade',
+'cvc_code' => 'Código CVC',
+'mbway_details' => 'Dados MB WAY',
+'phone_number' => 'Número de Telemóvel',
+'mbway_notification' => 'Irá receber uma notificação no seu telemóvel para confirmar o pagamento',
+'bank_transfer_details' => 'Dados para Transferência Bancária',
+'bank_information' => 'Informações Bancárias',
+'bank' => 'Banco',
+'account_holder' => 'Titular',
+'amount' => 'Valor',
+'transfer_proof' => 'Comprovativo de Transferência',
+'accepted_formats' => 'Formatos aceites: PDF, JPG, PNG (max. 5MB)',
+'transfer_confirmation_note' => 'A sua reserva será confirmada após a validação do comprovativo. Envie o comprovativo com o número da reserva como referência',
+'cash_payment' => 'Pagamento em Dinheiro',
+'cash_payment_note' => 'O pagamento em dinheiro deve ser efetuado no momento do check-in. A sua reserva será mantida como pendente até a confirmação do pagamento',
+];
+?>
+
+
 ];

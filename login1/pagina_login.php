@@ -53,7 +53,7 @@ $csrf_token = $_SESSION['csrf_token'];
                 
                 <div class="form-footer">
                     Não tem conta? <a href="#" id="showRegister">Criar conta</a>
-                    <a href="../index.html" class="extra-link">Voltar</a>
+                    <a href="../index.php" class="extra-link">Voltar</a>
                 </div>
             </form>
             <!-- Formulário de Registro -->

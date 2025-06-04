@@ -535,7 +535,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     <img src="https://img.icons8.com/?size=100&id=TA4QF-Vb1AiX&format=png&color=000000" alt="Newsletter">
                     <h3>Modelos de Emails</h3>
                 </a>
-                    <a class="card-opcao" href="dashboard_avaliacoes.php">
+                    <a class="card-opcao" href="listar_avaliacoes.php">
                     <img src="https://img.icons8.com/?size=100&id=104&format=png&color=000000" alt="Newsletter">
                     <h3>Avaliações dos hóspedes</h3>
                 </a>

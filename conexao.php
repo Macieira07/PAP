@@ -1,12 +1,13 @@
-    <?php
-    // Configurações de conexão para o Docker
-    $host = 'db'; // Nome do serviço MySQL no docker-compose
+<?php
+    $host = 'metro.proxy.rlwy.net'; // Host da Railway
+    $porta = 57649;                 // PORTA Railway (muito importante!)
     $usuario = 'root';
-    $senha = ''; // Senha vazia conforme definido no docker-compose
+    $senha = 'xCXZTSaCjuxzLagZNeraHBXNxechiiUp'; 
     $banco = 'basedados_pap';
+
     // Cria conexão com tratamento de erros
     try {
-        $conexao = new mysqli($host, $usuario, $senha, $banco);
+        $conexao = new mysqli($host, $usuario, $senha, $banco, $porta);
         
         if ($conexao->connect_error) {
             throw new Exception("Falha na conexão: " . $conexao->connect_error);
@@ -19,4 +20,4 @@
         error_log($e->getMessage());
         die("Erro crítico: Não foi possível conectar ao banco de dados. Por favor, tente novamente mais tarde.");
     }
-    ?>
+?>

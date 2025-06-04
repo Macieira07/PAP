@@ -1,3 +1,6 @@
+<?php require __DIR__ . '/../includes/chatbot.php'; ?>
+
+
 <!-- Footer -->
 <footer class="footer">
   <!-- Newsletter -->
@@ -84,18 +87,34 @@
   <a href="#" class="back-to-top" title="Voltar ao topo">↑</a>
 </footer>
 
-<!-- Script newsletter e botão topo -->
 <script>
-  // Newsletter feedback
-  document.getElementById("newsletterForm").addEventListener("submit", function(e) {
+  // Submissão AJAX da newsletter
+  document.getElementById("newsletterForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("newsletter-msg").style.display = "block";
-    this.reset();
-  });
+    
+    const emailInput = document.getElementById("newsletter-email");
+    const email = emailInput.value;
+    const msgBox = document.getElementById("newsletter-msg");
 
-  // Mostrar botão "voltar ao topo"
-  window.addEventListener("scroll", () => {
-    const topBtn = document.querySelector(".back-to-top");
-    topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    fetch("../index/newsletter_submeter.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `email=${encodeURIComponent(email)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      msgBox.textContent = data.mensagem;
+      msgBox.style.color = data.tipo === "sucesso" ? "lightgreen" : "red";
+      msgBox.style.display = "block";
+
+      if (data.tipo === "sucesso") {
+        emailInput.value = ""; // limpa campo
+      }
+    })
+    .catch(() => {
+      msgBox.textContent = "Erro ao submeter. Tenta novamente.";
+      msgBox.style.color = "red";
+      msgBox.style.display = "block";
+    });
   });
 </script>

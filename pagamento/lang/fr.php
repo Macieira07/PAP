@@ -868,7 +868,98 @@ return [
 'select_date' => 'Sélectionnez une date',
 'invalid_code' => 'Code invalide',
 'invalid_code_message' => 'Le code saisi n’est pas valide.',
-'check_code_try_again' => 'Veuillez vérifier le code et réessayer.'
+'check_code_try_again' => 'Veuillez vérifier le code et réessayer.',
+//PAGINA3.PHP
 
-];
+    // Payment Page
+    'payment' => 'Paiement',
+    'make_reservation' => 'Effectuez votre Réservation',
     
+    // Progress Steps
+    'dates' => 'Dates',
+    'personal_data' => 'Données Personnelles',
+    'payment' => 'Paiement',
+    'confirmation' => 'Confirmation',
+    
+    // Reservation Summary
+    'reservation_summary' => 'Résumé de la Réservation',
+    'nights' => 'Nuits',
+    'guests' => 'Invités',
+    'person' => 'personne',
+    'people' => 'personnes',
+    'services' => 'Services',
+    'total_to_pay' => 'Total à Payer',
+    
+    // Services
+    'thematic_decoration' => 'Décoration Thématique',
+    'daily_cleaning' => 'Nettoyage Quotidien',
+    'welcome_basket' => 'Panier de Bienvenue',
+    'breakfast' => 'Petit-déjeuner',
+    'dinner' => 'Dîner',
+    
+    // Payment Methods
+    'payment_method' => 'Méthode de Paiement',
+    'credit_card' => 'Carte de Crédit',
+    'mb_way' => 'MB WAY',
+    'bank_transfer' => 'Virement Bancaire',
+    'cash' => 'Espèces',
+    
+    // Card Data
+    'card_data' => 'Données de la Carte',
+    'card_name' => 'Nom sur la Carte',
+    'card_number' => 'Numéro de Carte',
+    'expiry_date' => 'Date d\'Expiration',
+    'cvc_code' => 'Code CVC',
+    
+    // MB WAY
+    'mbway_data' => 'Données MB WAY',
+    'mobile_number' => 'Numéro de Mobile',
+    'mbway_notification' => 'Vous recevrez une notification sur votre mobile pour confirmer le paiement.',
+    
+    // Bank Transfer
+    'bank_transfer_data' => 'Données pour Virement Bancaire',
+    'bank_info' => 'Informations Bancaires',
+    'bank' => 'Banque',
+    'holder' => 'Titulaire',
+    'amount' => 'Montant',
+    'transfer_receipt' => 'Justificatif de Virement',
+    'accepted_formats' => 'Formats acceptés: PDF, JPG, PNG (max. 5MB)',
+    'transfer_confirmation' => 'Votre réservation sera confirmée après validation du justificatif. Envoyez le justificatif avec le numéro de réservation comme référence.',
+    
+    // Cash Payment
+    'cash_payment' => 'Paiement en Espèces',
+    'cash_payment_info' => 'Le paiement en espèces doit être effectué au moment de l\'enregistrement. Votre réservation restera en attente jusqu\'à la confirmation du paiement.',
+    
+    // Buttons
+    'back' => 'Retour',
+    'confirm_reservation' => 'Confirmer la Réservation',
+    'card_expiry_required' => 'La date d’expiration de la carte est obligatoire',
+    'invalid_cvc' => 'Code CVC invalide',
+    'invalid_mbway' => 'Numéro MB WAY invalide',
+    'upload_transfer_proof' => 'Veuillez télécharger la preuve de virement',
+    'invalid_file_format' => 'Format de fichier invalide. Utilisez PDF, JPG ou PNG',
+    'file_too_large' => 'Fichier trop volumineux. Taille maximale : 5 Mo',
+    'upload_error' => 'Erreur lors de l’envoi de la preuve. Veuillez réessayer',
+    'reservation_error' => 'Erreur lors du traitement de la réservation. Veuillez réessayer. Erreur : ',
+    'no_available_houses' => 'Aucune maison disponible pour les dates sélectionnées',
+    'processing_error' => 'Une erreur s’est produite lors du traitement de votre réservation : ',
+    'fill_all_card_fields' => 'Veuillez remplir tous les champs de la carte',
+    'card_details' => 'Détails de la Carte',
+    'card_name' => 'Nom sur la Carte',
+    'card_number' => 'Numéro de Carte',
+    'expiry_date' => 'Date d’Expiration',
+    'cvc_code' => 'Code CVC',
+    'mbway_details' => 'Détails MB WAY',
+    'phone_number' => 'Numéro de Téléphone',
+    'mbway_notification' => 'Vous recevrez une notification sur votre téléphone pour confirmer le paiement',
+    'bank_transfer_details' => 'Détails du Virement Bancaire',
+    'bank_information' => 'Informations Bancaires',
+    'bank' => 'Banque',
+    'account_holder' => 'Titulaire du Compte',
+    'amount' => 'Montant',
+    'transfer_proof' => 'Preuve de Virement',
+    'accepted_formats' => 'Formats acceptés : PDF, JPG, PNG (max. 5 Mo)',
+    'transfer_confirmation_note' => 'Votre réservation sera confirmée après validation de la preuve. Envoyez la preuve avec le numéro de réservation en référence',
+    'cash_payment' => 'Paiement en Espèces',
+    'cash_payment_note' => 'Le paiement en espèces doit être effectué lors de l’enregistrement. Votre réservation sera marquée comme en attente jusqu’à confirmation du paiement',
+];

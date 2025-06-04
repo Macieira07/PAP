@@ -24,7 +24,7 @@ services:
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-basedados_pap}
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -44,5 +44,3 @@ services:
 
 volumes:
   db_data:
-  - ./:/var/www/html
-

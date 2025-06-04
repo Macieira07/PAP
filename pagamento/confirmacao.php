@@ -3,7 +3,7 @@ session_start();
 require_once '../conexao.php';
 
 // Configurações globais
-define('SITE_NAME', 'Quinta das Flores');
+define('SITE_NAME', 'Quinta Flores');
 define('PRIMARY_COLOR', '#4a8f29');
 define('EMAIL_COLOR', '#4a8f29');
 define('CONTACT_PHONE', '+351 912 418 976');
@@ -75,7 +75,6 @@ if (isset($_SESSION['servicos'])) {
         }
     }
 }
-
 // Aplicar desconto da oferta se existir
 if (isset($_SESSION['codigo_oferta'])) {
     switch ($_SESSION['codigo_oferta']) {
@@ -88,7 +87,6 @@ if (isset($_SESSION['codigo_oferta'])) {
             break;
     }
 }
-
 $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_servicos, R_metodo_pagamento)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conexao->prepare($query);
@@ -112,10 +110,8 @@ if (!$stmt->execute()) {
             </div>
           </div>');
 }
-
 $reserva_id = $conexao->insert_id;
 error_log("Nova reserva criada: ID=$reserva_id para {$_SESSION['email']}");
-
 // Gerar PDF
 require_once('tcpdf/tcpdf.php');
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
@@ -216,28 +212,23 @@ if (!empty($servicos_adicionais)) {
         $pdf->Cell(30, 7, '€' . number_format($valor_servico, 2, ',', '.'), 1, 1, 'R');
     }
 }
-
 // Total
 $pdf->SetFont('helvetica', 'B', 11);
 $pdf->Cell(120, 8, 'TOTAL', 1, 0, 'R');
 $pdf->Cell(60, 8, '€' . number_format($preco_total, 2, ',', '.'), 1, 1, 'R');
 $pdf->Ln(10);
-
 // Informações adicionais
 $pdf->SetFont('helvetica', 'I', 8);
 $pdf->MultiCell(0, 4, 'Este documento serve como fatura-recibo nos termos do artigo 42.º do Código do IVA. Isento de IVA - alínea 14 do artigo 9.º do Código do IVA.', 0, 'L');
 $pdf->Ln(5);
 $pdf->Cell(0, 4, 'Processado por sistema automático em ' . date('d/m/Y H:i'), 0, 1, 'L');
-
 $pdfContent = $pdf->Output('', 'S');
-
 // Envio de email
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
@@ -275,7 +266,6 @@ try {
         }
         $servicos_email .= '</div>';
     }
-    
     // Adicionar oferta ao email se existir
     $oferta_email = '';
     if (!empty($oferta_info)) {
@@ -284,13 +274,11 @@ try {
             <p>'.$oferta_info.'</p>
         </div>';
     }
-    
     // Adicionar método de pagamento
     $pagamento_email = '<div style="margin: 15px 0;">
         <h3 style="color:'.EMAIL_COLOR.'; margin-bottom: 10px;">Método de Pagamento</h3>
         <p>'.$metodo_pagamento.'</p>
     </div>';
-    
     $mail->Body = '
     <!DOCTYPE html>
     <html lang="pt">
@@ -348,7 +336,6 @@ try {
     </body>
     </html>
     ';
-    
     $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nOferta: {$oferta_info}\n\nMétodo de Pagamento: {$metodo_pagamento}\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nAtenciosamente,\nQuinta Flores";
     $mail->addStringAttachment($pdfContent, 'Fatura_Reserva_'.str_pad($reserva_id, 5, '0', STR_PAD_LEFT).'.pdf');
     
@@ -366,7 +353,6 @@ LOCATION:".PROPERTY_ADDRESS."
 END:VEVENT
 END:VCALENDAR";
     $mail->addStringAttachment($ical, 'evento.ics');
-    
     if ($mail->send()) {
         error_log("E-mail enviado com sucesso para {$_SESSION['email']}");
         echo '<div style="text-align: center; padding: 40px 20px; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -410,6 +396,5 @@ END:VCALENDAR";
             </div>
           </div>';
 }
-
 session_destroy();
 ?>

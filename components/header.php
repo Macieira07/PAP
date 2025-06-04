@@ -2,7 +2,7 @@
   <div class="nav__container">
     <!-- Logo -->
     <div class="logo">
-      <a href="../index/passeios_culturais.html">
+      <a href="../index.php">
         <img src="../assets/logos/logotipo1.png" alt="Quinta Flores">
       </a>
     </div>
@@ -26,12 +26,8 @@
       </div>
 
       <?php
-      // Aqui vai o array $nav_links, definido em cada página antes do include
-      // Exemplo: [ ['href'=>'#passeios','text'=>'Passeios Naturais'], ... ]
-
       if (isset($nav_links) && is_array($nav_links)) {
           foreach ($nav_links as $link) {
-              // Verifica se existe classe CSS adicional, tipo 'nav__cta'
               $class = isset($link['class']) ? ' ' . $link['class'] : '';
               echo '<li><a href="' . htmlspecialchars($link['href']) . '" class="nav__link' . $class . '">' . htmlspecialchars($link['text']) . '</a></li>';
           }
