@@ -32,7 +32,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION[
             <h2 style="color: #f44336;">Erro no Processamento</h2>
             <p>Dados da reserva não encontrados. Por favor, inicie o processo novamente.</p>
             <div style="margin-top: 20px;">
-                <a href="../index.html" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar à nossa página inicial</a>
+                <a href="../index.php" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar à nossa página inicial</a>
             </div>
           </div>');
 }
@@ -106,7 +106,7 @@ if (!$stmt->execute()) {
             <h2 style="color: #f44336;">Erro no Processamento</h2>
             <p>Ocorreu um erro ao processar sua reserva. Por favor, tente novamente.</p>
             <div style="margin-top: 20px;">
-                <a href="../index.html" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar ao Índice</a>
+                <a href="../index.php style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar ao Índice</a>
             </div>
           </div>');
 }
@@ -367,7 +367,7 @@ END:VCALENDAR";
                 <p style="font-size: 16px; margin-bottom: 30px;"><strong>Por favor, traga o comprovativo imprimido quando chegar ao alojamento.</strong></p>
                 
                 <div style="margin-top: 40px;">
-                    <a href="../index.html" style="background-color:'.PRIMARY_COLOR.'; color:white; padding:15px 30px; text-decoration:none; border-radius:5px; display:inline-block; font-weight:bold; font-size:16px;">Voltar ao Índice</a>
+                    <a href="../index.php" style="background-color:'.PRIMARY_COLOR.'; color:white; padding:15px 30px; text-decoration:none; border-radius:5px; display:inline-block; font-weight:bold; font-size:16px;">Voltar ao Índice</a>
                 </div>
               </div>';
     } else {
@@ -378,7 +378,7 @@ END:VCALENDAR";
                 <p style="font-size: 16px;">Sua reserva foi registrada com sucesso (Nº '.$reserva_id.'), mas houve um problema ao enviar o e-mail de confirmação.</p>
                 <p style="font-size: 16px;">Por favor, entre em contato conosco pelo e-mail '.CONTACT_EMAIL.' para obter os detalhes.</p>
                 <div style="margin-top: 30px;">
-                    <a href="../index.html" style="background-color: #f0f0f0; color: #333; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-right: 10px;">Voltar ao Índice</a>
+                    <a href="../index.php" style="background-color: #f0f0f0; color: #333; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-right: 10px;">Voltar ao Índice</a>
                     <a href="mailto:'.CONTACT_EMAIL.'" style="background-color:'.PRIMARY_COLOR.'; color:white; padding:12px 25px; text-decoration:none; border-radius:5px; display:inline-block; font-weight:bold;">Contatar Suporte</a>
                 </div>
               </div>';
@@ -391,7 +391,7 @@ END:VCALENDAR";
             <p style="font-size: 16px;">Ocorreu um erro ao processar sua reserva. Por favor, tente novamente.</p>
             <p style="font-size: 14px; color: #666;">Detalhes: '.htmlspecialchars($e->getMessage()).'</p>
             <div style="margin-top: 30px;">
-                <a href="../index.html" style="background-color: #f0f0f0; color: #333; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-right: 10px;">Voltar ao Índice</a>
+                <a href="../index.php" style="background-color: #f0f0f0; color: #333; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-right: 10px;">Voltar ao Índice</a>
                 <a href="mailto:'.CONTACT_EMAIL.'" style="background-color:'.PRIMARY_COLOR.'; color:white; padding:12px 25px; text-decoration:none; border-radius:5px; display:inline-block; font-weight:bold;">Contatar Suporte</a>
             </div>
           </div>';

@@ -7,8 +7,6 @@ $nav_links = [
     ['href' => '#testimonials', 'text' => 'Comentários'],
     ['href' => '#location', 'text' => 'Localização'],
     ['href' => '#contactos', 'text' => 'Contactos'],
-
-    ['href' => '../login1/pagina_login.php', 'text' => 'Reservar', 'class' => 'nav__cta'],
 ];
 include 'components/header.php'; ?>
 <!DOCTYPE html>
@@ -25,7 +23,7 @@ include 'components/header.php'; ?>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="index/style.css">
+    <link rel="stylesheet" type="text/css" href="index/teste.css">
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
     <link rel="stylesheet" type="text/css" href="../includes/chatbot.css">
@@ -228,7 +226,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         <p class="room__description">
          Dois dias inesquecíveis para reacender a chama do amor
         </p>
-        <a href="index/tempo_namorar.html" class="room__link">Planeie a sua experiência</a>
+        <a href="index/tempo_namorar.php" class="room__link">Planeie a sua experiência</a>
       </div>
     </div>
 
@@ -243,7 +241,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         <p class="room__description">
           O cenário perfeito para celebrar com os teus amigos ao máximo
         </p>
-        <a href="index/festa_amigos.html" class="room__link">Planeie a sua experiência</a>
+        <a href="../festa_amigos.php" class="room__link">Planeie a sua experiência</a>
       </div>
     </div>
 
@@ -254,11 +252,11 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
       </div>
       <div class="room__content">
         <h3 class="room__title">	Retiro Espiritual </h3>
-        <p class="room__price">Preço: 200€</p>
+        <p class="room__price">Preço: 240€</p>
         <p class="room__description">
             Paz, reflexão e união num ambiente acolhedor com kits espirituais incluídos
         </p>
-        <a href="index/retiro_catequese.html" class="room__link">Planeie a sua experiência</a>
+        <a href="index/retiro_catequese.php" class="room__link">Planeie a sua experiência</a>
       </div>
     </div>
   </div>
@@ -571,7 +569,11 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
           </div>
         </div>
       </div>
-      <Button>Avalie-nos</Button>
+<button class="gallery-reveal-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfzD7UZqC1_SoZ5SUhd8EthQv97FC7C8KSiznylvtOGqdeaEg/viewform?usp=dialog', '_blank')">
+  <span>Avalie nos</span>
+  <i class="ri-arrow-down-s-line"></i>
+</button>
+
     </section>
     <!-- Location Section -->
     <section class="section__container location" id="location">
@@ -616,12 +618,10 @@ function getIconForType(type) {
     default: return 'fa-info-circle';
   }
 }
-
 // Mostrar a flash message
 function showFlashMessage(message, tipo = 'sucesso', duration = 4000) {
   // Remover anteriores
   document.querySelectorAll('.flash-message').forEach(el => el.remove());
-
   const flash = document.createElement('div');
   flash.classList.add('flash-message', `flash-${tipo}`);
   flash.innerHTML = `
@@ -642,14 +642,10 @@ function showFlashMessage(message, tipo = 'sucesso', duration = 4000) {
     setTimeout(() => flash.remove(), 400);
   }, duration);
 }
-
-
-
-
+</script>
+<?php include 'components/footer.php'; ?>
 <div id="toast" class="toast"></div>
-    <?php include 'components/footer.php'; ?>
     <script src="assets/i18n/translator.js"></script>
     <script src="../includes/chatbot.js"></script>
-    <script src="index/flash-messages.js"></script>
-  </body> 
-</html>
+    </body>
+    </html>

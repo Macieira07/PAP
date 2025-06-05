@@ -124,7 +124,7 @@ $csrf_token = $_SESSION['csrf_token'];
                 
                 <div class="form-footer">
                     Já tem conta? <a href="#" id="showLogin">Fazer Login</a>
-                    <a href="../index.html" class="extra-link">Voltar</a>
+                    <a href="../index.php" class="extra-link">Voltar</a>
                 </div>
             </form>
         </div>

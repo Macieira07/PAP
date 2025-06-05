@@ -28,7 +28,11 @@ $result = $conexao->query("SELECT * FROM modelos_newsletter ORDER BY MN_data_cri
     <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-    <h1>Modelos Newsletter</h1>
+    <h1 style="display: flex; align-items: center; gap: 10px;">
+  <img src="https://img.icons8.com/?size=100&id=SaUMpeyy7rHl&format=png&color=000000" alt="ícone newsletter" style="width: 40px; height: 40px;">
+  Modelos Newsletter
+</h1>
+
 
     <?= $mensagem ?>
 

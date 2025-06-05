@@ -1,6 +1,3 @@
-<?php require __DIR__ . '/../includes/chatbot.php'; ?>
-
-
 <!-- Footer -->
 <footer class="footer">
   <!-- Newsletter -->

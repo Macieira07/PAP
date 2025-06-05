@@ -2,11 +2,9 @@
 include '../conexao.php';   
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 require '../vendor/autoload.php'; // Ajusta o caminho se necessário
 
 header('Content-Type: application/json');
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST['email']);
     // Validação
@@ -14,7 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode(['mensagem' => 'Email inválido.', 'tipo' => 'erro']);
         exit;
     }
-
     // Verificar duplicado
     $stmt = $conexao->prepare("SELECT 1 FROM newsletter WHERE N_email = ?");
     $stmt->bind_param("s", $email);
@@ -25,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode(['mensagem' => 'Este email já está subscrito.', 'tipo' => 'erro']);
         exit;
     }
-
     // Inserir
     $stmt = $conexao->prepare("INSERT INTO newsletter (N_email) VALUES (?)");
     $stmt->bind_param("s", $email);
@@ -44,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
             $mail->addAddress($email);
-
 $mail->AddEmbeddedImage('../assets/logos/logotipo1.png', 'logotipo');
 
 $mail->isHTML(true);
@@ -74,7 +69,6 @@ $mail->Body = '
         </p>
     </div>
 ';
-
             $mail->send();
             echo json_encode(['mensagem' => 'Subscreveste com sucesso! Verifica o teu email.', 'tipo' => 'sucesso']);
         } catch (Exception $e) {

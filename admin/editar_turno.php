@@ -1,14 +1,12 @@
 <?php
 require '../conexao.php';
 
-// Verificar se o ID do turno foi passado
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID do turno não fornecido.");
 }
 
 $id_turno = $_GET['id'];
 
-// Obter os dados do turno atual
 $stmt = $conexao->prepare("SELECT t.*, f.F_nome FROM turnos t 
                          JOIN funcionarios f ON t.F_id_funcionario = f.F_id_funcionario 
                          WHERE t.T_id_turno = ?");
@@ -22,30 +20,39 @@ if ($resultado->num_rows === 0) {
 
 $turno = $resultado->fetch_assoc();
 
-// Garantir que os valores de horário estejam definidos
 $horario_inicio = $turno['T_inicio'] ?? '';
 $horario_fim = $turno['T_fim'] ?? '';
 
-// Processar o formulário quando enviado
+function calcularHorarioFim($inicio) {
+    $inicio_dt = DateTime::createFromFormat('H:i:s', $inicio) ?: DateTime::createFromFormat('H:i', $inicio);
+    if (!$inicio_dt) return '';
+    $inicio_dt->modify('+8 hours');
+    return $inicio_dt->format('H:i');
+}
+
+if (empty($horario_fim) && !empty($horario_inicio)) {
+    $horario_fim = calcularHorarioFim($horario_inicio);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obter os dados do formulário
     $tipo_turno = $_POST['tipo_turno'];
     $horario_inicio = $_POST['horario_inicio'];
     $horario_fim = $_POST['horario_fim'];
     $data_inicio = $_POST['data_inicio'];
     $data_fim = $_POST['data_fim'];
 
-    // Validar a duração do turno
     $inicio = new DateTime($horario_inicio);
     $fim = new DateTime($horario_fim);
+    if ($fim <= $inicio) {
+        $fim->modify('+1 day');
+    }
     $intervalo = $inicio->diff($fim);
     $horas = $intervalo->h + ($intervalo->days * 24);
 
     if ($horas != 8) {
         $erro = "O turno deve ter exatamente 8 horas.";
     } else {
-        // Atualizar os dados do turno
-        $stmt_update = $conexao->prepare("UPDATE turnos SET turno = ?, data_inicio = ?, data_fim = ?, horario_inicio = ?, horario_fim = ? WHERE T_id_turno = ?");
+        $stmt_update = $conexao->prepare("UPDATE turnos SET turno = ?, data_inicio = ?, data_fim = ?, T_inicio = ?, T_fim = ? WHERE T_id_turno = ?");
         $stmt_update->bind_param("sssssi", $tipo_turno, $data_inicio, $data_fim, $horario_inicio, $horario_fim, $id_turno);
 
         if ($stmt_update->execute()) {
@@ -55,9 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mensagem = "Erro ao atualizar o turno: " . $conexao->error;
             $tipo = "erro";
         }
-
-        // Redirecionar de volta para a página de funcionários com mensagem
-        header("Location: funcionarios.php?mensagem=$mensagem&tipo=$tipo");
+        header("Location: funcionarios.php?mensagem=" . urlencode($mensagem) . "&tipo=" . urlencode($tipo));
         exit;
     }
 }
@@ -66,10 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="admin.css">
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Editar Turno</title>
     <style>
         .form-container {
@@ -115,67 +117,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=19202&format=png&color=000000" alt="Ícone Turno" style="height: 50px;">
-        <h1>Editar Turno</h1>
-    </div>
-    
-    <script>
-        // Script para definir automaticamente os horários com base no tipo de turno
-        function atualizarHorarios() {
-            const tipoTurno = document.getElementById('tipo_turno').value;
-            const horarioInicio = document.getElementById('horario_inicio');
-            const horarioFim = document.getElementById('horario_fim');
+    <h1>Editar Turno</h1>
 
-            if (tipoTurno === 'Manhã') {
-                horarioInicio.value = '08:00';
-                horarioFim.value = '16:00';
-            } else if (tipoTurno === 'Tarde') {
-                horarioInicio.value = '16:00';
-                horarioFim.value = '00:00';
-            } else if (tipoTurno === 'Noite') {
-                horarioInicio.value = '00:00';
-                horarioFim.value = '08:00';
-            }
+    <?php if (isset($erro)): ?>
+        <p style="color:red;"><?= htmlspecialchars($erro) ?></p>
+    <?php endif; ?>
+
+    <form method="post">
+        <label for="tipo_turno">Tipo de Turno:</label>
+        <select id="tipo_turno" name="tipo_turno" onchange="definirHorarioInicio()" required>
+            <option value="Manhã" <?= $turno['turno'] == 'Manhã' ? 'selected' : '' ?>>Manhã (08:00 - 16:00)</option>
+            <option value="Tarde" <?= $turno['turno'] == 'Tarde' ? 'selected' : '' ?>>Tarde (16:00 - 00:00)</option>
+            <option value="Noite" <?= $turno['turno'] == 'Noite' ? 'selected' : '' ?>>Noite (00:00 - 08:00)</option>
+        </select>
+
+        <label for="horario_inicio">Horário de Início:</label>
+        <input type="time" id="horario_inicio" name="horario_inicio" value="<?= htmlspecialchars($horario_inicio) ?>" required />
+
+        <label for="horario_fim">Horário de Fim:</label>
+        <input type="time" id="horario_fim" name="horario_fim" value="<?= htmlspecialchars($horario_fim) ?>" required readonly />
+
+        <label for="data_inicio">Data de Início:</label>
+        <input type="date" id="data_inicio" name="data_inicio" value="<?= htmlspecialchars($turno['data_inicio']) ?>" required />
+
+        <label for="data_fim">Data de Fim:</label>
+        <input type="date" id="data_fim" name="data_fim" value="<?= htmlspecialchars($turno['data_fim']) ?>" required />
+
+        <button type="submit">Atualizar Turno</button>
+    </form>
+
+<script>
+    function adicionarHoras(horaStr, horasAdicionar) {
+        const [hora, minuto] = horaStr.split(':').map(Number);
+        const data = new Date();
+        data.setHours(hora + horasAdicionar);
+        data.setMinutes(minuto);
+        const h = data.getHours();
+        const m = data.getMinutes();
+        return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+    }
+
+    function atualizarHorarioFim() {
+        const inicio = document.getElementById('horario_inicio').value;
+        if (inicio) {
+            const fim = adicionarHoras(inicio, 8);
+            document.getElementById('horario_fim').value = fim;
+        }
+    }
+
+    function definirHorarioInicio() {
+        const tipoTurno = document.getElementById('tipo_turno').value;
+        let inicio = '08:00';
+
+        if (tipoTurno === 'Manhã') {
+            inicio = '08:00';
+        } else if (tipoTurno === 'Tarde') {
+            inicio = '16:00';
+        } else if (tipoTurno === 'Noite') {
+            inicio = '00:00';
         }
 
-        // Chamar a função ao carregar a página para definir os horários iniciais
-        window.onload = function() {
-            atualizarHorarios();
-        };
-    </script>
-    
-    <div class="form-container">
-        <h2>Funcionário: <?= $turno['F_nome'] ?></h2>
-        
-        <?php if (isset($erro)): ?>
-            <div class="erro"><?= $erro ?></div>
-        <?php endif; ?>
-        
-        <form method="post">
-            <label for="tipo_turno">Tipo de Turno:</label>
-            <select id="tipo_turno" name="tipo_turno" onchange="atualizarHorarios()" required>
-                <option value="Manhã" <?= $turno['turno'] == 'Manhã' ? 'selected' : '' ?>>Manhã (08:00 - 16:00)</option>
-                <option value="Tarde" <?= $turno['turno'] == 'Tarde' ? 'selected' : '' ?>>Tarde (16:00 - 00:00)</option>
-                <option value="Noite" <?= $turno['turno'] == 'Noite' ? 'selected' : '' ?>>Noite (00:00 - 08:00)</option>
-            </select>
-            
-            <label for="horario_inicio">Horário de Início:</label>
-            <input type="time" id="horario_inicio" name="horario_inicio" value="<?= $horario_inicio ?>" required>
-            
-            <label for="horario_fim">Horário de Fim:</label>
-            <input type="time" id="horario_fim" name="horario_fim" value="<?= $horario_fim ?>" required>
-            
-            <label for="data_inicio">Data de Início:</label>
-            <input type="date" id="data_inicio" name="data_inicio" value="<?= $turno['data_inicio'] ?>" required>
-            
-            <label for="data_fim">Data de Fim:</label>
-            <input type="date" id="data_fim" name="data_fim" value="<?= $turno['data_fim'] ?>" required>
-            
-            <button type="submit">Atualizar Turno</button>
-        </form>
-    </div>
-    
-    <a href="funcionarios.php">← Voltar para Lista de Funcionários</a>
+        document.getElementById('horario_inicio').value = inicio;
+        atualizarHorarioFim();
+    }
+
+    document.getElementById('horario_inicio').addEventListener('change', atualizarHorarioFim);
+
+    window.addEventListener('load', function() {
+        definirHorarioInicio();
+    });
+</script>
+
 </body>
 </html>

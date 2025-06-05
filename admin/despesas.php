@@ -74,16 +74,19 @@ if ($result) {
     }
 }
 
-// Contar total para paginação (sem filtros)
-$totalResult = $conexao->query("
+// Contar total para paginação (com os mesmos filtros aplicados)
+$countSql = "
     SELECT COUNT(*) AS total FROM (
-        SELECT M_id_manutencao AS id FROM manutencao
+        SELECT M_id_manutencao AS id, M_tipo AS nome, M_custo AS valor, 'manutencao' AS origem, M_pago AS pago, NULL AS data_pagamento FROM manutencao
         UNION ALL
-        SELECT S_id_servico AS id FROM servicos
+        SELECT S_id_servico AS id, S_nome AS nome, S_preco AS valor, 'servico' AS origem, S_pago AS pago, NULL AS data_pagamento FROM servicos
         UNION ALL
-        SELECT id FROM despesas
-    ) AS all_despesas
-");
+        SELECT id, D_nome AS nome, D_valor AS valor, 'despesa' AS origem, D_pago AS pago, D_data_pagamento AS data_pagamento FROM despesas
+    ) AS despesas
+    $whereSql
+";
+
+$totalResult = $conexao->query($countSql);
 $totalItems = $totalResult->fetch_assoc()['total'] ?? count($despesas);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -93,12 +96,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
     $valor = floatval($_POST['valor']);
     $origem = $_POST['origem'];
 
+    // Validar origem
     if (!in_array($origem, ['manutencao', 'servico', 'despesa'])) {
         set_flash('Origem inválida.', 'error');
         header("Location: despesas.php");
         exit;
     }
 
+    // Validar saldo
     if ($saldo < $valor) {
         set_flash('Saldo insuficiente para pagar esta despesa!', 'error');
         header("Location: despesas.php");
@@ -110,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
         $stmt = $conexao->prepare("UPDATE manutencao SET M_pago = 1 WHERE M_id_manutencao = ?");
     } elseif ($origem === 'servico') {
         $stmt = $conexao->prepare("UPDATE servicos SET S_pago = 1 WHERE S_id_servico = ?");
-    } else {
+    } else { // despesa
         $stmt = $conexao->prepare("UPDATE despesas SET D_pago = 1, D_data_pagamento = CURDATE() WHERE id = ?");
     }
     $stmt->bind_param('i', $id);
@@ -135,8 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
     exit;
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -229,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
     <?php if ($totalPages > 1): ?>
         <?php for ($p = 1; $p <= $totalPages; $p++): ?>
             <?php
-                $url = 'despesas.php?'.http_build_query(array_merge($_GET, ['page' => $p]));
+                $url = 'despesas.php?' . http_build_query(array_merge($_GET, ['page' => $p]));
             ?>
             <a href="<?= $url ?>" style="margin-right: 5px; <?= $p == $page ? 'font-weight:bold; text-decoration: underline;' : '' ?>">
                 <?= $p ?>

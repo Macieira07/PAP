@@ -126,7 +126,21 @@ $stmt->close();
     <i class="fa-solid fa-check"></i> Atualizar Reserva
   </button>
 </form>
+<script>
+// Verifica se o estado foi alterado para 'confirmada'
+if ($novo_estado === 'confirmada') {
+    // Obtém o valor da reserva
+    $stmt = $conexao->prepare("SELECT R_preco_total FROM reservas WHERE R_id_reserva = ?");
+    $stmt->bind_param("i", $id_reserva);
+    $stmt->execute();
+    $stmt->bind_result($preco_total);
+    $stmt->fetch();
+    $stmt->close();
 
+    // Atualiza o saldo da conta virtual (id = 1, ou outro se necessário)
+    $conexao->query("UPDATE conta_virtual SET saldo = saldo + $preco_total WHERE id = 1");
+}
+</script>
 <a href="reservas.php">
   <i class="fa-solid fa-arrow-left"></i> Voltar
 </a>

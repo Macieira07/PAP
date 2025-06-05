@@ -13,7 +13,7 @@ function enviarEmailCodigo($destinatarioEmail, $destinatarioNome, $codigo) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'quinta.flores2019@gmail.com'; // O teu e-mail
-        $mail->Password   = 'svwy ziac roqo ygzw'; // Palavra-passe da aplicação
+        $mail->Password   = 'cbra fjzb nizo lilw'; // Palavra-passe da aplicação
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 

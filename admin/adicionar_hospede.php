@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../conexao.php';
-require_once 'email.php';
+require_once 'email.php'; // Assumo que aqui tens função enviarEmailCodigo($email, $nome, $codigo)
 
 function gerarCodigo() {
     return rand(100000, 999999);
@@ -24,21 +24,22 @@ $dadosForm = [
     'aceitou' => 'Não'
 ];
 
-// Carrega os dados previamente preenchidos, se existirem
+// Atualiza dados preenchidos (para manter no form)
 foreach ($dadosForm as $campo => $valor) {
     if (isset($_POST[$campo])) {
-        $dadosForm[$campo] = htmlspecialchars($_POST[$campo]);
+        $dadosForm[$campo] = htmlspecialchars(trim($_POST[$campo]));
     }
 }
 
+// Se for pedido o código por email
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar_codigo'])) {
-    $email = $_POST['email'];
-    $nome = $_POST['nome'];
+    $email = trim($_POST['email']);
+    $nome = trim($_POST['nome']);
 
     if (!validarEmail($email)) {
         $erro = "Email inválido.";
     } elseif (isset($_SESSION['codigo_gerado']) && $_SESSION['email_gerado'] === $email) {
-        $erro = "Já foi enviado um código para este email.";
+        $erro = "Já foi enviado um código para este email. Por favor, verifique sua caixa de entrada.";
     } else {
         $codigoGerado = gerarCodigo();
         $_SESSION['codigo_gerado'] = $codigoGerado;
@@ -54,21 +55,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar_codigo'])) {
     }
 }
 
+// Se for submissão do formulário completo com código e dados
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_hospede'])) {
-    $codigoInserido = $_POST['codigo'];
+    $codigoInserido = trim($_POST['codigo']);
     $codigoCerto = $_SESSION['codigo_gerado'] ?? '';
     $emailSession = $_SESSION['email_gerado'] ?? '';
-    $emailForm = $_POST['email'];
+    $emailForm = trim($_POST['email']);
 
     if ($codigoInserido != $codigoCerto || $emailSession != $emailForm) {
-        $erro = "O código inserido está incorreto ou o email não corresponde.";
+        $erro = "Código incorreto ou email não corresponde ao que recebeu o código.";
     } else {
-        $nome = $_POST['nome'];
-        $email = $_POST['email'];
+        // Campos do formulário
+        $nome = trim($_POST['nome']);
+        $email = $emailForm;
         $senha = password_hash($codigoInserido, PASSWORD_DEFAULT);
-        $telefone = $_POST['telefone'];
-        $documento = $_POST['documento'];
-        $morada = $_POST['morada'];
+        $telefone = trim($_POST['telefone']);
+        $documento = trim($_POST['documento']);
+        $morada = trim($_POST['morada']);
         $verificado = ($_POST['verificado'] === 'Sim') ? 1 : 0;
         $aceitou = ($_POST['aceitou'] === 'Sim') ? 1 : 0;
 
@@ -89,10 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_hospede']))
             $stmt = $conexao->prepare("INSERT INTO hospedes 
                 (H_nome, H_email, H_senha, H_telefone, H_documento_ident, H_morada, 
                 H_verificado_email, H_aceitou_termos_uso, H_notas, H_token_verificacao, H_token_expira, H_valor_notas)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', '', ?, 0)");
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', ?, ?, 0)");
 
-            $stmt->bind_param("sssssssis", $nome, $email, $senha, $telefone, $documento, $morada,
-                $verificado, $aceitou, $token_expira);
+            // Corrigido bind_param, tipos e parâmetros (ssssssii, pois verificado e aceitou são ints)
+            $stmt->bind_param("sssssssiis", $nome, $email, $senha, $telefone, $documento, $morada,
+                $verificado, $aceitou, $token, $token_expira);
 
             if ($stmt->execute()) {
                 $sucesso = "Hóspede adicionado com sucesso!";
@@ -107,12 +111,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_hospede']))
                     'aceitou' => 'Não'
                 ];
             } else {
-                $erro = "Erro ao adicionar hóspede.";
+                $erro = "Erro ao adicionar hóspede: " . $stmt->error;
             }
+            $stmt->close();
         }
     }
 }
 ?>
+
+<!-- HTML -->
 
 <link rel="stylesheet" href="admin.css">
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">

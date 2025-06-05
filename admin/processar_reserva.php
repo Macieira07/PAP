@@ -1,24 +1,38 @@
 <?php
+session_start();
 require '../conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die('Método inválido');
 }
 
-// Verificar se o formulário já foi processado
+// Evitar duplicação do processamento da mesma reserva
 if (isset($_SESSION['reserva_processada']) && $_SESSION['reserva_processada'] === true) {
     header('Location: reservas.php');
     exit();
 }
 
-// Capturar dados
+// Capturar dados do formulário
 $data_checkin = $_POST['data_checkin'];
 $data_checkout = $_POST['data_checkout'];
 $id_casa = (int)$_POST['id_casa'];
 $id_hospede = (int)$_POST['id_hospede'];
 $num_hospedes = (int)$_POST['num_hospedes'];
 
-// Verificar disponibilidade
+// Validar datas
+$checkin = DateTime::createFromFormat('Y-m-d', $data_checkin);
+$checkout = DateTime::createFromFormat('Y-m-d', $data_checkout);
+
+if (!$checkin || !$checkout || $checkin >= $checkout) {
+    die('Datas inválidas.');
+}
+
+// Validar número de hóspedes
+if ($num_hospedes < 1) {
+    die('Número de hóspedes inválido.');
+}
+
+// Verificar disponibilidade da casa para o intervalo de datas
 $stmt = $conexao->prepare("SELECT COUNT(*) FROM reservas 
                           WHERE R_id_casa = ? 
                           AND R_estado != 'cancelada'
@@ -34,7 +48,7 @@ if ($count > 0) {
     die('A casa já está reservada para essas datas.');
 }
 
-// Obter preço da casa
+// Obter preço por noite da casa
 $stmt = $conexao->prepare("SELECT C_preco_noite FROM casas WHERE C_id_casa = ?");
 $stmt->bind_param("i", $id_casa);
 $stmt->execute();
@@ -42,13 +56,17 @@ $stmt->bind_result($preco_noite);
 $stmt->fetch();
 $stmt->close();
 
-// Calcular total
-$checkin = new DateTime($data_checkin);
-$checkout = new DateTime($data_checkout);
 $dias = $checkout->diff($checkin)->days;
 $preco_total = $dias * $preco_noite;
 
-// Inserir reserva
+// Calcular serviços adicionais
+$decoracao = (isset($_POST['decoracao_tematica']) && $_POST['decoracao_tematica'] !== '') ? 130 : 0;
+$limpeza = (isset($_POST['limpeza_diaria'])) ? 15 * $dias : 0;
+$cesto = (isset($_POST['cesto_boas_vindas'])) ? 10 : 0;
+
+$preco_total += $decoracao + $limpeza + $cesto;
+
+// Inserir reserva na base de dados
 $stmt = $conexao->prepare("INSERT INTO reservas 
                           (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 
                           R_num_hospedes, R_preco_total, R_estado) 
@@ -58,9 +76,15 @@ $stmt->execute();
 $reserva_id = $stmt->insert_id;
 $stmt->close();
 
-// Marcar como processado para evitar duplicação
+// Atualizar saldo na conta_virtual (assumindo id = 1)
+$stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo + ? WHERE id = 1");
+$stmt->bind_param("d", $preco_total);
+$stmt->execute();
+$stmt->close();
+
+// Marcar sessão como processada para evitar duplicação
 $_SESSION['reserva_processada'] = true;
 
-// Redirecionar para a página de sucesso
+// Redirecionar para página de sucesso
 header("Location: reserva_sucesso.php?id=$reserva_id");
 exit;

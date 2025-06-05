@@ -1,3 +1,5 @@
+<?php
+include '../components/header.php'; ?>
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
 <head>
@@ -13,53 +15,18 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" type="text/css" href="lermais.css">
     <link rel="stylesheet" type="text/css" href="chatbot.css">
+        <link rel="stylesheet" href="../components/header.css">
+    <link rel="stylesheet" href="../components/footer.css">
+
 </head>
 
 <body>
-    <!-- Cabeçalho/Header -->
-    <header class="header" id="header">
-        <div class="nav__container">
-            <div class="logo">
-                <a href="../index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
-            </div>
-            <ul class="nav__links" id="navLinks">
-                <div class="language-selector">
-                    <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
-                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT
-                    </button>
-                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
-                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> EN
-                    </button>
-                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> ES
-                    </button>
-                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR
-                    </button>
-                </div>
-                <li><a href="../index.html#about" class="nav__link">Sobre</a></li>
-                <li><a href="../index.html#accommodation" class="nav__link">Acomodações</a></li>
-                <li><a href="../index.html#activities" class="nav__link">Experiências</a></li>
-                <li><a href="../index.html#gallery" class="nav__link">Galeria</a></li>
-                <li><a href="../index.html#testimonials" class="nav__link">Avaliações</a></li>
-                <li><a href="../index.html#contact" class="nav__link">Contacto</a></li>
-                <li><a href="../login1/pagina_login.php" class="nav__link nav__cta">Reservar</a></li>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="ri-sun-line"></i>
-                </button>
-            </ul>
-
-            <button class="hamburger" id="hamburger">
-                <i class="ri-menu-line"></i>
-            </button>
-        </div>
-    </header>
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="section">
             <div class="section__container">
-                <a href="../index.html#activities" class="back-btn">
+                <a href="../index.php#activities" class="back-btn">
                     <i class="ri-arrow-left-line"></i>
                     Voltar às ofertas
                 </a>
@@ -149,50 +116,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Rodapé -->
-    <footer class="footer">
-        <div class="section__container footer__container">
-            <div class="footer__col">
-                <img src="../assets/logos/logotipo1.png" alt="Logótipo Quinta Flores" style="width: 150px; margin-bottom: 1rem;">
-                <p style="color: #a3a3a3;">Na Quinta Flores criamos momentos especiais. Descubra a tranquilidade, o conforto e a tradição num só lugar, em plena natureza minhota.</p>
-            </div>
-            <div class="footer__col">
-                <h4>Links Rápidos</h4>
-                <ul class="footer__links">
-                    <li class="footer__link"><a href="../index.html#about">🏠 Início</a></li>
-                    <li class="footer__link"><a href="../index.html#accommodation">🛏️ Acomodações</a></li>
-                    <li class="footer__link"><a href="../index.html#activities">🎉 Experiências</a></li>
-                    <li class="footer__link"><a href="../index.html#gallery">🖼️ Galeria</a></li>
-                    <li class="footer__link"><a href="../index.html#testimonials">⭐ Avaliações</a></li>
-                    <li class="footer__link"><a href="../index.html#contact">📞 Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer__col">
-                <h4>Descobrir a Região</h4>
-                <ul class="footer__links">
-                    <li class="footer__link">
-                        <a href="trilhos.html">
-                            <img src="https://img.icons8.com/?size=100&id=sssl0bdjFnpD&format=png&color=2e7d32" alt="Trilhos" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Trilhos e Natureza
-                        </a>
-                    </li>
-                    <li class="footer__link">
-                        <a href="gastronomia.html">
-                            <img src="https://img.icons8.com/?size=100&id=bSjYRwluTLTm&format=png&color=2e7d32" alt="Gastronomia" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Sabores do Minho
-                        </a>
-                    </li>
-                    <li class="footer__link">
-                        <a href="passeios_culturais.html">
-                            <img src="https://img.icons8.com/?size=100&id=juiXdfFuXLd1&format=png&color=2e7d32" alt="Passeios Culturais" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Passeios Culturais
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </footer>
         <script>
                     function toggleTheme() {
                 const html = document.documentElement;
@@ -217,5 +140,7 @@
             icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
             themeToggle.addEventListener('click', toggleTheme);
     </script>
+    <?php
+include '../components/footer.php'; ?>
 </body>
 </html>

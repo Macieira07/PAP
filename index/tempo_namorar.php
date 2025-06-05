@@ -1,3 +1,6 @@
+<?php
+include '../components/header.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
 <head>
@@ -13,36 +16,19 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" type="text/css" href="lermais.css">
     <link rel="stylesheet" type="text/css" href="chatbot.css">
+    <link rel="stylesheet" href="../components/header.css">
+    <link rel="stylesheet" href="../components/footer.css">
+
 </head>
 
 <body>
-    <header class="header" id="header">
-        <div class="nav__container">
-            <div class="logo">
-                <a href="../index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
-            </div>
-            <ul class="nav__links" id="navLinks">
-                <div class="language-selector">
-                    <button onclick="changeLanguage('pt')" class="language-btn active"><img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT</button>
-                    <button onclick="changeLanguage('en')" class="language-btn"><img src="https://flagcdn.com/w20/gb.png" alt="English"> EN</button>
-                    <button onclick="changeLanguage('es')" class="language-btn"><img src="https://flagcdn.com/w20/es.png" alt="Español"> ES</button>
-                    <button onclick="changeLanguage('fr')" class="language-btn"><img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR</button>
-                </div>
-                <li><a href="../index.html#about" class="nav__link">Sobre</a></li>
-                <li><a href="../index.html#accommodation" class="nav__link">Acomodações</a></li>
-                <li><a href="../login1/pagina_login.php" class="nav__link nav__cta">Reservar</a></li>
-                <button class="theme-toggle" id="themeToggle"><i class="ri-sun-line"></i></button>
-            </ul>
-            <button class="hamburger" id="hamburger"><i class="ri-menu-line"></i></button>
-        </div>
-    </header>
 
     <main class="main-content">
         <section class="section">
             <div class="section__container">
-                <a href="../index.html#activities" class="back-btn">
+                <a href="../index.php#activities" class="back-btn">
                     <i class="ri-arrow-left-line"></i>
-                    Voltar às ofertas
+                    Voltar às ofertas   
                 </a>
 
                 <p class="section__subheader">Oferta Especial</p>
@@ -109,43 +95,6 @@
             </div>
         </section>
     </main>
-
-    <footer class="footer">
-        <div class="section__container footer__container">
-            <div class="footer__col">
-                <img src="../assets/logos/logotipo1.png" alt="Logótipo Quinta Flores" style="width: 150px; margin-bottom: 1rem;">
-                <p style="color: #a3a3a3;">A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.</p>
-            </div>
-            <div class="footer__col">
-                <h4>Links Rápidos</h4>
-                <ul class="footer__links">
-                    <li class="footer__link"><a href="../index.html#about">🏠 Início</a></li>
-                    <li class="footer__link"><a href="../index.html#accommodation">ℹ️ Acomodações</a></li>
-                    <li class="footer__link"><a href="../index.html#activities">🛋️ Experiências</a></li>
-                    <li class="footer__link"><a href="../index.html#gallery">🖼️ Galeria</a></li>
-                    <li class="footer__link"><a href="../index.html#testimonials">⭐ Avaliações</a></li>
-                    <li class="footer__link"><a href="../index.html#contact">✉️ Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer__col">
-                <h4>Descobrir a Região</h4>
-                <ul class="footer__links">
-                    <li class="footer__link"><a href="trilhos.html">🌿 Trilhos e Natureza</a></li>
-                    <li class="footer__link"><a href="gastronomia.html">🍷 Sabores do Minho</a></li>
-                    <li class="footer__link"><a href="passeios_culturais.html">🏛️ Passeios Culturais</a></li>
-                </ul>
-            </div>
-            <div class="footer__col">
-                <h4>Contactos</h4>
-                <ul class="footer__links">
-                    <li class="footer__link"><i class="ri-map-pin-line"></i> Travessa da Seara 265, 4490-575 Calheiros, Ponte de Lima, Portugal</li>
-                    <li class="footer__link"><i class="ri-phone-line"></i> <a href="tel:+351912418976">+351 912 418 976</a></li>
-                    <li class="footer__link"><i class="ri-mail-line"></i> <a href="mailto:quinta.flores2019@gmail.com">quinta.flores2019@gmail.com</a></li>
-                    <li class="footer__link"><i class="ri-whatsapp-line"></i> <a href="https://wa.me/351912418976" target="_blank">Contactar via WhatsApp</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
     <script>
                     function toggleTheme() {
                 const html = document.documentElement;
@@ -170,5 +119,7 @@
             icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
             themeToggle.addEventListener('click', toggleTheme);
     </script>
+    <?php
+include '../components/footer.php'; ?>
 </body>
 </html>

@@ -127,10 +127,11 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
             $stmt_turno->execute();
             $turno = $stmt_turno->get_result()->fetch_assoc();
             ?>
-            <?php if ($turno): ?>
-                <?= $turno['turno'] ?> (<?= $turno['T_inicio'] ?> - <?= $turno['T_fim'] ?>)
-                <br><a href="editar_turno.php?id=<?= $turno['T_id_turno'] ?>"><i class="fa-solid fa-pen-to-square"></i> Editar Turno</a>
-            <?php else: ?>
+<?php if ($turno): ?>
+    <?= $turno['turno'] ?> (<?= $turno['data_inicio'] ?> - <?= $turno['data_fim'] ?>)
+    <br><a href="editar_turno.php?id=<?= $turno['T_id_turno'] ?>"><i class="fa-solid fa-pen-to-square"></i> Editar Turno</a>
+<?php else: ?>
+
                 Nenhum turno registrado
             <?php endif; ?>
         </td>

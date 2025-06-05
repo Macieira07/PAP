@@ -307,11 +307,10 @@ include '../components/header.php'; ?>
     </section>
 <!-- Contact Section -->
 <section class="section contact-section" id="contact">
-    <!-- Flash Message Container -->
+<div class="section__container">
+    <!-- Flash Messages Container (adicionar antes do form) -->
     <div id="flash-message" class="flash-message" style="display: none;"></div>
-    
-    <div class="section__container">
-        <h2 class="section-title" data-aos="fade-up">Entre em Contacto</h2>
+    <h2 class="section-title" data-aos="fade-up">Entre em Contacto</h2>
         <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Estamos sempre disponíveis para ajudar e responder suas perguntas</p>
         <div class="contact-grid">
             <div class="contact-info" data-aos="fade-up" data-aos-delay="200">
@@ -344,10 +343,6 @@ include '../components/header.php'; ?>
                         </div>
                     </li>
                 </ul>
-                <div class="social-icons">
-                    <a href="https://www.instagram.com/quintaflores19/?utm_source=ig_web_button_share_sheet" class="social-icon"><i class="ri-instagram-fill"></i></a>
-                </div>
-                
             </div>
             <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
                 <form id="contactForm" action="send_message.php" method="POST">
@@ -424,195 +419,173 @@ include '../components/header.php'; ?>
         </div>
     </div>
 </section>
-
 <style>
-/* Flash Messages Styles */
-.flash-message {
-    padding: 15px 20px;
-    margin-bottom: 20px;
+  /* Flash message base */
+  .flash-message {
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 1rem 1.5rem;
     border-radius: 8px;
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
-    border-left: 4px solid;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    animation: slideDown 0.5s ease-out;
-}
-
-.flash-success {
-    background-color: #d4edda;
-    color: #155724;
-    border-left-color: #28a745;
-    border: 1px solid #c3e6cb;
-}
-
-.flash-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-left-color: #dc3545;
-    border: 1px solid #f5c6cb;
-}
-
-.flash-warning {
-    background-color: #fff3cd;
-    color: #856404;
-    border-left-color: #ffc107;
-    border: 1px solid #ffeaa7;
-}
-
-.flash-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border-left-color: #17a2b8;
-    border: 1px solid #bee5eb;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Loading Button Animation */
-.form-button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
     position: relative;
-    transition: all 0.3s ease;
-}
+    z-index: 10;
+  }
 
-.form-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
+  /* Mostrar flash */
+  .flash-message.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
 
-.button-loading i {
-    animation: spin 1s linear infinite;
-}
+  /* Ícones */
+  .flash-message svg {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+  }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+  /* Sucesso */
+  .flash-success {
+    background: #e6ffed;
+    color: #2c7a2c;
+    border: 1.5px solid #2c7a2c;
+  }
+  .flash-success svg path {
+    stroke: #2c7a2c;
+    fill: none;
+  }
 
-/* Dark theme support for flash messages */
-[data-theme="dark"] .flash-success {
-    background-color: rgba(40, 167, 69, 0.2);
-    color: #90ee90;
-    border-color: #28a745;
-}
+  /* Erro */
+  .flash-error {
+    background: #ffe6e6;
+    color: #a12b2b;
+    border: 1.5px solid #a12b2b;
+  }
+  .flash-error svg path {
+    stroke: #a12b2b;
+    fill: none;
+  }
 
-[data-theme="dark"] .flash-error {
-    background-color: rgba(220, 53, 69, 0.2);
-    color: #ff9999;
-    border-color: #dc3545;
-}
-
-[data-theme="dark"] .flash-warning {
-    background-color: rgba(255, 193, 7, 0.2);
-    color: #ffeb3b;
-    border-color: #ffc107;
-}
-
-[data-theme="dark"] .flash-info {
-    background-color: rgba(23, 162, 184, 0.2);
-    color: #87ceeb;
-    border-color: #17a2b8;
-}
+  /* Botão fechar */
+  .flash-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: inherit;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+  }
+  .flash-close:hover {
+    color: #555;
+  }
 </style>
+
+<!-- Flash Messages Container -->
+<div id="flash-message" class="flash-message" role="alert" aria-live="assertive" style="display: none;">
+  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="flash-text"></span>
+  <button class="flash-close" aria-label="Fechar mensagem" onclick="hideFlashMessage()">&times;</button>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar flash messages via URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const flashMessage = urlParams.get('flash_message');
-    const flashType = urlParams.get('flash_type');
+  const flashDiv = document.getElementById('flash-message');
+  const flashText = document.getElementById('flash-text');
+  const flashIcon = flashDiv.querySelector('svg');
 
-    if (flashMessage) {
-        showFlashMessage(decodeURIComponent(flashMessage), flashType || 'info');
-        // Limpar os parâmetros da URL
-        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+  function showFlashMessage(type, message) {
+    flashText.textContent = message;
+
+    if (type === 'sucesso') {
+      flashDiv.className = 'flash-message flash-success show';
+      flashIcon.innerHTML = `
+        <circle cx="12" cy="12" r="10" stroke="#2c7a2c"></circle>
+        <path d="M8 12.5l3 3 5-6" stroke="#2c7a2c"/>
+      `;
+    } else {
+      flashDiv.className = 'flash-message flash-error show';
+      flashIcon.innerHTML = `
+        <circle cx="12" cy="12" r="10" stroke="#a12b2b"></circle>
+        <line x1="15" y1="9" x2="9" y2="15" stroke="#a12b2b"/>
+        <line x1="9" y1="9" x2="15" y2="15" stroke="#a12b2b"/>
+      `;
     }
 
-    // Função para mostrar flash messages
-    function showFlashMessage(message, type) {
-        const flashDiv = document.getElementById('flash-message');
-        flashDiv.innerHTML = message;
-        flashDiv.className = `flash-message flash-${type}`;
-        flashDiv.style.display = 'block';
-        
-        // Scroll suave para a mensagem
-        flashDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Auto-hide após 7 segundos
-        setTimeout(() => {
-            flashDiv.style.opacity = '0';
-            setTimeout(() => {
-                flashDiv.style.display = 'none';
-                flashDiv.style.opacity = '1';
-            }, 300);
-        }, 7000);
-    }
+    flashDiv.style.display = 'flex';
 
-    // Melhorar o formulário de contacto
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            const submitButton = this.querySelector('.form-button');
-            const buttonText = submitButton.querySelector('.button-text');
-            const buttonLoading = submitButton.querySelector('.button-loading');
-            
-            // Mostrar loading
-            buttonText.style.display = 'none';
-            buttonLoading.style.display = 'inline-flex';
-            submitButton.disabled = true;
-            
-            // Validação básica no frontend
-            let nome = document.getElementById("name").value.trim();
-            let email = document.getElementById("email").value.trim();
-            let assunto = document.getElementById("subject").value.trim();
-            let mensagem = document.getElementById("message").value.trim();
+    // Auto fechar depois de 6s
+    clearTimeout(flashDiv._timeout);
+    flashDiv._timeout = setTimeout(() => {
+      hideFlashMessage();
+    }, 6000);
+  }
 
-            if (!nome || !email || !assunto || !mensagem) {
-                e.preventDefault();
-                showFlashMessage("Por favor, preencha todos os campos obrigatórios.", "error");
-                
-                // Restaurar botão
-                buttonText.style.display = 'inline';
-                buttonLoading.style.display = 'none';
-                submitButton.disabled = false;
-                return;
-            }
+  function hideFlashMessage() {
+    flashDiv.classList.remove('show');
+    setTimeout(() => {
+      flashDiv.style.display = 'none';
+      flashText.textContent = '';
+      flashIcon.innerHTML = '';
+    }, 400);
+  }
 
-            // Validação de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                e.preventDefault();
-                showFlashMessage("Por favor, introduza um endereço de email válido.", "error");
-                
-                // Restaurar botão
-                buttonText.style.display = 'inline';
-                buttonLoading.style.display = 'none';
-                submitButton.disabled = false;
-                return;
-            }
-        });
-    }
-    // Adicionar funcionalidade de fechar flash message clicando
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.flash-message')) {
-            const flashMessage = e.target.closest('.flash-message');
-            flashMessage.style.opacity = '0';
-            setTimeout(() => {
-                flashMessage.style.display = 'none';
-                flashMessage.style.opacity = '1';
-            }, 300);
-        }
+  // Atualização do teu script de envio para usar showFlashMessage
+
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this;
+    flashDiv.style.display = 'none';
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    const buttonText = submitButton.querySelector('.button-text');
+    const buttonLoading = submitButton.querySelector('.button-loading');
+
+    buttonText.style.display = 'none';
+    buttonLoading.style.display = 'inline-block';
+    submitButton.disabled = true;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.tipo === 'sucesso') {
+        showFlashMessage('sucesso', data.mensagem);
+        form.reset();
+      } else {
+        showFlashMessage('erro', data.mensagem);
+      }
+    })
+    .catch(() => {
+      showFlashMessage('erro', 'Erro ao enviar a mensagem. Tente novamente.');
+    })
+    .finally(() => {
+      submitButton.disabled = false;
+      buttonText.style.display = 'inline-block';
+      buttonLoading.style.display = 'none';
+
+      flashDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-});
+  });
 </script>
+
                 </div>
             </div>
         </div>
@@ -724,6 +697,6 @@ function showFlashMessage(message, type) {
 });
     </script>
     <?php include '../components/footer.php'; ?>
-    <script src="../../includes/chatbot.js"></script>
+    <script src="../includes/chatbot.js"></script>
 </body>
 </html>

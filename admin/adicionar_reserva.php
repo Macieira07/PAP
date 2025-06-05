@@ -120,6 +120,15 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
         <i class="fas fa-calendar-plus fa-2x"></i>
         <h1>Adicionar Reserva</h1>
     </div>
+    <script>
+    // Supondo que $preco_total é o valor total da reserva
+$preco_total = $_POST['R_preco_total']; // ou outra variável que uses
+
+// Atualizar o saldo na conta_virtual
+$stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo + ? WHERE id = 1");
+$stmt->bind_param("d", $preco_total);
+$stmt->execute();
+</script>
 
     <form method="POST" action="processar_reserva.php" id="reservaForm">
         <div class="form-group">

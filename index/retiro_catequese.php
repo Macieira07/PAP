@@ -1,3 +1,5 @@
+<?php
+include '../components/header.php'; ?>
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
 <head>
@@ -13,41 +15,12 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" type="text/css" href="lermais.css">
     <link rel="stylesheet" type="text/css" href="chatbot.css">
+    <link rel="stylesheet" href="../components/header.css">
+    <link rel="stylesheet" href="../components/footer.css">
+
 </head>
 <body>
     <!-- Cabeçalho/Header -->
-    <header class="header" id="header">
-        <div class="nav__container">
-            <div class="logo">
-                <a href="../index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
-            </div>
-            <ul class="nav__links" id="navLinks">
-                <div class="language-selector">
-                    <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
-                        <img src="https://flagcdn.com/w20/pt.png" alt="Português"> PT
-                    </button>   
-                    <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
-                        <img src="https://flagcdn.com/w20/gb.png" alt="English"> EN
-                    </button>
-                    <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español"> ES
-                    </button>
-                    <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français"> FR
-                    </button>
-                </div>
-                <li><a href="#sobre" class="nav__link">Sobre</a></li>
-                <li><a href="#ofertas" class="nav__link">Ofertas</a></li>
-                <li><a href="#reserva" class="nav__link">Reservar</a></li>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="ri-sun-line"></i>
-                </button>
-            </ul>
-            <button class="hamburger" id="hamburger">
-                <i class="ri-menu-line"></i>
-            </button>
-        </div>
-    </header>
     <!-- Main Content -->
     <main class="main-content" id="sobre">
         <section class="section">
@@ -128,85 +101,6 @@
             </div>
         </section>
     </main>
-    <!-- Rodapé/Footer -->
-    <footer class="footer">
-        <div class="section__container footer__container">
-            <!-- Logótipo + Descrição -->
-            <div class="footer__col">
-                <img src="../assets/logos/logotipo1.png" alt="Logótipo Quinta Flores" style="width: 150px; margin-bottom: 1rem;">
-                <p style="color: #a3a3a3;">A Quinta Flores oferece uma experiência única de alojamento local em Ponte de Lima, combinando tradição minhota com conforto moderno.</p>
-            </div>
-            <!-- Links Rápidos -->
-            <div class="footer__col">
-                <h4>Links Rápidos</h4>
-                <ul class="footer__links">
-                    <li class="footer__link"><a href="../index.html#about">🏠 Início</a></li>
-                    <li class="footer__link"><a href="../index.html#accommodation">ℹ️ Acomodações</a></li>
-                    <li class="footer__link"><a href="../index.html#activities">🛋️ Experiências</a></li>
-                    <li class="footer__link"><a href="../index.html#gallery">🖼️ Galeria</a></li>
-                    <li class="footer__link"><a href="../index.html#testimonials">⭐ Avaliações</a></li>
-                    <li class="footer__link"><a href="../index.html#contact">✉️ Contacto</a></li>
-                </ul>
-            </div>
-            <!-- Descobrir a Região -->
-            <div class="footer__col">
-                <h4>Descobrir a Região</h4>
-                <ul class="footer__links">
-                    <li class="footer__link">
-                        <a href="trilhos.html">
-                            <img src="https://img.icons8.com/?size=100&id=sssl0bdjFnpD&format=png&color=2e7d32" alt="Trilhos" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Trilhos e Natureza
-                        </a>
-                    </li>
-                    <li class="footer__link">
-                        <a href="gastronomia.html">
-                            <img src="https://img.icons8.com/?size=100&id=bSjYRwluTLTm&format=png&color=2e7d32" alt="Gastronomia" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Sabores do Minho
-                        </a>
-                    </li>
-                    <li class="footer__link">
-                        <a href="passeios_culturais.html">
-                            <img src="https://img.icons8.com/?size=100&id=juiXdfFuXLd1&format=png&color=2e7d32" alt="Passeios Culturais" width="16" style="vertical-align: middle; margin-right: 6px;">
-                            Passeios Culturais
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <!-- Contactos -->
-            <div class="footer__col">
-                <h4>Contactos</h4>
-                <ul class="footer__links">
-                    <li class="footer__link">
-                        <i class="ri-map-pin-line"></i>
-                        <span>Travessa da Seara 265, 4490-575 Calheiros, Ponte de Lima, Portugal</span>
-                    </li>
-                    <li class="footer__link">
-                        <i class="ri-phone-line"></i>
-                        <a href="tel:+351912418976">+351 912 418 976</a>
-                    </li>
-                    <li class="footer__link">
-                        <i class="ri-mail-line"></i>
-                        <a href="mailto:quinta.flores2019@gmail.com">quinta.flores2019@gmail.com</a>
-                    </li>
-                    <li class="footer__link">
-                        <i class="ri-whatsapp-line"></i>
-                        <a href="https://wa.me/351912418976" target="_blank">Contactar via WhatsApp</a>
-                    </li>
-                    <li class="footer__link">
-                        <i class="ri-map-pin-2-line"></i>
-                        <a href="https://www.google.com/maps/place/Travessa+da+Seara,+Calheiros,+Ponte+de+Lima" target="_blank">Ver no Google Maps</a>
-                    </li>
-                    <li class="footer__link">
-                        <i class="ri-instagram-fill"></i>
-                        <a href="https://www.instagram.com/quintaflores19" target="_blank">Segue-nos no Instagram</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer__bar">
-            Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
-        </div>
-    </footer>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
         <script>
                     function toggleTheme() {
@@ -232,5 +126,7 @@
             icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
             themeToggle.addEventListener('click', toggleTheme);
     </script>
+    <?php
+include '../components/footer.php'; ?>
 </body>
 </html>

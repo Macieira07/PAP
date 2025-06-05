@@ -118,7 +118,7 @@ define('SECONDARY_COLOR', '#047857');
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="../index.html" class="logo-link">
+                    <a href="../index.php" class="logo-link">
                         <img src="../assets/logos/logotipo1.png" alt="Logotipo <?= SITE_NAME ?>" class="logo-img" />
                         <span><?= SITE_NAME ?></span>
                     </a>
