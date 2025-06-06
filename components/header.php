@@ -34,6 +34,51 @@
       }
       ?>
     </ul>
+    <script>
+  function changeLanguage(lang) {
+    // Guarda o idioma no localStorage (opcional)
+    localStorage.setItem('selectedLanguage', lang);
+
+    // Redireciona para a mesma página com o parâmetro lang, SEM hash (vai para o topo)
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    url.hash = '';
+    window.location.href = url.toString();
+  }
+
+  function updateActiveLanguage() {
+    const selectedLanguage = localStorage.getItem('selectedLanguage') || 'pt';
+    const buttons = document.querySelectorAll('.language-btn');
+
+    buttons.forEach(button => {
+      if (button.dataset.lang === selectedLanguage) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+  }
+
+  // Quando a página carregar, atualiza o botão ativo
+  document.addEventListener('DOMContentLoaded', () => {
+    updateActiveLanguage();
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const currentLang = document.documentElement.lang; // 'pt', 'en', etc.
+    const buttons = document.querySelectorAll(".language-btn");
+
+    buttons.forEach(btn => {
+        if (btn.dataset.lang === currentLang) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+});
+</script>
+
 
     <!-- Botões -->
     <button class="theme-toggle" id="themeToggle"><i class="ri-sun-line"></i></button>

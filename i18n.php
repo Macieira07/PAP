@@ -19,12 +19,19 @@ class I18n {
     }
 
     private static function loadTranslations() {
-        $langFile = __DIR__ . '/lang/' . self::$language . '.php';
+        // Detecta o nome da página (sem .php)
+        $page = basename($_SERVER['SCRIPT_NAME'], '.php');
+        $langFile = __DIR__ . '/index/lang/' . self::$language . "_{$page}.php";
         if (file_exists($langFile)) {
             self::$translations = include $langFile;
         } else {
             // Fallback para português se o arquivo de idioma não existir
-            self::$translations = include __DIR__ . '/lang/pt.php';
+            $fallback = __DIR__ . '/index/lang/pt_' . $page . '.php';
+            if (file_exists($fallback)) {
+                self::$translations = include $fallback;
+            } else {
+                self::$translations = [];
+            }
         }
     }
 

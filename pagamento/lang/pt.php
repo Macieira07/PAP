@@ -1,6 +1,6 @@
 <?php
 return [
-    'site_name' => 'Quinta das Flores',
+    'site_name' => 'Quinta Flores',
     'reservation' => 'Reserva',
     'make_reservation' => 'Faça sua Reserva',
     'personal_info' => 'Informações Pessoais',

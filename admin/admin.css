@@ -1,4 +1,6 @@
-/* estilo-global.css - Versão Profissional Melhorada */
+/* ============================================= */
+/* ============== CONFIGURAÇÕES BASE =========== */
+/* ============================================= */
 
 /* Resetar estilos básicos */
 *,
@@ -7,6 +9,31 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Variáveis CSS para consistência */
+:root {
+    /* Cores */
+    --cor-fundo: #fafbfc;
+    --cor-branco: #ffffff;
+    --cor-texto-principal: #2c3e50;
+    --cor-texto-secundario: #5a6c7d;
+    --cor-azul-principal: #3498db;
+    --cor-azul-escuro: #2980b9;
+    --cor-borda: #e1e8ed;
+    --cor-sucesso: #27ae60;
+    --cor-aviso: #f39c12;
+    --cor-erro: #e74c3c;
+    
+    /* Sombras */
+    --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --sombra-media: 0 4px 16px rgba(0, 0, 0, 0.12);
+    
+    /* Bordas */
+    --raio-borda: 8px;
+    
+    /* Transições */
+    --transicao: all 0.3s ease;
 }
 
 /* Importar fonte Lufga */
@@ -19,25 +46,34 @@
     font-display: swap;
 }
 
-/* Variáveis CSS para consistência */
-:root {
-    --cor-fundo: #fafbfc;
-    --cor-branco: #ffffff;
-    --cor-texto-principal: #2c3e50;
-    --cor-texto-secundario: #5a6c7d;
-    --cor-azul-principal: #3498db;
-    --cor-azul-escuro: #2980b9;
-    --cor-borda: #e1e8ed;
-    --cor-sucesso: #27ae60;
-    --cor-aviso: #f39c12;
-    --cor-erro: #e74c3c;
-    --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --sombra-media: 0 4px 16px rgba(0, 0, 0, 0.12);
-    --raio-borda: 8px;
-    --transicao: all 0.3s ease;
+/* Seleção de texto */
+::selection {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: var(--cor-texto-principal);
 }
 
-/* Estilos gerais */
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cor-fundo);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--cor-borda);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cor-texto-secundario);
+}
+
+/* ============================================= */
+/* ============== ELEMENTOS BASE =============== */
+/* ============================================= */
+
 body {
     font-family: 'Lufga', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--cor-fundo);
@@ -91,7 +127,11 @@ a:hover {
     color: var(--cor-azul-escuro);
 }
 
-/* Container principal para consistência */
+/* ============================================= */
+/* ============== COMPONENTES ================== */
+/* ============================================= */
+
+/* Container principal */
 .container {
     background-color: var(--cor-branco);
     border-radius: var(--raio-borda);
@@ -668,7 +708,116 @@ a.voltar:hover {
     font-weight: 500;
 }
 
-/* Responsividade */
+/* Modelos de newsletter */
+#modelos-newsletter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.modelo {
+    background: linear-gradient(135deg, #ffffff, #f3f3f3);
+    border: 1px solid #ddd;
+    border-left: 4px solid #7e7e7e;
+    border-radius: 12px;
+    padding: 16px 20px;
+    width: 240px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.modelo:hover {
+    background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.modelo strong {
+    font-size: 16px;
+    color: #333;
+}
+
+.modelo small {
+    display: block;
+    margin-top: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.modelo::after {
+    content: "\f0c5"; /* ícone Font Awesome - copy */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 20px;
+    color: #b0b0b0;
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    opacity: 0.3;
+}
+
+/* ============================================= */
+/* ============== ANIMAÇÕES ==================== */
+/* ============================================= */
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--cor-branco);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================= */
+/* ============== UTILITÁRIOS ================== */
+/* ============================================= */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+/* ============================================= */
+/* ============== RESPONSIVIDADE =============== */
+/* ============================================= */
+
 @media (max-width: 1024px) {
     .form-col-2, .form-col-3 {
         flex: 0 0 100%;
@@ -761,148 +910,13 @@ a.voltar:hover {
     .detalhe-card {
         padding: 1.5rem;
     }
-}
-
-/* Animações suaves */
-@keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(20px); 
+    
+    #modelos-newsletter {
+        justify-content: center;
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+    
+    .modelo {
+        width: 100%;
+        max-width: 300px;
     }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
-}
-
-/* Loading spinner */
-.loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--cor-branco);
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Utilitários */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-.mb-4 { margin-bottom: 2rem; }
-
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: 0.5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-.mt-4 { margin-top: 2rem; }
-
-/* Seleção de texto */
-::selection {
-    background-color: rgba(52, 152, 219, 0.2);
-    color: var(--cor-texto-principal);
-}
-
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--cor-fundo);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--cor-borda);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--cor-texto-secundario);
-}
-
-#modelos-newsletter {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.modelo {
-    background-color: #f3f3f3;
-    border: 1px solid #ccc;
-    padding: 12px;
-    border-radius: 8px;
-    width: 200px;
-    cursor: grab;
-    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
-    transition: background-color 0.2s ease;
-}
-
-.modelo:hover {
-    background-color: #eaeaea;
-}
-#modelos-newsletter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin: 30px 0;
-}
-
-.modelo {
-    background: linear-gradient(135deg, #ffffff, #f3f3f3);
-    border: 1px solid #ddd;
-    border-left: 4px solid #7e7e7e;
-    border-radius: 12px;
-    padding: 16px 20px;
-    width: 240px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
-    cursor: grab;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.modelo:hover {
-    background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.modelo strong {
-    font-size: 16px;
-    color: #333;
-}
-
-.modelo small {
-    display: block;
-    margin-top: 8px;
-    color: #666;
-    font-size: 14px;
-}
-
-.modelo::after {
-    content: "\f0c5"; /* ícone Font Awesome - copy */
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    font-size: 20px;
-    color: #b0b0b0;
-    position: absolute;
-    bottom: 10px;
-    right: 15px;
-    opacity: 0.3;
 }

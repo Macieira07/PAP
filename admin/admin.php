@@ -1,7 +1,6 @@
 <?php
 session_start();
 require '../conexao.php';
-
 // Função para criar uma notificação de reserva
 function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, $dataCheckin) {
     $mensagem = "Nova reserva: $hospedeNome reservou $casaNome para " . date('d/m/Y', strtotime($dataCheckin));
@@ -11,7 +10,6 @@ function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, 
     $stmt->bind_param("ss", $tipo, $mensagem);
     $stmt->execute();
 }
-
 // Função para verificar novas reservas e criar notificações
 function verificarNovasReservas($conexao) {
     // Buscar a data da última notificação de reserva
@@ -541,7 +539,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 </a>
             </div>
         </div>
-
         <!-- Container de Notificações -->
         <div class="notificacoes-container" id="notificacoesContainer">
             <div class="notificacoes-header">
@@ -598,10 +595,8 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             function fecharNotificacoes() {
                 document.getElementById('notificacoesContainer').style.display = 'none';
             }
-
     function marcarComoLida(idNotificacao, event) {
-        event.stopPropagation();
-        
+        event.stopPropagation();   
         fetch('marcar_como_lida.php?id=' + idNotificacao)
             .then(response => response.text())
             .then(data => {
@@ -609,11 +604,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     const notificacao = document.getElementById('notificacao-' + idNotificacao);
                     notificacao.style.opacity = '0.6';
                     notificacao.style.transition = 'opacity 0.3s ease';
-                    
                     // Remover após a animação
                     setTimeout(() => {
                         notificacao.remove();
-                        
                         // Atualizar contador
                         const contador = document.querySelector('.contador-notificacoes');
                         if (contador) {
@@ -633,7 +626,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             })
             .catch(error => console.error('Erro:', error));
     }
-
             // Fechar notificações ao clicar fora
             document.addEventListener('click', function(event) {
                 const notificacoes = document.getElementById('notificacoesContainer');
@@ -644,7 +636,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     !iconeNotificacao.contains(event.target)) {
                     notificacoes.style.display = 'none';
                 }
-            
             });
         </script>
     </body>

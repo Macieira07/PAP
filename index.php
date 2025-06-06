@@ -1,4 +1,8 @@
 <?php 
+require_once 'i18n.php';
+if (isset($_GET['lang'])) {
+    I18n::setLanguage($_GET['lang']);
+}
 $nav_links = [
     ['href' => '#about', 'text' => 'Sobre'],
     ['href' => '#rooms', 'text' => 'Ofertas'],
@@ -24,6 +28,7 @@ include 'components/header.php'; ?>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="index/teste.css">
+    <link rel="stylesheet" href="includes/chatbot.css">
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
     <link rel="stylesheet" type="text/css" href="../includes/chatbot.css">
@@ -33,12 +38,11 @@ include 'components/header.php'; ?>
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
   </head>
   <body>
-    <!-- Cabeçalho/Header  -->
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">
-            <h1 class="hero__title">Bem-vindo à Quinta Flores</h1>
-            <p class="hero__subtitle">Um espaço pensado para quem valoriza conforto, beleza e boas memórias</p>
+            <h1 class="hero__title"><?= I18n::get('hero_title', 'Bem-vindo à Quinta Flores') ?></h1>
+            <p class="hero__subtitle"><?= I18n::get('hero_subtitle', 'Um espaço pensado para quem valoriza conforto, beleza e boas memórias') ?></p>
             <a href="../login1/pagina_login.php" class="hero__cta">Reservar Agora</a>
         </div>
         <a href="#about" class="scroll-down">
@@ -51,26 +55,26 @@ include 'components/header.php'; ?>
     <div class="input__group">
       <span><i class="ri-calendar-line"></i></span>
       <div>
-        <label for="checkIn">Check In</label>
+        <label for="checkIn"><?= I18n::get('checkIn', 'Check In') ?></label>
         <input type="date" id="checkIn" required>
       </div>
     </div>
     <div class="input__group">
       <span><i class="ri-calendar-line"></i></span>
       <div>
-        <label for="checkOut">Check Out</label>
+        <label for="checkOut"><?= I18n::get('checkOut', 'Check Out') ?></label>
         <input type="date" id="checkOut" required>
       </div>
     </div>
     <div class="input__group">
       <span><i class="ri-user-line"></i></span>
       <div>
-        <label for="guests">Hóspedes</label>
+        <label for="guests"><?= I18n::get('guests', 'Hóspedes') ?></label>
         <input type="number" id="guests" min="1" max="10" value="2" required>
       </div>
     </div>
     <div class="input__group input__btn">
-      <button type="button" id="searchBtn" class="btn">Ver disponibilidade</button>
+      <button type="button" id="searchBtn" class="btn"><?= I18n::get('searchBtn', 'Ver disponibilidade') ?></button>
     </div>
   </form>
   <div id="availabilityResult" class="availability__message"></div>
@@ -126,7 +130,7 @@ function checkAvailability() {
 
   // Validações
   if (!checkIn || !checkOut) {
-    showFlashMessage('Por favor, preencha as datas de check-in e check-out.', 'error');
+    showFlashMessage('<?= I18n::get('error_checkIn_checkOut', 'Por favor, preencha as datas de check-in e check-out.') ?>', 'error');
     resultDiv.innerHTML = '';
     return;
   }
@@ -137,24 +141,24 @@ function checkAvailability() {
   today.setHours(0, 0, 0, 0);
 
   if (checkInDate < today) {
-    showFlashMessage('A data de check-in não pode ser anterior a hoje.', 'error');
+    showFlashMessage('<?= I18n::get('error_checkIn_today', 'A data de check-in não pode ser anterior a hoje.') ?>', 'error');
     return;
   }
 
   if (checkOutDate <= checkInDate) {
-    showFlashMessage('A data de check-out deve ser posterior à de check-in.', 'error');
+    showFlashMessage('<?= I18n::get('error_checkOut_checkIn', 'A data de check-out deve ser posterior à de check-in.') ?>', 'error');
     return;
   }
 
   if (guests < 1 || guests > 10) {
-    showFlashMessage('O número de hóspedes deve estar entre 1 e 10.', 'error');
+    showFlashMessage('<?= I18n::get('error_guests', 'O número de hóspedes deve estar entre 1 e 10.') ?>', 'error');
     return;
   }
 
   // Estado de carregamento
-  resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade...';
+  resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <?= I18n::get('checking', 'A verificar disponibilidade...') ?>';
   resultDiv.className = 'availability__message checking';
-  showFlashMessage('A verificar disponibilidade...', 'info', 2000);
+  showFlashMessage('<?= I18n::get('checking', 'A verificar disponibilidade...') ?>', 'info', 2000);
 
   // Requisição simulada à API
   fetch('index/verificar_disponibilidade.php', {
@@ -164,7 +168,7 @@ function checkAvailability() {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Erro ao comunicar com o servidor.');
+        throw new Error('<?= I18n::get('error_comunication', 'Erro ao comunicar com o servidor.') ?>');
       }
       return response.json();
     })
@@ -173,19 +177,17 @@ function checkAvailability() {
       resultDiv.className = `availability__message ${data.available ? 'available' : 'unavailable'}`;
 
       if (data.available) {
-        showFlashMessage('Disponibilidade confirmada! As datas estão livres.', 'success');
+        showFlashMessage('<?= I18n::get('success_available', 'Disponibilidade confirmada! As datas estão livres.') ?>', 'success');
       } else {
-        showFlashMessage('Sem disponibilidade para as datas selecionadas.', 'error');
+        showFlashMessage('<?= I18n::get('error_unavailable', 'Sem disponibilidade para as datas selecionadas.') ?>', 'error');
       }
     })
     .catch(error => {
-      console.error('Erro:', error);
-      showFlashMessage('Ocorreu um erro ao verificar disponibilidade.', 'error');
+      console.error('<?= I18n::get('error_general', 'Erro:') ?>', error);
+      showFlashMessage('<?= I18n::get('error_general', 'Ocorreu um erro ao verificar disponibilidade.') ?>', 'error');
       resultDiv.innerHTML = '';
     });
 }
-
-// Associar evento ao botão
 document.getElementById('searchBtn').addEventListener('click', checkAvailability);
 </script>
     <!-- About Section -->
@@ -194,14 +196,13 @@ document.getElementById('searchBtn').addEventListener('click', checkAvailability
         <img src="assets/images/foto_principal_2.jpeg" alt="sobre nós">
       </div>
       <div class="about__content">
-        <p class="section__subheader">Quinta Flores </p>
-        <h2 class="section__header">Refúgio de Natureza e Conforto em Ponte de Lima
-        </h2>
+        <p class="section__subheader"><?= I18n::get('about_subheader', 'Quinta Flores ') ?></p>
+        <h2 class="section__header"><?= I18n::get('about_header', 'Refúgio de Natureza e Conforto em Ponte de Lima') ?></h2>
         <p class="section__description">
-          Situada no coração da deslumbrante região de Ponte de Lima, a Quinta Flores é uma casa inteira pensada para receber até 10 pessoas num ambiente familiar, tranquilo e repleto de natureza. Aqui, poderá desfrutar de momentos de relaxamento e convívio, rodeado por paisagens serenas e ar puro.
+          <?= I18n::get('about_description', 'Situada no coração da deslumbrante região de Ponte de Lima, a Quinta Flores é uma casa inteira pensada para receber até 10 pessoas num ambiente familiar, tranquilo e repleto de natureza. Aqui, poderá desfrutar de momentos de relaxamento e convívio, rodeado por paisagens serenas e ar puro.') ?>
         </p>
         <p class="section__description">
-Ideal para famílias, grupos de amigos ou turistas à procura de um refúgio calmo, a Quinta Flores oferece um espaço acolhedor onde a boa comida e a hospitalidade genuína são parte da experiência. Para além do conforto da casa, proporcionamos um ambiente perfeito para explorar as muitas atividades e atrações da região, detalhadas no nosso site para facilitar a sua programação.
+<?= I18n::get('about_description_2', 'Ideal para famílias, grupos de amigos ou turistas à procura de um refúgio calmo, a Quinta Flores oferece um espaço acolhedor onde a boa comida e a hospitalidade genuína são parte da experiência. Para além do conforto da casa, proporcionamos um ambiente perfeito para explorar as muitas atividades e atrações da região, detalhadas no nosso site para facilitar a sua programação.') ?>
 Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie memórias inesquecíveis na Quinta Flores.
         </p>
           <a href="index/lermais.php" class="btn" style="text-decoration: none;">Ler Mais</a>
@@ -210,8 +211,8 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     </section>
 <!-- Ofertas Section -->
 <section class="section__container rooms__container" id="rooms">
-  <p class="section__subheader">Momentos inesquecíveis com condições especiais</p>
-  <h2 class="section__header">Descobre as Nossas Ofertas Especiais</h2>
+  <p class="section__subheader"><?= I18n::get('rooms_subheader', 'Momentos inesquecíveis com condições especiais') ?></p>
+  <h2 class="section__header"><?= I18n::get('rooms_header', 'Descobre as Nossas Ofertas Especiais') ?></h2>
 
   <div class="rooms__grid">
     
@@ -221,54 +222,51 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         <div class="room__badge">2 noites</div>
       </div>
       <div class="room__content">
-        <h3 class="room__title">Tempo a Dois</h3>
-        <p class="room__price">Preço: 260€</p>
+        <h3 class="room__title"><?= I18n::get('room_title_amor', 'Tempo a Dois') ?></h3>
+        <p class="room__price"><?= I18n::get('room_price_amor', 'Preço: 260€') ?></p>
         <p class="room__description">
-         Dois dias inesquecíveis para reacender a chama do amor
+         <?= I18n::get('room_description_amor', 'Dois dias inesquecíveis para reacender a chama do amor') ?>
         </p>
-        <a href="index/tempo_namorar.php" class="room__link">Planeie a sua experiência</a>
+        <a href="index/tempo_namorar.php" class="room__link"><?= I18n::get('room_link_amor', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
-
     <div class="room__card">
       <div class="room__image">
         <img src="assets/images/party.avif" alt="Oferta Festa com Amigos">
         <div class="room__badge">1 a 2 noites</div>
       </div>
       <div class="room__content">
-        <h3 class="room__title">Diversão em Grupo</h3>
-        <p class="room__price">Preço: 250€</p>
+        <h3 class="room__title"><?= I18n::get('room_title_party', 'Diversão em Grupo') ?></h3>
+        <p class="room__price"><?= I18n::get('room_price_party', 'Preço: 250€') ?></p>
         <p class="room__description">
-          O cenário perfeito para celebrar com os teus amigos ao máximo
+          <?= I18n::get('room_description_party', 'O cenário perfeito para celebrar com os teus amigos ao máximo') ?>
         </p>
-        <a href="../festa_amigos.php" class="room__link">Planeie a sua experiência</a>
+        <a href="../index/festa_amigos.php" class="room__link"><?= I18n::get('room_link_party', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
-
     <div class="room__card">
       <div class="room__image">
         <img src="assets/images/religious.avif" alt="Oferta Retiro de Catequese">
         <div class="room__badge">3 noites</div>
       </div>
       <div class="room__content">
-        <h3 class="room__title">	Retiro Espiritual </h3>
-        <p class="room__price">Preço: 240€</p>
+        <h3 class="room__title"><?= I18n::get('room_title_religious', 'Retiro Espiritual') ?></h3>
+        <p class="room__price"><?= I18n::get('room_price_religious', 'Preço: 240€') ?></p>
         <p class="room__description">
-            Paz, reflexão e união num ambiente acolhedor com kits espirituais incluídos
+            <?= I18n::get('room_description_religious', 'Paz, reflexão e união num ambiente acolhedor com kits espirituais incluídos') ?>
         </p>
-        <a href="index/retiro_catequese.php" class="room__link">Planeie a sua experiência</a>
+        <a href="index/retiro_catequese.php" class="room__link"><?= I18n::get('room_link_religious', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
   </div>
 </section>
-
     <!-- Galeria Section -->
 <section class="gallery-section" id="gallery">
-  <p class="section__subheader">Algumas fotos do Alojamento</p>
-  <h2 class="section__header">Galeria</h2>
+  <p class="section__subheader"><?= I18n::get('gallery_subheader', 'Algumas fotos do Alojamento') ?></p>
+  <h2 class="section__header"><?= I18n::get('gallery_header', 'Galeria') ?></h2>
     <div class="gallery-reveal">
       <button class="gallery-reveal-btn" id="revealBtn">
-        <span>Ver Fotos</span>
+        <span><?= I18n::get('gallery_reveal_btn', 'Ver Fotos') ?></span>
         <i class="ri-arrow-down-s-line"></i>
       </button>
     </div>
@@ -276,134 +274,134 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     <div class="gallery-item">
       <img src="assets/images/6.png" alt="Sala de Estar">
       <div class="gallery-hover-content">
-        <h3>Sala de Estar</h3>
-        <p>Espaçosa e luminosa</p>
+        <h3><?= I18n::get('gallery_item_title_6', 'Sala de Estar') ?></h3>
+        <p><?= I18n::get('gallery_item_description_6', 'Espaçosa e luminosa') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/7.png" alt="Sala de Jantar">
       <div class="gallery-hover-content">
-        <h3>Sala de Jantar</h3>
-        <p>Com mesa para 6 pessoas</p>
+        <h3><?= I18n::get('gallery_item_title_7', 'Sala de Jantar') ?></h3>
+        <p><?= I18n::get('gallery_item_description_7', 'Com mesa para 6 pessoas') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/13.png" alt="Cozinha">
       <div class="gallery-hover-content">
-        <h3>Cozinha</h3>
-        <p>Totalmente Equipada</p>
+        <h3><?= I18n::get('gallery_item_title_13', 'Cozinha') ?></h3>
+        <p><?= I18n::get('gallery_item_description_13', 'Totalmente Equipada') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/12.png" alt="Cozinha">
       <div class="gallery-hover-content">
-        <h3>Cozinha</h3>
-        <p>Totalmente Equipada</p>
+        <h3><?= I18n::get('gallery_item_title_12', 'Cozinha') ?></h3>
+        <p><?= I18n::get('gallery_item_description_12', 'Totalmente Equipada') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/area_comum6.jpg" alt="Área de lazer">
       <div class="gallery-hover-content">
-        <h3>Escadas</h3>
-        <p>Sala para o Quarto</p>
+        <h3><?= I18n::get('gallery_item_title_area_comum6', 'Escadas') ?></h3>
+        <p><?= I18n::get('gallery_item_description_area_comum6', 'Sala para o Quarto') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/14.png" alt="Entrada para os Quartos">
       <div class="gallery-hover-content">
-        <h3>Entrada</h3>
-        <p>para os quartos</p>
+        <h3><?= I18n::get('gallery_item_title_14', 'Entrada') ?></h3>
+        <p><?= I18n::get('gallery_item_description_14', 'para os quartos') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/casa_banho_9.jpg" alt="Casa de banho">
       <div class="gallery-hover-content">
-        <h3>Casa de banho</h3>
-        <p>Partilhada</p>
+        <h3><?= I18n::get('gallery_item_title_casa_banho_9', 'Casa de banho') ?></h3>
+        <p><?= I18n::get('gallery_item_description_casa_banho_9', 'Partilhada') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/quarto_3.jpg" alt="Quarto equipado">
       <div class="gallery-hover-content">
-        <h3>Quarto</h3>
-        <p>com 2 camas de casal</p>
+        <h3><?= I18n::get('gallery_item_title_quarto_3', 'Quarto') ?></h3>
+        <p><?= I18n::get('gallery_item_description_quarto_3', 'com 2 camas de casal') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/quarto_3.jpg" alt="Quarto equipado">
       <div class="gallery-hover-content">
-        <h3>Quarto</h3>
-        <p>com 2 camas de casal</p>
+        <h3><?= I18n::get('gallery_item_title_quarto_3_2', 'Quarto') ?></h3>
+        <p><?= I18n::get('gallery_item_description_quarto_3_2', 'com 2 camas de casal') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/quarto_3.jpg" alt="Suite">
       <div class="gallery-hover-content">
-        <h3>Suite</h3>
-        <p>com 1 cama de casal</p>
+        <h3><?= I18n::get('gallery_item_title_quarto_3', 'Suite') ?></h3>
+        <p><?= I18n::get('gallery_item_description_quarto_3', 'com 1 cama de casal') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/casa_de_banho_7.jpg" alt="Casa de Banho">
       <div class="gallery-hover-content">
-        <h3>Suite</h3>
-        <p>Casa de banho</p>
+        <h3><?= I18n::get('gallery_item_title_casa_de_banho_7', 'Suite') ?></h3>
+        <p><?= I18n::get('gallery_item_description_casa_de_banho_7', 'Casa de banho') ?></p>
       </div>
     </div>
     <div class="gallery-item">
       <img src="assets/images/casa_de_banho6.jpg" alt="Casa de Banho">
       <div class="gallery-hover-content">
-        <h3>Suite</h3>
-        <p>Casa de banho</p>
+        <h3><?= I18n::get('gallery_item_title_casa_de_banho6', 'Suite') ?></h3>
+        <p><?= I18n::get('gallery_item_description_casa_de_banho6', 'Casa de banho') ?></p>
       </div>
     </div>
         <div class="gallery-item">
       <img src="assets/images/foto_principal_4.jpg" alt="Casa vista de fora">
       <div class="gallery-hover-content">
-        <h3>Casa</h3>
-        <p>Vista de fora</p>
+        <h3><?= I18n::get('gallery_item_title_foto_principal_4', 'Casa') ?></h3>
+        <p><?= I18n::get('gallery_item_description_foto_principal_4', 'Vista de fora') ?></p>
       </div>
     </div>
-            <div class="gallery-item">
+    <div class="gallery-item">
       <img src="assets/images/19.png" alt="Casa vista de cima">
       <div class="gallery-hover-content">
-        <h3>Casa</h3>
-        <p>Vista de cima</p>
+        <h3><?= I18n::get('gallery_item_title_19', 'Casa') ?></h3>
+        <p><?= I18n::get('gallery_item_description_19', 'Vista de cima') ?></p>
       </div>
     </div>
-            <div class="gallery-item">
+    <div class="gallery-item">
       <img src="assets/images/natureza23.jpg" alt="Entrada para jardim e piscina">
       <div class="gallery-hover-content">
-        <h3>Entrada</h3>
-        <p>Para o jardim e a Piscina</p>
+        <h3><?= I18n::get('gallery_item_title_natureza23', 'Entrada') ?></h3>
+        <p><?= I18n::get('gallery_item_description_natureza23', 'Para o jardim e a Piscina') ?></p>
       </div>
     </div>
       <div class="gallery-item">
       <img src="assets/images/piscina2.jpg" alt="Piscina">
       <div class="gallery-hover-content">
-        <h3>Piscina</h3>
-        <p>Com direito a duas espreguiçadeiras e toalhas</p>
+        <h3><?= I18n::get('gallery_item_title_piscina2', 'Piscina') ?></h3>
+        <p><?= I18n::get('gallery_item_description_piscina2', 'Com direito a duas espreguiçadeiras e toalhas') ?></p>
       </div>
     </div>
           <div class="gallery-item">
       <img src="assets/images/churrasco.jpg" alt="churrasco">
       <div class="gallery-hover-content">
-        <h3>Churrasco</h3>
-        <p>e momentos com todos</p>
+        <h3><?= I18n::get('gallery_item_title_churrasco', 'Churrasco') ?></h3>
+        <p><?= I18n::get('gallery_item_description_churrasco', 'e momentos com todos') ?></p>
       </div>
     </div>
           <div class="gallery-item">
       <img src="assets/images/foto_principal_3.png" alt="garagem">
       <div class="gallery-hover-content">
-        <h3>Garagem</h3>
-        <p>Para dois carros</p>
+        <h3><?= I18n::get('gallery_item_title_foto_principal_3', 'Garagem') ?></h3>
+        <p><?= I18n::get('gallery_item_description_foto_principal_3', 'Para dois carros') ?></p>
       </div>
     </div>
           <div class="gallery-item">
       <img src="assets/images/entrada_3.jpg" alt="entrada">
       <div class="gallery-hover-content">
-        <h3>Entrada</h3>
-        <p>2º</p>
+        <h3><?= I18n::get('gallery_item_title_entrada_3', 'Entrada') ?></h3>
+        <p><?= I18n::get('gallery_item_description_entrada_3', '2º') ?></p>
       </div>
     </div>
           <div class="gallery-item">
@@ -427,7 +425,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         if(isRevealed) {
           galleryGrid.classList.remove('hidden');
           galleryGrid.classList.add('revealed');
-          revealBtn.innerHTML = '<span>Ocultar Fotos</span><i class="ri-arrow-up-s-line"></i>';
+          revealBtn.innerHTML = '<span><?= I18n::get('gallery_reveal_btn_2', 'Ocultar Fotos') ?></span><i class="ri-arrow-up-s-line"></i>';
           
           // Posicionar corretamente
           const section = document.getElementById('gallerySection');
@@ -435,88 +433,87 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         } else {
           galleryGrid.classList.remove('revealed');
           galleryGrid.classList.add('hidden');
-          revealBtn.innerHTML = '<span>Ver Fotos</span><i class="ri-arrow-down-s-line"></i>';
+          revealBtn.innerHTML = '<span><?= I18n::get('gallery_reveal_btn_3', 'Ver Fotos') ?></span><i class="ri-arrow-down-s-line"></i>';
         }
       });
     });
   </script>
-      
     </div>
   </div>
 </section>
 <!--Comodidades -->
 <section class="section__container comodidades" id="amenities">
-  <p class="section__subheader">O que este espaço oferece</p>
-  <h2 class="section__header">Comodidades</h2>
+  <p class="section__subheader"><?= I18n::get('amenities_subheader', 'O que este espaço oferece') ?></p>
+  <h2 class="section__header"><?= I18n::get('amenities_header', 'Comodidades') ?></h2>
   <div class="comodidades__container">
     <ul class="comodidades__list">
       <li>
         <i class="fa-solid fa-wifi"></i>
-        <span>Wi-Fi Gratuito</span>
+        <span><?= I18n::get('amenities_wifi', 'Wi-Fi Gratuito') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-person-swimming"></i>
-        <span>Piscina Exterior</span>
+        <span><?= I18n::get('amenities_piscina', 'Piscina Exterior') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-square-parking"></i>
-        <span>Estacionamento Privado</span>
+        <span><?= I18n::get('amenities_estacionamento', 'Estacionamento Privado') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-bed"></i>
-        <span>Lençóis e Toalhas de Alta Qualidade</span>
+        <span><?= I18n::get('amenities_lençóis', 'Lençóis e Toalhas de Alta Qualidade') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-gamepad"></i>
-        <span>Área de Lazer</span>
+        <span><?= I18n::get('amenities_area_lazer', 'Área de Lazer') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-fire"></i>
-        <span>Lareira</span>
+        <span><?= I18n::get('amenities_lareira', 'Lareira') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-soap"></i>
-        <span>Máquina de Lavar Roupa</span>
+        <span><?= I18n::get('amenities_máquina_lavar', 'Máquina de Lavar Roupa') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-tv"></i>
-        <span>Televisão</span>
+        <span><?= I18n::get('amenities_televisão', 'Televisão') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-kitchen-set"></i>
-        <span>Cozinha Totalmente Equipada</span>
+        <span><?= I18n::get('amenities_cozinha', 'Cozinha Totalmente Equipada') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-kit-medical"></i>
-        <span>Kit de Primeiros Socorros</span>
+        <span><?= I18n::get('amenities_kit_primeiros', 'Kit de Primeiros Socorros') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-hot-tub-person"></i>
-        <span>Jacuzzi</span>
+        <span><?= I18n::get('amenities_jacuzzi', 'Jacuzzi') ?></span>
       </li>
       <li>
         <i class="fa-solid fa-drumstick-bite"></i>
-        <span>Churrasqueira</span>
+        <span><?= I18n::get('amenities_churrasqueira', 'Churrasqueira') ?></span>
       </li>
     </ul>
   </div>
 </section>
     <!-- Testimonials Section -->
     <section class="section__container testimonials" id="testimonials">
-      <p class="section__subheader">Comentários</p>
-      <h2 class="section__header">O Que Dizem os Nossos Hóspedes</h2>
+      <p class="section__subheader"><?= I18n::get('testimonials_subheader', 'Comentários') ?></p>
+      <h2 class="section__header"><?= I18n::get('testimonials_header', 'O Que Dizem os Nossos Hóspedes') ?></h2>
       <div class="testimonial__container">
         <div class="testimonial__grid">
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
             <p class="testimonial__text">
-              A Quinta Flores superou todas as nossas expectativas. O local é lindo, os quartos impecáveis e o pequeno-almoço delicioso com produtos regionais. Voltaremos com certeza!
+              <?= I18n::get('testimonial_text_1', 'A Quinta Flores superou todas as nossas expectativas. O local é lindo, os quartos impecáveis e o pequeno-almoço delicioso com produtos regionais. Voltaremos com certeza!') ?>
             </p>
             <div class="testimonial__author">
               <img src="assets/images/Ana_Silva.jpg" alt="Ana Silva">
               <div class="author__info">
-                <h4>Ana Silva</h4>
-                <p>Porto, Portugal</p>
+                <h4><?= I18n::get('testimonial_author_name_1', 'Ana Silva') ?></h4>
+                <p><?= I18n::get('testimonial_author_location_1', 'Porto, Portugal') ?></p>
                 <div class="rating">
                   <i class="ri-star-fill"></i>
                   <i class="ri-star-fill"></i>
@@ -530,13 +527,13 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
             <p class="testimonial__text">
-              Foi nossa segunda estadia e foi tão boa quanto a primeira. A atenção da equipa é excepcional e adoramos os passeios sugeridos pela região. Recomendamos!
+              <?= I18n::get('testimonial_text_2', 'Foi nossa segunda estadia e foi tão boa quanto a primeira. A atenção da equipa é excepcional e adoramos os passeios sugeridos pela região. Recomendamos!') ?>
             </p>
             <div class="testimonial__author">
               <img src="assets/images/Carlos_Mendes.jpg" alt="Carlos Mendes">
               <div class="author__info">
-                <h4>Carlos Mendes</h4>
-                <p>Lisboa, Portugal</p>
+                <h4><?= I18n::get('testimonial_author_name_2', 'Carlos Mendes') ?></h4>
+                <p><?= I18n::get('testimonial_author_location_2', 'Lisboa, Portugal') ?></p>
                 <div class="rating">
                   <i class="ri-star-fill"></i>
                   <i class="ri-star-fill"></i>
@@ -550,13 +547,13 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
           <div class="testimonial__card">
             <div class="testimonial__quote">"</div>
             <p class="testimonial__text">
-              Perfect place to experience authentic Portuguese countryside. The owners are lovely and made us feel at home. The pool area is fantastic with amazing views.
+              <?= I18n::get('testimonial_text_3', 'Perfect place to experience authentic Portuguese countryside. The owners are lovely and made us feel at home. The pool area is fantastic with amazing views.') ?>
             </p>
             <div class="testimonial__author">
               <img src="assets/images/Emma_Johnson.jpg" alt="Emma Johnson">
               <div class="author__info">
-                <h4>Emma Johnson</h4>
-                <p>London, UK</p>
+                <h4><?= I18n::get('testimonial_author_name_3', 'Emma Johnson') ?></h4>
+                <p><?= I18n::get('testimonial_author_location_3', 'London, UK') ?></p>
                 <div class="rating">
                   <i class="ri-star-fill"></i>
                   <i class="ri-star-fill"></i>
@@ -570,37 +567,37 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         </div>
       </div>
 <button class="gallery-reveal-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfzD7UZqC1_SoZ5SUhd8EthQv97FC7C8KSiznylvtOGqdeaEg/viewform?usp=dialog', '_blank')">
-  <span>Avalie nos</span>
+  <span><?= I18n::get('testimonials_btn', 'Avalie nos') ?></span>
   <i class="ri-arrow-down-s-line"></i>
 </button>
 
     </section>
     <!-- Location Section -->
     <section class="section__container location" id="location">
-      <p class="section__subheader">Como chegar</p>
-      <h2 class="section__header">Localização</h2>
+      <p class="section__subheader"><?= I18n::get('location_subheader', 'Como chegar') ?></p>
+      <h2 class="section__header"><?= I18n::get('location_header', 'Localização') ?></h2>
       <div class="map__container">
         <div class="map__info">
-          <h3>Quinta Flores</h3>
+          <h3><?= I18n::get('location_h3', 'Quinta Flores') ?></h3>
           <div class="location__detail">
             <i class="ri-map-pin-line"></i>
-            <span>Travessa da seara 265 Calheiros Ponte de Lima 4990-575, Ponte de Lima, Portugal</span>
+            <span><?= I18n::get('location_detail_1', 'Travessa da seara 265 Calheiros Ponte de Lima 4990-575, Ponte de Lima, Portugal') ?></span>
           </div>
           <div class="location__detail">
             <i class="ri-phone-line"></i>
-            <span>+351 919 241 169</span>
+            <span><?= I18n::get('location_detail_2', '+351 919 241 169') ?></span>
           </div>
           <div class="location__detail">
             <i class="ri-mail-line"></i>
-            <span>quinta.flores2019@gmail.com</span>
+            <span><?= I18n::get('location_detail_3', 'quinta.flores2019@gmail.com') ?></span>
           </div>
           <div class="location__detail">
             <i class="ri-car-line"></i>
-            <span>45 min do Aeroporto do Porto (OPO)</span>
+            <span><?= I18n::get('location_detail_4', '45 min do Aeroporto do Porto (OPO)') ?></span>
           </div>
           <div class="location__detail">
             <i class="ri-train-line"></i>
-            <span>Estação de Ponte de Lima a 10 min</span>
+            <span><?= I18n::get('location_detail_5', 'Estação de Ponte de Lima a 10 min') ?></span>
           </div>
         </div>
         <div class="map__frame">

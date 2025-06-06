@@ -250,7 +250,6 @@ require_once 'header.php';
                 </div>
             </div>
         </div>
-
         <script>
             // Ofertas disponíveis
             const ofertas = {

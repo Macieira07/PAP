@@ -110,15 +110,13 @@
   color: var(--text-light);
 }
 .section__subheader {
-  font-size: 1.25rem;       /* Tamanho de fonte médio */
-  font-weight: 200;         /* Peso médio para destaque */
-  color: #047857;              /* Cor suave para subtítulo */
-  margin-bottom: 1rem;    /* Espaço abaixo do subtítulo */
-  letter-spacing: 0px;    /* Espaçamento entre letras */
-  line-height: 2;         /* Altura da linha */
+  font-size: 1.25rem;     
+  font-weight: 200;         
+  color: #047857;              
+  margin-bottom: 1rem;    
+  letter-spacing: 0px;    
+  line-height: 2;         
 }
-
-
 /* ===== BOTÕES ===== */
 .btn,
 .animated-button1 {
@@ -136,20 +134,17 @@
   cursor: pointer;
   z-index: 1;
 }
-
 .btn:hover,
 .animated-button1:hover {
   background-color: var(--primary-color-dark);
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
 .btn:active,
 .animated-button1:active {
   transform: translateY(-1px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-
 /* ===== FORMULÁRIO DE RESERVA ===== */
 .booking__container {
   margin-top: -50px;
@@ -157,7 +152,6 @@
   z-index: 10;
   position: relative;
 }
-
 .booking__form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -167,7 +161,6 @@
   border-radius: 1rem;
   box-shadow: var(--card-shadow);
 }
-
 .input__group {
   display: flex;
   align-items: center;
@@ -176,23 +169,19 @@
   padding: 1rem;
   border-radius: 0.5rem;
 }
-
 .input__group span {
   color: var(--primary-color);
   font-size: 1.5rem;
 }
-
 .input__group div {
   flex: 1;
 }
-
 .input__group label {
   display: block;
   font-size: 0.8rem;
   color: var(--text-light);
   margin-bottom: 0.3rem;
 }
-
 .input__group input {
   width: 100%;
   border: none;
@@ -200,15 +189,12 @@
   font-size: 1rem;
   color: var(--text-dark);
 }
-
 .input__group input:focus {
   outline: none;
 }
-
 .input__btn {
   justify-content: center;
 }
-
 /* ===== SOBRE NÓS ===== */
 .about__container {
   position:relative;
@@ -217,7 +203,6 @@
   gap: 4rem;
   align-items: center;
 }
-
 .about__image img {
   width: 100%;
   border-radius: 1rem;

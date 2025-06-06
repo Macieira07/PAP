@@ -1,6 +1,6 @@
 <?php
 // Configurações básicas
-define('SITE_NAME', 'Quinta das Flores');
+define('SITE_NAME', 'Quinta  Flores');
 define('PRIMARY_COLOR', '#4a8f29');
 define('EMAIL_COLOR', '#4a8f29');
 define('CONTACT_PHONE', '+351 912 418 976');

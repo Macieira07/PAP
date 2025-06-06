@@ -78,6 +78,7 @@ h1, h2, h3, h4, h5 {
     list-style: none;
 }
 
+
 .nav__link {
     color: var(--text-dark);
     text-decoration: none;
@@ -86,6 +87,9 @@ h1, h2, h3, h4, h5 {
     transition: var(--transition);
     position: relative;
 }
+
+
+
 
 .nav__link:after {
     content: '';
