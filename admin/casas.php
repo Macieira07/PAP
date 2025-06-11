@@ -56,7 +56,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     </style>
 <body>
     <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
+        <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
         <h1>Lista de Alojamentos</h1>
     </div>
 

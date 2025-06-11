@@ -8,14 +8,12 @@ use PHPMailer\PHPMailer\Exception;
 require_once __DIR__ . '/PHPMailer/src/Exception.php';
 require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/src/SMTP.php';
-
-
-function enviarEmail($to, $subject, $body, $attachments = []) {
+function enviarEmail($to, $subject, $body, $attachments = [], $embeddedImages = []) {
     try {
         $mail = new PHPMailer(true);
         
         // Configurações detalhadas
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Habilita debug detalhado
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Debug
         $mail->Debugoutput = function($str, $level) {
             error_log("PHPMailer ($level): $str");
         };
@@ -33,13 +31,23 @@ function enviarEmail($to, $subject, $body, $attachments = []) {
         // Remetente e destinatário
         $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
         $mail->addAddress($to);
+
+        // Imagem embutida do logotipo
+        $mail->AddEmbeddedImage(__DIR__ . '/../assets/logos/logotipo1.png', 'logotipo_cid');
+
+        // Embutir emojis (array de ['path' => caminho, 'cid' => cid])
+        foreach ($embeddedImages as $img) {
+            if (file_exists($img['path'])) {
+                $mail->AddEmbeddedImage($img['path'], $img['cid']);
+            }
+        }
         
         // Conteúdo
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $body;
         
-        // Anexos
+        // Anexos extras
         foreach ($attachments as $attachment) {
             if (file_exists($attachment)) {
                 $mail->addAttachment($attachment);
@@ -57,3 +65,5 @@ function enviarEmail($to, $subject, $body, $attachments = []) {
         return false;
     }
 }
+
+

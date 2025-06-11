@@ -117,7 +117,7 @@ if (!$resultado) {
 </head>
 <body>
     <h2 style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://img.icons8.com/?size=100&id=J06I8dkRqpNR&format=png&color=000000" alt="ícone" style="width: 60px; height: 60px;">
+  <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="ícone hospedes" style="width: 60px; height: 60px;">
   Hóspedes Subscritos
 </h2>
 

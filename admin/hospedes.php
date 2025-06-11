@@ -1,17 +1,17 @@
 <?php
 require '../conexao.php';
+session_start();
 
-// Obter parâmetros de pesquisa/filtro
+// Obter parâmetro de pesquisa (sem filtro verificado)
 $pesquisa = $_GET['pesquisa'] ?? '';
-$filtro_verificado = $_GET['verificado'] ?? '';
 
+// Exibir flash message se existir
 if (isset($_SESSION['flash'])) {
     echo "<div class='flash-message {$_SESSION['flash']['type']}'>{$_SESSION['flash']['msg']}</div>";
     unset($_SESSION['flash']);
 }
 
-
-// Montar SQL dinamicamente com filtros
+// Montar SQL com filtro só para pesquisa
 $sql = "SELECT * FROM hospedes WHERE 1=1";
 
 if (!empty($pesquisa)) {
@@ -19,23 +19,17 @@ if (!empty($pesquisa)) {
     $sql .= " AND (H_nome LIKE '%$pesq%' OR H_email LIKE '%$pesq%' OR H_documento_ident LIKE '%$pesq%')";
 }
 
-if ($filtro_verificado === 'Sim' || $filtro_verificado === 'Não') {
-    $sql .= " AND H_verificado_email = '$filtro_verificado'";
-}
-
 $resultado = $conexao->query($sql);
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="hospedes.css">
     <meta charset="UTF-8">
     <title>Hóspedes</title>
-</head>
     <style>
         .flash-message {
             position: fixed;
@@ -52,25 +46,22 @@ $resultado = $conexao->query($sql);
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
+</head>
 <body>
     <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
+        <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
         <h1>Todos os Hóspedes</h1>
     </div>
     <a href="admin.php">← Voltar</a> | 
     <a href="adicionar_hospede.php">+ Adicionar Hóspede</a>
 
-    <!-- Formulário de pesquisa e filtro -->
+    <!-- Formulário de pesquisa -->
     <form method="get" style="margin-top: 20px; margin-bottom: 20px;">
         <input type="text" name="pesquisa" placeholder="Pesquisar por nome, email ou documento" value="<?= htmlspecialchars($pesquisa) ?>">
-        <select name="verificado">
-            <option value="">Todos</option>
-            <option value="Sim" <?= $filtro_verificado === 'Sim' ? 'selected' : '' ?>>Verificados</option>
-            <option value="Não" <?= $filtro_verificado === 'Não' ? 'selected' : '' ?>>Não Verificados</option>
-        </select>
         <button type="submit">Filtrar</button>
         <a href="hospedes.php" style="margin-left: 10px;">Limpar Filtros</a>
     </form>
+
     <table border="1" cellpadding="10">
         <tr>
             <th>ID</th>
@@ -93,47 +84,9 @@ $resultado = $conexao->query($sql);
                 <a href="editar_hospede.php?id=<?= $h['H_id_hospede'] ?>">Editar</a> |
                 <a href="eliminar_hospede.php?id=<?= $h['H_id_hospede'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
             </td>
-            <!-- Detalhes ocultos que aparecem ao passar o mouse -->
-            <td class="hospede-details">
-                <div class="details-content">
-                    <p><strong>Nome:</strong> <?= $h['H_nome'] ?></p>
-                    <p><strong>Email:</strong> <?= $h['H_email'] ?></p>
-                    <p><strong>Telefone:</strong> <?= $h['H_telefone'] ?></p>
-                    <p><strong>Documento:</strong> <?= $h['H_documento_ident'] ?></p>
-                    <p><strong>Verificado:</strong> <?= $h['H_verificado_email'] ?></p>
-                </div>
-            </td>
         </tr>
         <?php endwhile; ?>
-    </table>
-    <?php
-if (isset($_GET['exportar'])) {
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="hospedes.csv"');
-    
-    $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'Nome', 'Email', 'Telefone', 'Documento', 'Verificado']);
-    
-    $result = $conexao->query("SELECT * FROM hospedes");
-    while ($row = $result->fetch_assoc()) {
-        fputcsv($output, [
-            $row['H_id_hospede'],
-            $row['H_nome'],
-            $row['H_email'],
-            $row['H_telefone'],
-            $row['H_documento_ident'],
-            $row['H_verificado_email']
-        ]);
-    }
-    fclose($output);
-    exit;
-
-    
-}
-?>
-<!-- Botão de exportação -->
-<a href="hospedes.php?exportar=1" class="botao-exportar">Exportar CSV</a>
-    
+    </table> 
     <a href="admin.php">← Voltar</a>
 </body>
 </html>

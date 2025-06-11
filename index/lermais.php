@@ -697,6 +697,9 @@ function showFlashMessage(message, type) {
 });
     </script>
     <?php include '../components/footer.php'; ?>
-    <script src="../includes/chatbot.js"></script>
+<link rel="stylesheet" href="../chatbot/chatbot.css">
+<script src="../chatbot/chatbot.js"></script>
+<?php include '../chatbot/chatbot_config.php'; ?>
+<?php include '../chatbot/chatbot.php'; ?>
 </body>
 </html> 

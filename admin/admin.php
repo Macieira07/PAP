@@ -1,6 +1,14 @@
 <?php
 session_start();
 require '../conexao.php';
+
+// Verifica se o usuário está logado (se o id está na sessão)
+if (!isset($_SESSION['id'])) {
+    // Redireciona para a página de login se não estiver logado
+    header('Location: ../login1/login.php');
+    exit;
+}
+
 // Função para criar uma notificação de reserva
 function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, $dataCheckin) {
     $mensagem = "Nova reserva: $hospedeNome reservou $casaNome para " . date('d/m/Y', strtotime($dataCheckin));
@@ -10,6 +18,7 @@ function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, 
     $stmt->bind_param("ss", $tipo, $mensagem);
     $stmt->execute();
 }
+
 // Função para verificar novas reservas e criar notificações
 function verificarNovasReservas($conexao) {
     // Buscar a data da última notificação de reserva
@@ -50,7 +59,8 @@ function obterSaldoAtual($conexao) {
 // Usar as funções
 verificarNovasReservas($conexao);
 
-$id = $_SESSION['id'];  
+$id = $_SESSION['id'];
+
 $stmt = $conexao->prepare("SELECT F_nome, F_email FROM funcionarios WHERE F_id_funcionario = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -78,6 +88,7 @@ $resultado_notificacoes = $conexao->query("
 
 $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoes WHERE lida = 0")->fetch_assoc()['total'];
 ?>
+
 
     <!DOCTYPE html>
     <html lang="pt">
@@ -494,27 +505,27 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             <!-- Menu de Opções -->
             <div class="menu-cards">
                 <a class="card-opcao" href="casas.php">
-                    <img src="https://img.icons8.com/?size=100&id=8BBH2HJBM6Nz&format=png&color=000000" alt="Casas">
+                    <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Casas">
                     <h3>Gerir Casas</h3>
                 </a>
                 <a class="card-opcao" href="hospedes.php">
-                    <img src="https://img.icons8.com/?size=100&id=60018&format=png&color=000000" alt="Hóspedes">
+                    <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="Hóspedes">
                     <h3>Gerir Hóspedes</h3>
                 </a>
                 <a class="card-opcao" href="funcionarios.php">
-                    <img src="https://img.icons8.com/?size=100&id=37174&format=png&color=000000" alt="Funcionários">
+                    <img src="https://img.icons8.com/?size=100&id=TDEKFc4RXwN_&format=png&color=000000" alt="Funcionários">
                     <h3>Gerir Funcionários</h3>
                 </a>
                 <a class="card-opcao" href="reservas.php">
-                    <img src="https://img.icons8.com/?size=100&id=vTZ34gSDdvwJ&format=png&color=000000" alt="Reservas">
+                    <img src="https://img.icons8.com/?size=100&id=MCnPOwFJpCvG&format=png&color=000000" alt="Reservas">
                     <h3>Gerir Reservas</h3>
                 </a>
                 <a class="card-opcao" href="servicos.php">
-                    <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Serviços">
+                    <img src="https://img.icons8.com/?size=100&id=GtKvA4suLFWD&format=png&color=000000" alt="Serviços">
                     <h3>Gerir Serviços</h3>
                 </a>
                 <a class="card-opcao" href="despesas.php">
-                    <img src="https://img.icons8.com/?size=100&id=2975&format=png&color=000000" alt="Despesas">
+                    <img src="https://img.icons8.com/?size=100&id=22462&format=png&color=000000" alt="Despesas">
                     <h3>Gerir Despesas</h3>
                 </a>
                 <a class="card-opcao" href="manutencao.php">
@@ -522,19 +533,19 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     <h3>Gerir Manutenções</h3>
                 </a>
                 <a class="card-opcao" href="receitas.php">
-                    <img src="https://img.icons8.com/?size=100&id=24836&format=png&color=000000" alt="Receitas">
+                    <img src="https://img.icons8.com/?size=100&id=p2scHNLP9nSb&format=png&color=000000" alt="Receitas">
                     <h3>Gerir Receitas</h3>
                 </a>
                     <a class="card-opcao" href="newsletter.php">
-                    <img src="https://img.icons8.com/?size=100&id=53388&format=png&color=000000" alt="Newsletter">
+                    <img src="https://img.icons8.com/?size=100&id=bqI4gOgp4z1f&format=png&color=000000" alt="Newsletter">
                     <h3>Enviar Emails</h3>
                 </a>
                     <a class="card-opcao" href="modelos_newsletter.php">
-                    <img src="https://img.icons8.com/?size=100&id=TA4QF-Vb1AiX&format=png&color=000000" alt="Newsletter">
+                    <img src="https://img.icons8.com/?size=100&id=MmZOzSKjFP8X&format=png&color=000000" alt="Modelos de Newsletter">
                     <h3>Modelos de Emails</h3>
                 </a>
                     <a class="card-opcao" href="listar_avaliacoes.php">
-                    <img src="https://img.icons8.com/?size=100&id=104&format=png&color=000000" alt="Newsletter">
+                    <img src="https://img.icons8.com/?size=100&id=8ggStxqyboK5&format=png&color=000000" alt="Listar Avaliações">
                     <h3>Avaliações dos hóspedes</h3>
                 </a>
             </div>

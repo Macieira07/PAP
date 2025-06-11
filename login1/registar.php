@@ -5,7 +5,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('error_log', __DIR__ . '/registro_errors.log');
 error_log("Início do processamento de registro");
-
 // Configurações de sessão
 session_set_cookie_params([
     'lifetime' => 86400,
@@ -61,16 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim(htmlspecialchars($_POST['nome'], ENT_QUOTES));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $senha = $_POST['password'];
-    
+
     // Formatação do telefone
     $telefone = $_POST['telefone'];
-    
-    // Preserva o formato internacional do telefone
     if (strpos($telefone, '+') !== 0) {
-        // Se não tem +, considera que é um número local e adiciona o código do país (Portugal por padrão)
         $telefone = '+351' . preg_replace('/[^0-9]/', '', $telefone);
     }
-    
+
     $documento = trim(htmlspecialchars($_POST['documento'], ENT_QUOTES));
     $token = bin2hex(random_bytes(32));
     $token_expira = date('Y-m-d H:i:s', strtotime('+1 day'));
@@ -87,15 +83,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verifica se email já existe
     $sql_check = "SELECT H_id_hospede FROM hospedes WHERE H_email = ?";
     $stmt_check = $conexao->prepare($sql_check);
-    
+
     if (!$stmt_check) {
         error_log("Erro ao preparar consulta de verificação: " . $conexao->error);
         die(json_encode(['error' => 'Erro no sistema. Por favor, tente novamente mais tarde.']));
     }
-    
+
     $stmt_check->bind_param("s", $email);
     $stmt_check->execute();
-    
+
     if ($stmt_check->get_result()->num_rows > 0) {
         die(json_encode(['error' => 'Este email já está registrado.']));
     }
@@ -105,57 +101,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $conexao->begin_transaction();
-        
-        // Query atualizada para a estrutura da tabela
-       $sql = "INSERT INTO hospedes (
-    H_nome, H_email, H_senha, H_telefone, 
-    H_documento_ident, H_token_verificacao, H_token_expira,
-    H_verificado_email, H_aceitou_termos_uso
-) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)";
 
-        
+        $sql = "INSERT INTO hospedes (
+            H_nome, H_email, H_senha, H_telefone, 
+            H_documento_ident, H_token_verificacao, H_token_expira,
+            H_verificado_email, H_aceitou_termos_uso
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)";
+
         $stmt = $conexao->prepare($sql);
         if (!$stmt) {
             throw new Exception("Erro ao preparar a consulta: " . $conexao->error);
         }
-        
+
         $stmt->bind_param(
             "sssssss", 
             $nome, $email, $senha_hash, $telefone, 
             $documento, $token, $token_expira
         );
-        
+
         if (!$stmt->execute()) {
             throw new Exception("Erro ao executar a consulta: " . $stmt->error);
         }
-        
-        // Link de verificação CORRETO com o token
-        $verification_url = "http://" . $_SERVER['HTTP_HOST'] . "/login1/verify.php?token=" . urlencode($token);
-        
-        // Email de verificação
-        $subject = "Verifique seu email - Quinta Flores";
-        $body = "<h2>Bem-vindo à Quinta Flores!</h2>
-                <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar seu email:</p>
-                <p><a href='" . $verification_url . "'>Verificar Email</a></p>";
-        
+$subject = "✅ Verifique o seu email - Quinta Flores";
+
+$body = '
+<div style="font-family: Arial, sans-serif; background-color: #f0f8ff; padding: 30px; color: #333;">
+  <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 35px; text-align: center;">
+    <img src="cid:logotipo_cid" alt="Logotipo Quinta Flores" style="max-width: 140px; margin-bottom: 25px;">
+    <h2 style="color: #28a745; font-weight: 700; margin-bottom: 15px;">Bem-vindo à Quinta Flores 🥳!</h2>
+    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
+      A sua conta foi criada com sucesso. 😊<br>
+      Muito obrigado por se registar! 💚
+    </p>
+  </div>
+</div>';
+
+
         $conexao->commit();
-        
-        // Tentativa de enviar email
-        $email_sent = false;
-        try {
-            $email_sent = enviarEmail($email, $subject, $body);
-        } catch (Exception $e) {
-            error_log("Erro ao enviar email: " . $e->getMessage());
-        }
-        
+
+        $email_sent = enviarEmail($email, $subject, $body);
+
         if ($email_sent) {
-            echo json_encode(['success' => 'Registro bem-sucedido! Verifique seu email para confirmar a conta.']);
+            echo json_encode(['success' => 'Registro bem-sucedido! Verifique seu email para confirmar.']);
         } else {
             echo json_encode([
                 'warning' => 'Registro concluído, mas houve um problema ao enviar o email de verificação. Por favor, entre em contato com o suporte.'
             ]);
         }
-        
+
     } catch (Exception $e) {
         $conexao->rollback();
         error_log("Erro no registro: " . $e->getMessage());
@@ -165,4 +158,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: pagina_login.php");
     exit();
 }
-?>

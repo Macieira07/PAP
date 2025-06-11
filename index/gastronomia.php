@@ -24,7 +24,6 @@ include '../components/header.php';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="chatbot.css" />
     <link rel="stylesheet" href="gastronomia.css" />
     <link rel="stylesheet" href="../components/header.css">
 </head>
@@ -155,7 +154,6 @@ include '../components/header.php';
                 document.getElementById('langDropdown').classList.toggle('show');
             });
         }
-    
         // Fecha o dropdown ao clicar fora
         window.addEventListener('click', function(e) {
             if (!e.target.matches('.language-dropdown-btn') && !e.target.matches('.language-dropdown-btn *')) {
@@ -166,7 +164,6 @@ include '../components/header.php';
             }
         });
     }
-    
     // Função para trocar o idioma
     function changeLanguage(lang) {
         console.log('Changing language to: ' + lang);
@@ -178,7 +175,6 @@ include '../components/header.php';
                 btn.classList.add('active');
             }
         });
-    
         // Atualiza a bandeira no menu dropdown
         const currentFlag = document.getElementById('currentLangFlag');
         if (currentFlag) {
@@ -197,7 +193,6 @@ include '../components/header.php';
                     break;
             }
         }
-    
         // Tenta encontrar e alterar o seletor do Google Translate
         try {
             // Espera o elemento estar disponível - múltiplas tentativas
@@ -237,7 +232,6 @@ include '../components/header.php';
     }
 </script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="chatbot.js"></script>
     <script>
         // Initialize AOS (Animate On Scroll)
         AOS.init({
@@ -311,5 +305,9 @@ include '../components/header.php';
         });
     </script>
     <?php include '../components/footer.php'; ?>
+    <link rel="stylesheet" href="../chatbot/chatbot.css">
+<script src="../chatbot/chatbot.js"></script>
+<?php include '../chatbot/chatbot_config.php'; ?>
+<?php include '../chatbot/chatbot.php'; ?>
 </body>
 </html>

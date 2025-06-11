@@ -1,10 +1,6 @@
 <?php
 require '../conexao.php';
 session_start();
-$saldo_result = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1");
-$saldo = $saldo_result->fetch_assoc()['saldo'];
-echo "<p><strong>Saldo atual:</strong> " . number_format($saldo, 2) . "€</p>";
-
 // Filtros
 $where = "1=1";
 
@@ -75,7 +71,10 @@ $paginas = ceil($total_reservas / $por_pagina);
     </style>
 </head>
 <body>
-    <h1>Gestão de Reservas</h1>
+        <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=MCnPOwFJpCvG&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
+        <h1>Todos as Reservas</h1>
+    </div>
     <a href="admin.php">← Voltar</a>
     
     <div class="filter-form">

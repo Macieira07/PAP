@@ -28,10 +28,8 @@ include 'components/header.php'; ?>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="index/teste.css">
-    <link rel="stylesheet" href="includes/chatbot.css">
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
-    <link rel="stylesheet" type="text/css" href="../includes/chatbot.css">
     <link rel="stylesheet" type="text/css" href="assets/i18n/translator.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
     <title>QUINTA | FLORES</title>
@@ -83,113 +81,145 @@ include 'components/header.php'; ?>
 // Função para obter o ícone de acordo com o tipo de mensagem
 function getIconForType(type) {
   switch (type) {
-    case 'success': return 'fa-check-circle';
-    case 'error': return 'fa-exclamation-triangle';
-    case 'info': return 'fa-info-circle';
-    default: return 'fa-info-circle';
+    case 'success': return 'fa-check-circle';        // Ícone para sucesso
+    case 'error': return 'fa-exclamation-triangle';  // Ícone para erro
+    case 'info': return 'fa-info-circle';            // Ícone para informação
+    default: return 'fa-info-circle';                 // Ícone padrão
   }
 }
 
-// Função para mostrar mensagens flash
+document.addEventListener('DOMContentLoaded', () => {
+  const checkInInput = document.getElementById('checkIn');
+  const checkOutInput = document.getElementById('checkOut');
+
+  // Bloquear datas anteriores a hoje
+  const today = new Date().toISOString().split('T')[0];
+  checkInInput.min = today;
+  checkOutInput.min = today;
+
+  // Atualizar o mínimo do checkOut quando o checkIn for selecionado
+  checkInInput.addEventListener('change', () => {
+    const checkInDate = checkInInput.value;
+    if (checkInDate) {
+      checkOutInput.min = checkInDate;  // Garante que checkOut não seja antes do checkIn
+      // Se o checkOut atual for antes do checkIn, limpa o checkOut
+      if (checkOutInput.value && checkOutInput.value < checkInDate) {
+        checkOutInput.value = '';
+      }
+    }
+  });
+
+  // Liga o evento do botão para verificar disponibilidade
+  document.getElementById('searchBtn').addEventListener('click', checkAvailability);
+});
+
+// Função para mostrar mensagens "flash" no ecrã, com botão para fechar manualmente
 function showFlashMessage(message, type = 'success', duration = 4000) {
-  // Remover mensagens existentes
+  // Remove mensagens existentes (não mostrar várias ao mesmo tempo)
   document.querySelectorAll('.flash-message').forEach(msg => msg.remove());
 
-  // Criar o elemento da flash message
+  // Cria o elemento da flash message
   const flash = document.createElement('div');
   flash.classList.add('flash-message', `flash-${type}`);
   flash.innerHTML = `
-    <div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
       <i class="fa-solid ${getIconForType(type)}" style="font-size: 18px;"></i>
       <span>${message}</span>
     </div>
+    <button class="close-btn" aria-label="Fechar">&times;</button>
   `;
+
+  // Adiciona ao corpo do documento
   document.body.appendChild(flash);
 
-  // Mostrar animação de entrada
-  setTimeout(() => {
-    flash.style.transform = 'translateX(0)';
-    flash.style.opacity = '1';
-  }, 10);
-
-  // Remover após duração definida
-  setTimeout(() => {
+  // Evento para fechar manualmente ao clicar no botão "×"
+  flash.querySelector('.close-btn').addEventListener('click', () => {
     flash.classList.add('fade-out');
-    setTimeout(() => {
-      if (flash.parentNode) flash.remove();
-    }, 400);
-  }, duration);
+    setTimeout(() => flash.remove(), 400);
+  });
+
+  // Animação para mostrar a mensagem (entra da direita)
+// Mostrar animação de entrada
+setTimeout(() => {
+  flash.classList.add('show');
+}, 10);
+
+// Remover após duração definida
+setTimeout(() => {
+  flash.classList.remove('show');
+  flash.classList.add('fade-out');
+  setTimeout(() => {
+    if (flash.parentNode) flash.remove();
+  }, 500);
+}, duration);
+
 }
 
-// Função para verificar disponibilidade
+// Função que verifica a disponibilidade ao clicar no botão
 function checkAvailability() {
   const checkIn = document.getElementById('checkIn').value;
   const checkOut = document.getElementById('checkOut').value;
   const guests = document.getElementById('guests').value;
-  const resultDiv = document.getElementById('availabilityResult');
 
-  // Validações
+  // Validação: verifica se as datas foram preenchidas
   if (!checkIn || !checkOut) {
-    showFlashMessage('<?= I18n::get('error_checkIn_checkOut', 'Por favor, preencha as datas de check-in e check-out.') ?>', 'error');
-    resultDiv.innerHTML = '';
+    showFlashMessage('Por favor, preencha as datas de check-in e check-out.', 'error');
     return;
   }
 
+  // Converte as strings de data para objetos Date
   const checkInDate = new Date(checkIn);
   const checkOutDate = new Date(checkOut);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0); // Zera horas para comparar só datas
 
+  // Validação: check-in não pode ser anterior a hoje
   if (checkInDate < today) {
-    showFlashMessage('<?= I18n::get('error_checkIn_today', 'A data de check-in não pode ser anterior a hoje.') ?>', 'error');
+    showFlashMessage('A data de check-in não pode ser anterior a hoje.', 'error');
     return;
   }
 
+  // Validação: check-out tem que ser depois do check-in
   if (checkOutDate <= checkInDate) {
-    showFlashMessage('<?= I18n::get('error_checkOut_checkIn', 'A data de check-out deve ser posterior à de check-in.') ?>', 'error');
+    showFlashMessage('A data de check-out deve ser posterior à data de check-in.', 'error');
     return;
   }
 
+  // Validação: número de hóspedes deve estar entre 1 e 10
   if (guests < 1 || guests > 10) {
-    showFlashMessage('<?= I18n::get('error_guests', 'O número de hóspedes deve estar entre 1 e 10.') ?>', 'error');
+    showFlashMessage('O número de hóspedes deve estar entre 1 e 10.', 'error');
     return;
   }
 
-  // Estado de carregamento
-  resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <?= I18n::get('checking', 'A verificar disponibilidade...') ?>';
-  resultDiv.className = 'availability__message checking';
-  showFlashMessage('<?= I18n::get('checking', 'A verificar disponibilidade...') ?>', 'info', 2000);
+  // Mensagem de carregamento
+  showFlashMessage('A verificar disponibilidade...', 'info', 2000);
 
-  // Requisição simulada à API
+  // Faz uma requisição POST para o servidor (exemplo)
   fetch('index/verificar_disponibilidade.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ checkIn, checkOut, guests })
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('<?= I18n::get('error_comunication', 'Erro ao comunicar com o servidor.') ?>');
-      }
-      return response.json();
-    })
-    .then(data => {
-      resultDiv.innerHTML = data.message;
-      resultDiv.className = `availability__message ${data.available ? 'available' : 'unavailable'}`;
-
-      if (data.available) {
-        showFlashMessage('<?= I18n::get('success_available', 'Disponibilidade confirmada! As datas estão livres.') ?>', 'success');
-      } else {
-        showFlashMessage('<?= I18n::get('error_unavailable', 'Sem disponibilidade para as datas selecionadas.') ?>', 'error');
-      }
-    })
-    .catch(error => {
-      console.error('<?= I18n::get('error_general', 'Erro:') ?>', error);
-      showFlashMessage('<?= I18n::get('error_general', 'Ocorreu um erro ao verificar disponibilidade.') ?>', 'error');
-      resultDiv.innerHTML = '';
-    });
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Erro ao comunicar com o servidor.');
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.available) {
+      showFlashMessage('Disponibilidade confirmada! As datas estão livres.', 'success');
+    } else {
+      showFlashMessage('Sem disponibilidade para as datas selecionadas.', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    showFlashMessage('Ocorreu um erro ao verificar disponibilidade.', 'error');
+  });
 }
-document.getElementById('searchBtn').addEventListener('click', checkAvailability);
 </script>
+
     <!-- About Section -->
     <section class="section__container about__container" id="about">
       <div class="about__image">
@@ -606,13 +636,13 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
       </div>
     </section>
 <script>
-// Ícone de acordo com o tipo
+// Esta função devolve um ícone diferente conforme o tipo de mensagem (sucesso, erro, info)
 function getIconForType(type) {
   switch (type) {
-    case 'sucesso': return 'fa-check-circle';
-    case 'erro': return 'fa-exclamation-triangle';
-    case 'info': return 'fa-info-circle';
-    default: return 'fa-info-circle';
+    case 'sucesso': return 'fa-check-circle'; //icone de sucesso
+    case 'erro': return 'fa-exclamation-triangle'; //icone para erro
+    case 'info': return 'fa-info-circle';   //icone para informação
+    default: return 'fa-info-circle'; //icone padrao
   }
 }
 // Mostrar a flash message
@@ -644,5 +674,10 @@ function showFlashMessage(message, tipo = 'sucesso', duration = 4000) {
 <div id="toast" class="toast"></div>
     <script src="assets/i18n/translator.js"></script>
     <script src="../includes/chatbot.js"></script>
+    <!-- CHATBOT </body> -->
+<link rel="stylesheet" href="chatbot/chatbot.css">
+<script src="chatbot/chatbot.js"></script>
+<?php include 'chatbot/chatbot_config.php'; ?>
+<?php include 'chatbot/chatbot.php'; ?>
     </body>
     </html>

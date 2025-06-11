@@ -89,7 +89,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 </div>
 
 <div style="display: flex; align-items: center; gap: 10px;">
-    <img src="https://img.icons8.com/?size=100&id=37174&format=png&color=000000" style="height: 50px;">
+    <img src="https://img.icons8.com/?size=100&id=TDEKFc4RXwN_&format=png&color=000000" style="height: 50px;">
     <h1>Todos os Funcionários</h1>
 </div>
 

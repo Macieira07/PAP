@@ -2,64 +2,56 @@
 include "../conexao.php";
 session_start();
 
-// Função para mensagens flash
+// Flash message estilizada
 function set_flash($msg, $type = 'success') {
     $_SESSION['flash'] = ['msg' => $msg, 'type' => $type];
 }
 
 function show_flash() {
     if (!empty($_SESSION['flash'])) {
-        $color = $_SESSION['flash']['type'] === 'error' ? 'red' : 'green';
-        echo "<p style='color: $color; font-weight: bold;'>{$_SESSION['flash']['msg']}</p>";
+        $type = $_SESSION['flash']['type'];
+        $color = $type === 'error' ? '#f8d7da' : '#d4edda';
+        $border = $type === 'error' ? '#f5c6cb' : '#c3e6cb';
+        $text = $type === 'error' ? '#721c24' : '#155724';
+        echo "<div style='background:$color;border:1px solid $border;padding:10px;margin:10px 0;color:$text;border-radius:5px;font-weight:bold'>{$_SESSION['flash']['msg']}</div>";
         unset($_SESSION['flash']);
     }
 }
 
-// Obter saldo atual da conta_virtual
+// Obter saldo atual
 $saldoQuery = $conexao->query("SELECT saldo FROM conta_virtual WHERE id = 1");
 $saldoAtual = $saldoQuery->fetch_assoc()['saldo'] ?? 0;
 
-// Obter lista de hóspedes para dropdown
+// Obter hóspedes
 $hospedesResult = $conexao->query("SELECT H_id_hospede AS id, H_nome AS nome FROM hospedes ORDER BY H_nome ASC");
 $hospedes = [];
-if ($hospedesResult) {
-    while ($row = $hospedesResult->fetch_assoc()) {
-        $hospedes[] = $row;
-    }
+while ($row = $hospedesResult->fetch_assoc()) {
+    $hospedes[] = $row;
 }
 
-// --- Adicionar receita manual ---
+// Adicionar receita
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita'])) {
     $descricao = trim($_POST['descricao']);
     $valor = floatval($_POST['valor']);
     $tipo = $_POST['tipo'] ?? '';
     $origem = $_POST['origem'] ?? '';
     $id_hospede = $_POST['hospede'] ?? null;
-
-    // Validar inputs básicos
     $tipos_validos = ['gorjeta', 'reembolso', 'outro'];
     $origens_validas = ['dinheiro', 'mbway', 'transferencia bancaria'];
 
     if ($descricao === '' || $valor <= 0) {
-        set_flash("Por favor preencha a descrição e um valor válido para a receita.", 'error');
-    } elseif (!in_array($tipo, $tipos_validos)) {
-        set_flash("Tipo de receita inválido.", 'error');
-    } elseif (!in_array($origem, $origens_validas)) {
-        set_flash("Origem da receita inválida.", 'error');
+        set_flash("Por favor preencha a descrição e um valor válido.", 'error');
+    } elseif (!in_array($tipo, $tipos_validos) || !in_array($origem, $origens_validas)) {
+        set_flash("Tipo ou origem inválido(s).", 'error');
     } else {
-        // Inserir receita na base de dados
         $stmt = $conexao->prepare("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id) VALUES (?, ?, CURDATE(), ?, ?, ?)");
-        // Se não escolheram hóspede, usar 0
         $origem_id = is_numeric($id_hospede) ? intval($id_hospede) : 0;
         $stmt->bind_param('sdssi', $descricao, $valor, $tipo, $origem, $origem_id);
-
         if ($stmt->execute()) {
-            // Atualizar saldo (acrescentar valor da receita)
             $stmt2 = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo + ? WHERE id = 1");
             $stmt2->bind_param('d', $valor);
             $stmt2->execute();
             $stmt2->close();
-
             set_flash("Receita adicionada com sucesso!");
         } else {
             set_flash("Erro ao adicionar receita.", 'error');
@@ -70,64 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita']))
     }
 }
 
-// --- Recolher dinheiro ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recolher_dinheiro'])) {
-    $valor = floatval($_POST['valor_recolher']);
-    
-    if ($valor <= 0) {
-        set_flash("Por favor insira um valor válido para recolher.", 'error');
-    } elseif ($valor > $saldoAtual) {
-        set_flash("Não pode recolher mais dinheiro do que o saldo disponível.", 'error');
-    } else {
-        // Atualizar saldo (subtrair valor recolhido)
-        $stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo - ? WHERE id = 1");
-        $stmt->bind_param('d', $valor);
-        
-        if ($stmt->execute()) {
-            // Registrar a movimentação
-            $descricao = "Recolha de dinheiro";
-            $stmt2 = $conexao->prepare("INSERT INTO movimentacoes (tipo, descricao, valor, origem, data) VALUES ('despesa', ?, ?, 'recolha', NOW())");
-            $stmt2->bind_param('sd', $descricao, $valor);
-            $stmt2->execute();
-            $stmt2->close();
-            
-            set_flash("Recolheu €" . number_format($valor, 2, ',', '.') . " com sucesso!");
-        } else {
-            set_flash("Erro ao recolher dinheiro.", 'error');
-        }
-        $stmt->close();
-        header("Location: receitas.php");
-        exit;
-    }
-}
-
-// --- Recolher tudo ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recolher_tudo'])) {
-    if ($saldoAtual <= 0) {
-        set_flash("Não há dinheiro disponível para recolher.", 'error');
-    } else {
-        // Atualizar saldo (zerar)
-        $stmt = $conexao->prepare("UPDATE conta_virtual SET saldo = 0 WHERE id = 1");
-        
-        if ($stmt->execute()) {
-            // Registrar a movimentação
-            $descricao = "Recolha total de dinheiro";
-            $stmt2 = $conexao->prepare("INSERT INTO movimentacoes (tipo, descricao, valor, origem, data) VALUES ('despesa', ?, ?, 'recolha', NOW())");
-            $stmt2->bind_param('sd', $descricao, $saldoAtual);
-            $stmt2->execute();
-            $stmt2->close();
-            
-            set_flash("Recolheu todo o dinheiro (€" . number_format($saldoAtual, 2, ',', '.') . ") com sucesso!");
-        } else {
-            set_flash("Erro ao recolher todo o dinheiro.", 'error');
-        }
-        $stmt->close();
-        header("Location: receitas.php");
-        exit;
-    }
-}
-
-// --- Buscar receitas da tabela receitas ---
+// Obter receitas
 $sql = "SELECT * FROM receitas ORDER BY R_data DESC, R_id_receita DESC";
 $result = $conexao->query($sql);
 $receitas = [];
@@ -135,6 +70,10 @@ if ($result) {
     while ($row = $result->fetch_assoc()) {
         $receitas[] = $row;
     }
+}
+$hospedesMap = [];
+foreach ($hospedes as $h) {
+    $hospedesMap[$h['id']] = $h['nome'];
 }
 ?>
 
@@ -147,48 +86,54 @@ if ($result) {
     <style>
         .saldo-positivo { color: green; }
         .saldo-negativo { color: red; }
-        .recolher-container {
-            margin: 20px 0;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 5px;
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
+            z-index: 1000;
         }
-        .recolher-container input {
-            padding: 5px;
-            margin-right: 10px;
+        .modal-content {
+            background: white; padding: 20px; border-radius: 8px; min-width: 320px;
+            max-width: 90%; max-height: 80vh; overflow-y: auto;
         }
-        .recolher-container button {
-            padding: 5px 10px;
-            margin-right: 10px;
+        .modal-header {
+            font-weight: bold; margin-bottom: 10px;
+        }
+        .close-btn {
+            float: right; cursor: pointer; font-size: 20px;
+        }
+        table {
+            border-collapse: collapse; width: 100%;
+        }
+        table th, table td {
+            border: 1px solid #ccc; padding: 8px; text-align: left;
+        }
+        table th {
+            background-color: #eee;
+        }
+        button {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-
-<h2>Saldo atual: <span class="<?= $saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'; ?>">€<?= number_format($saldoAtual, 2, ',', '.'); ?></span></h2>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://img.icons8.com/?size=100&id=p2scHNLP9nSb&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
+        <h1>Todos as Receitas </h1>
+    </div>
+<h3>Saldo atual: 
+    <span class="<?= $saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'; ?>">
+        €<?= number_format($saldoAtual, 2, ',', '.'); ?>
+    </span>
+</h3>
 
 <?php show_flash(); ?>
 
-<a href="admin.php">← Voltar</a>
-
-<!-- Formulário para recolher dinheiro -->
-<div class="recolher-container">
-    <h3>Recolher Dinheiro</h3>
-    <form method="post" action="receitas.php">
-        <label>Valor a recolher (€): 
-            <input type="number" step="0.01" min="0.01" name="valor_recolher" value="<?= number_format($saldoAtual, 2, '.', '') ?>" required>
-        </label>
-        <button type="submit" name="recolher_dinheiro">Recolher</button>
-        <button type="submit" name="recolher_tudo">Recolher Tudo</button>
-    </form>
-</div>
-
+<!-- Adicionar Receita -->
 <h3>Adicionar Receita Manual</h3>
 <form method="post" action="receitas.php" style="margin-bottom: 20px;">
     <label>Descrição: <input type="text" name="descricao" required></label>
-    &nbsp;&nbsp;
-    <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" required></label>
-    <br><br>
+    <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" required></label><br><br>
     <label>Tipo:
         <select name="tipo" required>
             <option value="">-- Selecionar --</option>
@@ -197,7 +142,6 @@ if ($result) {
             <option value="outro">Outro</option>
         </select>
     </label>
-    &nbsp;&nbsp;
     <label>Origem:
         <select name="origem" required>
             <option value="">-- Selecionar --</option>
@@ -205,8 +149,7 @@ if ($result) {
             <option value="mbway">MB Way</option>
             <option value="transferencia bancaria">Transferência Bancária</option>
         </select>
-    </label>
-    <br><br>
+    </label><br><br>
     <label>Hóspede (opcional):
         <select name="hospede">
             <option value="0">Nenhum</option>
@@ -215,50 +158,66 @@ if ($result) {
             <?php endforeach; ?>
         </select>
     </label>
-    &nbsp;&nbsp;
     <button type="submit" name="adicionar_receita">Adicionar Receita</button>
 </form>
+<a href="admin.php">← Voltar</a>
 
-<h3>Lista de Receitas</h3>
-<table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%;">
+<!-- Tabela de Receitas -->
+<table>
     <thead>
-        <tr style="background: #eee;">
+        <tr>
             <th>ID</th>
             <th>Descrição</th>
-            <th>Valor (€)</th>
             <th>Data</th>
-            <th>Tipo</th>
-            <th>Origem</th>
-            <th>Hóspede Associado</th>
+            <th>Detalhes</th>
         </tr>
     </thead>
     <tbody>
         <?php if (empty($receitas)): ?>
-            <tr><td colspan="7" style="text-align:center;">Nenhuma receita encontrada.</td></tr>
+            <tr><td colspan="4" style="text-align:center;">Nenhuma receita encontrada.</td></tr>
         <?php else: ?>
-            <?php
-            // Para mostrar nome do hóspede associado, vamos buscar a lista dos hóspedes num array para acesso rápido
-            $hospedesMap = [];
-            foreach ($hospedes as $h) {
-                $hospedesMap[$h['id']] = $h['nome'];
-            }
-            ?>
             <?php foreach ($receitas as $r): ?>
                 <tr>
-                    <td><?= htmlspecialchars($r['R_id_receita']) ?></td>
+                    <td><?= $r['R_id_receita'] ?></td>
                     <td><?= htmlspecialchars($r['R_descricao']) ?></td>
-                    <td><?= number_format($r['R_valor'], 2, ',', '.') ?></td>
                     <td><?= date('d/m/Y', strtotime($r['R_data'])) ?></td>
-                    <td><?= htmlspecialchars($r['R_tipo']) ?></td>
-                    <td><?= htmlspecialchars($r['R_origem']) ?></td>
-                    <td>
-                        <?= isset($hospedesMap[$r['R_origem_id']]) ? htmlspecialchars($hospedesMap[$r['R_origem_id']]) : '-' ?>
-                    </td>
+                    <td><button onclick='abrirModal(<?= htmlspecialchars(json_encode($r)) ?>)'>Ver</button></td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>
     </tbody>
 </table>
+<a href="admin.php">← Voltar
+<!-- Modal -->
+<div id="modal" class="modal" onclick="fecharModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="fecharModal()">×</span>
+        <div class="modal-header">Detalhes da Receita</div>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+function abrirModal(receita) {
+    const body = document.getElementById('modal-body');
+    const hospede = <?= json_encode($hospedesMap) ?>;
+    body.innerHTML = `
+        <p><strong>ID:</strong> ${receita.R_id_receita}</p>
+        <p><strong>Descrição:</strong> ${receita.R_descricao}</p>
+        <p><strong>Valor:</strong> €${parseFloat(receita.R_valor).toFixed(2).replace('.', ',')}</p>
+        <p><strong>Data:</strong> ${new Date(receita.R_data).toLocaleDateString('pt-PT')}</p>
+        <p><strong>Tipo:</strong> ${receita.R_tipo}</p>
+        <p><strong>Origem:</strong> ${receita.R_origem}</p>
+        <p><strong>Hóspede:</strong> ${hospede[receita.R_origem_id] || '-'}</p>
+    `;
+    document.getElementById('modal').style.display = 'flex';
+}
+function fecharModal(event) {
+    if (!event || event.target.id === 'modal' || event.target.classList.contains('close-btn')) {
+        document.getElementById('modal').style.display = 'none';
+    }
+}
+</script>
 
 </body>
 </html>

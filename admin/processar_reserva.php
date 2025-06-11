@@ -67,11 +67,14 @@ $cesto = (isset($_POST['cesto_boas_vindas'])) ? 10 : 0;
 $preco_total += $decoracao + $limpeza + $cesto;
 
 // Inserir reserva na base de dados
+$origem = $_POST['origem'] ?? 'presencial'; // Default para presencial se não enviado
+
 $stmt = $conexao->prepare("INSERT INTO reservas 
                           (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 
-                          R_num_hospedes, R_preco_total, R_estado) 
-                          VALUES (?, ?, ?, ?, ?, ?, 'pendente')");
-$stmt->bind_param("iissid", $id_hospede, $id_casa, $data_checkin, $data_checkout, $num_hospedes, $preco_total);
+                          R_num_hospedes, R_preco_total, R_estado, R_origem) 
+                          VALUES (?, ?, ?, ?, ?, ?, 'pendente', ?)");
+$stmt->bind_param("iissids", $id_hospede, $id_casa, $data_checkin, $data_checkout, 
+                 $num_hospedes, $preco_total, $origem);
 $stmt->execute();
 $reserva_id = $stmt->insert_id;
 $stmt->close();

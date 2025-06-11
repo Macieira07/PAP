@@ -230,7 +230,7 @@
         
 
         .form-footer a {
-            color: var(--primary-color);
+            color: white;
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;

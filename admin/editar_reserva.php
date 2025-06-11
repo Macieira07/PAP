@@ -111,6 +111,14 @@ $stmt->close();
     <option value="transferencia">Transferência</option>
     <option value="cartao">Cartão de Crédito</option>
   </select><br><br>
+  <label for="origem">
+    <i class="fa-solid fa-phone"></i> Origem:
+</label><br>
+<select name="origem" id="origem" required>
+    <option value="presencial" <?= $reserva['R_origem'] == 'presencial' ? 'selected' : '' ?>>Presencial</option>
+    <option value="chamada" <?= $reserva['R_origem'] == 'chamada' ? 'selected' : '' ?>>Por Chamada</option>
+    <option value="online" <?= $reserva['R_origem'] == 'online' ? 'selected' : '' ?>>Online</option>
+</select><br><br>
 
   <label for="estado">
     <i class="fa-solid fa-info-circle"></i> Estado:

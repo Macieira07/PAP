@@ -550,74 +550,108 @@
   height: 100%;
   border: none;
 }
-
-/* ===== FLASH MESSAGES ===== */
+/* ===== FLASH MESSAGES MELHORADAS ===== */
 .flash-message {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 9999;
-  min-width: 300px;
+  min-width: 320px;
   max-width: 420px;
-  padding: 16px 20px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.12);
-  color: white;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transform: translateX(100%);
-  opacity: 0;
-  transition: all 0.4s ease-in-out;
-  font-family: "Montserrat", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  animation: slideInBounce 0.6s ease-out;
+  padding: 18px 24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
+.flash-message.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.flash-message.fade-out {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Ícone */
 .flash-message i {
-  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  font-size: 20px;
   padding: 10px;
   border-radius: 50%;
-  font-size: 16px;
-  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
+/* Tipos de mensagem com gradiente e borda esquerda */
 .flash-success {
-  background: linear-gradient(135deg, #16a34aee, #15803Dee);
-  border-left: 5px solid #22c55e;
+  background: linear-gradient(135deg, #22c55ecc, #16a34acc);
+  border-left: 6px solid #22c55e;
 }
-
 .flash-error {
-  background: linear-gradient(135deg, #dc2626ee, #b91c1cee);
-  border-left: 5px solid #ef4444;
+  background: linear-gradient(135deg, #ef4444cc, #b91c1ccc);
+  border-left: 6px solid #ef4444;
 }
-
 .flash-info {
-  background: linear-gradient(135deg, #2563ebee, #1d4ed8ee);
-  border-left: 5px solid #3b82f6;
+  background: linear-gradient(135deg, #3b82f6cc, #2563ebcc);
+  border-left: 6px solid #3b82f6;
 }
 
-.flash-success i { color: #bbf7d0; }
-.flash-error i { color: #fecaca; }
-.flash-info i { color: #bfdbfe; }
-
-.flash-message:hover {
-  transform: translateX(-5px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+/* Ícones coloridos conforme tipo */
+.flash-success i {
+  color: #d1fae5;
+}
+.flash-error i {
+  color: #fecaca;
+}
+.flash-info i {
+  color: #bfdbfe;
 }
 
+/* Botão fechar */
 .flash-message .close-btn {
   margin-left: auto;
   background: transparent;
   border: none;
-  color: white;
-  font-size: 16px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
   cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1;
+  user-select: none;
 }
+
+.flash-message .close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #eee;
+}
+
+/* Texto dentro da flash */
+.flash-message span {
+  flex: 1;
+  user-select: text;
+  word-break: break-word;
+}
+
 
 /* ===== NEWSLETTER ===== */
 .newsletter h4 {
