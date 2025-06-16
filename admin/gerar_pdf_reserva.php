@@ -1,16 +1,19 @@
 <?php
 // Configurações básicas
-define('SITE_NAME', 'Quinta  Flores');
+define('SITE_NAME', 'Quinta Flores');
 define('PRIMARY_COLOR', '#4a8f29');
 define('EMAIL_COLOR', '#4a8f29');
 define('CONTACT_PHONE', '+351 912 418 976');
 define('CONTACT_EMAIL', 'quinta.flores2019@gmail.com');
 define('PROPERTY_ADDRESS', 'Travessa da Seara 265-Calheiros, Ponte de Lima');
 define('RNAL', 'AL123456'); // Número de registo de alojamento local
+
 require __DIR__ . '/../pagamento/tcpdf/tcpdf.php';
 require __DIR__ . '/../conexao.php';
+
 if (!isset($_GET['id'])) die('Reserva não especificada.');
 $reserva_id = (int)$_GET['id'];
+
 // Obter dados da reserva
 $query = "SELECT r.*, h.H_nome, h.H_email, h.H_telefone, c.C_nome, c.C_preco_noite
           FROM reservas r
@@ -24,6 +27,7 @@ $res = $stmt->get_result();
 if ($res->num_rows === 0) die('Reserva não encontrada.');
 $r = $res->fetch_assoc();
 $stmt->close();
+
 // Cálculos
 $checkin = new DateTime($r['R_data_checkin']);
 $checkout = new DateTime($r['R_data_checkout']);
@@ -32,6 +36,7 @@ $num_noites = $diferenca->days;
 $preco_por_noite = $r['C_preco_noite'];
 $preco_total = $r['R_preco_total'];
 $metodo_pagamento = $r['R_metodo_pagamento'];
+
 // Verificar se é uma oferta especial
 $oferta_info = '';
 $codigos_oferta = [
@@ -39,6 +44,7 @@ $codigos_oferta = [
     'PARTY260' => 'Pacote Festa com Amigos (2 noites - €260)',
     'RETIRO240' => 'Pacote Retiro na Catequese (2 noites - €240)'
 ];
+
 // Extrair código de oferta dos serviços se existir
 if (!empty($r['R_servicos'])) {
     foreach ($codigos_oferta as $codigo => $descricao) {
@@ -48,6 +54,7 @@ if (!empty($r['R_servicos'])) {
         }
     }
 }
+
 // Extrair serviços adicionais
 $servicos_adicionais = [];
 if (!empty($r['R_servicos']) && strtolower($r['R_servicos']) != 'nenhum serviço adicional') {
@@ -66,6 +73,7 @@ if (!empty($r['R_servicos']) && strtolower($r['R_servicos']) != 'nenhum serviço
         }
     }
 }
+
 // Configurar PDF
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 $pdf->SetCreator(SITE_NAME);
@@ -75,17 +83,20 @@ $pdf->SetSubject('Fatura de Alojamento Local');
 $pdf->SetMargins(15, 15, 15);
 $pdf->SetAutoPageBreak(TRUE, 15);
 $pdf->AddPage();
+
 // Cabeçalho
 $pdf->SetFont('helvetica', 'B', 16);
 $pdf->Cell(0, 8, SITE_NAME, 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 10);
 $pdf->Cell(0, 5, 'Alojamento Local • RNAL: ' . RNAL, 0, 1, 'L');
 $pdf->Cell(0, 5, 'Telefone: ' . CONTACT_PHONE . ' • Email: ' . CONTACT_EMAIL, 0, 1, 'L');
+
 // Linha divisória
 $pdf->SetDrawColor(74, 143, 41);
 $pdf->SetLineWidth(0.5);
 $pdf->Line(15, $pdf->GetY()+3, 195, $pdf->GetY()+3);
 $pdf->Ln(8);
+
 // Título
 $pdf->SetFont('helvetica', 'B', 14);
 $pdf->Cell(0, 8, 'FATURA/RECIBO', 0, 1, 'L');
@@ -173,7 +184,8 @@ $pdf->Ln(10);
 $pdf->SetFont('helvetica', 'I', 8);
 $pdf->MultiCell(0, 4, 'Este documento serve como fatura-recibo nos termos do artigo 42.º do Código do IVA. Isento de IVA - alínea 14 do artigo 9.º do Código do IVA.', 0, 'L');
 $pdf->Ln(5);
-$pdf->Cell(0, 4, 'Processado por sistema automático em ' . date('d/m/Y H:i'), 0, 1, 'L');   
+$pdf->Cell(0, 4, 'Processado por sistema automático em ' . date('d/m/Y H:i'), 0, 1, 'L');
+
 // Output do PDF
 $filename = 'Fatura_Reserva_' . str_pad($reserva_id, 5, '0', STR_PAD_LEFT) . '.pdf';
 $pdf->Output($filename, 'I');

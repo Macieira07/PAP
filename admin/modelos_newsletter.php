@@ -25,7 +25,7 @@ $result = $conexao->query("SELECT * FROM modelos_newsletter ORDER BY MN_data_cri
 <head>
     <meta charset="UTF-8" />
     <title>Modelos Newsletter - Listar</title>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
 </head>
 <body>
     <h1 style="display: flex; align-items: center; gap: 10px;">

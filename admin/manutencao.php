@@ -20,7 +20,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
 <head>
     <meta charset="UTF-8">
     <title>Manutenções</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <style>

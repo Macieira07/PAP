@@ -22,6 +22,7 @@
         <button class="quick-btn" data-query="preços"><?= I18n::get('chatbot_quick_precos', 'Preços') ?></button>
         <button class="quick-btn" data-query="localização"><?= I18n::get('chatbot_quick_localizacao', 'Localização') ?></button>
         <button class="quick-btn" data-query="contato"><?= I18n::get('chatbot_quick_contato', 'Contato') ?></button>
+        <button class="quick-btn" data-query="Deixar Avaliação"><?= I18n::get('chatbot_quick_avaliacao', 'Deixar Avaliação') ?></button>
     </div>
 </div>
 <button id="chatbot-toggle" class="chatbot-toggle">

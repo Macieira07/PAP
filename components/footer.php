@@ -75,15 +75,20 @@
     </div>
   </div>
 
-  <!-- Barra inferior -->
-  <div class="footer__bar">
+<!-- Barra inferior -->
+<div class="footer__bar">
+  <p style="margin: 0;">
     Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
-  </div>
+    |
+    <a href="politica-de-privacidade.php" style="color: #a3a3a3;">Política de Privacidade</a>
+    |
+    <a href="politica-de-cookies.php" style="color: #a3a3a3;">Política de Cookies</a>
+  </p>
+</div>
 
-  <!-- Botão Voltar ao Topo -->
-  <a href="#" class="back-to-top" title="Voltar ao topo">↑</a>
+<!-- Botão Voltar ao Topo -->
+<a href="#" class="back-to-top" title="Voltar ao topo">↑</a>
 </footer>
-
 <script>
   // Submissão AJAX da newsletter
   document.getElementById("newsletterForm").addEventListener("submit", function (e) {
@@ -115,3 +120,5 @@
     });
   });
 </script>
+
+

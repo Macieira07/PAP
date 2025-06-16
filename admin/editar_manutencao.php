@@ -38,7 +38,7 @@ $casas_resultado = $conexao->query("SELECT * FROM casas");
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
     <title>Editar Manutenção</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
 </head>
 <body>
 <div style="display: flex; align-items: center; gap: 10px;">

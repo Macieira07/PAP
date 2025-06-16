@@ -217,8 +217,6 @@
 [data-theme="dark"] .quick-btn:hover {
     background-color: var(--chatbot-primary);
 }
-
-
 /*BOTAO LIMPAR CONVERSA*/
 .chatbot-btn-clear {
     background: transparent;
@@ -230,8 +228,6 @@
     padding: 5px;
     transition: color 0.2s ease;
 }
-
-
 /*ANIMACOES PARA A CONVERSA*/
 /* Entrada do user - slide da direita + fade + glow */
 @keyframes userMessageIn {
@@ -346,7 +342,6 @@
     transform: translateY(-4px);  /* menos “bounce” para suavizar */
   }
 }
-
 /* Scroll suave ao abrir o chat */
 #chatbot-container.chatbot-visible {
   animation: fadeInContainer 0.4s ease forwards;

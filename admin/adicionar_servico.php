@@ -18,9 +18,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Inserção de serviço
-    $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssdi", $nome_servico, $descricao, $preco, $categoria_servico);
+    // Tratamento da imagem (opcional)
+    $imagem_path = null;
+
+    if (isset($_FILES['imagem_servico']) && $_FILES['imagem_servico']['error'] === UPLOAD_ERR_OK) {
+        $arquivo_tmp = $_FILES['imagem_servico']['tmp_name'];
+        $nome_arquivo = basename($_FILES['imagem_servico']['name']);
+        $extensao = strtolower(pathinfo($nome_arquivo, PATHINFO_EXTENSION));
+
+        $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($extensao, $extensoes_permitidas)) {
+            $novo_nome = uniqid('servico_') . '.' . $extensao;
+            $diretorio_upload = '../fotos_servicos/';
+
+            if (!is_dir($diretorio_upload)) {
+                mkdir($diretorio_upload, 0755, true);
+            }
+
+            $caminho_final = $diretorio_upload . $novo_nome;
+
+            if (move_uploaded_file($arquivo_tmp, $caminho_final)) {
+                $imagem_path = 'fotos_servicos/' . $novo_nome;
+            } else {
+                echo "Erro ao salvar a imagem.";
+                exit;
+            }
+        } else {
+            echo "Formato de imagem não permitido. Use jpg, jpeg, png ou gif.";
+            exit;
+        }
+    }
+
+    // Inserção com ou sem imagem
+    if ($imagem_path) {
+        $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id, S_imagem) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssdis", $nome_servico, $descricao, $preco, $categoria_servico, $imagem_path);
+    } else {
+        $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssdi", $nome_servico, $descricao, $preco, $categoria_servico);
+    }
+
     $stmt->execute();
 
     header("Location: servicos.php");
@@ -33,59 +71,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Adicionar Serviço</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     
     <script>
     const servicos = {
-        servico_limpeza_casa: {
-            nome: "Limpeza da Casa",
-            preco: 100,
-            descricao: "Serviço completo de limpeza da casa.",
+        servico_limpeza_piscina: {
+            nome: "Limpeza da Piscina",
+            preco: 200,
+            descricao: "Serviço completo de limpeza da piscina.",
             categoria: "Serviços de Limpeza"
         },
-        servico_limpeza_jardim: {
-            nome: "Limpeza do Jardim",
-            preco: 500,
-            descricao: "Manutenção e limpeza do jardim.",
+        servico_manutencao_jardim: {
+            nome: "Manutenção do Jardim",
+            preco: 300,
+            descricao: "Manutenção e cuidado do jardim.",
             categoria: "Serviços de Limpeza"
         },
-        servico_recepcao: {
-            nome: "Recepção 24h",
-            preco: 50,
-            descricao: "Atendimento disponível 24 horas por dia.",
-            categoria: "Serviços Básicos"
+        servico_reparacao_equipamentos: {
+            nome: "Reparação de Equipamentos (TV, AC, etc.)",
+            preco: 0,
+            descricao: "Reparação de equipamentos variados. Preço variável conforme o serviço.",
+            categoria: "Serviços Técnicos"
         },
-        servico_concierge: {
-            nome: "Concierge",
-            preco: 150,
-            descricao: "Serviço de apoio personalizado para hóspedes.",
-            categoria: "Serviços de Luxo"
-        },
-        servico_deposito_bagagem: {
-            nome: "Depósito de Bagagens",
-            preco: 30,
-            descricao: "Guarda segura de bagagens.",
-            categoria: "Serviços Adicionais"
-        },
-        servico_lavanderia: {
-            nome: "Lavanderia",
+        servico_lavandaria: {
+            nome: "Serviço de Lavandaria (Toalhas/Roupas de cama)",
             preco: 80,
-            descricao: "Serviço de lavagem e secagem de roupas.",
+            descricao: "Lavagem e tratamento de toalhas e roupas de cama.",
             categoria: "Serviços Adicionais"
         },
-        servico_caixa_segurança: {
-            nome: "Caixa de Segurança",
-            preco: 20,
-            descricao: "Armazenamento seguro de objetos de valor.",
-            categoria: "Serviços de Segurança"
+        servico_compra_higiene: {
+            nome: "Compra de Produtos de Higiene",
+            preco: 40,
+            descricao: "Aquisição de produtos de higiene pessoal e limpeza.",
+            categoria: "Serviços Adicionais"
         },
-        servico_wifi: {
-            nome: "Wi-Fi Gratuito",
-            preco: 10,
-            descricao: "Acesso gratuito à internet sem fios.",
-            categoria: "Tecnologia"
+        servico_reposicao_gas_carvao: {
+            nome: "Reposição de Gás / Carvão",
+            preco: 35,
+            descricao: "Reposição de gás ou carvão para churrasqueira ou fogão.",
+            categoria: "Serviços Gerais"
+        },
+        servico_desinfestacao: {
+            nome: "Desinfestação / Controlo de Pragas",
+            preco: 150,
+            descricao: "Serviço de desinfestação e controlo de pragas.",
+            categoria: "Serviços de Limpeza"
+        },
+        servico_limpeza_geral: {
+            nome: "Serviço de Limpeza Geral (final de estadia)",
+            preco: 100,
+            descricao: "Limpeza completa após saída dos hóspedes.",
+            categoria: "Serviços de Limpeza"
+        },
+        servico_canalizacao_eletricidade: {
+            nome: "Serviço de Canalização / Eletricidade",
+            preco: 120,
+            descricao: "Reparações e manutenção de canalização e eletricidade.",
+            categoria: "Serviços Técnicos"
+        },
+        servico_manutencao_churrasco: {
+            nome: "Manutenção do Churrasco / Grelhador",
+            preco: 50,
+            descricao: "Limpeza e manutenção do churrasco ou grelhador.",
+            categoria: "Serviços Gerais"
+        },
+        servico_compra_consumiveis: {
+            nome: "Compra de Consumíveis (Papel, Detergentes, etc.)",
+            preco: 30,
+            descricao: "Compra de consumíveis para o funcionamento da casa.",
+            categoria: "Serviços Adicionais"
+        },
+        servico_transporte_materiais: {
+            nome: "Transporte de materiais / Entregas",
+            preco: 25,
+            descricao: "Serviço de transporte e entregas diversas.",
+            categoria: "Serviços Gerais"
+        },
+        servico_renovacao_plantas: {
+            nome: "Renovação de Plantas / Jardins",
+            preco: 60,
+            descricao: "Renovação e reposição de plantas e jardins.",
+            categoria: "Serviços de Limpeza"
+        },
+        servico_pintura_reparacao: {
+            nome: "Pintura / Reparação de Estrutura",
+            preco: 200,
+            descricao: "Serviços de pintura e reparação de estruturas.",
+            categoria: "Serviços Técnicos"
+        },
+        servico_checkup_seguranca: {
+            nome: "Check-up de Segurança (extintores, alarmes, etc.)",
+            preco: 90,
+            descricao: "Verificação e manutenção de sistemas de segurança.",
+            categoria: "Serviços de Segurança"
         }
     };
 
@@ -122,32 +202,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=rk8gMHQsBQHb&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
-        <h1>Adicionar Serviço</h1>
+        <img src="https://img.icons8.com/?size=100&id=GtKvA4suLFWD&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
+        <h1>Adicionar Novo Serviço</h1>
     </div>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
+        <fieldset>
+            <legend>Selecione os Serviços:</legend>
+            <?php foreach ($servicos = [
+                'servico_limpeza_piscina' => ['nome'=>'Limpeza da Piscina', 'preco'=>200, 'descricao'=>'Serviço completo de limpeza da piscina.', 'categoria'=>'Serviços de Limpeza'],
+                'servico_manutencao_jardim' => ['nome'=>'Manutenção do Jardim', 'preco'=>300, 'descricao'=>'Manutenção e cuidado do jardim.', 'categoria'=>'Serviços de Limpeza'],
+                'servico_reparacao_equipamentos' => ['nome'=>'Reparação de Equipamentos (TV, AC, etc.)', 'preco'=>0, 'descricao'=>'Reparação de equipamentos variados. Preço variável conforme o serviço.', 'categoria'=>'Serviços Técnicos'],
+                'servico_lavandaria' => ['nome'=>'Serviço de Lavandaria (Toalhas/Roupas de cama)', 'preco'=>80, 'descricao'=>'Lavagem e tratamento de toalhas e roupas de cama.', 'categoria'=>'Serviços Adicionais'],
+                'servico_compra_higiene' => ['nome'=>'Compra de Produtos de Higiene', 'preco'=>40, 'descricao'=>'Aquisição de produtos de higiene pessoal e limpeza.', 'categoria'=>'Serviços Adicionais'],
+                'servico_reposicao_gas_carvao' => ['nome'=>'Reposição de Gás / Carvão', 'preco'=>35, 'descricao'=>'Reposição de gás ou carvão para churrasqueira ou fogão.', 'categoria'=>'Serviços Gerais'],
+                'servico_desinfestacao' => ['nome'=>'Desinfestação / Controlo de Pragas', 'preco'=>150, 'descricao'=>'Serviço de desinfestação e controlo de pragas.', 'categoria'=>'Serviços de Limpeza'],
+                'servico_limpeza_geral' => ['nome'=>'Serviço de Limpeza Geral (final de estadia)', 'preco'=>100, 'descricao'=>'Limpeza completa após saída dos hóspedes.', 'categoria'=>'Serviços de Limpeza'],
+                'servico_canalizacao_eletricidade' => ['nome'=>'Serviço de Canalização / Eletricidade', 'preco'=>120, 'descricao'=>'Reparações e manutenção de canalização e eletricidade.', 'categoria'=>'Serviços Técnicos'],
+                'servico_manutencao_churrasco' => ['nome'=>'Manutenção do Churrasco / Grelhador', 'preco'=>50, 'descricao'=>'Limpeza e manutenção do churrasco ou grelhador.', 'categoria'=>'Serviços Gerais'],
+                'servico_compra_consumiveis' => ['nome'=>'Compra de Consumíveis (Papel, Detergentes, etc.)', 'preco'=>30, 'descricao'=>'Compra de consumíveis para o funcionamento da casa.', 'categoria'=>'Serviços Adicionais'],
+                'servico_transporte_materiais' => ['nome'=>'Transporte de materiais / Entregas', 'preco'=>25, 'descricao'=>'Serviço de transporte e entregas diversas.', 'categoria'=>'Serviços Gerais'],
+                'servico_renovacao_plantas' => ['nome'=>'Renovação de Plantas / Jardins', 'preco'=>60, 'descricao'=>'Renovação e reposição de plantas e jardins.', 'categoria'=>'Serviços de Limpeza'],
+                'servico_pintura_reparacao' => ['nome'=>'Pintura / Reparação de Estrutura', 'preco'=>200, 'descricao'=>'Serviços de pintura e reparação de estruturas.', 'categoria'=>'Serviços Técnicos'],
+                'servico_checkup_seguranca' => ['nome'=>'Check-up de Segurança (extintores, alarmes, etc.)', 'preco'=>90, 'descricao'=>'Verificação e manutenção de sistemas de segurança.', 'categoria'=>'Serviços de Segurança'],
+            ] as $id => $s): ?>
+                <label>
+                    <input type="checkbox" id="<?= $id ?>" onclick="atualizarPreco()">
+                    <?= $s['nome'] ?> (€<?= $s['preco'] ?>)
+                </label><br>
+            <?php endforeach; ?>
+        </fieldset>
+
+        <br>
         Nome do Serviço: <input type="text" id="nome_servico" name="nome_servico" required><br><br>
-        Descrição: <textarea id="descricao" name="descricao"></textarea><br><br>
+        Descrição:<br>
+        <textarea id="descricao" name="descricao" rows="5" cols="40" required></textarea><br><br>
 
-        <h3>Escolha os Serviços:</h3>
-        <label><input type="checkbox" id="servico_limpeza_casa" onclick="atualizarPreco()"> Limpeza da Casa (100€)</label><br>
-        <label><input type="checkbox" id="servico_limpeza_jardim" onclick="atualizarPreco()"> Limpeza do Jardim (500€)</label><br>
-        <label><input type="checkbox" id="servico_recepcao" onclick="atualizarPreco()"> Recepção 24h (50€)</label><br>
-        <label><input type="checkbox" id="servico_concierge" onclick="atualizarPreco()"> Concierge (150€)</label><br>
-        <label><input type="checkbox" id="servico_deposito_bagagem" onclick="atualizarPreco()"> Depósito de Bagagens (30€)</label><br>
-        <label><input type="checkbox" id="servico_lavanderia" onclick="atualizarPreco()"> Lavanderia (80€)</label><br>
-        <label><input type="checkbox" id="servico_caixa_segurança" onclick="atualizarPreco()"> Caixa de Segurança (20€)</label><br>
-        <label><input type="checkbox" id="servico_wifi" onclick="atualizarPreco()"> Wi-Fi Gratuito (10€)</label><br><br>
-
-        Categoria: 
-        <select name="categoria_servico" id="categoria_servico" required>
+        Categoria:
+        <select id="categoria_servico" name="categoria_servico" required>
             <?php while ($categoria = $categorias->fetch_assoc()): ?>
-                <option value="<?= $categoria['id'] ?>"><?= $categoria['nome'] ?></option>
+                <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
             <?php endwhile; ?>
         </select><br><br>
 
-        Preço (€): <input type="number" step="0.01" id="preco" name="preco" readonly required><br><br>
+        Preço (€): <input type="number" step="0.01" id="preco" name="preco" required><br><br>
+
+        Imagem do Serviço: <input type="file" name="imagem_servico" accept="image/*"><br><br>
+
         <button type="submit">Adicionar Serviço</button>
     </form>
 

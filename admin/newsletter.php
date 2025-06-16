@@ -69,7 +69,7 @@ if (!$resultado) {
 <html lang="pt">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
     <title>Newsletter - Quinta Flores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- TinyMCE -->

@@ -11,7 +11,6 @@ $nav_links = [
 
 include '../components/header.php'; 
 ?>
-<!DOCTYPE html>
 <html lang="<?= I18n::getCurrentLanguage() ?>" data-theme="light">
 <head>
     <meta charset="UTF-8">

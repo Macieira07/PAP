@@ -1,0 +1,85 @@
+/* Estilo básico para a tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+/* Estilo para as linhas da tabela */
+.hospede-row {
+    position: relative;
+}
+
+/* Detalhes ocultos inicialmente */
+.hospede-details {
+    display: none;
+}
+
+/* Mostrar detalhes ao passar o mouse sobre a linha */
+.hospede-row:hover .hospede-details {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1000;
+}
+
+/* Estilo para o conteúdo dos detalhes */
+.details-content p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Estilo para as ações de editar e eliminar */
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+/* paginacao exportação */
+.paginacao {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.paginacao a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 3px;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.paginacao a.ativa {
+    background: #0056b3;
+    font-weight: bold;
+}
+
+/* Botão Exportar */
+.botao-exportar {
+    background: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.botao-exportar:hover {
+    background: #218838;
+}

@@ -202,7 +202,7 @@ $tempoRestanteCooldown = max(0, $cooldownSegundos - $tempoDesdeUltimoCodigo);
 <head>
 <meta charset="utf-8">
 <title>Adicionar Hóspede</title>
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="../public/css/admin.css">
 <style>
 .progress-bar {
   width: 100%;

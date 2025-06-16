@@ -548,6 +548,10 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     <img src="https://img.icons8.com/?size=100&id=8ggStxqyboK5&format=png&color=000000" alt="Listar Avaliações">
                     <h3>Avaliações dos hóspedes</h3>
                 </a>
+                                    <a class="card-opcao" href="atualizar_index.php">
+                    <img src="https://img.icons8.com/?size=100&id=8ggStxqyboK5&format=png&color=000000" alt="Listar Avaliações">
+                    <h3>Atualização do index</h3>
+                </a>
             </div>
         </div>
         <!-- Container de Notificações -->

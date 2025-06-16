@@ -15,11 +15,9 @@ session_set_cookie_params([
     'samesite' => 'Strict'
 ]);
 session_start();
-
 // Inclui arquivos necessários
 require_once 'email_functions.php';
 require_once '../conexao.php';
-
 // Verifica conexão com o banco
 if ($conexao->connect_error) {
     die(json_encode(['error' => 'Erro de conexão com o banco de dados: ' . $conexao->connect_error]));
@@ -29,7 +27,6 @@ if ($conexao->connect_error) {
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     error_log("POST recebido: " . print_r($_POST, true));
     
@@ -37,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die(json_encode(['error' => 'Token CSRF inválido']));
     }
-
     // Campos obrigatórios
-    $requiredFields = ['nome', 'email', 'password', 'telefone', 'documento'];
+    $requiredFields = ['nome', 'email', 'password', 'documento'];
+
     $missingFields = [];
     
     foreach ($requiredFields as $field) {
@@ -61,11 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $senha = $_POST['password'];
 
-    // Formatação do telefone
-    $telefone = $_POST['telefone'];
-    if (strpos($telefone, '+') !== 0) {
-        $telefone = '+351' . preg_replace('/[^0-9]/', '', $telefone);
-    }
+
 
     $documento = trim(htmlspecialchars($_POST['documento'], ENT_QUOTES));
     $token = bin2hex(random_bytes(32));
@@ -102,22 +95,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conexao->begin_transaction();
 
-        $sql = "INSERT INTO hospedes (
-            H_nome, H_email, H_senha, H_telefone, 
-            H_documento_ident, H_token_verificacao, H_token_expira,
-            H_verificado_email, H_aceitou_termos_uso
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)";
+$sql = "INSERT INTO hospedes (
+    H_nome, H_email, H_senha, 
+    H_documento_ident, H_token_verificacao, H_token_expira,
+    H_verificado_email, H_aceitou_termos_uso
+) VALUES (?, ?, ?, ?, ?, ?, 0, 1)";
 
-        $stmt = $conexao->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar a consulta: " . $conexao->error);
-        }
+$stmt = $conexao->prepare($sql);
+if (!$stmt) {
+    throw new Exception("Erro ao preparar a consulta: " . $conexao->error);
+}
 
-        $stmt->bind_param(
-            "sssssss", 
-            $nome, $email, $senha_hash, $telefone, 
-            $documento, $token, $token_expira
-        );
+$stmt->bind_param(
+    "ssssss", 
+    $nome, $email, $senha_hash, 
+    $documento, $token, $token_expira
+);
+
 
         if (!$stmt->execute()) {
             throw new Exception("Erro ao executar a consulta: " . $stmt->error);
@@ -135,8 +129,6 @@ $body = '
     </p>
   </div>
 </div>';
-
-
         $conexao->commit();
 
         $email_sent = enviarEmail($email, $subject, $body);
@@ -148,7 +140,6 @@ $body = '
                 'warning' => 'Registro concluído, mas houve um problema ao enviar o email de verificação. Por favor, entre em contato com o suporte.'
             ]);
         }
-
     } catch (Exception $e) {
         $conexao->rollback();
         error_log("Erro no registro: " . $e->getMessage());

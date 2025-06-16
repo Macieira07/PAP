@@ -1,7 +1,0 @@
-Array
-(
-    [name] => David
-    [email] => macieiradavid0@gmail.com
-    [subject] => Bom dia
-    [message] => ola bom dia
-)

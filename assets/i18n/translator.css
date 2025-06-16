@@ -6,27 +6,38 @@
   margin-right: 20px;
 }
 
-.language-flag {
+.language-btn {
   cursor: pointer;
-  padding: 2px 5px;
+  padding: 5px 10px;
   font-size: 0.8rem;
   font-weight: 600;
   border-radius: 4px;
   border: 1px solid #ddd;
   transition: all 0.3s ease;
   opacity: 0.6;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
 }
 
-.language-flag:hover {
+.language-btn:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-.language-flag.active {
+.language-btn.active {
   opacity: 1;
   border-color: #555;
   background-color: #f0f0f0;
   color: #333;
+}
+
+.language-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 2px;
 }
 
 /* Versão responsiva */
@@ -36,8 +47,13 @@
     gap: 5px;
   }
   
-  .language-flag {
-    padding: 1px 3px;
+  .language-btn {
+    padding: 3px 6px;
     font-size: 0.7rem;
+  }
+  
+  .language-btn img {
+    width: 16px;
+    height: 16px;
   }
 }

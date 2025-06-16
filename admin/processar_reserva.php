@@ -89,5 +89,9 @@ $stmt->close();
 $_SESSION['reserva_processada'] = true;
 
 // Redirecionar para página de sucesso
-header("Location: reserva_sucesso.php?id=$reserva_id");
+$_SESSION['flash'] = [
+    'type' => 'success',
+    'msg' => "Reserva #$reserva_id criada com sucesso!"
+];
+header("Location: reservas.php");
 exit;

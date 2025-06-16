@@ -34,7 +34,6 @@ include '../components/header.php'; ?>
     <link rel="stylesheet" href="../components/bas.css"
     <link rel="stylesheet" type="text/css" href="../includes/chatbot.css">
 </head>
-
 <body>
     <!-- Hero Section -->
     <section class="hero">
@@ -89,7 +88,6 @@ include '../components/header.php'; ?>
                         <li><?= I18n::get('lermais_accommodation_quartos_5', 'Decoração tradicional portuguesa com toques contemporâneos') ?></li>
                     </ul>
                 </div>
-
                 <div class="info-card" data-aos="fade-up" data-aos-delay="300">
                     <i class="ri-community-line info-card__icon"></i>
                     <h3><?= I18n::get('lermais_accommodation_comum', 'Áreas Comuns') ?></h3>
@@ -362,7 +360,6 @@ include '../components/header.php'; ?>
                             title="<?= I18n::get('lermais_contact_nome_title', 'Introduza o seu nome completo') ?>"
                         >
                     </div>
-
                     <div class="form-group">
                         <label for="email" class="form-label">
                             <?= I18n::get('lermais_contact_email', 'Email') ?> <i class="ri-mail-line"></i>
@@ -393,7 +390,6 @@ include '../components/header.php'; ?>
                             title="<?= I18n::get('lermais_contact_assunto_title', 'Introduza o assunto da sua mensagem') ?>"
                         >
                     </div>
-
                     <div class="form-group">
                         <label for="message" class="form-label">
                             <?= I18n::get('lermais_contact_mensagem', 'Mensagem') ?> <i class="ri-message-line"></i>
@@ -408,7 +404,6 @@ include '../components/header.php'; ?>
                             rows="5"
                         ></textarea>
                     </div>
-
                     <button type="submit" class="form-button">
                         <span class="button-text"><?= I18n::get('lermais_contact_enviar', 'Enviar Mensagem') ?></span>
                         <span class="button-loading" style="display: none;">

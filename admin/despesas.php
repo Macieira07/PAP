@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['pagar'])) {
 <head>
 <meta charset="UTF-8"/>
 <title>Despesas</title>
-<link rel="stylesheet" href="admin.css"/>
+<link rel="stylesheet" href="../public/css/admin.css"/>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <style>
 .flash { padding:10px; margin:15px 0; border-radius:4px; }

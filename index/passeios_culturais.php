@@ -1,20 +1,22 @@
 <?php 
-$nav_links = [
-    ['href' => '#passeios', 'text' => 'Passeios Naturais'],
-    ['href' => '#PacoCalheiros', 'text' => 'Paço de Calheiros'],
-    ['href' => '#galeria', 'text' => 'Galeria'],
-    ['href' => '#localizacao', 'text' => 'Localização'],
-    ['href' => '../login1/pagina_login.php', 'text' => 'Reservar', 'class' => 'nav__cta'],
-];
+// Get language from session or default to Portuguese
+session_start();
+$lang = isset($_GET['lang']) ? $_GET['lang'] : (isset($_SESSION['lang']) ? $_SESSION['lang'] : 'pt');
+$_SESSION['lang'] = $lang;
+
+// Load translations
+$translations = require_once "../translations/passeios_culturais_{$lang}.php";
+
+$nav_links = $translations['nav_links'];
 include '../components/header.php'; ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="light">
+<html lang="<?php echo $lang; ?>" data-theme="light">
 <head>
     <meta charset="UTF-8">
         <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passeios Culturais | Quinta Flores - Ponte de Lima</title>
+    <title><?php echo $translations['hero']['title']; ?> | Quinta Flores - Ponte de Lima</title>
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -468,9 +470,9 @@ include '../components/header.php'; ?>
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">
-            <h1 class="hero__title">Passeios Culturais</h1>
-            <p class="hero__subtitle">Descubra as riquezas naturais e culturais de Calheiros e Ponte de Lima</p>
-            <a href="../login1/pagina_login.php" class="hero__cta">Reservar Agora</a>
+            <h1 class="hero__title"><?php echo $translations['hero']['title']; ?></h1>
+            <p class="hero__subtitle"><?php echo $translations['hero']['subtitle']; ?></p>
+            <a href="../login1/pagina_login.php" class="hero__cta"><?php echo $translations['hero']['cta']; ?></a>
         </div>
         <a href="#passeios" class="scroll-down">
             <i class="ri-arrow-down-s-line"></i>
@@ -480,163 +482,162 @@ include '../components/header.php'; ?>
     <!-- Passeios Section -->
     <section class="section" id="passeios">
         <div class="section__container">
-            <h2 class="section-title" data-aos="fade-up">Passeios Naturais em Calheiros e Ponte de Lima</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Explore trilhas deslumbrantes e paisagens culturais únicas na região do Minho</p>
+            <h2 class="section-title" data-aos="fade-up"><?php echo $translations['passeios']['title']; ?></h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?php echo $translations['passeios']['subtitle']; ?></p>
 
             <div class="activities-grid">
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
-                    <img src="../assets/images/percurso_da_lagoa.jpg" alt="Percurso da Lagoa" class="activity-card__image">
+                    <img src="../assets/images/percurso_da_lagoa.jpg" alt="<?php echo $translations['passeios']['percurso_lagoa']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Percurso da Lagoa</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['percurso_lagoa']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: 1,57 km (circular)</span>
+                                <span><?php echo $translations['passeios']['percurso_lagoa']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Aproximadamente 45 minutos</span>
+                                <span><?php echo $translations['passeios']['percurso_lagoa']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Fácil</span>
+                                <span><?php echo $translations['passeios']['percurso_lagoa']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Lagoa de S. Pedro d'Arcos, observação de aves, nenúfares em flor e passadiços de madeira. Ideal para famílias e amantes da natureza.</p>  
+                        <p class="activity-card__text"><?php echo $translations['passeios']['percurso_lagoa']['description']; ?></p>
                     </div>
                 </div>
 
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="300">
-                    <img src="../assets/images/percurso_do_rio.jpg" alt="Percurso do Rio" class="activity-card__image">
+                    <img src="../assets/images/percurso_do_rio.jpg" alt="<?php echo $translations['passeios']['percurso_rio']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Percurso do Rio</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['percurso_rio']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: 2,9 km (circular)</span>
+                                <span><?php echo $translations['passeios']['percurso_rio']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Cerca de 1h30</span>
+                                <span><?php echo $translations['passeios']['percurso_rio']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Fácil</span>
+                                <span><?php echo $translations['passeios']['percurso_rio']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Rio Estorãos, bosques autóctones, avifauna e paisagens ribeirinhas. Perfeito para caminhadas relaxantes.</p>
+                        <p class="activity-card__text"><?php echo $translations['passeios']['percurso_rio']['description']; ?></p>
                     </div>
                 </div>
+
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="400">
-                    <img src="../assets/images/percurso_da_agua.jpg" alt="Percurso da Água" class="activity-card__image">
+                    <img src="../assets/images/percurso_da_agua.jpg" alt="<?php echo $translations['passeios']['percurso_agua']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Percurso da Água</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['percurso_agua']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: 12,5 km (circular)</span>
+                                <span><?php echo $translations['passeios']['percurso_agua']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Aproximadamente 6 horas</span>
+                                <span><?php echo $translations['passeios']['percurso_agua']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Moderada</span>
+                                <span><?php echo $translations['passeios']['percurso_agua']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Lagoa do Mimoso, Quinta de Pentieiros, pontes históricas e paisagens culturais. Uma imersão na natureza e cultura local.</p>
+                        <p class="activity-card__text"><?php echo $translations['passeios']['percurso_agua']['description']; ?></p>
                     </div>
                 </div>
 
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
-                    <img src="../assets/images/passadicos_lagoas_bertiandos.jpg" alt="Passadiços e Lagoas de Bertiandos" class="activity-card__image">
+                    <img src="../assets/images/passadicos_lagoas_bertiandos.jpg" alt="<?php echo $translations['passeios']['passadicos_bertiandos']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Passadiços e Lagoas de Bertiandos</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['passadicos_bertiandos']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: 6,2 km (circular)</span>
+                                <span><?php echo $translations['passeios']['passadicos_bertiandos']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Cerca de 2 horas</span>
+                                <span><?php echo $translations['passeios']['passadicos_bertiandos']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Baixa</span>
+                                <span><?php echo $translations['passeios']['passadicos_bertiandos']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Passadiços de madeira, observação de aves e flora diversificada. Um passeio tranquilo em área protegida.</p>
+                        <p class="activity-card__text"><?php echo $translations['passeios']['passadicos_bertiandos']['description']; ?></p>
                     </div>
                 </div>
 
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="300">
-                    <img src="../assets/images/trilho_das_portelas.jpg" alt="Trilho das Portelas" class="activity-card__image">
+                    <img src="../assets/images/trilho_das_portelas.jpg" alt="<?php echo $translations['passeios']['trilho_portelas']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">PR14 - Trilho das Portelas</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['trilho_portelas']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: 14,7 km (circular)</span>
+                                <span><?php echo $translations['passeios']['trilho_portelas']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Cerca de 5 horas</span>
+                                <span><?php echo $translations['passeios']['trilho_portelas']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Moderada</span>
+                                <span><?php echo $translations['passeios']['trilho_portelas']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Moinhos, riachos, miradouros naturais e vegetação autóctone. Ideal para quem busca uma conexão mais profunda com a natureza.</p>
+                        <p class="activity-card__text"><?php echo $translations['passeios']['trilho_portelas']['description']; ?></p>
                     </div>
                 </div>
 
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="400">
-                    <img src="../assets/images/rota_alto_minho.jpg" alt="Rota das Paisagens Protegidas" class="activity-card__image">
+                    <img src="../assets/images/rota_alto_minho.jpg" alt="<?php echo $translations['passeios']['rota_paisagens']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Rota das Paisagens Protegidas do Alto Minho</h3>
+                        <h3 class="activity-card__title"><?php echo $translations['passeios']['rota_paisagens']['title']; ?></h3>
                         <div class="activity-card__details">
                             <div class="activity-card__detail">
                                 <i class="ri-map-pin-line"></i>
-                                <span>Distância: Cerca de 100 km (dividida em etapas)</span>
+                                <span><?php echo $translations['passeios']['rota_paisagens']['distance']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-time-line"></i>
-                                <span>Duração: Variável</span>
+                                <span><?php echo $translations['passeios']['rota_paisagens']['duration']; ?></span>
                             </div>
                             <div class="activity-card__detail">
                                 <i class="ri-bar-chart-line"></i>
-                                <span>Dificuldade: Variada</span>
+                                <span><?php echo $translations['passeios']['rota_paisagens']['difficulty']; ?></span>
                             </div>
                         </div>
-                        <p class="activity-card__text">Destaques: Conecta áreas protegidas como as Lagoas de Bertiandos, Corno de Bico e Serra d'Arga. Oferece experiências de natureza, cultura e gastronomia.</p>
+                        <p class="activity-card__text"><?php echo $translations['passeios']['rota_paisagens']['description']; ?></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- Paço de Calheiros Section -->
     <section class="section" id="PacoCalheiros" style="background-color: var(--gray-light);">
         <div class="section__container">
-            <h2 class="section-title" data-aos="fade-up">Paço de Calheiros</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Um marco cultural e histórico na região de Ponte de Lima</p>
+            <h2 class="section-title" data-aos="fade-up"><?php echo $translations['paco_calheiros']['title']; ?></h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?php echo $translations['paco_calheiros']['subtitle']; ?></p>
 
             <div class="activities-grid">
                 <div class="activity-card" data-aos="fade-up" data-aos-delay="200">
-                    <img src="../assets/images/paco_calheiros.jpg" alt="Paço de Calheiros" class="activity-card__image">
+                    <img src="../assets/images/paco_calheiros.jpg" alt="<?php echo $translations['paco_calheiros']['title']; ?>" class="activity-card__image">
                     <div class="activity-card__content">
-                        <h3 class="activity-card__title">Paço de Calheiros</h3>
-                        <p class="activity-card__text">Além dos percursos naturais, o Paço de Calheiros é uma atração imperdível. Esta casa senhorial do século XVII oferece vistas panorâmicas sobre o vale do Lima, jardins históricos e experiências de enoturismo. É um excelente ponto de partida para explorar os trilhos da região.</p>
+                        <h3 class="activity-card__title"><?php echo $translations['paco_calheiros']['title']; ?></h3>
+                        <p class="activity-card__text"><?php echo $translations['paco_calheiros']['description']; ?></p>
                         <ul class="features-list">
-                            <li>Arquitetura histórica do século XVII</li>
-                            <li>Jardins paisagísticos com vista para o vale do Lima</li>
-                            <li>Experiências de enoturismo com vinhos locais</li>
-                            <li>Visitas guiadas à casa senhorial</li>
-                            <li>Localização privilegiada para explorar os trilhos da região</li>
+                            <?php foreach ($translations['paco_calheiros']['features'] as $feature): ?>
+                                <li><?php echo $feature; ?></li>
+                            <?php endforeach; ?>
                         </ul>
-                        
                     </div>
                 </div>
             </div>
@@ -646,41 +647,41 @@ include '../components/header.php'; ?>
     <!-- Gallery Section -->
     <section class="section gallery-section" id="galeria">
         <div class="section__container">
-            <h2 class="section-title" data-aos="fade-up">Galeria de Imagens</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Momentos capturados nos passeios culturais de Calheiros e Ponte de Lima</p>
+            <h2 class="section-title" data-aos="fade-up"><?php echo $translations['galeria']['title']; ?></h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?php echo $translations['galeria']['subtitle']; ?></p>
 
             <div class="gallery">
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
-                    <img src="../assets/images/lagoa_Spedro_arcos.jpg" alt="Lagoa de S. Pedro d'Arcos">
-                    <div class="gallery-caption">Lagoa de S. Pedro d'Arcos</div>
+                    <img src="../assets/images/lagoa_Spedro_arcos.jpg" alt="<?php echo $translations['galeria']['images'][0]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][0]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
-                    <img src="../assets/images/passadicos.jpg" alt="Passadiços de madeira">
-                    <div class="gallery-caption">Passadiços de madeira</div>
+                    <img src="../assets/images/passadicos.jpg" alt="<?php echo $translations['galeria']['images'][1]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][1]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
-                    <img src="../assets/images/rio_estoraos.jpg" alt="Rio Estorãos">
-                    <div class="gallery-caption">Rio Estorãos</div>
+                    <img src="../assets/images/rio_estoraos.jpg" alt="<?php echo $translations['galeria']['images'][2]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][2]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
-                    <img src="../assets/images/lagoa_mimoso.jpg" alt="Lagoa do Mimoso">
-                    <div class="gallery-caption">Lagoa do Mimoso</div>
+                    <img src="../assets/images/lagoa_mimoso.jpg" alt="<?php echo $translations['galeria']['images'][3]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][3]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
-                    <img src="../assets/images/ponte_historica.jpg" alt="Ponte histórica">
-                    <div class="gallery-caption">Ponte histórica</div>
+                    <img src="../assets/images/ponte_historica.jpg" alt="<?php echo $translations['galeria']['images'][4]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][4]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
-                    <img src="../assets/images/passadicos_bertiandos.jpg" alt="Passadiços de Bertiandos">
-                    <div class="gallery-caption">Passadiços de Bertiandos</div>
+                    <img src="../assets/images/passadicos_bertiandos.jpg" alt="<?php echo $translations['galeria']['images'][5]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][5]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
-                    <img src="../assets/images/moinho.avif" alt="Moinhos tradicionais">
-                    <div class="gallery-caption">Moinhos tradicionais</div>
+                    <img src="../assets/images/moinho.avif" alt="<?php echo $translations['galeria']['images'][6]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][6]; ?></div>
                 </div>
                 <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
-                    <img src="../assets/images/paco_calheiros_vista.jpeg" alt="Vista do Paço de Calheiros">
-                    <div class="gallery-caption">Vista do Paço de Calheiros</div>
+                    <img src="../assets/images/paco_calheiros_vista.jpeg" alt="<?php echo $translations['galeria']['images'][7]; ?>">
+                    <div class="gallery-caption"><?php echo $translations['galeria']['images'][7]; ?></div>
                 </div>
             </div>
         </div>
@@ -689,8 +690,8 @@ include '../components/header.php'; ?>
     <!-- Map Section -->
     <section class="section" id="localizacao">
         <div class="section__container">
-            <h2 class="section-title" data-aos="fade-up">Localização dos Passeios</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Explore no mapa os principais pontos de interesse cultural e natural da região</p>
+            <h2 class="section-title" data-aos="fade-up"><?php echo $translations['localizacao']['title']; ?></h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?php echo $translations['localizacao']['subtitle']; ?></p>
 
             <div class="map-container" data-aos="fade-up" data-aos-delay="200">
                 <iframe 
@@ -705,6 +706,7 @@ include '../components/header.php'; ?>
             </div>
         </div>
     </section>
+
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
@@ -774,6 +776,27 @@ include '../components/header.php'; ?>
             
             themeToggle.addEventListener('click', toggleTheme);
         });
+
+        function changeLanguage(lang) {
+            // Atualiza a sessão via AJAX
+            fetch('change_language.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'lang=' + lang
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recarrega a página com o novo idioma
+                    window.location.href = window.location.pathname + '?lang=' + lang;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
     <?php include '../components/footer.php'; ?>
 <link rel="stylesheet" href="../chatbot/chatbot.css">

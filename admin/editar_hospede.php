@@ -81,7 +81,7 @@ $h = $resultado->fetch_assoc();
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 
 <h2>Editar Hóspede</h2>
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="../public/css/admin.css">
 
 <form method="post">
     Nome: <input type="text" name="nome" value="<?= htmlspecialchars($h['H_nome'] ?? '') ?>" required><br><br>

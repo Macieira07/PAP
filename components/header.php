@@ -11,7 +11,7 @@
     <ul class="nav__links" id="navLinks">
       <div class="language-selector">
         <!-- Botões de idioma -->
-        <button onclick="changeLanguage('pt')" class="language-btn active" data-lang="pt">
+        <button onclick="changeLanguage('pt')" class="language-btn" data-lang="pt">
           <img src="../assets/flags/portugal.png" alt="Português"> PT
         </button>
         <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
@@ -34,54 +34,55 @@
       }
       ?>
     </ul>
-    <script>
-  function changeLanguage(lang) {
-    // Guarda o idioma no localStorage (opcional)
-    localStorage.setItem('selectedLanguage', lang);
-
-    // Redireciona para a mesma página com o parâmetro lang, SEM hash (vai para o topo)
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', lang);
-    url.hash = '';
-    window.location.href = url.toString();
-  }
-
-  function updateActiveLanguage() {
-    const selectedLanguage = localStorage.getItem('selectedLanguage') || 'pt';
-    const buttons = document.querySelectorAll('.language-btn');
-
-    buttons.forEach(button => {
-      if (button.dataset.lang === selectedLanguage) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
-      }
-    });
-  }
-
-  // Quando a página carregar, atualiza o botão ativo
-  document.addEventListener('DOMContentLoaded', () => {
-    updateActiveLanguage();
-  });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const currentLang = document.documentElement.lang; // 'pt', 'en', etc.
-    const buttons = document.querySelectorAll(".language-btn");
-
-    buttons.forEach(btn => {
-        if (btn.dataset.lang === currentLang) {
-            btn.classList.add("active");
-        } else {
-            btn.classList.remove("active");
-        }
-    });
-});
-</script>
-
 
     <!-- Botões -->
     <button class="theme-toggle" id="themeToggle"><i class="ri-sun-line"></i></button>
     <button class="hamburger" id="hamburger"><i class="ri-menu-line"></i></button>
   </div>
 </header>
+
+<script>
+function changeLanguage(lang) {
+  // Guarda o idioma no localStorage
+  localStorage.setItem('language', lang);
+
+  // Redireciona para a mesma página com o parâmetro lang
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', lang);
+  url.hash = '';
+  window.location.href = url.toString();
+}
+
+// Quando a página carregar, atualiza o botão ativo
+document.addEventListener('DOMContentLoaded', () => {
+  const currentLang = localStorage.getItem('language') || 'pt';
+  const buttons = document.querySelectorAll('.language-btn');
+  
+  buttons.forEach(button => {
+    if (button.dataset.lang === currentLang) {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  });
+});
+</script>
+<script>
+  const hamburger = document.getElementById("hamburger");
+  const navLinks = document.getElementById("navLinks");
+
+  hamburger.addEventListener("click", () => {
+    navLinks.classList.toggle("nav__links--active");
+    hamburger.classList.toggle("open");
+  });
+
+  // Fecha o menu ao clicar num link
+  document.querySelectorAll('.nav__link').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove("nav__links--active");
+      hamburger.classList.remove("open");
+    });
+  });
+</script>
+
+

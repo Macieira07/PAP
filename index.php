@@ -12,29 +12,45 @@ $nav_links = [
     ['href' => '#location', 'text' => 'Localização'],
     ['href' => '#contactos', 'text' => 'Contactos'],
 ];
-include 'components/header.php'; ?>
+include 'components/header.php'; 
+$aboutData = json_decode(file_get_contents(__DIR__ . '/data/about.json'), true);
+
+// Carregar todas as configurações de imagens
+$settingsFile = __DIR__ . '/data/about.json';
+$settings = file_exists($settingsFile) ? json_decode(file_get_contents($settingsFile), true) : [];
+
+// Função para obter imagem, com fallback para uma imagem padrão
+function getImage($key, $default) {
+    global $settings;
+    return 'assets/images/' . ($settings[$key] ?? $default);
+}
+?>
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
-  <head>
+<head>
+    <!-- Meta tags otimizadas para mobile -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="Alojamento local em Ponte de Lima - Aconchego, natureza e tradição minhota">  
-    <link rel="preload" href="imagens/hero.webp" as="image">
+    <!-- Preload otimizado -->
+    <link rel="preload" href="imagens/hero.webp" as="image" media="(max-width: 600px)">
+    <link rel="preload" href="imagens/hero-large.webp" as="image" media="(min-width: 601px)">
+    <!-- Fontes otimizadas -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"/>
+    <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="index/teste.css">
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
     <link rel="stylesheet" type="text/css" href="assets/i18n/translator.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
     <title>QUINTA | FLORES</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
-  </head>
+</head>
   <body>
     <!-- Hero Section -->
     <section class="hero">
@@ -47,6 +63,7 @@ include 'components/header.php'; ?>
             <i class="ri-arrow-down-s-line"></i>
         </a>
     </section>
+    
  <!-- Boking Section -->
  <section class="booking__container" id="booking">
   <form class="booking__form" id="bookingForm">
@@ -222,9 +239,9 @@ function checkAvailability() {
 
     <!-- About Section -->
     <section class="section__container about__container" id="about">
-      <div class="about__image">
-        <img src="assets/images/foto_principal_2.jpeg" alt="sobre nós">
-      </div>
+<div class="about__image">
+  <img src="<?= htmlspecialchars(getImage('imagem', 'foto_principal_2.jpeg')) ?>" alt="sobre nós">
+</div>
       <div class="about__content">
         <p class="section__subheader"><?= I18n::get('about_subheader', 'Quinta Flores ') ?></p>
         <h2 class="section__header"><?= I18n::get('about_header', 'Refúgio de Natureza e Conforto em Ponte de Lima') ?></h2>
@@ -248,202 +265,98 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     
     <div class="room__card">
       <div class="room__image">
-        <img src="assets/images/amor.avif" alt="Oferta Tempo de Namorar">
+        <img src="<?= htmlspecialchars(getImage('room_amor', 'amor.avif')) ?>" alt="Oferta Tempo de Namorar">
         <div class="room__badge">2 noites</div>
       </div>
       <div class="room__content">
         <h3 class="room__title"><?= I18n::get('room_title_amor', 'Tempo a Dois') ?></h3>
         <p class="room__price"><?= I18n::get('room_price_amor', 'Preço: 260€') ?></p>
-        <p class="room__description">
-         <?= I18n::get('room_description_amor', 'Dois dias inesquecíveis para reacender a chama do amor') ?>
-        </p>
+        <p class="room__description"><?= I18n::get('room_description_amor', 'Dois dias inesquecíveis para reacender a chama do amor') ?></p>
         <a href="index/tempo_namorar.php" class="room__link"><?= I18n::get('room_link_amor', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
+
     <div class="room__card">
       <div class="room__image">
-        <img src="assets/images/party.avif" alt="Oferta Festa com Amigos">
+        <img src="<?= htmlspecialchars(getImage('room_party', 'party.avif')) ?>" alt="Oferta Festa com Amigos">
         <div class="room__badge">1 a 2 noites</div>
       </div>
       <div class="room__content">
         <h3 class="room__title"><?= I18n::get('room_title_party', 'Diversão em Grupo') ?></h3>
         <p class="room__price"><?= I18n::get('room_price_party', 'Preço: 250€') ?></p>
-        <p class="room__description">
-          <?= I18n::get('room_description_party', 'O cenário perfeito para celebrar com os teus amigos ao máximo') ?>
-        </p>
+        <p class="room__description"><?= I18n::get('room_description_party', 'O cenário perfeito para celebrar com os teus amigos ao máximo') ?></p>
         <a href="../index/festa_amigos.php" class="room__link"><?= I18n::get('room_link_party', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
+
     <div class="room__card">
       <div class="room__image">
-        <img src="assets/images/religious.avif" alt="Oferta Retiro de Catequese">
+        <img src="<?= htmlspecialchars(getImage('room_religious', 'religious.avif')) ?>" alt="Oferta Retiro de Catequese">
         <div class="room__badge">3 noites</div>
       </div>
       <div class="room__content">
         <h3 class="room__title"><?= I18n::get('room_title_religious', 'Retiro Espiritual') ?></h3>
         <p class="room__price"><?= I18n::get('room_price_religious', 'Preço: 240€') ?></p>
-        <p class="room__description">
-            <?= I18n::get('room_description_religious', 'Paz, reflexão e união num ambiente acolhedor com kits espirituais incluídos') ?>
-        </p>
+        <p class="room__description"><?= I18n::get('room_description_religious', 'Paz, reflexão e união num ambiente acolhedor com kits espirituais incluídos') ?></p>
         <a href="index/retiro_catequese.php" class="room__link"><?= I18n::get('room_link_religious', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
+
   </div>
 </section>
-    <!-- Galeria Section -->
 <section class="gallery-section" id="gallery">
   <p class="section__subheader"><?= I18n::get('gallery_subheader', 'Algumas fotos do Alojamento') ?></p>
   <h2 class="section__header"><?= I18n::get('gallery_header', 'Galeria') ?></h2>
-    <div class="gallery-reveal">
-      <button class="gallery-reveal-btn" id="revealBtn">
-        <span><?= I18n::get('gallery_reveal_btn', 'Ver Fotos') ?></span>
-        <i class="ri-arrow-down-s-line"></i>
-      </button>
-    </div>
-    <div class="gallery-grid hidden" id="galleryGrid">
-    <div class="gallery-item">
-      <img src="assets/images/6.png" alt="Sala de Estar">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_6', 'Sala de Estar') ?></h3>
-        <p><?= I18n::get('gallery_item_description_6', 'Espaçosa e luminosa') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/7.png" alt="Sala de Jantar">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_7', 'Sala de Jantar') ?></h3>
-        <p><?= I18n::get('gallery_item_description_7', 'Com mesa para 6 pessoas') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/13.png" alt="Cozinha">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_13', 'Cozinha') ?></h3>
-        <p><?= I18n::get('gallery_item_description_13', 'Totalmente Equipada') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/12.png" alt="Cozinha">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_12', 'Cozinha') ?></h3>
-        <p><?= I18n::get('gallery_item_description_12', 'Totalmente Equipada') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/area_comum6.jpg" alt="Área de lazer">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_area_comum6', 'Escadas') ?></h3>
-        <p><?= I18n::get('gallery_item_description_area_comum6', 'Sala para o Quarto') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/14.png" alt="Entrada para os Quartos">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_14', 'Entrada') ?></h3>
-        <p><?= I18n::get('gallery_item_description_14', 'para os quartos') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/casa_banho_9.jpg" alt="Casa de banho">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_casa_banho_9', 'Casa de banho') ?></h3>
-        <p><?= I18n::get('gallery_item_description_casa_banho_9', 'Partilhada') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/quarto_3.jpg" alt="Quarto equipado">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_quarto_3', 'Quarto') ?></h3>
-        <p><?= I18n::get('gallery_item_description_quarto_3', 'com 2 camas de casal') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/quarto_3.jpg" alt="Quarto equipado">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_quarto_3_2', 'Quarto') ?></h3>
-        <p><?= I18n::get('gallery_item_description_quarto_3_2', 'com 2 camas de casal') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/quarto_3.jpg" alt="Suite">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_quarto_3', 'Suite') ?></h3>
-        <p><?= I18n::get('gallery_item_description_quarto_3', 'com 1 cama de casal') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/casa_de_banho_7.jpg" alt="Casa de Banho">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_casa_de_banho_7', 'Suite') ?></h3>
-        <p><?= I18n::get('gallery_item_description_casa_de_banho_7', 'Casa de banho') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/casa_de_banho6.jpg" alt="Casa de Banho">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_casa_de_banho6', 'Suite') ?></h3>
-        <p><?= I18n::get('gallery_item_description_casa_de_banho6', 'Casa de banho') ?></p>
-      </div>
-    </div>
-        <div class="gallery-item">
-      <img src="assets/images/foto_principal_4.jpg" alt="Casa vista de fora">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_foto_principal_4', 'Casa') ?></h3>
-        <p><?= I18n::get('gallery_item_description_foto_principal_4', 'Vista de fora') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/19.png" alt="Casa vista de cima">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_19', 'Casa') ?></h3>
-        <p><?= I18n::get('gallery_item_description_19', 'Vista de cima') ?></p>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="assets/images/natureza23.jpg" alt="Entrada para jardim e piscina">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_natureza23', 'Entrada') ?></h3>
-        <p><?= I18n::get('gallery_item_description_natureza23', 'Para o jardim e a Piscina') ?></p>
-      </div>
-    </div>
+  
+  <div class="gallery-reveal">
+    <button class="gallery-reveal-btn" id="revealBtn">
+      <span><?= I18n::get('gallery_reveal_btn', 'Ver Fotos') ?></span>
+      <i class="ri-arrow-down-s-line"></i>
+    </button>
+  </div>
+
+  <div class="gallery-grid hidden" id="galleryGrid">
+    <?php
+    // Define as chaves das imagens na ordem que queres mostrar, com info de alt, titulo, descrição i18n
+    $galleryItems = [
+      ['key' => 'gallery_6', 'alt' => 'Sala de Estar', 'title_key' => 'gallery_item_title_6', 'desc_key' => 'gallery_item_description_6'],
+      ['key' => 'gallery_7', 'alt' => 'Sala de Jantar', 'title_key' => 'gallery_item_title_7', 'desc_key' => 'gallery_item_description_7'],
+      ['key' => 'gallery_13', 'alt' => 'Cozinha', 'title_key' => 'gallery_item_title_13', 'desc_key' => 'gallery_item_description_13'],
+      ['key' => 'gallery_12', 'alt' => 'Cozinha', 'title_key' => 'gallery_item_title_12', 'desc_key' => 'gallery_item_description_12'],
+      ['key' => 'gallery_area_comum6', 'alt' => 'Escadas', 'title_key' => 'gallery_item_title_area_comum6', 'desc_key' => 'gallery_item_description_area_comum6'],
+      ['key' => 'gallery_14', 'alt' => 'Entrada para os Quartos', 'title_key' => 'gallery_item_title_14', 'desc_key' => 'gallery_item_description_14'],
+      ['key' => 'gallery_casa_banho_9', 'alt' => 'Casa de banho', 'title_key' => 'gallery_item_title_casa_banho_9', 'desc_key' => 'gallery_item_description_casa_banho_9'],
+      ['key' => 'gallery_quarto_3', 'alt' => 'Quarto equipado', 'title_key' => 'gallery_item_title_quarto_3', 'desc_key' => 'gallery_item_description_quarto_3'],
+      ['key' => 'gallery_quarto_3_2', 'alt' => 'Quarto equipado', 'title_key' => 'gallery_item_title_quarto_3_2', 'desc_key' => 'gallery_item_description_quarto_3_2'],
+      ['key' => 'gallery_quarto_3_suite', 'alt' => 'Suite', 'title_key' => 'gallery_item_title_quarto_3', 'desc_key' => 'gallery_item_description_quarto_3'],
+      ['key' => 'gallery_casa_de_banho_7', 'alt' => 'Casa de Banho', 'title_key' => 'gallery_item_title_casa_de_banho_7', 'desc_key' => 'gallery_item_description_casa_de_banho_7'],
+      ['key' => 'gallery_casa_de_banho6', 'alt' => 'Casa de Banho', 'title_key' => 'gallery_item_title_casa_de_banho6', 'desc_key' => 'gallery_item_description_casa_de_banho6'],
+      ['key' => 'gallery_foto_principal_4', 'alt' => 'Casa vista de fora', 'title_key' => 'gallery_item_title_foto_principal_4', 'desc_key' => 'gallery_item_description_foto_principal_4'],
+      ['key' => 'gallery_19', 'alt' => 'Casa vista de cima', 'title_key' => 'gallery_item_title_19', 'desc_key' => 'gallery_item_description_19'],
+      ['key' => 'gallery_natureza23', 'alt' => 'Entrada para jardim e piscina', 'title_key' => 'gallery_item_title_natureza23', 'desc_key' => 'gallery_item_description_natureza23'],
+      ['key' => 'gallery_piscina2', 'alt' => 'Piscina', 'title_key' => 'gallery_item_title_piscina2', 'desc_key' => 'gallery_item_description_piscina2'],
+      ['key' => 'gallery_churrasco', 'alt' => 'Churrasco', 'title_key' => 'gallery_item_title_churrasco', 'desc_key' => 'gallery_item_description_churrasco'],
+      ['key' => 'gallery_foto_principal_3', 'alt' => 'Garagem', 'title_key' => 'gallery_item_title_foto_principal_3', 'desc_key' => 'gallery_item_description_foto_principal_3'],
+      ['key' => 'gallery_entrada_3', 'alt' => 'Entrada', 'title_key' => 'gallery_item_title_entrada_3', 'desc_key' => 'gallery_item_description_entrada_3'],
+      ['key' => 'gallery_entrada_2', 'alt' => '', 'title_key' => '', 'desc_key' => ''],
+    ];
+
+    foreach ($galleryItems as $item) {
+      $imgSrc = getImage($item['key'], 'default.jpg');
+      ?>
       <div class="gallery-item">
-      <img src="assets/images/piscina2.jpg" alt="Piscina">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_piscina2', 'Piscina') ?></h3>
-        <p><?= I18n::get('gallery_item_description_piscina2', 'Com direito a duas espreguiçadeiras e toalhas') ?></p>
+        <img src="<?= htmlspecialchars($imgSrc) ?>" alt="<?= htmlspecialchars($item['alt']) ?>">
+        <div class="gallery-hover-content">
+          <h3><?= $item['title_key'] ? I18n::get($item['title_key'], $item['alt']) : '' ?></h3>
+          <p><?= $item['desc_key'] ? I18n::get($item['desc_key'], '') : '' ?></p>
+        </div>
       </div>
-    </div>
-          <div class="gallery-item">
-      <img src="assets/images/churrasco.jpg" alt="churrasco">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_churrasco', 'Churrasco') ?></h3>
-        <p><?= I18n::get('gallery_item_description_churrasco', 'e momentos com todos') ?></p>
-      </div>
-    </div>
-          <div class="gallery-item">
-      <img src="assets/images/foto_principal_3.png" alt="garagem">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_foto_principal_3', 'Garagem') ?></h3>
-        <p><?= I18n::get('gallery_item_description_foto_principal_3', 'Para dois carros') ?></p>
-      </div>
-    </div>
-          <div class="gallery-item">
-      <img src="assets/images/entrada_3.jpg" alt="entrada">
-      <div class="gallery-hover-content">
-        <h3><?= I18n::get('gallery_item_title_entrada_3', 'Entrada') ?></h3>
-        <p><?= I18n::get('gallery_item_description_entrada_3', '2º') ?></p>
-      </div>
-    </div>
-          <div class="gallery-item">
-      <img src="assets/images/entrada_2.jpg" alt="">
-      <div class="gallery-hover-content">
-        <h3></h3>
-        <p></p>
-      </div>
-    </div>
-  </div> 
+      <?php
+    }
+    ?>
+  </div>
+
   <script>
-    // JavaScript modificado
     document.addEventListener('DOMContentLoaded', function() {
       const revealBtn = document.getElementById('revealBtn');
       const galleryGrid = document.getElementById('galleryGrid');
@@ -451,15 +364,11 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
 
       revealBtn.addEventListener('click', function() {
         isRevealed = !isRevealed;
-        
-        if(isRevealed) {
+
+        if (isRevealed) {
           galleryGrid.classList.remove('hidden');
           galleryGrid.classList.add('revealed');
           revealBtn.innerHTML = '<span><?= I18n::get('gallery_reveal_btn_2', 'Ocultar Fotos') ?></span><i class="ri-arrow-up-s-line"></i>';
-          
-          // Posicionar corretamente
-          const section = document.getElementById('gallerySection');
-          const rect = section.getBoundingClientRect();
         } else {
           galleryGrid.classList.remove('revealed');
           galleryGrid.classList.add('hidden');
@@ -468,9 +377,9 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
       });
     });
   </script>
-    </div>
-  </div>
 </section>
+
+
 <!--Comodidades -->
 <section class="section__container comodidades" id="amenities">
   <p class="section__subheader"><?= I18n::get('amenities_subheader', 'O que este espaço oferece') ?></p>
@@ -529,7 +438,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
   </div>
 </section>
     <!-- Testimonials Section -->
-    <section class="section__container testimonials" id="testimonials">
+    <section class="testimonials" id="testimonials">
       <p class="section__subheader"><?= I18n::get('testimonials_subheader', 'Comentários') ?></p>
       <h2 class="section__header"><?= I18n::get('testimonials_header', 'O Que Dizem os Nossos Hóspedes') ?></h2>
       <div class="testimonial__container">

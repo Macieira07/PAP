@@ -1,10 +1,8 @@
 // Sistema de tradução para Quinta Flores
 document.addEventListener('DOMContentLoaded', function() {
-  // Carregar o idioma salvo no localStorage ou usar português como padrão
-  const savedLanguage = localStorage.getItem('language') || 'pt';
-  
-  // Selecionar todos os seletores de idioma
-  const languageSelectors = document.querySelectorAll('.language-selector .language-flag');
+  // Carregar o idioma da URL ou do localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const lang = urlParams.get('lang') || localStorage.getItem('language') || 'pt';
   
   // Objeto para armazenar as traduções
   let translations = {};
@@ -22,12 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Aplicar as traduções
       applyTranslations();
-      
-      // Atualizar UI
-      updateActiveFlag(lang);
-      
-      // Salvar a preferência no localStorage
-      localStorage.setItem('language', lang);
       
       // Atualizar o atributo lang do HTML
       document.documentElement.setAttribute('lang', lang);
@@ -76,25 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Função para atualizar a bandeira ativa
-  function updateActiveFlag(lang) {
-    languageSelectors.forEach(flag => {
-      if (flag.getAttribute('data-lang').toLowerCase() === lang.toLowerCase()) {
-        flag.classList.add('active');
-      } else {
-        flag.classList.remove('active');
-      }
-    });
-  }
-  
-  // Adicionar evento de clique aos seletores de idioma
-  languageSelectors.forEach(flag => {
-    flag.addEventListener('click', function() {
-      const lang = this.getAttribute('data-lang').toLowerCase();
-      loadTranslations(lang);
-    });
-  });
-  
-  // Carregar o idioma salvo ao iniciar
-  loadTranslations(savedLanguage);
+  // Carregar o idioma ao iniciar
+  loadTranslations(lang);
 });

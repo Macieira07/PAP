@@ -10,7 +10,8 @@ function getCommonQuestions() {
         'Quais são os preços?',
         'Vocês aceitam animais?',
         'Qual o horário de check-in?',
-        'Quais atividades há na região?'
+        'Quais atividades há na região?',
+        'Onde posso deixar um avaliação?'
     ];
 }
 

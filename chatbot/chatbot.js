@@ -111,15 +111,16 @@ function processUserMessage(message) {
     }, 1200); // duração do "typing" em ms
 }
 
-    function getWelcomeMessage() {
-        return `Olá! Sou o assistente virtual da <strong>Quinta Flores</strong> em Ponte de Lima. 😊<br><br>
-        Como posso ajudar você hoje? Pode me perguntar sobre:<br>
-        • Reservas e disponibilidade<br>
-        • Preços e ofertas especiais<br>
-        • Localização e como chegar<br>
-        • Serviços e comodidades<br>
-        • Atividades na região`;
-    }
+function getQuickQueryText(query) {
+    const texts = {
+        'reservas': 'Gostaria de informações sobre reservas',
+        'preços': 'Quero saber sobre preços',
+        'localização': 'Como chegar à Quinta Flores?',
+        'contato': 'Quero entrar em contato',
+        'valiacao': 'Gostaria de deixar uma avaliação'
+    };
+    return texts[query] || query;
+}
 
     function getQuickQueryText(query) {
         const texts = {
@@ -210,6 +211,13 @@ function enableInput() {
             • <strong>Festival Internacional de Jardins</strong>: Evento anual<br><br>
             Posso sugerir atividades específicas para seu grupo?`;
         }
+        if (message.includes('avaliação') || message.includes('avaliar') || message.includes('feedback')) {
+    return `Ficamos muito felizes em saber que deseja deixar uma avaliação! 😊<br><br>
+    Pode fazê-lo de forma rápida através do nosso formulário no Google:<br>
+    <a href='https://docs.google.com/forms/d/e/1FAIpQLSfzD7UZqC1_SoZ5SUhd8EthQv97FC7C8KSiznylvtOGqdeaEg/viewform?usp=dialog', '_blank' target="_blank" style="color: var(--chatbot-primary); font-weight: 600;">Clique aqui para deixar a sua opinião</a><br><br>
+    A sua opinião é muito importante para continuarmos a melhorar! Obrigado. 🙏`;
+}
+
 
         // Se não reconhecer a pergunta
         return `Desculpe, não entendi completamente sua pergunta. 😕<br><br>
