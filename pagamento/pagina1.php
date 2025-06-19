@@ -493,5 +493,9 @@ require_once 'header.php';
         </script>
     </div>
     <?php require_once 'footer.php'; ?>
+    <link rel="stylesheet" href="../chatbot/chatbot.css">
+<script src="../chatbot/chatbot.js"></script>
+<?php include '../chatbot/chatbot_config.php'; ?>
+<?php include '../chatbot/chatbot.php'; ?>
 </body>
 </html>

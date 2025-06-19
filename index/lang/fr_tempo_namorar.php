@@ -1,0 +1,23 @@
+<?php
+return [
+    'romantic_getaway_title' => 'Escapade Romantique',
+    'back_to_offers' => 'Retour aux offres',
+    'special_offer' => 'Offre Spéciale',
+    'nights_badge' => 'nuits',
+    'for_two_people' => 'Pour deux personnes',
+    'romantic_getaway_subtitle' => 'Séjour à deux',
+    'promo_code_highlight' => 'Code promo :',
+    'romantic_getaway_description' => 'Profitez d’un séjour romantique tout compris.',
+    'whats_included' => 'Ce qui est inclus',
+    'two_nights_title' => '2 Nuits d’Hébergement',
+    'two_nights_description' => 'Deux nuits en chambre double.',
+    'romantic_picnic_title' => 'Pique-nique Romantique',
+    'romantic_picnic_description' => 'Panier pique-nique pour deux.',
+    'special_breakfast_title' => 'Petit-déjeuner Spécial',
+    'special_breakfast_description' => 'Petit-déjeuner servi en chambre.',
+    'candlelight_dinner_title' => 'Dîner aux Chandelles',
+    'candlelight_dinner_description' => 'Dîner romantique pour deux.',
+    'romantic_cta_title' => 'Prêt à réserver ?',
+    'romantic_cta_subtitle' => 'Réservez votre escapade maintenant.',
+    'book_now_button' => 'Réserver',
+]; 

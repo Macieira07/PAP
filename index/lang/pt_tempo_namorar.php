@@ -1,0 +1,23 @@
+<?php
+return [
+    'romantic_getaway_title' => 'Fuga Romântica',
+    'back_to_offers' => 'Voltar às ofertas',
+    'special_offer' => 'Oferta Especial',
+    'nights_badge' => 'noites',
+    'for_two_people' => 'Para duas pessoas',
+    'romantic_getaway_subtitle' => 'Escapadinha a dois',
+    'promo_code_highlight' => 'Código promocional:',
+    'romantic_getaway_description' => 'Desfrute de uma estadia romântica com tudo incluído.',
+    'whats_included' => 'O que está incluído',
+    'two_nights_title' => '2 Noites de Alojamento',
+    'two_nights_description' => 'Duas noites em quarto duplo.',
+    'romantic_picnic_title' => 'Piquenique Romântico',
+    'romantic_picnic_description' => 'Cesta de piquenique para dois.',
+    'special_breakfast_title' => 'Pequeno-almoço Especial',
+    'special_breakfast_description' => 'Pequeno-almoço servido no quarto.',
+    'candlelight_dinner_title' => 'Jantar à Luz das Velas',
+    'candlelight_dinner_description' => 'Jantar romântico para dois.',
+    'romantic_cta_title' => 'Pronto para reservar?',
+    'romantic_cta_subtitle' => 'Garanta já a sua escapadinha.',
+    'book_now_button' => 'Reservar Agora',
+]; 

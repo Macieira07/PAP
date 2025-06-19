@@ -1,0 +1,23 @@
+<?php
+return [
+    'romantic_getaway_title' => 'Romantic Getaway',
+    'back_to_offers' => 'Back to offers',
+    'special_offer' => 'Special Offer',
+    'nights_badge' => 'nights',
+    'for_two_people' => 'For two people',
+    'romantic_getaway_subtitle' => 'A getaway for two',
+    'promo_code_highlight' => 'Promo code:',
+    'romantic_getaway_description' => 'Enjoy a romantic stay with everything included.',
+    'whats_included' => "What's included", 
+    'two_nights_title' => '2 Nights Accommodation',
+    'two_nights_description' => 'Two nights in a double room.',
+    'romantic_picnic_title' => 'Romantic Picnic',
+    'romantic_picnic_description' => 'Picnic basket for two.',
+    'special_breakfast_title' => 'Special Breakfast',
+    'special_breakfast_description' => 'Breakfast served in the room.',
+    'candlelight_dinner_title' => 'Candlelight Dinner',
+    'candlelight_dinner_description' => 'Romantic dinner for two.',
+    'romantic_cta_title' => 'Ready to book?',
+    'romantic_cta_subtitle' => 'Secure your getaway now.',
+    'book_now_button' => 'Book Now',
+]; 
