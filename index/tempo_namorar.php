@@ -99,7 +99,6 @@ include '../components/header.php';
                         </div>
                     </div>
                 </div>
-
                 <div class="cta-section">
                     <h3 class="cta-title"><?= I18n::get('romantic_cta_title') ?></h3>
                     <p class="cta-subtitle"><?= I18n::get('romantic_cta_subtitle') ?></p>
@@ -111,7 +110,6 @@ include '../components/header.php';
             </div>
         </section>
     </main>
-
     <script>
     function toggleTheme() {
         const html = document.documentElement;
@@ -143,7 +141,6 @@ include '../components/header.php';
         window.location.href = url.toString();
     }
     </script>
-
 <?php include '../components/footer.php'; ?>
 <link rel="stylesheet" href="../chatbot/chatbot.css">
 <script src="../chatbot/chatbot.js"></script>

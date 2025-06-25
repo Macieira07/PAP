@@ -19,6 +19,7 @@ include '../components/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= I18n::get('gastronomia_meta_title', 'Gastronomia de Ponte de Lima | Quinta Flores') ?></title>
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
@@ -308,5 +309,9 @@ include '../components/header.php';
 <script src="../chatbot/chatbot.js"></script>
 <?php include '../chatbot/chatbot_config.php'; ?>
 <?php include '../chatbot/chatbot.php'; ?>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init(); // Inicia o AOS
+  </script>
 </body>
 </html>

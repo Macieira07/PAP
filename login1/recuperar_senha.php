@@ -1,30 +1,19 @@
 <?php
-// Configuração de erros (desenvolvimento)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/recovery_errors.log');
-
-// Iniciar sessão
 session_start();
-
-// Verificar arquivos necessários
-if (!file_exists('../conexao.php') || !file_exists('mail_config.php')) {
-    die("<h1>Erro: Arquivos essenciais não encontrados!</h1>
-        <p>Verifique se os arquivos existem:</p>
-        <ul>
-            <li>../conexao.php</li>
-            <li>mail_config.php</li>
-        </ul>");
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-// Incluir arquivos necessários
-require_once '../conexao.php';
-require_once 'mail_config.php';
+// Inclui apenas o necessário
+require_once __DIR__ . '/../conexao.php';
+require_once __DIR__ . '/email_functions.php'; // Garanta que este caminho está correto
 
 // Verificar conexão com banco de dados
 if (!$conexao || $conexao->connect_error) {
-    die("<h1>Erro de conexão com o banco de dados</h1>
+    die("<h1>Erro de conexão com a base de dados</h1>
         <p>" . ($conexao->connect_error ?? "Erro desconhecido") . "</p>");
 }
 
@@ -77,22 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("Erro ao atualizar token: " . $update->error);
                 }
                 
-                // Preparar link de recuperação
-                $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/PAP/login/reset_senha.php?token=" . urlencode($token);
-                
+                // Preparar link de recuperação;
+                $reset_link = "http://localhost:8080/reset_senha.php?token=" . urlencode($token);
+
                 // Criar email
                 $subject = "Recuperação de Senha - Quinta Flores";
-                $body = "
-                    <h2>Recuperação de Senha</h2>
-                    <p>Olá " . htmlspecialchars($hospede['H_nome']) . ",</p>
-                    <p>Recebemos uma solicitação para redefinir sua senha.</p>
-                    <p>Clique no link abaixo ou copie e cole no seu navegador:</p>
-                    <p><a href='$reset_link'>$reset_link</a></p>
-                    <p><strong>Este link expira em 1 hora.</strong></p>
-                    <p>Se você não solicitou esta alteração, ignore este email.</p>
-                    <p>Atenciosamente,<br>Equipe Quinta Flores</p>
-                ";
-                
+$body = "
+    <h2>Recuperação de Senha</h2>
+    <p>Olá " . htmlspecialchars($hospede['H_nome']) . ",</p>
+    <p>Recebemos uma solicitação para redefinir a sua password.</p>
+    <p><a href='$reset_link'>Recupere a sua senha</a></p>
+    <p><strong>Este link expira em 1 hora.</strong></p>
+    <p>Se você não solicitou esta alteração, ignore este email.</p>
+    <p>Atenciosamente,<br>Equipe Quinta Flores</p>
+";
                 // Enviar email
                 if (enviarEmail($email, $subject, $body)) {
                     $message = "Um email com instruções foi enviado para $email";
@@ -116,13 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Senha - Quinta Flores</title>
+    <title>Recuperar Password - Quinta Flores</title>
     <style>
         :root {
             /* New color scheme */
@@ -267,19 +253,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="container">
-        <h1>Recuperar Senha</h1>
-        
+        <h1>Recuperar Password</h1>
         <?php if (!empty($message)): ?>
             <div class="alert alert-<?= $message_type ?>">
                 <?= htmlspecialchars($message) ?>
             </div>
         <?php endif; ?>
-        
         <form method="POST" action="">
             <div class="form-group">
                 <label for="email">Email cadastrado</label>
                 <input type="email" id="email" name="email" required placeholder="seu@email.com">
             </div>
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             
             <button type="submit">Enviar Link de Recuperação</button>
         </form>

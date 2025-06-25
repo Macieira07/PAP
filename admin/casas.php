@@ -1,6 +1,5 @@
 <?php
 require '../conexao.php';
-
 // Pesquisa
 $pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 // Mensagem flash
@@ -33,8 +32,8 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-
-    <link rel="stylesheet" href="../public/css/admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="casas.css">
     <meta charset="UTF-8">
     <title>Casas</title>
 </head>
@@ -54,7 +53,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
-<body>
+<body class="dark-mode">
     <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
         <h1>Lista de Alojamentos</h1>
@@ -97,5 +96,6 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
             <a href="casas.php?pagina=<?= $i ?>&pesquisa=<?= $pesquisa ?>"><?= $i ?></a> 
         <?php endfor; ?>
     </div>
+    <script>document.body.classList.toggle("dark-mode");</script>
 </body>
 </html>

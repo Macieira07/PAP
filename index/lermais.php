@@ -3,7 +3,6 @@ require_once '../i18n.php';
 if (isset($_GET['lang'])) {
     I18n::setLanguage($_GET['lang']);
 }
-
 $nav_links = [
     ['href' => '#about', 'text' => 'Sobre'],
     ['href' => '#accommodation', 'text' => 'Acomodações'],
@@ -646,28 +645,6 @@ function showFlashMessage(message, type) {
                     item.classList.toggle('active');
                 });
             });
-            function toggleTheme() {
-                const html = document.documentElement;
-                const themeToggle = document.getElementById('themeToggle');
-                const currentTheme = html.getAttribute('data-theme');
-                const icon = themeToggle.querySelector('i');
-                
-                if (currentTheme === 'light') {
-                    html.setAttribute('data-theme', 'dark');
-                    icon.className = 'ri-moon-line';
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    html.setAttribute('data-theme', 'light');
-                    icon.className = 'ri-sun-line';
-                    localStorage.setItem('theme', 'light');
-                }
-            }
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            const themeToggle = document.getElementById('themeToggle');
-            const icon = themeToggle.querySelector('i');
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
-            themeToggle.addEventListener('click', toggleTheme);
             // Formulário de contato
             const contactForm = document.getElementById('contactForm');
             if (contactForm) {

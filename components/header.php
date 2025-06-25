@@ -84,5 +84,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
+<script>
+  // Ícones para o botão (podes trocar conforme os que tens disponíveis)
+  const sunIconClass = 'ri-sun-line';   // luz (modo claro)
+  const moonIconClass = 'ri-moon-line'; // escuro (modo escuro)
+
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const icon = themeToggleBtn.querySelector('i');
+
+  // Carregar preferência guardada ou modo padrão (claro)
+  function loadTheme() {
+    const theme = localStorage.getItem('theme') || 'light';
+    if(theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      icon.classList.remove(sunIconClass);
+      icon.classList.add(moonIconClass);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      icon.classList.remove(moonIconClass);
+      icon.classList.add(sunIconClass);
+    }
+  }
+
+  // Alternar tema e guardar escolha
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if(isDark){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+      icon.classList.remove(moonIconClass);
+      icon.classList.add(sunIconClass);
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      icon.classList.remove(sunIconClass);
+      icon.classList.add(moonIconClass);
+    }
+  }
+
+  // Eventos
+  themeToggleBtn.addEventListener('click', toggleTheme);
+  document.addEventListener('DOMContentLoaded', loadTheme);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Carrega tema do localStorage
+    function loadTheme() {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const icon = document.querySelector('#themeToggle i');
+            icon.classList.remove('ri-sun-line');
+            icon.classList.add('ri-moon-line');
+        }
+    }
+
+    loadTheme();
+});
+
+</script>
+
 
 

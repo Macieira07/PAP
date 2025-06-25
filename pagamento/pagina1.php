@@ -107,7 +107,6 @@ require_once 'header.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="../includes/chatbot.css">
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
 </head>
 <body>

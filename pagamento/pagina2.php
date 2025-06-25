@@ -246,19 +246,18 @@ require_once 'header.php';
                 required pattern="\d{9}" maxlength="9" placeholder="<?= I18n::get('required_field') ?>">
             </div>
             
-            <div class="form-group">
-                <label for="pais_regiao"><i class="fas fa-globe"></i> <?= I18n::get('country_region') ?></label>
-                <select id="pais_regiao" name="pais_regiao" class="form-control" required>
-                    <option value=""><?= I18n::get('select_country') ?></option>
-                    <?php foreach ($paises as $codigo => $dados): ?>
-                        <option value="<?= $codigo ?>" 
-                            <?= (isset($_POST['pais_regiao']) && $_POST['pais_regiao'] == $codigo) ? 'selected' : '' ?>>
-                            <?= $dados['nome'] ?> (<?= $dados['codigo'] ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
+<div class="form-group">
+    <label for="pais_regiao"><i class="fas fa-globe"></i> <?= I18n::get('country_region') ?></label>
+    <select id="pais_regiao" name="pais_regiao" class="form-control" required>
+        <option value=""><?= I18n::get('select_country') ?></option>
+        <?php foreach ($paises as $codigo => $dados): ?>
+            <option value="<?= $codigo ?>" 
+                <?= (isset($_POST['pais_regiao']) && $_POST['pais_regiao'] == $codigo) ? 'selected' : '' ?>>
+                <?= $dados['nome'] ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
             <div class="form-group">
                 <label for="telefone"><i class="fas fa-phone"></i> <?= I18n::get('phone') ?></label>
                 <div class="input-group">

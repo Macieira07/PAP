@@ -47,9 +47,71 @@ function getImage($key, $default) {
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
     <link rel="stylesheet" type="text/css" href="assets/i18n/translator.css">
+    <link rel="stylesheet" type="text/css" href="index/lermais.css"> <!-- Adicionado: CSS das bandeiras -->
     <title>QUINTA | FLORES</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
+    <!-- Dark mode text color fix -->
+    <style>
+      html[data-theme="dark"],
+      html[data-theme="dark"] body {
+        color: #fff !important;
+        background-color: #181818 !important;
+      }
+      /* Títulos em verde escuro no modo escuro, exceto hero/header/footer */
+      html[data-theme="dark"] h1,
+      html[data-theme="dark"] h2,
+      html[data-theme="dark"] h3,
+      html[data-theme="dark"] h4,
+      html[data-theme="dark"] h5,
+      html[data-theme="dark"] h6,
+      html[data-theme="dark"] .section__header,
+      html[data-theme="dark"] .section__subheader {
+        color: #14532d !important; /* verde escuro */
+      }
+      /* Títulos em branco no hero, header e footer no modo escuro */
+      html[data-theme="dark"] .hero h1,
+      html[data-theme="dark"] .hero h2,
+      html[data-theme="dark"] .hero h3,
+      html[data-theme="dark"] .hero h4,
+      html[data-theme="dark"] .hero h5,
+      html[data-theme="dark"] .hero h6,
+      html[data-theme="dark"] .hero .section__header,
+      html[data-theme="dark"] .hero .section__subheader,
+      html[data-theme="dark"] .header h1,
+      html[data-theme="dark"] .header h2,
+      html[data-theme="dark"] .header h3,
+      html[data-theme="dark"] .header h4,
+      html[data-theme="dark"] .header h5,
+      html[data-theme="dark"] .header h6,
+      html[data-theme="dark"] .header .section__header,
+      html[data-theme="dark"] .header .section__subheader,
+      html[data-theme="dark"] footer h1,
+      html[data-theme="dark"] footer h2,
+      html[data-theme="dark"] footer h3,
+      html[data-theme="dark"] footer h4,
+      html[data-theme="dark"] footer h5,
+      html[data-theme="dark"] footer h6,
+      html[data-theme="dark"] footer .section__header,
+      html[data-theme="dark"] footer .section__subheader {
+        color: #fff !important;
+      }
+      html[data-theme="dark"] p,
+      html[data-theme="dark"] a,
+      html[data-theme="dark"] span,
+      html[data-theme="dark"] label,
+      html[data-theme="dark"] li,
+      html[data-theme="dark"] .btn {
+        color: #fff !important;
+      }
+      html[data-theme="dark"] input,
+      html[data-theme="dark"] textarea,
+      html[data-theme="dark"] select {
+        background: #222 !important;
+        color: #fff !important;
+        border-color: #444 !important;
+      }
+    </style>
 </head>
   <body>
     <!-- Hero Section -->
@@ -104,16 +166,13 @@ function getIconForType(type) {
     default: return 'fa-info-circle';                 // Ícone padrão
   }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   const checkInInput = document.getElementById('checkIn');
   const checkOutInput = document.getElementById('checkOut');
-
   // Bloquear datas anteriores a hoje
   const today = new Date().toISOString().split('T')[0];
   checkInInput.min = today;
   checkOutInput.min = today;
-
   // Atualizar o mínimo do checkOut quando o checkIn for selecionado
   checkInInput.addEventListener('change', () => {
     const checkInDate = checkInInput.value;
@@ -125,11 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-
   // Liga o evento do botão para verificar disponibilidade
   document.getElementById('searchBtn').addEventListener('click', checkAvailability);
 });
-
 // Função para mostrar mensagens "flash" no ecrã, com botão para fechar manualmente
 function showFlashMessage(message, type = 'success', duration = 4000) {
   // Remove mensagens existentes (não mostrar várias ao mesmo tempo)
@@ -154,13 +211,11 @@ function showFlashMessage(message, type = 'success', duration = 4000) {
     flash.classList.add('fade-out');
     setTimeout(() => flash.remove(), 400);
   });
-
   // Animação para mostrar a mensagem (entra da direita)
 // Mostrar animação de entrada
 setTimeout(() => {
   flash.classList.add('show');
 }, 10);
-
 // Remover após duração definida
 setTimeout(() => {
   flash.classList.remove('show');
@@ -171,7 +226,6 @@ setTimeout(() => {
 }, duration);
 
 }
-
 // Função que verifica a disponibilidade ao clicar no botão
 function checkAvailability() {
   const checkIn = document.getElementById('checkIn').value;
@@ -355,7 +409,6 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     }
     ?>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const revealBtn = document.getElementById('revealBtn');

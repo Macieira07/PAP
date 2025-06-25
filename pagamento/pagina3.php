@@ -339,14 +339,14 @@ require_once 'header.php';
             <h3><i class="fas fa-credit-card"></i> <?= I18n::get('payment_method') ?></h3>
             
             <div class="metodos-pagamento">
-                <div class="metodo-option">
-                    <input type="radio" id="cartao_radio" name="pagamento" value="Cartão" required 
-                           <?= (isset($_POST['pagamento'])) && $_POST['pagamento'] === 'Cartão' ? 'checked' : '' ?>
-                    <label for="cartao_radio">
-                        <i class="fas fa-credit-card"></i>
-                        <span><?= I18n::get('credit_card') ?></span>
-                    </label>
-                </div>
+<div class="metodo-option">
+    <input type="radio" id="cartao_radio" name="pagamento" value="Cartão" required 
+           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Cartão') ? 'checked' : '' ?>>
+          <label for="cartao_radio">
+        <i class="fas fa-credit-card"></i>
+        <span><?= I18n::get('credit_card') ?></span>
+    </label>
+</div>
                 <div class="metodo-option">
                     <input type="radio" id="mbway_radio" name="pagamento" value="MB WAY" 
                            <?= (isset($_POST['pagamento'])) && $_POST['pagamento'] === 'MB WAY' ? 'checked' : '' ?>>
