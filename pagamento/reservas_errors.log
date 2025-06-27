@@ -182,3 +182,12 @@ Stack trace:
 [16-Jun-2025 10:41:35 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
 [25-Jun-2025 14:10:56 UTC] Nova reserva criada: ID=80 para davidfloresmacieira@gmail.com
 [25-Jun-2025 14:10:59 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[26-Jun-2025 11:06:16 UTC] Nova reserva criada: ID=82 para davidfloresmacieira@gmail.com
+[26-Jun-2025 11:06:20 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[27-Jun-2025 09:57:04 UTC] Nova reserva criada: ID=84 para davidfloresmacieira@gmail.com
+[27-Jun-2025 09:57:08 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[27-Jun-2025 10:02:02 UTC] Nova reserva criada: ID=86 para davidfloresmacieira@gmail.com
+[27-Jun-2025 10:02:05 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[27-Jun-2025 10:06:41 UTC] Nova reserva criada: ID=88 para davidfloresmacieira@gmail.com
+[27-Jun-2025 10:06:41 UTC] PHP Warning:  Undefined variable $telefone_formatado in /var/www/html/pagamento/confirmacao.php on line 152
+[27-Jun-2025 10:06:43 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com

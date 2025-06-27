@@ -2,7 +2,7 @@
 // footer.php
 ?>
     </main>
-<link rel="stylesheet" href="global.css">
+<link rel="stylesheet" href="../public/css/admin.css">
 
     <footer class="main-footer">
         <div class="container">

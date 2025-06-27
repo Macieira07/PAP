@@ -80,9 +80,9 @@
   <p style="margin: 0;">
     Copyright © 2025 QUINTA FLORES. Todos os direitos reservados.
     |
-    <a href="politica-de-privacidade.php" style="color: #a3a3a3;">Política de Privacidade</a>
+    <a href="..\components\politica-de-privacidade.php" style="color: #a3a3a3;">Política de Privacidade</a>
     |
-    <a href="politica-de-cookies.php" style="color: #a3a3a3;">Política de Cookies</a>
+    <a href="..\components\politica-de-cookies.php" style="color: #a3a3a3;">Política de Cookies</a>
   </p>
 </div>
 

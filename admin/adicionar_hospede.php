@@ -133,7 +133,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['adicionar_hospede'])) {
             $erroTermos = "É necessário aceitar os Termos.";
         } else {
             // Inserir no banco
-            $nome = $dadosForm['nome'];
+            $nome = isset($_POST['nome']) ? trim($_POST['nome']) : $dadosForm['nome'];
             $email = $emailForm;
             $senhaTemp = password_hash($_SESSION['codigo_gerado'], PASSWORD_DEFAULT);
             $telefoneCompleto = $paisCodigo . $telDigits;
@@ -236,46 +236,192 @@ $tempoRestanteCooldown = max(0, $cooldownSegundos - $tempoDesdeUltimoCodigo);
   background: #d4edda;
   color: #155724;
 }
+input:invalid, select:invalid {
+    border-color: #f44336;
+}
+input:valid, select:valid {
+    border-color: #4CAF50;
+}
+input, select {
+    transition: border 0.2s;
+}
+input + .icon-erro, select + .icon-erro {
+    display: none;
+    color: #f44336;
+    margin-left: 6px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+input:invalid + .icon-erro, select:invalid + .icon-erro {
+    display: inline;
+}
 </style>
 <script>
-function updateProgress(step) {
-    const totalSteps = 3;
-    let percent = (step / totalSteps) * 100;
-    document.getElementById('progressInner').style.width = percent + '%';
-    document.getElementById('progressInner').textContent = 'Passo ' + step + ' de ' + totalSteps;
+// Máscara dinâmica de telefone
+function aplicarMascaraTelefone(input, pais) {
+    let v = input.value.replace(/\D/g, '');
+    if (pais === '+351') {
+        v = v.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+    } else if (pais === '+34' || pais === '+33') {
+        v = v.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+    } else if (pais === '+1') {
+        v = v.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    }
+    input.value = v.trim();
 }
 
-function startCooldown(seconds) {
-    const btn = document.getElementById('enviar_codigo_btn');
-    btn.disabled = true;
-    let remaining = seconds;
-    const originalText = btn.textContent;
-    const interval = setInterval(() => {
-        if (remaining <= 0) {
-            btn.disabled = false;
-            btn.textContent = originalText;
-            clearInterval(interval);
-        } else {
-            btn.textContent = `Aguarde (${remaining}s)`;
-            remaining--;
-        }
-    }, 1000);
+// Validação em tempo real
+function validarEmail(email) {
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+}
+function validarNIF(nif) {
+    if (!/^\d{9}$/.test(nif)) return false;
+    let total = 0;
+    for (let i = 0; i < 8; i++) total += parseInt(nif[i]) * (9 - i);
+    let resto = total % 11;
+    let dig = (resto < 2) ? 0 : 11 - resto;
+    return parseInt(nif[8]) === dig;
+}
+function validarTelefone(tel, pais) {
+    tel = tel.replace(/\D/g, '');
+    if (pais === '+351') return /^9\d{8}$/.test(tel);
+    if (pais === '+34' || pais === '+33') return /^[67]\d{8}$/.test(tel);
+    if (pais === '+1') return /^\d{10}$/.test(tel);
+    return false;
+}
+
+function setFieldStatus(input, valido) {
+    input.style.borderColor = valido ? '#4CAF50' : '#f44336';
+    input.nextElementSibling && (input.nextElementSibling.style.display = valido ? 'none' : 'inline');
 }
 
 window.onload = function() {
     <?php if($tempoRestanteCooldown > 0): ?>
         startCooldown(<?php echo $tempoRestanteCooldown; ?>);
     <?php endif; ?>
-
-    // Inicializa barra de progresso no passo 1
     updateProgress(1);
-
-    // Remover mensagens após 5 segundos
     setTimeout(() => {
         const msgs = document.querySelectorAll('.message');
         msgs.forEach(m => m.style.display = 'none');
     }, 5000);
-};
+
+    // Validação em tempo real
+    const emailInput = document.getElementById('email');
+    const telefoneInput = document.getElementById('telefone');
+    const paisInput = document.querySelector('select[name="pais_codigo"]');
+    const nifInput = document.getElementById('documento');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            setFieldStatus(this, validarEmail(this.value));
+        });
+        emailInput.addEventListener('blur', function() {
+            if (validarEmail(this.value)) {
+                fetch('verificar_email.php?email=' + encodeURIComponent(this.value))
+                    .then(r => r.text())
+                    .then(resp => {
+                        if (resp === 'bloqueado') {
+                            setFieldStatus(emailInput, false);
+                            showToast('Este email está bloqueado!', 'error');
+                        } else if (resp === 'existe') {
+                            setFieldStatus(emailInput, false);
+                            showToast('Este email já está cadastrado!', 'error');
+                        }
+                    });
+            }
+        });
+    }
+    if (telefoneInput && paisInput) {
+        telefoneInput.addEventListener('input', function() {
+            aplicarMascaraTelefone(this, paisInput.value);
+            setFieldStatus(this, validarTelefone(this.value, paisInput.value));
+        });
+        paisInput.addEventListener('change', function() {
+            aplicarMascaraTelefone(telefoneInput, this.value);
+            setFieldStatus(telefoneInput, validarTelefone(telefoneInput.value, this.value));
+        });
+    }
+    if (nifInput) {
+        nifInput.addEventListener('input', function() {
+            setFieldStatus(this, validarNIF(this.value));
+        });
+    }
+
+    // Mostrar/ocultar código
+    const codigoInput = document.getElementById('codigo');
+    if (codigoInput) {
+        let btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '👁';
+        btn.style.marginLeft = '8px';
+        btn.onclick = function(e) {
+            e.preventDefault();
+            codigoInput.type = codigoInput.type === 'password' ? 'text' : 'password';
+        };
+        codigoInput.parentNode.insertBefore(btn, codigoInput.nextSibling);
+        codigoInput.type = 'password';
+    }
+
+    // Modal de termos
+    const termosCheckbox = document.querySelector('input[name="aceitou"]');
+    if (termosCheckbox) {
+        termosCheckbox.addEventListener('click', function(e) {
+            if (!document.getElementById('modal-termos')) {
+                let modal = document.createElement('div');
+                modal.id = 'modal-termos';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100vw';
+                modal.style.height = '100vh';
+                modal.style.background = 'rgba(0,0,0,0.4)';
+                modal.style.display = 'flex';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                modal.innerHTML = `<div style="background:#fff;padding:32px 28px;max-width:500px;border-radius:10px;position:relative;"><span style='position:absolute;top:10px;right:18px;font-size:28px;cursor:pointer;' onclick='document.getElementById(\'modal-termos\').remove()'>&times;</span><h2>Termos e Condições</h2><div style='max-height:300px;overflow:auto;font-size:15px;line-height:1.5;'>Ao se cadastrar, você concorda com os termos de uso e política de privacidade da Quinta Flores. Seus dados serão utilizados apenas para fins de reserva e comunicação. Para mais detalhes, consulte nosso site.</div><button onclick='document.getElementById(\'modal-termos\').remove()' style='margin-top:18px;padding:8px 18px;border-radius:6px;background:#2e5090;color:#fff;border:none;'>Fechar</button></div>`;
+                document.body.appendChild(modal);
+            }
+        });
+    }
+}
+
+// Barra de progresso animada
+function updateProgress(step) {
+    const totalSteps = 3;
+    let percent = (step / totalSteps) * 100;
+    const inner = document.getElementById('progressInner');
+    inner.style.transition = 'width 0.5s cubic-bezier(.4,2,.6,1)';
+    inner.style.width = percent + '%';
+    inner.textContent = 'Passo ' + step + ' de ' + totalSteps;
+}
+
+// Toast animado
+function showToast(msg, type='success') {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.style.position = 'fixed';
+        toast.style.top = '30px';
+        toast.style.right = '30px';
+        toast.style.zIndex = 9999;
+        toast.style.padding = '16px 28px';
+        toast.style.borderRadius = '8px';
+        toast.style.fontWeight = 'bold';
+        toast.style.fontSize = '16px';
+        toast.style.boxShadow = '0 2px 12px rgba(0,0,0,0.15)';
+        toast.style.transition = 'all 0.4s';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.background = type === 'success' ? '#4CAF50' : '#f44336';
+    toast.style.color = '#fff';
+    toast.style.display = 'block';
+    toast.style.opacity = 1;
+    setTimeout(() => {
+        toast.style.opacity = 0;
+        setTimeout(() => toast.style.display = 'none', 400);
+    }, 2000);
+}
 </script>
 </head>
 <body>
@@ -314,6 +460,7 @@ window.onload = function() {
   <?php if (isset($_SESSION['codigo_gerado'])): ?>
   <form method="post" action="" id="formHospede" onsubmit="updateProgress(3);">
     <input type="hidden" name="email" value="<?php echo htmlspecialchars($_SESSION['email_gerado']); ?>">
+    <input type="hidden" name="nome" value="<?php echo htmlspecialchars($dadosForm['nome']); ?>">
     <label for="codigo">Código de Verificação:</label><br>
     <input type="text" id="codigo" name="codigo" pattern="\d{6}" title="6 dígitos numéricos" required><br>
     <?php if($erroCodigo): ?><div class="message error"><?php echo $erroCodigo; ?></div><?php endif; ?>

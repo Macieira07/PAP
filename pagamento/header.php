@@ -22,7 +22,7 @@ define('SECONDARY_COLOR', '#047857');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?= htmlspecialchars($page_title ?? 'Reserva') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png" />
 

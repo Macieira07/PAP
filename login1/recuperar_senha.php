@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 // Preparar link de recuperação;
-                $reset_link = "http://localhost:8080/reset_senha.php?token=" . urlencode($token);
+                $reset_link = "http://localhost:8080/login1/reset_senha.php?token=" . urlencode($token);
 
                 // Criar email
                 $subject = "Recuperação de Senha - Quinta Flores";

@@ -2,11 +2,24 @@
 require_once '../i18n.php';
 if (isset($_GET['lang'])) {
     I18n::setLanguage($_GET['lang']);
+    $lang = $_GET['lang'];
+} else {
+    $lang = I18n::getCurrentLanguage();
+}
+// Adiciona o parâmetro lang aos links do menu
+function addLangParam($href, $lang) {
+    if (strpos($href, '?') !== false) {
+        return $href . '&lang=' . $lang;
+    } else if (strpos($href, '#') === 0) {
+        return $href;
+    } else {
+        return $href . '?lang=' . $lang;
+    }
 }
 $nav_links = [
-    ['href' => '#sobre', 'text' => I18n::get('gastronomia_nav_sobre', 'Sobre')],
-    ['href' => '#galeria', 'text' => I18n::get('gastronomia_nav_galeria', 'Galeria')],
-    ['href' => '../login1/pagina_login.php', 'text' => I18n::get('gastronomia_nav_reservar', 'Reservar'), 'class' => 'nav__cta'],
+    ['href' => addLangParam('#sobre', $lang), 'text' => I18n::get('gastronomia_nav_sobre', 'Sobre')],
+    ['href' => addLangParam('#galeria', $lang), 'text' => I18n::get('gastronomia_nav_galeria', 'Galeria')],
+    ['href' => addLangParam('../login1/pagina_login.php', $lang), 'text' => I18n::get('gastronomia_nav_reservar', 'Reservar'), 'class' => 'nav__cta'],
 ];
 
 include '../components/header.php'; 
@@ -30,7 +43,7 @@ include '../components/header.php';
 <body>
     <div class="nav__container">
         <div class="logo">
-            <a href="../index.html"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
+            <a href="../index.php?lang=<?= $lang ?>"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
         </div>
         
         <ul class="nav__links" id="navLinks">

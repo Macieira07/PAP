@@ -98,6 +98,8 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Painel de Administração - QUINTA FLORES</title>
+        <!-- Flatpickr CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <style>
             /* Estilos Gerais */
             body {
@@ -460,6 +462,155 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 }
             }
             
+            .global-search-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .global-search-input {
+                width: 100%;
+                max-width: 400px;
+                padding: 10px 15px;
+                border: 1px solid #ccc;
+                border-radius: 25px;
+                font-size: 16px;
+                outline: none;
+                transition: border 0.2s;
+            }
+            .global-search-input:focus {
+                border: 1.5px solid #2e5090;
+            }
+            .global-search-results {
+                position: absolute;
+                top: 45px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                max-width: 500px;
+                background: #fff;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+                z-index: 999;
+                display: none;
+            }
+            .global-search-results.active {
+                display: block;
+            }
+            .global-search-group {
+                border-bottom: 1px solid #f0f0f0;
+                padding: 8px 0 0 0;
+            }
+            .global-search-group:last-child {
+                border-bottom: none;
+            }
+            .global-search-title {
+                font-size: 13px;
+                color: #888;
+                margin: 8px 0 4px 16px;
+                font-weight: bold;
+            }
+            .global-search-item {
+                padding: 8px 16px;
+                cursor: pointer;
+                transition: background 0.15s;
+                font-size: 15px;
+            }
+            .global-search-item:hover {
+                background: #f0f4ff;
+            }
+            .global-search-empty {
+                padding: 16px;
+                color: #aaa;
+                text-align: center;
+            }
+            .painel-atalhos-resumo {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 24px;
+                margin-bottom: 28px;
+                align-items: flex-start;
+            }
+            .atalhos-rapidos {
+                display: flex;
+                gap: 16px;
+            }
+            .atalho-btn {
+                background: #2e5090;
+                color: #fff;
+                padding: 12px 22px;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: 600;
+                text-decoration: none;
+                box-shadow: 0 2px 8px rgba(46,80,144,0.08);
+                transition: background 0.2s, transform 0.2s;
+            }
+            .atalho-btn:hover {
+                background: #1d3557;
+                transform: translateY(-2px);
+            }
+            .resumo-diario {
+                display: flex;
+                gap: 18px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 14px 24px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            .resumo-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 110px;
+            }
+            .resumo-titulo {
+                font-size: 13px;
+                color: #888;
+                margin-bottom: 4px;
+            }
+            .resumo-valor {
+                font-size: 22px;
+                font-weight: bold;
+                color: #2e5090;
+            }
+            @media (max-width: 900px) {
+                .painel-atalhos-resumo { flex-direction: column; gap: 16px; }
+                .resumo-diario { flex-wrap: wrap; gap: 10px; }
+            }
+            .modal-overlay {
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                background: rgba(0,0,0,0.4); z-index: 2000; display: flex; align-items: center; justify-content: center;
+            }
+            .modal-content {
+                background: #fff; border-radius: 10px; padding: 32px 28px; min-width: 320px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                position: relative;
+            }
+            .modal-close {
+                position: absolute; top: 12px; right: 18px; font-size: 28px; color: #888; cursor: pointer;
+            }
+            .modal-content h2 { margin-top: 0; }
+            .modal-content .form-group { margin-bottom: 16px; }
+            .modal-content label { display: block; margin-bottom: 4px; color: #2e5090; font-weight: 500; }
+            .modal-content input, .modal-content select {
+                width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 15px;
+            }
+            /* Flatpickr datas bloqueadas com X vermelho */
+            .flatpickr-day.disabled {
+                background: #ffdddd;
+                color: #d00;
+                position: relative;
+            }
+            .flatpickr-day.disabled:after {
+                content: "✗";
+                color: #d00;
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                font-size: 14px;
+                pointer-events: none;
+            }
         </style>
     </head>
     <body>
@@ -499,6 +650,157 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                         <div class="contador-notificacoes"><?= $total_notificacoes ?></div>
                         <?php endif; ?>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Busca Global -->
+            <div class="global-search-container">
+                <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Buscar hóspedes, reservas, casas, funcionários...">
+                <div id="globalSearchResults" class="global-search-results"></div>
+            </div>
+            
+            <!-- Barra de Resumo + Atalhos -->
+            <div class="painel-barra" style="display: flex; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap;">
+                <div class="resumo-diario" style="display: flex; gap: 18px; background: #f8f9fa; border-radius: 10px; padding: 14px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                    <div class="resumo-item">
+                        <span class="resumo-titulo">Reservas do Dia</span>
+                        <span class="resumo-valor">
+                            <?php
+                            $hoje = date('Y-m-d');
+                            $qtd_reservas = $conexao->query("SELECT COUNT(*) FROM reservas WHERE DATE(R_data_criacao) = '$hoje' AND R_estado != 'cancelada'")->fetch_row()[0];
+                            echo $qtd_reservas;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="resumo-item">
+                        <span class="resumo-titulo">Check-ins Hoje</span>
+                        <span class="resumo-valor">
+                            <?php
+                            $qtd_checkin = $conexao->query("SELECT COUNT(*) FROM reservas WHERE R_data_checkin = '$hoje' AND R_estado != 'cancelada'")->fetch_row()[0];
+                            echo $qtd_checkin;
+                            ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="atalhos-rapidos" style="display: flex; gap: 16px; align-items: center;">
+                    <button class="atalho-btn" onclick="abrirModalReserva(event)">+ Nova Reserva</button>
+                    <button class="atalho-btn" disabled>+ Novo Hóspede</button>
+                    <button class="atalho-btn" disabled>+ Adicionar Despesa</button>
+                </div>
+            </div>
+            <!-- Modal Nova Reserva (wizard em etapas) -->
+            <div id="modalReserva" class="modal-overlay" style="display:none;">
+                <div class="modal-content" style="max-width: 600px;">
+                    <span class="modal-close" onclick="fecharModalReserva()">&times;</span>
+                    <h2>Nova Reserva</h2>
+                    <form id="formNovaReservaModal">
+                        <!-- Etapa 1: Dados da Reserva -->
+                        <div class="wizard-step" id="step1">
+                            <div class="form-group">
+                                <label for="id_casa_modal"><i class="fas fa-home"></i> Casa:</label>
+                                <select name="id_casa" id="id_casa_modal" required>
+                                    <option value="">-- Selecione --</option>
+                                    <?php $casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHERE C_estado = 'disponível' ORDER BY C_nome");
+                                    while ($c = $casas->fetch_assoc()): ?>
+                                        <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>">
+                                            <?= htmlspecialchars($c['C_nome']) ?> (<?= number_format($c['C_preco_noite'], 2) ?>€/noite)
+                                        </option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="data_checkin_modal"><i class="fas fa-calendar-check"></i> Check-in:</label>
+                                <input type="text" id="data_checkin_modal" name="data_checkin" placeholder="Selecione a data" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="data_checkout_modal"><i class="fas fa-calendar-times"></i> Check-out:</label>
+                                <input type="text" id="data_checkout_modal" name="data_checkout" placeholder="Selecione a data" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_hospede_modal"><i class="fas fa-user"></i> Hóspede:</label>
+                                <select name="id_hospede" id="id_hospede_modal" required>
+                                    <option value="">-- Selecione --</option>
+                                    <?php $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_telefone, H_bloqueado FROM hospedes ORDER BY H_nome");
+                                    while ($h = $hospedes->fetch_assoc()): ?>
+                                        <option value="<?= $h['H_id_hospede'] ?>" <?= $h['H_bloqueado'] ? 'disabled style="color:#aaa;"' : '' ?>>
+                                            <?= htmlspecialchars($h['H_nome']) ?><?= $h['H_bloqueado'] ? ' (Bloqueado)' : '' ?> - <?= htmlspecialchars($h['H_telefone']) ?>
+                                        </option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="num_hospedes_modal"><i class="fas fa-users"></i> Número de Hóspedes:</label>
+                                <input type="number" id="num_hospedes_modal" name="num_hospedes" min="1" value="1" required>
+                            </div>
+                            <button type="button" class="atalho-btn" style="float:right;" onclick="wizardProximo(1)">Próximo &rarr;</button>
+                        </div>
+                        <!-- Etapa 2: Ofertas e Serviços -->
+                        <div class="wizard-step" id="step2" style="display:none;">
+                            <div class="oferta-container">
+                                <h3><i class="fas fa-gift"></i> Ofertas Especiais</h3>
+                                <div class="form-group">
+                                    <label for="codigo_oferta_modal"><i class="fas fa-tag"></i> Código Promocional:</label>
+                                    <select id="codigo_oferta_modal" name="codigo_oferta" class="form-control">
+                                        <option value="">-- Selecione uma oferta --</option>
+                                        <option value="LOVE260">LOVE260</option>
+                                        <option value="PARTY260">PARTY260</option>
+                                        <option value="RETIRO240">RETIRO240</option>
+                                    </select>
+                                </div>
+                                <div id="detalhes-oferta-modal" style="display: none;">
+                                    <h4 id="titulo-oferta-modal"></h4>
+                                    <p id="descricao-oferta-modal"></p>
+                                    <p id="condicoes-oferta-modal" style="font-weight: bold;"></p>
+                                </div>
+                            </div>
+                            <fieldset style="margin-bottom:15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <legend><i class="fas fa-concierge-bell"></i> Serviços Adicionais</legend>
+                                <div class="form-group">
+                                    <label for="decoracao_tematica_modal"><i class="fas fa-palette"></i> Decoração Temática (130€):</label>
+                                    <select id="decoracao_tematica_modal" name="decoracao_tematica">
+                                        <option value="">Selecione um tema</option>
+                                        <option value="Romântico">Romântico</option>
+                                        <option value="Aniversário">Aniversário</option>
+                                        <option value="Natal">Natal</option>
+                                        <option value="Lua de Mel">Lua de Mel</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-broom"></i> Limpeza Diária (15€/noite):</label>
+                                    <input type="checkbox" id="limpeza_diaria_modal" name="limpeza_diaria">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-gift"></i> Cesto de Boas-Vindas (10€):</label>
+                                    <input type="checkbox" id="cesto_boas_vindas_modal" name="cesto_boas_vindas">
+                                </div>
+                            </fieldset>
+                            <div class="form-group">
+                                <label for="origem_modal"><i class="fas fa-map-marker-alt"></i> Origem da Reserva:</label>
+                                <select name="origem" id="origem_modal" required>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="chamada">Por Chamada</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                            <button type="button" class="atalho-btn" onclick="wizardAnterior(2)">&larr; Anterior</button>
+                            <button type="button" class="atalho-btn" style="float:right;" onclick="wizardProximo(2)">Próximo &rarr;</button>
+                        </div>
+                        <!-- Etapa 3: Resumo & Confirmação -->
+                        <div class="wizard-step" id="step3" style="display:none;">
+                            <div class="total-box">
+                                <h3><i class="fas fa-receipt"></i> Total Estimado</h3>
+                                <p><i class="fas fa-tag"></i> Preço por noite: <span id="preco_noite_modal">0.00</span>€</p>
+                                <p><i class="fas fa-moon"></i> Noites: <span id="noites_modal">0</span></p>
+                                <p><i class="fas fa-concierge-bell"></i> Serviços adicionais: <span id="preco_servicos_modal">0.00</span>€</p>
+                                <p><i class="fas fa-gift"></i> Desconto: <span id="desconto_oferta_modal">0.00</span>€</p>
+                                <p><strong><i class="fas fa-money-bill-wave"></i> Total: <span id="preco_total_modal">0.00</span>€</strong></p>
+                            </div>
+                            <button type="button" class="atalho-btn" onclick="wizardAnterior(3)">&larr; Anterior</button>
+                            <button type="submit" class="atalho-btn" style="float:right;"><i class="fas fa-check-circle"></i> Confirmar Reserva</button>
+                        </div>
+                    </form>
+                    <div id="reservaMsgModal" style="margin-top:10px;"></div>
                 </div>
             </div>
             
@@ -600,6 +902,8 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             </div>
         </div>
 
+        <!-- Flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
             // Funções para Notificações
             function mostrarNotificacoes() {
@@ -652,6 +956,151 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     notificacoes.style.display = 'none';
                 }
             });
+
+        // Busca Global
+        const input = document.getElementById('globalSearchInput');
+        const resultsBox = document.getElementById('globalSearchResults');
+        let timeout = null;
+        input.addEventListener('input', function() {
+            clearTimeout(timeout);
+            const q = this.value.trim();
+            if (q.length < 2) {
+                resultsBox.classList.remove('active');
+                resultsBox.innerHTML = '';
+                return;
+            }
+            timeout = setTimeout(() => {
+                fetch('busca_global.php?q=' + encodeURIComponent(q))
+                    .then(r => r.json())
+                    .then(data => {
+                        let html = '';
+                        let hasResults = false;
+                        function group(title, arr, type) {
+                            if (!arr.length) return '';
+                            hasResults = true;
+                            let items = arr.map(item => {
+                                let label = '';
+                                let url = '#';
+                                if (type === 'hospedes') {
+                                    label = `<b>${item.nome}</b> <small>(${item.email})</small>`;
+                                    url = `editar_hospede.php?id=${item.id}`;
+                                } else if (type === 'reservas') {
+                                    label = `<b>Reserva #${item.id}</b> <small>${item.nome_hospede} - ${item.nome_casa} (${item.data_entrada} a ${item.data_saida})</small>`;
+                                    url = `editar_reserva.php?id=${item.id}`;
+                                } else if (type === 'casas') {
+                                    label = `<b>${item.nome}</b> <small>(Casa #${item.id}, Capacidade: ${item.C_capacidade}, Estado: ${item.C_estado})</small>`;
+                                    url = `editar_casa.php?id=${item.id}`;
+                                } else if (type === 'funcionarios') {
+                                    label = `<b>${item.nome}</b> <small>(${item.email})</small>`;
+                                    url = `editar_funcionario.php?id=${item.id}`;
+                                }
+                                return `<div class='global-search-item' data-url='${url}'>${label}</div>`;
+                            }).join('');
+                            return `<div class='global-search-group'><div class='global-search-title'>${title}</div>${items}</div>`;
+                        }
+                        html += group('Hóspedes', data.hospedes, 'hospedes');
+                        html += group('Reservas', data.reservas, 'reservas');
+                        html += group('Casas', data.casas, 'casas');
+                        html += group('Funcionários', data.funcionarios, 'funcionarios');
+                        if (!hasResults) html = `<div class='global-search-empty'>Nenhum resultado encontrado.</div>`;
+                        resultsBox.innerHTML = html;
+                        resultsBox.classList.add('active');
+                    });
+            }, 250);
+        });
+        // Clique no resultado
+        resultsBox.addEventListener('mousedown', function(e) {
+            const el = e.target.closest('.global-search-item');
+            if (el && el.dataset.url) {
+                window.location.href = el.dataset.url;
+            }
+        });
+        // Fechar resultados ao clicar fora
+        document.addEventListener('mousedown', function(e) {
+            if (!resultsBox.contains(e.target) && e.target !== input) {
+                resultsBox.classList.remove('active');
+            }
+        });
+        function abrirModalReserva(e) {
+            e.preventDefault();
+            document.getElementById('modalReserva').style.display = 'flex';
+        }
+        function fecharModalReserva() {
+            document.getElementById('modalReserva').style.display = 'none';
+            document.getElementById('formNovaReservaModal').reset();
+            document.getElementById('reservaMsgModal').innerHTML = '';
+        }
+        document.getElementById('formNovaReservaModal').onsubmit = async function(ev) {
+            ev.preventDefault();
+            const form = ev.target;
+            const dados = new FormData(form);
+            document.getElementById('reservaMsgModal').innerHTML = 'Salvando...';
+            const resp = await fetch('processar_reserva.php', { method: 'POST', body: dados });
+            if (resp.redirected) {
+                window.location.href = resp.url;
+            } else {
+                const txt = await resp.text();
+                document.getElementById('reservaMsgModal').innerHTML = txt;
+            }
+        }
+        // Wizard navegação
+        function wizardProximo(etapa) {
+            if (etapa === 1) {
+                // Validação simples dos campos obrigatórios da etapa 1
+                if (!document.getElementById('id_casa_modal').value || !document.getElementById('data_checkin_modal').value || !document.getElementById('data_checkout_modal').value || !document.getElementById('id_hospede_modal').value || !document.getElementById('num_hospedes_modal').value) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+            }
+            document.getElementById('step'+etapa).style.display = 'none';
+            document.getElementById('step'+(etapa+1)).style.display = 'block';
+        }
+        function wizardAnterior(etapa) {
+            document.getElementById('step'+etapa).style.display = 'none';
+            document.getElementById('step'+(etapa-1)).style.display = 'block';
+        }
+        // --- FLATPICKR E DATAS OCUPADAS ---
+        let datasOcupadas = [];
+        let checkinPicker, checkoutPicker;
+
+        function atualizarDatasOcupadas() {
+            const idCasa = document.getElementById('id_casa_modal').value;
+            if (!idCasa) {
+                if (checkinPicker) checkinPicker.set('disable', []);
+                if (checkoutPicker) checkoutPicker.set('disable', []);
+                return;
+            }
+            fetch('datas_ocupadas.php?id_casa=' + idCasa)
+                .then(r => r.json())
+                .then(datas => {
+                    datasOcupadas = datas;
+                    if (checkinPicker) checkinPicker.set('disable', datasOcupadas);
+                    if (checkoutPicker) checkoutPicker.set('disable', datasOcupadas);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkinPicker = flatpickr("#data_checkin_modal", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: datasOcupadas,
+                onOpen: atualizarDatasOcupadas,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (checkoutPicker) checkoutPicker.set('minDate', dateStr);
+                }
+            });
+            checkoutPicker = flatpickr("#data_checkout_modal", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: datasOcupadas,
+                onOpen: atualizarDatasOcupadas
+            });
+            document.getElementById('id_casa_modal').addEventListener('change', function() {
+                atualizarDatasOcupadas();
+                if (checkinPicker) checkinPicker.clear();
+                if (checkoutPicker) checkoutPicker.clear();
+            });
+        });
         </script>
     </body>
     </html>

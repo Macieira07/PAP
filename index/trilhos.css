@@ -192,6 +192,12 @@
     background-color: rgba(16, 185, 129, 0.1);
 }
 
+[data-theme="dark"] .hero__title,
+[data-theme="dark"] .hero__subtitle,
+[data-theme="dark"] .hero__cta {
+  color: #fff !important;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
@@ -225,4 +231,75 @@
     .activities-grid {
         grid-template-columns: 1fr;
     }
+}
+
+:root {
+    --primary-color: #10B981;
+    --primary-color-dark: #047857;
+    --primary-color-light: #D1FAE5;
+    --accent-color: #FCD34D;
+    --text-dark: #111827;
+    --text-light: #6B7280;
+    --white: #F9FAFB;
+    --gray-light: #F3F4F6;
+    --transition: all 0.3s ease-in-out;
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+    --border-radius: 12px;
+}
+[data-theme="dark"] {
+    --bg-main: #181818;
+    --card-bg: #232323;
+    --text-dark: #f9f9f9;
+    --text-light: #b0b0b0;
+    --white: #232323;
+    --gray-light: #232323;
+}
+
+[data-theme="dark"] .header {
+  background: rgba(24,24,24,0.98) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  border-bottom: 1px solid #222;
+}
+[data-theme="dark"] .nav__link {
+  color: #fff !important;
+}
+[data-theme="dark"] .nav__link:hover {
+  color: var(--primary-color) !important;
+}
+[data-theme="dark"] .theme-toggle {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .logo img {
+  filter: none !important;
+}
+[data-theme="dark"] .language-btn {
+  background: transparent;
+  border: 2px solid transparent;
+  color: #fff;
+  transition: background 0.2s, border 0.2s;
+}
+[data-theme="dark"] .language-btn:hover, [data-theme="dark"] .language-btn.active {
+  background: #fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+[data-theme="dark"] .language-btn img {
+  filter: none;
+}
+
+[data-theme="dark"] .footer,
+[data-theme="dark"] .footer__col h4,
+[data-theme="dark"] .footer__link,
+[data-theme="dark"] .footer__link a,
+[data-theme="dark"] .footer__bar,
+[data-theme="dark"] .newsletter,
+[data-theme="dark"] .newsletter h4,
+[data-theme="dark"] .newsletter input,
+[data-theme="dark"] .newsletter button {
+  color: #fff !important;
+}
+[data-theme="dark"] .footer__link a:hover {
+  color: var(--primary-color) !important;
 } 

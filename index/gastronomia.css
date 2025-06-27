@@ -369,17 +369,54 @@
 
         /* Dark Mode */
         [data-theme="dark"] {
+            --bg-main: #181818;
+            --card-bg: #232323;
+            --text-dark: #f9f9f9;
+            --text-light: #b0b0b0;
+            --white: #232323;
+            --gray-light: #232323;
             background-color: #121212;
             color: #e0e0e0;
         }
 
         [data-theme="dark"] .header {
-            background-color: rgba(18, 18, 18, 0.95);
+            background: rgba(24,24,24,0.98) !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 1px solid #222;
         }
 
         [data-theme="dark"] .nav__link {
-            color: #e0e0e0;
+            color: #fff !important;
+        }
+
+        [data-theme="dark"] .nav__link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: var(--primary-color) !important;
+            color: #fff !important;
+        }
+
+        [data-theme="dark"] .logo img {
+            filter: none !important;
+        }
+
+        [data-theme="dark"] .language-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            color: #fff;
+            transition: background 0.2s, border 0.2s;
+        }
+
+        [data-theme="dark"] .language-btn:hover, [data-theme="dark"] .language-btn.active {
+            background: #fff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        [data-theme="dark"] .language-btn img {
+            filter: none;
         }
 
         [data-theme="dark"] .info-card {
@@ -402,6 +439,28 @@
         [data-theme="dark"] .section-subtitle,
         [data-theme="dark"] .info-card p {
             color: #b0b0b0;
+        }
+
+        [data-theme="dark"] .hero__title,
+        [data-theme="dark"] .hero__subtitle,
+        [data-theme="dark"] .hero__cta {
+            color: #fff !important;
+        }
+
+        [data-theme="dark"] .footer,
+        [data-theme="dark"] .footer__col h4,
+        [data-theme="dark"] .footer__link,
+        [data-theme="dark"] .footer__link a,
+        [data-theme="dark"] .footer__bar,
+        [data-theme="dark"] .newsletter,
+        [data-theme="dark"] .newsletter h4,
+        [data-theme="dark"] .newsletter input,
+        [data-theme="dark"] .newsletter button {
+            color: #fff !important;
+        }
+
+        [data-theme="dark"] .footer__link a:hover {
+            color: var(--primary-color) !important;
         }
 
         /* Responsive Design */

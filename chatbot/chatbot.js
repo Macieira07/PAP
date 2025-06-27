@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sendQuickQuery(query);
         });
     });
-    //Quando o bot “está a pensar”, mostra um balão com “Digitando...” antes da resposta aparecer.
+    //Quando o bot "está a pensar", mostra um balão com "Digitando..." antes da resposta aparecer.
     function showTypingIndicator() {
     const typingDiv = document.createElement('div');
     typingDiv.classList.add('message', 'bot-message', 'typing');
@@ -131,7 +131,7 @@ function getQuickQueryText(query) {
         };
         return texts[query] || query;
     }
-    //Desativar input e botão “Enviar” enquanto o bot responde
+    //Desativar input e botão "Enviar" enquanto o bot responde
     function disableInput() {
   chatbotInput.disabled = true;
   chatbotSend.disabled = true;
@@ -218,6 +218,18 @@ function enableInput() {
     A sua opinião é muito importante para continuarmos a melhorar! Obrigado. 🙏`;
 }
 
+        if (message.includes('animal') || message.includes('animais') || message.includes('pet') || message.includes('cachorro') || message.includes('gato')) {
+            return `<i class='fa-solid fa-dog' style='color:#ffe066; margin-right:6px;'></i> Aceitamos apenas animais de <strong>porte pequeno</strong> e mediante consulta prévia. Para garantir conforto e segurança, entre em contato antes de reservar.`;
+        }
+        if (message.includes('estacionamento') || message.includes('carro') || message.includes('garagem') || message.includes('parking')) {
+            return `<i class='fa-solid fa-square-parking' style='color:#4caf50; margin-right:6px;'></i> Temos estacionamento <strong>gratuito</strong> para até <strong>2 carros dentro da garagem</strong>. Vagas adicionais podem ser consultadas.`;
+        }
+        if (message.includes('café da manhã') || message.includes('pequeno almoço') || message.includes('breakfast')) {
+            return `<i class='fa-solid fa-mug-hot' style='color:#ff9800; margin-right:6px;'></i> O pequeno-almoço <strong>não está incluído</strong>, mas pode ser solicitado à parte. Consulte-nos para opções e valores.`;
+        }
+        if (message.includes('refeição') || message.includes('refeições') || message.includes('comida') || message.includes('alimentação') || message.includes('meal') || message.includes('food')) {
+            return `<i class='fa-solid fa-utensils' style='color:#ff9800; margin-right:6px;'></i> Em reservas normais <strong>nenhuma refeição está incluída</strong>. Podemos sugerir restaurantes típicos da região ou, se desejar, consultar opções de refeições à parte. Fale conosco para mais detalhes!`;
+        }
 
         // Se não reconhecer a pergunta
         return `Desculpe, não entendi completamente sua pergunta. 😕<br><br>
@@ -232,5 +244,10 @@ function enableInput() {
     // Carregar respostas personalizadas se existirem
     if (typeof loadChatbotResponses === 'function') {
         loadChatbotResponses();
+    }
+
+    function getWelcomeMessage() {
+        // Pode futuramente usar I18n ou variáveis para multilíngue
+        return `<b>Bem-vindo ao Chatbot da Quinta Flores!</b><br>Como posso ajudar você hoje? 😊`;
     }
 });

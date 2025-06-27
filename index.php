@@ -51,67 +51,6 @@ function getImage($key, $default) {
     <title>QUINTA | FLORES</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
-    <!-- Dark mode text color fix -->
-    <style>
-      html[data-theme="dark"],
-      html[data-theme="dark"] body {
-        color: #fff !important;
-        background-color: #181818 !important;
-      }
-      /* Títulos em verde escuro no modo escuro, exceto hero/header/footer */
-      html[data-theme="dark"] h1,
-      html[data-theme="dark"] h2,
-      html[data-theme="dark"] h3,
-      html[data-theme="dark"] h4,
-      html[data-theme="dark"] h5,
-      html[data-theme="dark"] h6,
-      html[data-theme="dark"] .section__header,
-      html[data-theme="dark"] .section__subheader {
-        color: #14532d !important; /* verde escuro */
-      }
-      /* Títulos em branco no hero, header e footer no modo escuro */
-      html[data-theme="dark"] .hero h1,
-      html[data-theme="dark"] .hero h2,
-      html[data-theme="dark"] .hero h3,
-      html[data-theme="dark"] .hero h4,
-      html[data-theme="dark"] .hero h5,
-      html[data-theme="dark"] .hero h6,
-      html[data-theme="dark"] .hero .section__header,
-      html[data-theme="dark"] .hero .section__subheader,
-      html[data-theme="dark"] .header h1,
-      html[data-theme="dark"] .header h2,
-      html[data-theme="dark"] .header h3,
-      html[data-theme="dark"] .header h4,
-      html[data-theme="dark"] .header h5,
-      html[data-theme="dark"] .header h6,
-      html[data-theme="dark"] .header .section__header,
-      html[data-theme="dark"] .header .section__subheader,
-      html[data-theme="dark"] footer h1,
-      html[data-theme="dark"] footer h2,
-      html[data-theme="dark"] footer h3,
-      html[data-theme="dark"] footer h4,
-      html[data-theme="dark"] footer h5,
-      html[data-theme="dark"] footer h6,
-      html[data-theme="dark"] footer .section__header,
-      html[data-theme="dark"] footer .section__subheader {
-        color: #fff !important;
-      }
-      html[data-theme="dark"] p,
-      html[data-theme="dark"] a,
-      html[data-theme="dark"] span,
-      html[data-theme="dark"] label,
-      html[data-theme="dark"] li,
-      html[data-theme="dark"] .btn {
-        color: #fff !important;
-      }
-      html[data-theme="dark"] input,
-      html[data-theme="dark"] textarea,
-      html[data-theme="dark"] select {
-        background: #222 !important;
-        color: #fff !important;
-        border-color: #444 !important;
-      }
-    </style>
 </head>
   <body>
     <!-- Hero Section -->
@@ -261,7 +200,6 @@ function checkAvailability() {
     showFlashMessage('O número de hóspedes deve estar entre 1 e 10.', 'error');
     return;
   }
-
   // Mensagem de carregamento
   showFlashMessage('A verificar disponibilidade...', 'info', 2000);
 

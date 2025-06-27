@@ -19,6 +19,18 @@ $id_casa = (int)$_POST['id_casa'];
 $id_hospede = (int)$_POST['id_hospede'];
 $num_hospedes = (int)$_POST['num_hospedes'];
 
+// Novo: impedir reservas para hóspedes bloqueados
+$stmt = $conexao->prepare("SELECT H_bloqueado FROM hospedes WHERE H_id_hospede = ?");
+$stmt->bind_param("i", $id_hospede);
+$stmt->execute();
+$stmt->bind_result($bloqueado);
+$stmt->fetch();
+$stmt->close();
+if ($bloqueado) {
+    echo '<div style="background:#ffebee;color:#c62828;padding:18px 24px;border-radius:8px;font-size:18px;text-align:center;max-width:500px;margin:40px auto;box-shadow:0 2px 12px rgba(0,0,0,0.08);">Este hóspede está <b>bloqueado</b> e não pode fazer reservas.<br><a href="admin.php" style="color:#2e5090;text-decoration:underline;">Voltar ao painel</a></div>';
+    exit;
+}
+
 // Validar datas
 $checkin = DateTime::createFromFormat('Y-m-d', $data_checkin);
 $checkout = DateTime::createFromFormat('Y-m-d', $data_checkout);

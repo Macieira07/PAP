@@ -34,7 +34,7 @@ img {
   min-height: 600px;
   max-height: 1200px;
   width: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/natureza20.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/19.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; /* Efeito parallax */
@@ -941,7 +941,7 @@ body {
     min-height: 600px;
     max-height: 1200px;
     width: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/natureza20.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/19.png');
     background-size: cover;
     background-position: center;
     display: flex;

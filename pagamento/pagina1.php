@@ -106,7 +106,7 @@ require_once 'header.php';
     <title><?= I18n::get('reservation') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
 </head>
 <body>
@@ -402,12 +402,12 @@ require_once 'header.php';
                         instance.set('maxDate', new Date().fp_incr(730)); // 2 anos
                     },
                     onDayCreate: function(dObj, dStr, fp, dayElem) {
-                        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
-                        if (datasOcupadas.includes(dateStr)) {
-                            dayElem.classList.add('reserved');
-                            dayElem.title = "<?= I18n::get('unavailable') ?>";
-                        }
-                    }
+    const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+    if (datasOcupadas.includes(dateStr)) {
+        dayElem.classList.add('reserved');
+        dayElem.title = "<?= I18n::get('unavailable') ?>";
+    }
+}
                 });
                 
                 const checkoutPicker = flatpickr("#checkout", {
@@ -492,9 +492,5 @@ require_once 'header.php';
         </script>
     </div>
     <?php require_once 'footer.php'; ?>
-    <link rel="stylesheet" href="../chatbot/chatbot.css">
-<script src="../chatbot/chatbot.js"></script>
-<?php include '../chatbot/chatbot_config.php'; ?>
-<?php include '../chatbot/chatbot.php'; ?>
 </body>
 </html>

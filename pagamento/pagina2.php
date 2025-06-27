@@ -61,15 +61,38 @@ try {
 
 $id_hospede = $_SESSION['id'];
 
-// Lista de países com códigos de telefone e regras de validação
+// Lista de países com códigos de telefone, exemplos e regras de validação
 $paises = [
-    "PT" => ["nome" => I18n::get('portugal'), "codigo" => "+351", "regex" => "/^\d{9}$/"],
-    "ES" => ["nome" => I18n::get('spain'), "codigo" => "+34", "regex" => "/^\d{9}$/"],
-    "FR" => ["nome" => I18n::get('france'), "codigo" => "+33", "regex" => "/^\d{9}$/"],
-    "BR" => ["nome" => I18n::get('brazil'), "codigo" => "+55", "regex" => "/^\d{10,11}$/"],
-    "US" => ["nome" => I18n::get('usa'), "codigo" => "+1", "regex" => "/^\d{10}$/"],
-    "DE" => ["nome" => I18n::get('germany'), "codigo" => "+49", "regex" => "/^\d{10,11}$/"],
-    "IT" => ["nome" => I18n::get('italy'), "codigo" => "+39", "regex" => "/^\d{9,10}$/"],
+    "PT" => ["nome" => "Portugal", "codigo" => "+351", "regex" => "/^\\d{9}$/", "exemplo" => "912345678"],
+    "ES" => ["nome" => "Espanha", "codigo" => "+34", "regex" => "/^\\d{9}$/", "exemplo" => "612345678"],
+    "FR" => ["nome" => "França", "codigo" => "+33", "regex" => "/^\\d{9}$/", "exemplo" => "612345678"],
+    "BR" => ["nome" => "Brasil", "codigo" => "+55", "regex" => "/^\\d{10,11}$/", "exemplo" => "11999999999"],
+    "US" => ["nome" => "Estados Unidos", "codigo" => "+1", "regex" => "/^\\d{10}$/", "exemplo" => "2015550123"],
+    "DE" => ["nome" => "Alemanha", "codigo" => "+49", "regex" => "/^\\d{10,11}$/", "exemplo" => "15123456789"],
+    "IT" => ["nome" => "Itália", "codigo" => "+39", "regex" => "/^\\d{9,10}$/", "exemplo" => "3123456789"],
+    "GB" => ["nome" => "Reino Unido", "codigo" => "+44", "regex" => "/^\\d{10}$/", "exemplo" => "7123456789"],
+];
+
+// Lista de regras de documento por país
+$documentos = [
+    // Portugal: 9 dígitos
+    'PT' => ['regex' => '/^\d{9}$/', 'exemplo' => '123456789', 'descricao' => '9 dígitos'],
+    // Espanha: 8 dígitos + letra (DNI)
+    'ES' => ['regex' => '/^\d{8}[A-Za-z]$/', 'exemplo' => '12345678Z', 'descricao' => '8 dígitos + 1 letra'],
+    // França: 13 dígitos (NIR simplificado)
+    'FR' => ['regex' => '/^\d{13}$/', 'exemplo' => '1234567890123', 'descricao' => '13 dígitos'],
+    // Brasil: CPF 11 dígitos
+    'BR' => ['regex' => '/^\d{11}$/', 'exemplo' => '12345678901', 'descricao' => '11 dígitos'],
+    // EUA: SSN 9 dígitos
+    'US' => ['regex' => '/^\d{9}$/', 'exemplo' => '123456789', 'descricao' => '9 dígitos'],
+    // Reino Unido: National Insurance 2 letras, 6 dígitos, 1 letra
+    'GB' => ['regex' => '/^[A-Z]{2}\d{6}[A-Z]$/', 'exemplo' => 'QQ123456C', 'descricao' => '2 letras + 6 dígitos + 1 letra'],
+    // Alemanha: 11 dígitos
+    'DE' => ['regex' => '/^\d{11}$/', 'exemplo' => '12345678901', 'descricao' => '11 dígitos'],
+    // Itália: Codice Fiscale (simplificado)
+    'IT' => ['regex' => '/^[A-Z0-9]{16}$/', 'exemplo' => 'RSSMRA85M01H501Z', 'descricao' => '16 caracteres alfanuméricos'],
+    // Default: qualquer coisa com 4-20 caracteres
+    'DEFAULT' => ['regex' => '/^.{4,20}$/', 'exemplo' => 'ABC12345', 'descricao' => '4-20 caracteres'],
 ];
 
 // Recalcula número de noites só por precaução
@@ -97,8 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erros[] = I18n::get('invalid_email');
     }
-    if (!preg_match('/^\d{9}$/', $documento)) {
-        $erros[] = I18n::get('invalid_document');
+    // Validação internacional do documento
+    $doc_regex = $documentos[$pais_regiao]['regex'] ?? $documentos['DEFAULT']['regex'];
+    if (!preg_match($doc_regex, $documento)) {
+        $doc_exemplo = $documentos[$pais_regiao]['exemplo'] ?? $documentos['DEFAULT']['exemplo'];
+        $doc_descricao = $documentos[$pais_regiao]['descricao'] ?? $documentos['DEFAULT']['descricao'];
+        $erros[] = "Documento inválido. Exemplo para o país selecionado: <b>$doc_exemplo</b> ($doc_descricao)";
     }
     if (empty($pais_regiao)) {
         $erros[] = I18n::get('select_country_error');
@@ -106,7 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($pais_regiao)) {
         $regex = $paises[$pais_regiao]['regex'];
         if (!preg_match($regex, $telefone)) {
-            $erros[] = I18n::get('invalid_phone');
+            $tel_exemplo = $paises[$pais_regiao]['exemplo'];
+            $erros[] = "Telefone inválido. Exemplo para o país selecionado: <b>{$paises[$pais_regiao]['codigo']} $tel_exemplo</b>";
         }
     }
     if (isset($_POST['servicos']) && in_array('decoracao', $_POST['servicos']) && empty($descricao_decoracao)) {
@@ -166,6 +194,16 @@ if (isset($_SESSION['servicos'])) {
     }
 }
 
+// Antes do HTML do select de país/região, adicione:
+$pais_regiao_selecionado = '';
+if (isset($_POST['pais_regiao'])) {
+    $pais_regiao_selecionado = $_POST['pais_regiao'];
+} elseif (isset($hospede['H_pais']) && array_key_exists($hospede['H_pais'], $paises)) {
+    $pais_regiao_selecionado = $hospede['H_pais'];
+} else {
+    $pais_regiao_selecionado = 'PT'; // valor padrão
+}
+
 require_once 'header.php';
 ?>
 <!DOCTYPE html>
@@ -177,7 +215,7 @@ require_once 'header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= I18n::get('personal_information') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../public/css/admin.css">
     <link rel="stylesheet" href="../includes/chatbot.css">
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
 </head>
@@ -240,24 +278,29 @@ require_once 'header.php';
             </div>
             
             <div class="form-group">
+                <label for="pais_regiao"><i class="fas fa-globe"></i> <?= I18n::get('country_region') ?></label>
+                <select id="pais_regiao" name="pais_regiao" class="form-control" required>
+                    <option value=""><?= I18n::get('select_country') ?></option>
+                    <?php foreach ($paises as $codigo => $dados): ?>
+                        <option value="<?= $codigo ?>" 
+                            <?= ($pais_regiao_selecionado == $codigo) ? 'selected' : '' ?>>
+                            <?= $dados['nome'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div class="form-group">
                 <label for="documento"><i class="fas fa-id-card"></i> <?= I18n::get('civil_identification') ?></label>
                 <input type="text" id="documento" name="documento" class="form-control" 
                 value="<?= isset($_POST['documento']) ? htmlspecialchars($_POST['documento']) : htmlspecialchars($documento_padrao) ?>" 
-                required pattern="\d{9}" maxlength="9" placeholder="<?= I18n::get('required_field') ?>">
+                required maxlength="20" placeholder="<?= isset($documentos[$pais_regiao_selecionado]['exemplo']) ? $documentos[$pais_regiao_selecionado]['exemplo'] : I18n::get('required_field') ?>">
+                <div id="formato-documento" class="formato-info">
+                    <?= isset($documentos[$pais_regiao_selecionado]['descricao']) ? 'Formato: ' . $documentos[$pais_regiao_selecionado]['descricao'] : '' ?>
+                </div>
+                <div id="erro-documento" class="error-message"></div>
             </div>
             
-<div class="form-group">
-    <label for="pais_regiao"><i class="fas fa-globe"></i> <?= I18n::get('country_region') ?></label>
-    <select id="pais_regiao" name="pais_regiao" class="form-control" required>
-        <option value=""><?= I18n::get('select_country') ?></option>
-        <?php foreach ($paises as $codigo => $dados): ?>
-            <option value="<?= $codigo ?>" 
-                <?= (isset($_POST['pais_regiao']) && $_POST['pais_regiao'] == $codigo) ? 'selected' : '' ?>>
-                <?= $dados['nome'] ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
             <div class="form-group">
                 <label for="telefone"><i class="fas fa-phone"></i> <?= I18n::get('phone') ?></label>
                 <div class="input-group">
@@ -265,14 +308,17 @@ require_once 'header.php';
                         <?php foreach ($paises as $codigo => $dados): ?>
                             <option value="<?= $dados['codigo'] ?>" 
                                 data-pais="<?= $codigo ?>"
-                                <?= (isset($_POST['pais_regiao']) && $_POST['pais_regiao'] == $codigo) ? 'selected' : '' ?>>
+                                <?= ($pais_regiao_selecionado == $codigo) ? 'selected' : '' ?>>
                                 <?= $dados['codigo'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                     <input type="text" id="telefone" name="telefone" class="form-control" style="flex: 3;" 
                            value="<?= isset($_POST['telefone']) ? htmlspecialchars($_POST['telefone']) : htmlspecialchars($telefone_padrao ?? '') ?>"
-                           required placeholder="<?= I18n::get('required_field') ?>">
+                           required maxlength="20" placeholder="<?= isset($paises[$pais_regiao_selecionado]['exemplo']) ? $paises[$pais_regiao_selecionado]['exemplo'] : I18n::get('required_field') ?>">
+                </div>
+                <div id="formato-telefone" class="formato-info">
+                    <?= isset($paises[$pais_regiao_selecionado]['codigo']) ? 'Formato: ' . $paises[$pais_regiao_selecionado]['codigo'] . ' + ' . (isset($paises[$pais_regiao_selecionado]['exemplo']) ? $paises[$pais_regiao_selecionado]['exemplo'] : '') : '' ?>
                 </div>
                 <div id="erro-telefone" class="error-message"></div>
             </div>
@@ -281,7 +327,7 @@ require_once 'header.php';
                 <label>
                     <input type="checkbox" id="confirmacao" name="confirmacao" value="1" 
                            <?= (isset($_POST['confirmacao']) && $_POST['confirmacao'] == 1) ? 'checked' : '' ?>>
-                    <i class="fas fa-check-circle"></i> <?= I18n::get('digital_confirmation') ?>
+                    <i class="fas fa-check-circle"></i> Entendo que vou receber uma confirmação digital
                 </label>
             </div>
             
@@ -413,42 +459,185 @@ require_once 'header.php';
                 });
             }
 
-            // Sincroniza os selects de país
+            // Elementos do formulário
             const paisRegiaoSelect = document.getElementById('pais_regiao');
             const codigoPaisSelect = document.getElementById('codigo_pais');
+            const telefoneInput = document.getElementById('telefone');
+            const documentoInput = document.getElementById('documento');
+            const formatoDocumentoDiv = document.getElementById('formato-documento');
+            const formatoTelefoneDiv = document.getElementById('formato-telefone');
             
-            if (paisRegiaoSelect && codigoPaisSelect) {
-                paisRegiaoSelect.addEventListener('change', function() {
-                    const selectedPais = this.value;
-                    const option = codigoPaisSelect.querySelector(`option[data-pais="${selectedPais}"]`);
-                    if (option) {
-                        codigoPaisSelect.value = option.value;
+            // Dados dos países
+            const paises = {
+                <?php foreach ($paises as $codigo => $dados): ?>
+                "<?= $codigo ?>": {
+                    codigo: "<?= $dados['codigo'] ?>",
+                    exemplo: "<?= $dados['exemplo'] ?? '' ?>",
+                    regex: "<?= trim($dados['regex'], '/') ?>"
+                },
+                <?php endforeach; ?>
+            };
+            
+            // Dados dos documentos
+            const documentos = {
+                <?php foreach ($documentos as $codigo => $dados): ?>
+                "<?= $codigo ?>": {
+                    exemplo: "<?= $dados['exemplo'] ?>",
+                    descricao: "<?= $dados['descricao'] ?>",
+                    regex: "<?= trim($dados['regex'], '/') ?>"
+                },
+                <?php endforeach; ?>
+            };
+            
+            // Atualiza todos os campos relacionados ao país
+            function atualizarCamposPorPais(pais) {
+                if (!pais) return;
+                
+                // Atualiza o código do país no select
+                if (paises[pais] && codigoPaisSelect) {
+                    for (let i = 0; i < codigoPaisSelect.options.length; i++) {
+                        if (codigoPaisSelect.options[i].value === paises[pais].codigo) {
+                            codigoPaisSelect.selectedIndex = i;
+                            break;
+                        }
                     }
+                }
+                
+                // Atualiza o placeholder e formato do telefone
+                if (telefoneInput && paises[pais]) {
+                    telefoneInput.placeholder = paises[pais].exemplo || '<?= I18n::get('required_field') ?>';
+                    if (formatoTelefoneDiv) {
+                        formatoTelefoneDiv.textContent = 'Formato: ' + paises[pais].codigo + ' ' + (paises[pais].exemplo || '');
+                    }
+                }
+                
+                // Atualiza o placeholder e formato do documento
+                if (documentoInput) {
+                    const docInfo = documentos[pais] || documentos['DEFAULT'];
+                    documentoInput.placeholder = docInfo.exemplo || '<?= I18n::get('required_field') ?>';
+                    if (formatoDocumentoDiv) {
+                        formatoDocumentoDiv.textContent = 'Formato: ' + docInfo.descricao;
+                    }
+                }
+            }
+            
+            // Quando o país é alterado
+            if (paisRegiaoSelect) {
+                paisRegiaoSelect.addEventListener('change', function() {
+                    atualizarCamposPorPais(this.value);
                 });
                 
+                // Inicializa os campos com o país selecionado
+                atualizarCamposPorPais(paisRegiaoSelect.value);
+            }
+            
+            // Quando o código do país é alterado (sincroniza com o select de país)
+            if (codigoPaisSelect) {
                 codigoPaisSelect.addEventListener('change', function() {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const pais = selectedOption.getAttribute('data-pais');
-                    if (pais) {
-                        paisRegiaoSelect.value = pais;
+                    const codigo = this.value;
+                    // Encontra o país correspondente ao código
+                    for (const [pais, dados] of Object.entries(paises)) {
+                        if (dados.codigo === codigo) {
+                            if (paisRegiaoSelect) {
+                                paisRegiaoSelect.value = pais;
+                                atualizarCamposPorPais(pais);
+                            }
+                            break;
+                        }
                     }
                 });
             }
             
-            // Validação em tempo real
+            // Validação em tempo real do email
             const emailInput = document.getElementById('email');
             if (emailInput) {
                 emailInput.addEventListener('blur', validarEmail);
             }
             
-            const telefoneInput = document.getElementById('telefone');
-            const paisRegiaoInput = document.getElementById('pais_regiao');
-            if (telefoneInput && paisRegiaoInput) {
-                telefoneInput.addEventListener('input', validarTelefone);
-                paisRegiaoInput.addEventListener('change', validarTelefone);
+            function validarEmail() {
+                const email = emailInput.value;
+                const erroEmail = document.getElementById('erro-email');
+                
+                if (!email) {
+                    if (erroEmail) erroEmail.style.display = 'none';
+                    return;
+                }
+                
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    if (erroEmail) {
+                        erroEmail.style.display = 'block';
+                        erroEmail.innerHTML = '<i class="fas fa-exclamation-circle"></i> <?= I18n::get("invalid_email") ?>';
+                    }
+                } else {
+                    if (erroEmail) erroEmail.style.display = 'none';
+                }
             }
             
-            // Mostra/oculta o campo de descrição da decoração ao carregar a página
+            // Validação em tempo real do documento
+            function validarDocumento() {
+                const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'DEFAULT';
+                const docInfo = documentos[pais] || documentos['DEFAULT'];
+                const documento = documentoInput.value;
+                const erroDoc = document.getElementById('erro-documento');
+                try {
+                    // Garante que o regex tenha ^ e $
+                    const regex = new RegExp('^' + docInfo.regex + '$');
+                    if (!regex.test(documento)) {
+                        erroDoc.style.display = 'block';
+                        erroDoc.innerHTML = '<i class="fas fa-exclamation-circle"></i> Documento inválido. Formato esperado: ' + docInfo.descricao;
+                        return false;
+                    } else {
+                        erroDoc.style.display = 'none';
+                        erroDoc.innerHTML = '';
+                        return true;
+                    }
+                } catch (e) {
+                    erroDoc.style.display = 'none';
+                    erroDoc.innerHTML = '';
+                    return true;
+                }
+            }
+            
+            if (documentoInput) {
+                documentoInput.addEventListener('input', validarDocumento);
+                documentoInput.addEventListener('blur', validarDocumento);
+            }
+            
+            // Validação em tempo real do telefone
+            function validarTelefone() {
+                const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'PT';
+                const telefone = telefoneInput.value;
+                const erroTel = document.getElementById('erro-telefone');
+                if (paises[pais]) {
+                    try {
+                        // Garante que o regex tenha ^ e $
+                        const regex = new RegExp('^' + paises[pais].regex + '$');
+                        if (!regex.test(telefone)) {
+                            erroTel.style.display = 'block';
+                            erroTel.innerHTML = '<i class="fas fa-exclamation-circle"></i> Telefone inválido. Formato esperado: ' + paises[pais].codigo + ' ' + (paises[pais].exemplo || '');
+                            return false;
+                        } else {
+                            erroTel.style.display = 'none';
+                            erroTel.innerHTML = '';
+                            return true;
+                        }
+                    } catch (e) {
+                        erroTel.style.display = 'none';
+                        erroTel.innerHTML = '';
+                        return true;
+                    }
+                }
+                erroTel.style.display = 'none';
+                erroTel.innerHTML = '';
+                return true;
+            }
+            
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', validarTelefone);
+                telefoneInput.addEventListener('blur', validarTelefone);
+            }
+            
+            // Mostra/oculta o campo de descrição da decoração
             const decoracaoCheckbox = document.getElementById('decoracao');
             const descricaoContainer = document.getElementById('descricao-decoracao-container');
             
@@ -464,77 +653,13 @@ require_once 'header.php';
                 }
             }
             
-            // Configura os event listeners para os checkboxes de serviços
-            const servicosCheckboxes = document.querySelectorAll('input[name="servicos[]"]');
-            if (servicosCheckboxes) {
-                servicosCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', atualizarPreco);
-                });
-            }
-            
-            // Atualiza o preço total ao carregar a página
-            atualizarPreco();
-        });
-        
-        function validarEmail() {
-            const email = document.getElementById('email').value;
-            const erroEmail = document.getElementById('erro-email');
-            
-            if (!email) {
-                if (erroEmail) erroEmail.style.display = 'none';
-                return;
-            }
-            
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                if (erroEmail) {
-                    erroEmail.style.display = 'block';
-                    erroEmail.innerHTML = '<i class="fas fa-exclamation-circle"></i> <?= I18n::get("invalid_email") ?>';
-                }
-            } else {
-                if (erroEmail) erroEmail.style.display = 'none';
-            }
-        }
-        
-        function validarTelefone() {
-            const telefone = document.getElementById('telefone').value;
-            const pais = document.getElementById('pais_regiao').value;
-            const erroTelefone = document.getElementById('erro-telefone');
-            
-            if (!pais || !telefone) {
-                if (erroTelefone) erroTelefone.style.display = 'none';
-                return;
-            }
-            
-            const regexMap = {
-                'PT': /^\d{9}$/,
-                'ES': /^\d{9}$/,
-                'FR': /^\d{9}$/,
-                'BR': /^\d{10,11}$/,
-                'US': /^\d{10}$/,
-                'DE': /^\d{10,11}$/,
-                'IT': /^\d{9,10}$/
-            };
-            
-            const regex = regexMap[pais];
-            
-            if (regex && !regex.test(telefone)) {
-                if (erroTelefone) {
-                    erroTelefone.style.display = 'block';
-                    erroTelefone.innerHTML = '<i class="fas fa-exclamation-circle"></i> <?= I18n::get("invalid_phone") ?>';
-                }
-            } else {
-                if (erroTelefone) erroTelefone.style.display = 'none';
-            }
-        }
-        
-        function atualizarPreco() {
-            const precoBase = 120 * <?= $num_noites ?>;
-            let precoTotal = precoBase;
-            
-            // Verifica se os elementos existem antes de tentar acessá-los
-            const servicosCheckboxes = document.querySelectorAll('input[name="servicos[]"]:checked');
-            
-            if (servicosCheckboxes) {
+            // Atualiza o preço total
+            function atualizarPreco() {
+                const precoBase = 120 * <?= $num_noites ?>;
+                let precoTotal = precoBase;
+                
+                const servicosCheckboxes = document.querySelectorAll('input[name="servicos[]"]:checked');
+                
                 servicosCheckboxes.forEach(servico => {
                     switch (servico.value) {
                         case 'limpeza':
@@ -548,17 +673,77 @@ require_once 'header.php';
                             break;
                     }
                 });
+                
+                const precoTotalElement = document.getElementById('preco-total');
+                if (precoTotalElement) {
+                    precoTotalElement.textContent = precoTotal;
+                }
             }
             
-            const precoTotalElement = document.getElementById('preco-total');
-            if (precoTotalElement) {
-                precoTotalElement.textContent = precoTotal;
+            // Configura os event listeners para os checkboxes de serviços
+            const servicosCheckboxes = document.querySelectorAll('input[name="servicos[]"]');
+            if (servicosCheckboxes) {
+                servicosCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', atualizarPreco);
+                });
             }
-        }
+            
+            // Atualiza o preço total ao carregar a página
+            atualizarPreco();
+            
+            // Impede o envio do formulário se houver erros
+            const form = document.getElementById('dadosPessoaisForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let valido = true;
+                    
+                    if (!validarDocumento()) {
+                        documentoInput.focus();
+                        valido = false;
+                    }
+                    
+                    if (!validarTelefone()) {
+                        telefoneInput.focus();
+                        valido = false;
+                    }
+                    
+                    if (!valido) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            // Esconde a mensagem de erro geral ao digitar nos campos de documento ou telefone
+            function esconderErroGeral() {
+                const erroGeral = document.querySelector('.error-message');
+                if (erroGeral) erroGeral.style.display = 'none';
+            }
+            if (documentoInput) documentoInput.addEventListener('input', esconderErroGeral);
+            if (telefoneInput) telefoneInput.addEventListener('input', esconderErroGeral);
+        });
         
         function sendMessage() {
-            // Implementação da função sendMessage para o chatbot
-            // (mantida como estava no código original)
+            // Função do chatbot (mantida do original)
+            const input = document.getElementById('chatbotInput');
+            const messages = document.getElementById('chatbotMessages');
+            
+            if (input && input.value.trim() !== '' && messages) {
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chatbot-message user-message';
+                userMessage.textContent = input.value;
+                messages.appendChild(userMessage);
+                
+                // Simula resposta do bot
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'chatbot-message bot-message';
+                    botMessage.textContent = 'Obrigado pela sua mensagem. Como posso ajudar?';
+                    messages.appendChild(botMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 500);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
         }
     </script>
     <?php require_once 'footer.php'; ?>

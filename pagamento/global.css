@@ -1,4 +1,4 @@
-/* global.css */
+/* ../public/css/admin.css */
 /* ========== ESTILOS BASE ========== */
 :root {
     /* Nova Paleta de Cores */
@@ -977,4 +977,35 @@ select:disabled, input[readonly] {
     color: #666;
     cursor: not-allowed;
     border-color: #ddd;
+}
+
+
+/* Estilo para dias reservados no Flatpickr */
+.flatpickr-day.reserved {
+    position: relative;
+    color: #ccc !important;
+    background: #f8f9fa !important;
+    border-color: #f8f9fa !important;
+    text-decoration: line-through !important;
+    cursor: not-allowed;
+}
+
+.flatpickr-day.reserved::after {
+    content: "✕";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: var(--error-color);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Manter o estilo padrão para dias desabilitados */
+.flatpickr-day.disabled {
+    color: #ccc !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    cursor: not-allowed;
 }

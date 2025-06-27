@@ -57,9 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim(htmlspecialchars($_POST['nome'], ENT_QUOTES));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $senha = $_POST['password'];
-
-
-
     $documento = trim(htmlspecialchars($_POST['documento'], ENT_QUOTES));
     $token = bin2hex(random_bytes(32));
     $token_expira = date('Y-m-d H:i:s', strtotime('+1 day'));
@@ -116,14 +113,14 @@ $stmt->bind_param(
         if (!$stmt->execute()) {
             throw new Exception("Erro ao executar a consulta: " . $stmt->error);
         }
-$subject = "✅ Verifique o seu email - Quinta Flores";
+$subject = " Verifique o seu email - Quinta Flores";
 
 $body = '
 <div style="font-family: Arial, sans-serif; background-color: #f0f8ff; padding: 30px; color: #333;">
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 35px; text-align: center;">
     <img src="cid:logotipo_cid" alt="Logotipo Quinta Flores" style="max-width: 140px; margin-bottom: 25px;">
     <h2 style="color: #28a745; font-weight: 700; margin-bottom: 15px;">Bem-vindo à Quinta Flores 🥳!</h2>
-    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
+    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">sim 
       A sua conta foi criada com sucesso. 😊<br>
       Muito obrigado por se registar! 💚
     </p>

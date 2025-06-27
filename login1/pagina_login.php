@@ -78,9 +78,19 @@ $csrf_token = $_SESSION['csrf_token'];
                 </div>
 
                 <div class="form-group">
-                    <label for="registerDocument">Documento de Identificação</label>
+                    <label for="registerDocument">Tipo de Documento</label>
                     <i class="fas fa-id-card"></i>
-                    <input type="text" id="registerDocument" name="documento" class="form-control" placeholder="NIF " required>
+                    <select id="registerTipoDocumento" name="tipo_documento" class="form-control" required>
+                        <option value="NIF">NIF</option>
+                        <option value="Passaporte">Passaporte</option>
+                        <option value="DNI">DNI</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerDocument">Número do Documento</label>
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="registerDocument" name="documento" class="form-control" placeholder="Número do documento" required>
                 </div>
                 
                 <div class="checkbox-group">

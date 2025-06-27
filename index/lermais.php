@@ -146,62 +146,62 @@ include '../components/header.php'; ?>
         </div>
     </section>
  <!-- Secção da Galeria -->
-<section class="section gallery-section" id="gallery">
-    <div class="section__container">
-        <h2 class="section-title" data-aos="fade-up"><?= I18n::get('lermais_gallery_title', 'A Nossa Galeria') ?></h2>
-        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?= I18n::get('lermais_gallery_subtitle', 'Imagens que capturam a essência e a beleza da Quinta Flores') ?></p>
-        <div class="gallery">
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
-                <img src="../assets/images/entrada_3.jpg" alt="Entrada da Quinta">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_entrada', 'Entrada Principal') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
-                <img src="../assets/images/19.png" alt="Vista Principal">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_vista', 'Vista Panorâmica') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
-                <img src="../assets/images/churrasco.jpg" alt="Área Externa">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_churrasco', 'Área de Churrasco') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
-                <img src="../assets/images/natureza19.jpg" alt="Jardim">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_jardins', 'Jardins Floridos') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
-                <img src="../assets/images/piscina2.jpg" alt="Piscina">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_piscina', 'Piscina Exterior') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
-                <img src="../assets/images/14.png" alt="Área de Lazer">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_entrada_quartos', 'Entrada Acolhedora para os Quartos') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
-                <img src="../assets/images/11.png" alt="Quarto">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_suite', 'Suite') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
-                <img src="../assets/images/casa_de_banho_7.jpg" alt="Casa de Banho">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_banho_suite', 'Casa de Banho (Suite)') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="900">
-                <img src="../assets/images/17.png" alt="Sala de Estar">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_sala', 'Sala de Estar Aconchegante') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1000">
-                <img src="../assets/images/13.png" alt="Cozinha Equipada">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_cozinha', 'Cozinha Totalmente Equipada') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1100">
-                <img src="../assets/images/entrada_2.jpg" alt="Espaço Infantil">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_ajardinado', 'Espaço Ajardinado com Esculturas') ?></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="1200">
-                <img src="../assets/images/natureza_2.jpg" alt="Pôr-do-Sol na Quinta">
-                <div class="gallery-caption"><?= I18n::get('lermais_gallery_pordosol', 'Pôr-do-Sol na Quinta') ?></div>
+    <section class="section gallery-section" id="gallery">
+        <div class="section__container">
+            <h2 class="section-title" data-aos="fade-up"><?= I18n::get('lermais_gallery_title', 'A Nossa Galeria') ?></h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100"><?= I18n::get('lermais_gallery_subtitle', 'Imagens que capturam a essência e a beleza da Quinta Flores') ?></p>
+            <div class="gallery">
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="../assets/images/entrada_3.jpg" alt="Entrada da Quinta">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_entrada', 'Entrada Principal') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="../assets/images/19.png" alt="Vista Principal">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_vista', 'Vista Panorâmica') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../assets/images/churrasco.jpg" alt="Área Externa">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_churrasco', 'Área de Churrasco') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
+                    <img src="../assets/images/natureza19.jpg" alt="Jardim">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_jardins', 'Jardins Floridos') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
+                    <img src="../assets/images/piscina2.jpg" alt="Piscina">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_piscina', 'Piscina Exterior') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
+                    <img src="../assets/images/14.png" alt="Área de Lazer">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_entrada_quartos', 'Entrada Acolhedora para os Quartos') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
+                    <img src="../assets/images/11.png" alt="Quarto">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_suite', 'Suite') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
+                    <img src="../assets/images/casa_de_banho_7.jpg" alt="Casa de Banho">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_banho_suite', 'Casa de Banho (Suite)') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="900">
+                    <img src="../assets/images/17.png" alt="Sala de Estar">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_sala', 'Sala de Estar Aconchegante') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="1000">
+                    <img src="../assets/images/13.png" alt="Cozinha Equipada">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_cozinha', 'Cozinha Totalmente Equipada') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="1100">
+                    <img src="../assets/images/entrada_2.jpg" alt="Espaço Infantil">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_ajardinado', 'Espaço Ajardinado com Esculturas') ?></div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="1200">
+                    <img src="../assets/images/natureza_2.jpg" alt="Pôr-do-Sol na Quinta">
+                    <div class="gallery-caption"><?= I18n::get('lermais_gallery_pordosol', 'Pôr-do-Sol na Quinta') ?></div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <!-- Testimonials Section -->
     <section class="section" id="testimonials">
         <div class="section__container">
