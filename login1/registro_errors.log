@@ -59309,3 +59309,14 @@
 [27-Jun-2025 10:10:29 UTC] PHPMailer (2): SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a892e59ab5sm2201224f8f.82 - gsmtp
 
 [27-Jun-2025 10:10:29 UTC] Email enviado com sucesso para catarinafloresmacieira@gmail.com
+[27-Jun-2025 15:44:17 UTC] Início do processamento de registro
+[27-Jun-2025 15:44:18 UTC] POST recebido: Array
+(
+    [nome] => David Macieira
+    [email] => davidfloresmacieira@gmail.com
+    [password] => David1234
+    [documento] => 123456789
+    [aceitar_termos] => on
+    [csrf_token] => 88fbaa847a6ec9b7373e3fcf46dfdadf77eeff8267cb49e701dd77d2a0e15964
+)
+

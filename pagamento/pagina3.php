@@ -273,7 +273,7 @@ require_once 'header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= I18n::get('payment') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <link rel="stylesheet" href="../index/chatbot.css">
     <link rel="icon" type="image/x-icon" href="../assets/logos/logotipo1.png">
 </head>

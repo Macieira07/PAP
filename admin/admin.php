@@ -684,8 +684,8 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 </div>
                 <div class="atalhos-rapidos" style="display: flex; gap: 16px; align-items: center;">
                     <button class="atalho-btn" onclick="abrirModalReserva(event)">+ Nova Reserva</button>
-                    <button class="atalho-btn" disabled>+ Novo Hóspede</button>
-                    <button class="atalho-btn" disabled>+ Adicionar Despesa</button>
+                    <button class="atalho-btn" onclick="abrirModalHospede(event)">+ Novo Hóspede</button>
+                
                 </div>
             </div>
             <!-- Modal Nova Reserva (wizard em etapas) -->
@@ -732,27 +732,24 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                                 <label for="num_hospedes_modal"><i class="fas fa-users"></i> Número de Hóspedes:</label>
                                 <input type="number" id="num_hospedes_modal" name="num_hospedes" min="1" value="1" required>
                             </div>
+                            <div class="form-group">
+                                <label for="codigo_oferta_modal"><i class="fas fa-tag"></i> Código Promocional:</label>
+                                <select id="codigo_oferta_modal" name="codigo_oferta" class="form-control">
+                                    <option value="">-- Selecione uma oferta --</option>
+                                    <option value="LOVE260">LOVE260</option>
+                                    <option value="PARTY260">PARTY260</option>
+                                    <option value="RETIRO240">RETIRO240</option>
+                                </select>
+                            </div>
+                            <div id="detalhes-oferta-modal" style="display: none;">
+                                <h4 id="titulo-oferta-modal"></h4>
+                                <p id="descricao-oferta-modal"></p>
+                                <p id="condicoes-oferta-modal" style="font-weight: bold;"></p>
+                            </div>
                             <button type="button" class="atalho-btn" style="float:right;" onclick="wizardProximo(1)">Próximo &rarr;</button>
                         </div>
-                        <!-- Etapa 2: Ofertas e Serviços -->
+                        <!-- Etapa 2: Serviços Adicionais -->
                         <div class="wizard-step" id="step2" style="display:none;">
-                            <div class="oferta-container">
-                                <h3><i class="fas fa-gift"></i> Ofertas Especiais</h3>
-                                <div class="form-group">
-                                    <label for="codigo_oferta_modal"><i class="fas fa-tag"></i> Código Promocional:</label>
-                                    <select id="codigo_oferta_modal" name="codigo_oferta" class="form-control">
-                                        <option value="">-- Selecione uma oferta --</option>
-                                        <option value="LOVE260">LOVE260</option>
-                                        <option value="PARTY260">PARTY260</option>
-                                        <option value="RETIRO240">RETIRO240</option>
-                                    </select>
-                                </div>
-                                <div id="detalhes-oferta-modal" style="display: none;">
-                                    <h4 id="titulo-oferta-modal"></h4>
-                                    <p id="descricao-oferta-modal"></p>
-                                    <p id="condicoes-oferta-modal" style="font-weight: bold;"></p>
-                                </div>
-                            </div>
                             <fieldset style="margin-bottom:15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                                 <legend><i class="fas fa-concierge-bell"></i> Serviços Adicionais</legend>
                                 <div class="form-group">
@@ -801,6 +798,54 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                         </div>
                     </form>
                     <div id="reservaMsgModal" style="margin-top:10px;"></div>
+                </div>
+            </div>
+            <!-- Modal Novo Hóspede (Etapa única, igual registar.php) -->
+            <div id="flashMessage" style="display:none;position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#28a745;color:#fff;padding:14px 32px;border-radius:8px;font-size:17px;z-index:2000;box-shadow:0 2px 12px rgba(0,0,0,0.15);font-weight:600;transition:opacity 0.4s;"></div>
+            <div id="modalHospede" class="modal-overlay" style="display:none;">
+                <div class="modal-content" style="max-width: 500px;">
+                    <span class="modal-close" onclick="fecharModalHospede()">&times;</span>
+                    <h2>Novo Hóspede</h2>
+                    <form id="formNovoHospedeModal">
+                        <div class="form-group">
+                            <label for="nome_hospede_modal">Nome:</label>
+                            <input type="text" id="nome_hospede_modal" name="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email_hospede_modal">Email:</label>
+                            <input type="email" id="email_hospede_modal" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pais_codigo_hospede_modal">País:</label>
+                            <select name="pais_codigo" id="pais_codigo_hospede_modal" required>
+                                <option value="+351">Portugal (+351)</option>
+                                <option value="+34">Espanha (+34)</option>
+                                <option value="+33">França (+33)</option>
+                                <option value="+1">EUA (+1)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone_hospede_modal">Telemóvel:</label>
+                            <input type="text" id="telefone_hospede_modal" name="telefone" required placeholder="Número">
+                        </div>
+                        <div class="form-group">
+                            <label for="documento_hospede_modal">NIF:</label>
+                            <input type="text" id="documento_hospede_modal" name="documento" pattern="\d{9}" title="9 dígitos numéricos" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="morada_hospede_modal">Morada (opcional):</label>
+                            <input type="text" id="morada_hospede_modal" name="morada">
+                        </div>
+                        <div class="form-group">
+                            <label for="password_hospede_modal">Palavra-passe:</label>
+                            <input type="password" id="password_hospede_modal" name="password" minlength="8" required placeholder="Mín. 8 caracteres, 1 maiúscula e 1 número">
+                        </div>
+                        <div class="form-group">
+                            <label><input type="checkbox" name="aceitou" id="aceitou_hospede_modal" value="Sim" required> Aceito os Termos e Condições</label>
+                        </div>
+                        <button type="submit" class="atalho-btn" id="btnSalvarHospede" style="float:right;">Adicionar Hóspede</button>
+                    </form>
+                    <div id="hospedeMsgModal" style="margin-top:10px;"></div>
                 </div>
             </div>
             
@@ -1101,6 +1146,300 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 if (checkoutPicker) checkoutPicker.clear();
             });
         });
+        // --- MELHORIA: Detalhes automáticos das ofertas especiais e lógica de bloqueio de serviços ---
+        const ofertas = {
+            "LOVE260": {
+                titulo: "Oferta Romântica LOVE260",
+                descricao: "Desconto especial para casais apaixonados.",
+                condicoes: "Válido para reservas de 2 noites ou mais.",
+                preco: 260,
+                noites: 2,
+                hospedes: 2
+            },
+            "PARTY260": {
+                titulo: "Oferta Festa PARTY260",
+                descricao: "Ideal para grupos e celebrações.",
+                condicoes: "Inclui decoração temática gratuita.",
+                preco: 260,
+                noites: 2,
+                hospedes: 4
+            },
+            "RETIRO240": {
+                titulo: "Oferta Retiro RETIRO240",
+                descricao: "Desconto para estadias tranquilas.",
+                condicoes: "Válido apenas durante a semana.",
+                preco: 240,
+                noites: 4,
+                hospedes: 10
+            }
+        };
+        const selectOferta = document.getElementById('codigo_oferta_modal');
+        const detalhesOferta = document.getElementById('detalhes-oferta-modal');
+        const step2 = document.getElementById('step2');
+        const decoracaoSelect = document.getElementById('decoracao_tematica_modal');
+        let inputOutro = null;
+        // Serviços adicionais
+        const servicos = [
+            { id: 'decoracao_tematica_modal', preco: 130 },
+            { id: 'limpeza_diaria_modal', preco: 15, porNoite: true },
+            { id: 'cesto_boas_vindas_modal', preco: 10 }
+        ];
+        // Bloquear serviços adicionais se oferta selecionada
+        selectOferta.addEventListener('change', function() {
+            const val = this.value;
+            if (ofertas[val]) {
+                document.getElementById('titulo-oferta-modal').textContent = ofertas[val].titulo;
+                document.getElementById('descricao-oferta-modal').textContent = ofertas[val].descricao;
+                document.getElementById('condicoes-oferta-modal').textContent = ofertas[val].condicoes;
+                detalhesOferta.style.display = 'block';
+                // Bloquear etapa 2 (serviços adicionais)
+                if (step2) {
+                    Array.from(step2.querySelectorAll('input,select')).forEach(el => {
+                        el.disabled = true;
+                        if (el.type === 'checkbox' || el.tagName === 'SELECT') el.checked = false;
+                        if (el.tagName === 'SELECT') el.value = '';
+                    });
+                    step2.style.opacity = 0.5;
+                }
+            } else {
+                detalhesOferta.style.display = 'none';
+                // Desbloquear etapa 2
+                if (step2) {
+                    Array.from(step2.querySelectorAll('input,select')).forEach(el => {
+                        el.disabled = false;
+                    });
+                    step2.style.opacity = 1;
+                }
+            }
+            calcularTotal();
+        });
+        // Campo personalizado para "Outro" em Decoração Temática
+        if (decoracaoSelect) {
+            decoracaoSelect.addEventListener('change', function() {
+                if (this.value === 'Outro') {
+                    if (!inputOutro) {
+                        inputOutro = document.createElement('input');
+                        inputOutro.type = 'text';
+                        inputOutro.name = 'decoracao_tematica_outro';
+                        inputOutro.placeholder = 'Descreva o tema';
+                        inputOutro.className = 'form-control';
+                        inputOutro.style.marginTop = '8px';
+                        this.parentNode.appendChild(inputOutro);
+                    }
+                    inputOutro.style.display = 'block';
+                } else if (inputOutro) {
+                    inputOutro.style.display = 'none';
+                }
+            });
+        }
+        // --- Cálculo do total ---
+        function calcularTotal() {
+            const cod = selectOferta.value;
+            // Se oferta válida, mostrar valor fixo do pacote
+            if (ofertas[cod]) {
+                document.getElementById('preco_noite_modal').textContent = '--';
+                document.getElementById('noites_modal').textContent = ofertas[cod].noites;
+                document.getElementById('preco_servicos_modal').textContent = '--';
+                document.getElementById('desconto_oferta_modal').textContent = '--';
+                document.getElementById('preco_total_modal').textContent = ofertas[cod].preco.toFixed(2);
+                return;
+            }
+            // Caso normal (sem oferta)
+            const casaSel = document.getElementById('id_casa_modal');
+            const precoNoite = casaSel && casaSel.selectedOptions[0] ? parseFloat(casaSel.selectedOptions[0].getAttribute('data-preco')) : 0;
+            const checkin = document.getElementById('data_checkin_modal').value;
+            const checkout = document.getElementById('data_checkout_modal').value;
+            let noites = 0;
+            if (checkin && checkout) {
+                const d1 = new Date(checkin);
+                const d2 = new Date(checkout);
+                noites = Math.max(0, Math.round((d2-d1)/(1000*60*60*24)));
+            }
+            document.getElementById('preco_noite_modal').textContent = precoNoite.toFixed(2);
+            document.getElementById('noites_modal').textContent = noites;
+            // Serviços adicionais
+            let precoServicos = 0;
+            if (step2 && step2.style.opacity != '0.5') {
+                servicos.forEach(s => {
+                    const el = document.getElementById(s.id);
+                    if (el) {
+                        if (el.type === 'checkbox' && el.checked) {
+                            precoServicos += s.porNoite ? (s.preco * noites) : s.preco;
+                        } else if (el.tagName === 'SELECT' && el.value && s.id === 'decoracao_tematica_modal') {
+                            precoServicos += s.preco;
+                        }
+                    }
+                });
+            }
+            document.getElementById('preco_servicos_modal').textContent = precoServicos.toFixed(2);
+            document.getElementById('desconto_oferta_modal').textContent = '--';
+            let total = (precoNoite * noites) + precoServicos;
+            if (total < 0) total = 0;
+            document.getElementById('preco_total_modal').textContent = total.toFixed(2);
+        }
+        // Atualizar total ao mudar campos relevantes
+        document.getElementById('id_casa_modal').addEventListener('change', calcularTotal);
+        document.getElementById('data_checkin_modal').addEventListener('change', calcularTotal);
+        document.getElementById('data_checkout_modal').addEventListener('change', calcularTotal);
+        if (decoracaoSelect) decoracaoSelect.addEventListener('change', calcularTotal);
+        ['limpeza_diaria_modal','cesto_boas_vindas_modal'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', calcularTotal);
+        });
+        selectOferta.addEventListener('change', calcularTotal);
+        // Inicializar total ao abrir modal
+        document.getElementById('modalReserva').addEventListener('show', calcularTotal);
+        // Também ao avançar etapas
+        window.wizardProximo = function(etapa) {
+            if (etapa === 1) {
+                if (!document.getElementById('id_casa_modal').value || !document.getElementById('data_checkin_modal').value || !document.getElementById('data_checkout_modal').value || !document.getElementById('id_hospede_modal').value || !document.getElementById('num_hospedes_modal').value) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+            }
+            document.getElementById('step'+etapa).style.display = 'none';
+            document.getElementById('step'+(etapa+1)).style.display = 'block';
+            calcularTotal();
+        }
+        // Atualizar total ao abrir modal
+        document.getElementById('modalReserva').addEventListener('click', function(e) {
+            if (e.target === this) calcularTotal();
+        });
+        // --- BLOQUEIO DE DATAS CHECKIN/CHECKOUT CONFORME OFERTA ---
+        function bloquearDatasOferta() {
+            const cod = selectOferta.value;
+            if (ofertas[cod]) {
+                // Ao selecionar check-in, checkout é automaticamente definido e bloqueado
+                if (checkinPicker && checkoutPicker) {
+                    checkinPicker.config.onChange = [function(selectedDates) {
+                        if (selectedDates.length > 0) {
+                            const checkinDate = selectedDates[0];
+                            const checkoutDate = new Date(checkinDate);
+                            checkoutDate.setDate(checkoutDate.getDate() + ofertas[cod].noites);
+                            checkoutPicker.setDate(checkoutDate);
+                            checkoutPicker.set('minDate', checkoutDate);
+                            checkoutPicker.set('maxDate', checkoutDate);
+                            document.getElementById('data_checkout_modal').readOnly = true;
+                            document.getElementById('data_checkin_modal').readOnly = false;
+                        }
+                    }];
+                    // Se já houver check-in selecionado
+                    if (checkinPicker.selectedDates.length > 0) {
+                        const checkinDate = checkinPicker.selectedDates[0];
+                        const checkoutDate = new Date(checkinDate);
+                        checkoutDate.setDate(checkoutDate.getDate() + ofertas[cod].noites);
+                        checkoutPicker.setDate(checkoutDate);
+                        checkoutPicker.set('minDate', checkoutDate);
+                        checkoutPicker.set('maxDate', checkoutDate);
+                        document.getElementById('data_checkout_modal').readOnly = true;
+                        document.getElementById('data_checkin_modal').readOnly = false;
+                    }
+                }
+            } else {
+                // Restaurar comportamento normal
+                if (checkinPicker && checkoutPicker) {
+                    checkinPicker.config.onChange = [function(selectedDates) {
+                        if (selectedDates.length > 0) {
+                            const checkinDate = selectedDates[0];
+                            checkoutPicker.set('minDate', new Date(checkinDate.getTime() + 86400000));
+                            checkoutPicker.set('maxDate', null);
+                            document.getElementById('data_checkout_modal').readOnly = false;
+                        }
+                    }];
+                    checkoutPicker.set('minDate', null);
+                    checkoutPicker.set('maxDate', null);
+                    document.getElementById('data_checkout_modal').readOnly = false;
+                }
+            }
+        }
+        // Integrar com o evento de mudança da oferta
+        selectOferta.addEventListener('change', function() {
+            bloquearDatasOferta();
+        });
+        // Integrar ao abrir modal
+        document.addEventListener('DOMContentLoaded', function() {
+            bloquearDatasOferta();
+        });
+        // --- Novo Hóspede (modal etapa única, PT-PT, flash message) ---
+        function mostrarFlashMessage(msg) {
+            const flash = document.getElementById('flashMessage');
+            flash.textContent = msg;
+            flash.style.display = 'block';
+            flash.style.opacity = 1;
+            setTimeout(() => {
+                flash.style.opacity = 0;
+                setTimeout(() => flash.style.display = 'none', 400);
+            }, 3000);
+        }
+        document.getElementById('btnSalvarHospede').onclick = async function(ev) {
+            ev.preventDefault();
+            const nome = document.getElementById('nome_hospede_modal').value.trim();
+            const email = document.getElementById('email_hospede_modal').value.trim();
+            const pais = document.getElementById('pais_codigo_hospede_modal').value;
+            const telefone = document.getElementById('telefone_hospede_modal').value.trim();
+            const documento = document.getElementById('documento_hospede_modal').value.trim();
+            const morada = document.getElementById('morada_hospede_modal').value.trim();
+            const password = document.getElementById('password_hospede_modal').value;
+            const aceitou = document.getElementById('aceitou_hospede_modal').checked ? 'Sim' : '';
+            if (!nome || !email || !pais || !telefone || !documento || !password || !aceitou) {
+                document.getElementById('hospedeMsgModal').innerHTML = 'Preencha todos os campos obrigatórios.';
+                return;
+            }
+            document.getElementById('hospedeMsgModal').innerHTML = 'A guardar...';
+            const formData = new FormData();
+            formData.append('nome', nome);
+            formData.append('email', email);
+            formData.append('pais_codigo', pais);
+            formData.append('telefone', telefone);
+            formData.append('documento', documento);
+            formData.append('morada', morada);
+            formData.append('password', password);
+            formData.append('aceitou', aceitou);
+            formData.append('novo_hospede', '1');
+            const resp = await fetch('adicionar_hospede.php', { method: 'POST', body: formData });
+            const txt = await resp.text();
+            if (txt.toLowerCase().includes('sucesso')) {
+                fecharModalHospede();
+                mostrarFlashMessage('Hóspede criado com sucesso!');
+            } else {
+                document.getElementById('hospedeMsgModal').innerHTML = txt.replace('sucesso', 'sucesso').replace('cadastrado', 'criado').replace('telefone', 'telemóvel').replace('senha', 'palavra-passe').replace('preencha', 'preencha').replace('erro', 'erro');
+            }
+        };
+        document.getElementById('formNovoHospedeModal').onsubmit = function(ev) {
+            ev.preventDefault();
+            document.getElementById('btnSalvarHospede').click();
+        };
+        function abrirModalHospede(e) {
+            e.preventDefault();
+            document.getElementById('modalHospede').style.display = 'flex';
+            document.getElementById('formNovoHospedeModal').reset();
+            document.getElementById('hospedeMsgModal').innerHTML = '';
+        }
+        function fecharModalHospede() {
+            document.getElementById('modalHospede').style.display = 'none';
+            document.getElementById('formNovoHospedeModal').reset();
+            document.getElementById('hospedeMsgModal').innerHTML = '';
+        }
+        // Máscara dinâmica de telemóvel
+        function aplicarMascaraTelefoneModal(input, pais) {
+            let v = input.value.replace(/\D/g, '');
+            if (pais === '+351' || pais === '+34' || pais === '+33') {
+                v = v.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+            } else if (pais === '+1') {
+                v = v.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            }
+            input.value = v.trim();
+        }
+        const telefoneInputModal = document.getElementById('telefone_hospede_modal');
+        const paisInputModal = document.getElementById('pais_codigo_hospede_modal');
+        if (telefoneInputModal && paisInputModal) {
+            telefoneInputModal.addEventListener('input', function() {
+                aplicarMascaraTelefoneModal(this, paisInputModal.value);
+            });
+            paisInputModal.addEventListener('change', function() {
+                aplicarMascaraTelefoneModal(telefoneInputModal, this.value);
+            });
+        }
         </script>
     </body>
-    </html>
+</html>

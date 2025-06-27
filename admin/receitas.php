@@ -36,6 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita']))
     $tipo = $_POST['tipo'] ?? '';
     $origem = $_POST['origem'] ?? '';
     $id_hospede = $_POST['hospede'] ?? null;
+    $recorrente = isset($_POST['recorrente']) ? 1 : 0;
+    $periodicidade = $_POST['periodicidade'] ?? null;
+    $data_fim_recorrencia = $_POST['data_fim_recorrencia'] ?? null;
     $tipos_validos = ['gorjeta', 'reembolso', 'outro'];
     $origens_validas = ['dinheiro', 'mbway', 'transferencia bancaria'];
 
@@ -44,9 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_receita']))
     } elseif (!in_array($tipo, $tipos_validos) || !in_array($origem, $origens_validas)) {
         set_flash("Tipo ou origem inválido(s).", 'error');
     } else {
-        $stmt = $conexao->prepare("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id) VALUES (?, ?, CURDATE(), ?, ?, ?)");
+        $stmt = $conexao->prepare("INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_origem, R_origem_id, recorrente, periodicidade, data_fim_recorrencia) VALUES (?, ?, CURDATE(), ?, ?, ?, ?, ?, ?)");
         $origem_id = is_numeric($id_hospede) ? intval($id_hospede) : 0;
-        $stmt->bind_param('sdssi', $descricao, $valor, $tipo, $origem, $origem_id);
+        $stmt->bind_param('sdssiiss', $descricao, $valor, $tipo, $origem, $origem_id, $recorrente, $periodicidade, $data_fim_recorrencia);
         if ($stmt->execute()) {
             $stmt2 = $conexao->prepare("UPDATE conta_virtual SET saldo = saldo + ? WHERE id = 1");
             $stmt2->bind_param('d', $valor);
@@ -158,6 +161,20 @@ foreach ($hospedes as $h) {
             <?php endforeach; ?>
         </select>
     </label>
+    <br><br>
+    <label><input type="checkbox" name="recorrente" value="1" id="recorrente_cb" onchange="document.getElementById('recorrencia_opts').style.display=this.checked?'block':'none'"> Receita recorrente</label>
+    <div id="recorrencia_opts" style="display:none; margin-top:10px;">
+        <label>Periodicidade:
+            <select name="periodicidade">
+                <option value="mensal">Mensal</option>
+                <option value="semanal">Semanal</option>
+                <option value="anual">Anual</option>
+            </select>
+        </label>
+        <label>Data de término:
+            <input type="date" name="data_fim_recorrencia">
+        </label>
+    </div>
     <button type="submit" name="adicionar_receita">Adicionar Receita</button>
 </form>
 <a href="admin.php">← Voltar</a>

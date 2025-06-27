@@ -18,7 +18,7 @@ $stmt->execute();
 $resultado = $stmt->get_result();
 $reservas = $resultado->fetch_all(MYSQLI_ASSOC);
 ?>
-<link rel="stylesheet" href="../public/css/admin.css">
+<link rel="stylesheet" href="global.css">
 
 <div class="page-title">
     <h1><i class="fas fa-calendar-alt"></i> <?= I18n::get('my_reservations') ?></h1>

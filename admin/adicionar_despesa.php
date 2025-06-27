@@ -6,6 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $valor = $_POST['valor'];
     $data = $_POST['data'];
     $descricao = $_POST['descricao'];
+    $recorrente = isset($_POST['recorrente']) ? 1 : 0;
+    $periodicidade = $_POST['periodicidade'] ?? null;
+    $data_fim_recorrencia = $_POST['data_fim_recorrencia'] ?? null;
 
     // Validação de valor
     if (!is_numeric($valor) || $valor <= 0) {
@@ -13,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $conexao->prepare("INSERT INTO despesas (D_nome, D_valor, D_data, D_descricao) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sdss", $nome, $valor, $data, $descricao);
+    $stmt = $conexao->prepare("INSERT INTO despesas (D_nome, D_valor, D_data, D_descricao, recorrente, periodicidade, data_fim_recorrencia) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sdssiss", $nome, $valor, $data, $descricao, $recorrente, $periodicidade, $data_fim_recorrencia);
     $stmt->execute();
 
     header("Location: despesas.php");
@@ -37,6 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Valor (€): <input type="number" step="0.01" name="valor" required><br><br>
         Data: <input type="date" name="data" required><br><br>
         Descrição: <textarea name="descricao"></textarea><br><br>
+        <label>
+            <input type="checkbox" name="recorrente" value="1" id="recorrente_cb" onchange="document.getElementById('recorrencia_opts').style.display=this.checked?'block':'none'"> Despesa recorrente
+        </label>
+        <div id="recorrencia_opts" style="display:none; margin-top:10px;">
+            <label>Periodicidade:
+                <select name="periodicidade">
+                    <option value="mensal">Mensal</option>
+                    <option value="semanal">Semanal</option>
+                    <option value="anual">Anual</option>
+                </select>
+            </label>
+            <label>Data de término:
+                <input type="date" name="data_fim_recorrencia">
+            </label>
+        </div>
         <button type="submit">Salvar</button>
     </form>
     <a href="despesas.php">← Voltar</a>

@@ -95,6 +95,29 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['pagar'])) {
     header("Location: despesas.php");
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST['nome'];
+    $valor = $_POST['valor'];
+    $data = $_POST['data'];
+    $descricao = $_POST['descricao'];
+    $recorrente = isset($_POST['recorrente']) ? 1 : 0;
+    $periodicidade = $_POST['periodicidade'] ?? null;
+    $data_fim_recorrencia = $_POST['data_fim_recorrencia'] ?? null;
+
+    // Validação de valor
+    if (!is_numeric($valor) || $valor <= 0) {
+        echo "O valor deve ser um valor positivo.";
+        exit;
+    }
+
+    $stmt = $conexao->prepare("INSERT INTO despesas (D_nome, D_valor, D_data, D_descricao, recorrente, periodicidade, data_fim_recorrencia) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sdssiss", $nome, $valor, $data, $descricao, $recorrente, $periodicidade, $data_fim_recorrencia);
+    $stmt->execute();
+
+    header("Location: despesas.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-PT">
@@ -128,7 +151,7 @@ function fecharModal() {
 function confirmarPagar(id,valor,origem) {
     const saldoAtual = <?= $saldo ?>;
     const saldoRest = (saldoAtual - valor).toFixed(2);
-    if (!confirm(`Vai pagar ${valor.toFixed(2)} € da despesa de ${origem} com ID ${id}?\nSaldo restante: ${saldoRest} €`)) {
+    if (!confirm(`Vai pagar ${valor.toFixed(2)} € da despesa de ${origem} com ID ${id}?\nSaldo restante: ${saldoRest} €`)) {
         return false;
     }
     return true;
@@ -150,7 +173,7 @@ window.onload = atualizarTotal;
     <h1>Todos as Despesas</h1>
 </div>
 
-<h2>Saldo atual: <strong><?= number_format($saldo,2) ?> €</strong></h2>
+<h2>Saldo atual: <strong><?= number_format($saldo,2) ?> €</strong></h2>
 <?php show_flash(); ?>
 <form method="get" action="despesas.php" style="margin-bottom:20px;">
   <label>Origem:

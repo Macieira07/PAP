@@ -106,7 +106,7 @@ require_once 'header.php';
     <title><?= I18n::get('reservation') ?> - <?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <link rel="icon" type="image/x-icon" href="../logotipos/logotipo2.png">
 </head>
 <body>
