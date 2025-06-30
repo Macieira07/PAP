@@ -36,16 +36,6 @@
     --transicao: all 0.3s ease;
 }
 
-/* Importar fonte Lufga */
-@font-face {
-    font-family: 'Lufga';
-    src: url('https://fonts.cdnfonts.com/css/lufga') format('woff2'),
-         url('https://fonts.cdnfonts.com/css/lufga') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* Seleção de texto */
 ::selection {
     background-color: rgba(52, 152, 219, 0.2);
@@ -319,6 +309,7 @@ form {
     box-shadow: var(--sombra-suave);
     border: 1px solid var(--cor-borda);
 }
+
 /* Campos de formulário */
 input[type="text"],
 input[type="email"],
@@ -339,6 +330,7 @@ textarea {
     background-color: var(--cor-branco);
     color: var(--cor-texto-principal);
 }
+
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="tel"]:focus,
@@ -351,94 +343,92 @@ textarea:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
+
 textarea {
     min-height: 120px;
     resize: vertical;
 }
+
 /* Botões */
 button {
-  position: relative;
-  margin: 0;
-  padding: 0.8em 1em;
-  outline: none;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border: none;
-  text-transform: uppercase;
-  background-color: #5c7ff3;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 300;
-  font-size: 13px;
-  font-family: inherit;
-  z-index: 0;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+    position: relative;
+    margin: 0;
+    padding: 0.8em 1em;
+    outline: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    background-color: #5c7ff3;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 300;
+    font-size: 13px;
+    font-family: inherit;
+    z-index: 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
 }
+
 button:hover {
-  animation: sh0 0.5s ease-in-out both;
+    animation: sh0 0.5s ease-in-out both;
 }
+
 @keyframes sh0 {
-  0% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
-  }
-
-  25% {
-    transform: rotate(7deg) translate3d(0, 0, 0);
-  }
-
-  50% {
-    transform: rotate(-7deg) translate3d(0, 0, 0);
-  }
-
-  75% {
-    transform: rotate(1deg) translate3d(0, 0, 0);
-  }
-
-  100% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
-  }
+    0% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+    25% {
+        transform: rotate(7deg) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: rotate(-7deg) translate3d(0, 0, 0);
+    }
+    75% {
+        transform: rotate(1deg) translate3d(0, 0, 0);
+    }
+    100% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
 }
 
 button:hover span {
-  animation: storm 0.7s ease-in-out both;
-  animation-delay: 0.06s;
+    animation: storm 0.7s ease-in-out both;
+    animation-delay: 0.06s;
 }
 
 button::before,
 button::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: #fff;
-  opacity: 0;
-  transition: transform 0.15s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.15s cubic-bezier(0.02, 0.01, 0.47, 1);
-  z-index: -1;
-  transform: translate(100%, -25%) translate3d(0, 0, 0);
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+    transition: transform 0.15s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.15s cubic-bezier(0.02, 0.01, 0.47, 1);
+    z-index: -1;
+    transform: translate(100%, -25%) translate3d(0, 0, 0);
 }
 
 button:hover::before,
 button:hover::after {
-  opacity: 0.15;
-  transition: transform 0.2s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.2s cubic-bezier(0.02, 0.01, 0.47, 1);
+    opacity: 0.15;
+    transition: transform 0.2s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.2s cubic-bezier(0.02, 0.01, 0.47, 1);
 }
 
 button:hover::before {
-  transform: translate3d(50%, 0, 0) scale(0.9);
+    transform: translate3d(50%, 0, 0) scale(0.9);
 }
 
 button:hover::after {
-  transform: translate(50%, 0) scale(1.1);
+    transform: translate(50%, 0) scale(1.1);
 }
-
-
 
 button.btn-secondary {
     background-color: var(--cor-texto-secundario);
@@ -973,6 +963,7 @@ a.voltar:hover {
         max-width: 300px;
     }
 }
+
 .flatpickr-day.flatpickr-disabled.ocupada {
     background-color: transparent !important;
     color: #e03e3e !important; /* vermelho suave, mais agradável */

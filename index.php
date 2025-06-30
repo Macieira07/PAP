@@ -47,7 +47,6 @@ function getImage($key, $default) {
     <link rel="stylesheet" href="components/header.css">
     <link rel="stylesheet" href="components/footer.css">
     <link rel="stylesheet" type="text/css" href="assets/i18n/translator.css">
-    <link rel="stylesheet" type="text/css" href="index/lermais.css"> <!-- Adicionado: CSS das bandeiras -->
     <title>QUINTA | FLORES</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
@@ -64,7 +63,6 @@ function getImage($key, $default) {
             <i class="ri-arrow-down-s-line"></i>
         </a>
     </section>
-    
  <!-- Boking Section -->
  <section class="booking__container" id="booking">
   <form class="booking__form" id="bookingForm">

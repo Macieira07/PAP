@@ -957,6 +957,7 @@ return [
 'transfer_confirmation_note' => 'Tu reserva será confirmada tras validar el comprobante. Envíalo con el número de reserva como referencia',
 'cash_payment' => 'Pago en Efectivo',
 'cash_payment_note' => 'El pago en efectivo debe realizarse durante el check-in. Tu reserva quedará pendiente hasta la confirmación del pago',
+    'digital_confirmation_notice' => 'Entiendo que voy a recibir una confirmación digital',
     'card_expiry_required' => 'La fecha de vencimiento de la tarjeta es obligatoria',
     'invalid_cvc' => 'Código CVC no válido',
     'invalid_mbway' => 'Número de MB WAY no válido',

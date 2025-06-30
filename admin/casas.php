@@ -33,7 +33,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="casas.css">
+    <link rel="stylesheet" href="global.css">
     <meta charset="UTF-8">
     <title>Casas</title>
 </head>
@@ -60,8 +60,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     </div>
 
     <a href="admin.php">← Voltar</a> | 
-    <a href="adicionar_casa.php">+ Adicionar Casa</a>
-    
+    <a href="#" id="btnAdicionarCasa">+ Adicionar Casa</a>
     <form method="get" action="casas.php" style="margin-top: 20px;">
         <input type="text" name="pesquisa" placeholder="Pesquisar por nome, estado ou capacidade" value="<?= isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '' ?>">
         <button type="submit">Pesquisar</button>
@@ -84,7 +83,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
                 <td><?= $casa['C_preco_noite'] ?>€</td>
                 <td><?= $casa['C_estado'] ?></td>
                 <td>
-                    <a href="editar_casa.php?id=<?= $casa['C_id_casa'] ?>">Editar</a> |
+                    <a href="#" class="btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">Editar</a> |
                     <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
                 </td>
             </tr>
@@ -96,6 +95,72 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
             <a href="casas.php?pagina=<?= $i ?>&pesquisa=<?= $pesquisa ?>"><?= $i ?></a> 
         <?php endfor; ?>
     </div>
+
+    <!-- Modal para adicionar/editar casa -->
+    <div id="modalCasa" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:#fff; padding:30px; border-radius:8px; min-width:350px; max-width:90vw; position:relative; max-height:90vh; overflow-y:auto;">
+            <button onclick="fecharModalCasa()" style="position:absolute; top:10px; right:10px; font-size:20px; background:none; border:none; cursor:pointer;">&times;</button>
+            <div id="modalConteudoCasa"></div>
+        </div>
+    </div>
+
+    <script>
+    function abrirModalCasa() {
+        document.getElementById('modalCasa').style.display = 'flex';
+    }
+    function fecharModalCasa() {
+        document.getElementById('modalCasa').style.display = 'none';
+        document.getElementById('modalConteudoCasa').innerHTML = '';
+    }
+    // Adicionar casa
+    document.getElementById('btnAdicionarCasa').onclick = function(e) {
+        e.preventDefault();
+        fetch('adicionar_casa.php?modal=1')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('modalConteudoCasa').innerHTML = html;
+                abrirModalCasa();
+                bindFormAjaxCasa();
+            });
+    };
+    // Editar casa
+    document.querySelectorAll('.btnEditarCasa').forEach(btn => {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+            fetch('editar_casa.php?id=' + id + '&modal=1')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('modalConteudoCasa').innerHTML = html;
+                    abrirModalCasa();
+                    bindFormAjaxCasa();
+                });
+        };
+    });
+    // Submissão AJAX do formulário
+    function bindFormAjaxCasa() {
+        const form = document.querySelector('#modalConteudoCasa form');
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(r => r.text())
+                .then(resp => {
+                    if (resp.trim() === 'OK') {
+                        window.location.reload();
+                    } else {
+                        document.getElementById('modalConteudoCasa').innerHTML = resp;
+                        bindFormAjaxCasa();
+                    }
+                });
+            };
+        }
+    }
+    </script>
     <script>document.body.classList.toggle("dark-mode");</script>
 </body>
 </html>

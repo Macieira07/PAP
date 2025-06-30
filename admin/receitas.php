@@ -85,7 +85,7 @@ foreach ($hospedes as $h) {
 <head>
     <meta charset="UTF-8" />
     <title>Receitas</title>
-    <link rel="stylesheet" href="../public/css/admin.css" />
+    <link rel="stylesheet" href="global.css" />
     <style>
         .saldo-positivo { color: green; }
         .saldo-negativo { color: red; }

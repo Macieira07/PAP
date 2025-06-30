@@ -239,7 +239,9 @@ require_once 'header.php';
                 <div id="erro-telefone" class="error-message"></div>
             </div>
             <div class="form-group">
-                <label><input type="checkbox" id="confirmacao" name="confirmacao" value="1" <?= (isset($_POST['confirmacao']) && $_POST['confirmacao'] == 1) ? 'checked' : '' ?>><i class="fas fa-check-circle"></i> Entendo que vou receber uma confirmação digital</label>
+                <label><input type="checkbox" id="confirmacao" name="confirmacao" value="1" <?= (isset($_POST['confirmacao']) && $_POST['confirmacao'] == 1) ? 'checked' : '' ?>>
+                    <i class="fas fa-check-circle"></i> <?= I18n::get('digital_confirmation_notice') ?>
+                </label>
             </div>
             <div class="form-group">
                 <label><input type="checkbox" id="cancelamento" name="cancelamento" value="1" <?= (isset($_POST['cancelamento']) && $_POST['cancelamento'] == 1) ? 'checked' : '' ?> required><i class="fas fa-info-circle"></i> <?= I18n::get('cancellation_policy') ?></label>
@@ -283,6 +285,17 @@ require_once 'header.php';
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Traduções para uso no JS
+            const translations = {
+                invalidPhone: '<?= I18n::get('invalid_phone') ?>',
+                invalidDocument: '<?= I18n::get('invalid_document') ?>',
+                expectedFormat: '<?= I18n::get('expected_format') ?>',
+                phoneFormat: '<?= I18n::get('phone_format') ?>',
+                documentFormat: '<?= I18n::get('document_format') ?>',
+                thankYou: '<?= I18n::get('thank_you_message') ?>',
+                requiredField: '<?= I18n::get('required_field') ?>',
+            };
+
             const paisRegiaoSelect = document.getElementById('pais_regiao');
             const codigoPaisSelect = document.getElementById('codigo_pais');
             const telefoneInput = document.getElementById('telefone');
@@ -309,7 +322,6 @@ require_once 'header.php';
                 },
                 <?php endforeach; ?>
             };
-
             function atualizarCamposPorPais(pais) {
                 if (!pais) return;
                 if (paises[pais] && codigoPaisSelect) {
@@ -334,14 +346,12 @@ require_once 'header.php';
                     }
                 }
             }
-
             if (paisRegiaoSelect) {
                 paisRegiaoSelect.addEventListener('change', function () {
                     atualizarCamposPorPais(this.value);
                 });
                 atualizarCamposPorPais(paisRegiaoSelect.value);
             }
-
             if (codigoPaisSelect) {
                 codigoPaisSelect.addEventListener('change', function () {
                     const codigo = this.value;
@@ -356,7 +366,6 @@ require_once 'header.php';
                     }
                 });
             }
-
             const emailInput = document.getElementById('email');
             if (emailInput) {
                 emailInput.addEventListener('blur', validarEmail);
@@ -377,7 +386,6 @@ require_once 'header.php';
                     if (erroEmail) erroEmail.style.display = 'none';
                 }
             }
-
             function validarDocumento() {
                 const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'DEFAULT';
                 const docInfo = documentos[pais] || documentos['DEFAULT'];
@@ -392,7 +400,7 @@ require_once 'header.php';
                     const regex = new RegExp('^' + docInfo.regex + '$');
                     if (!regex.test(documento)) {
                         erroDoc.style.display = 'block';
-                        erroDoc.innerHTML = '<i class="fas fa-exclamation-circle"></i> Documento inválido. Formato esperado: ' + docInfo.descricao;
+                        erroDoc.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + translations.invalidDocument + '. ' + translations.expectedFormat + ': ' + docInfo.descricao;
                         return false;
                     } else {
                         erroDoc.style.display = 'none';
@@ -409,7 +417,6 @@ require_once 'header.php';
                 documentoInput.addEventListener('input', validarDocumento);
                 documentoInput.addEventListener('blur', validarDocumento);
             }
-
             function validarTelefone() {
                 const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'PT';
                 const telefone = telefoneInput.value;
@@ -424,7 +431,7 @@ require_once 'header.php';
                         const regex = new RegExp('^' + paises[pais].regex + '$');
                         if (!regex.test(telefone)) {
                             erroTel.style.display = 'block';
-                            erroTel.innerHTML = '<i class="fas fa-exclamation-circle"></i> Telefone inválido. Formato esperado: ' + paises[pais].codigo + ' ' + (paises[pais].exemplo || '');
+                            erroTel.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + translations.invalidPhone + '. ' + translations.expectedFormat + ': ' + paises[pais].codigo + ' ' + (paises[pais].exemplo || '');
                             return false;
                         } else {
                             erroTel.style.display = 'none';
@@ -520,7 +527,7 @@ require_once 'header.php';
                 setTimeout(() => {
                     const botMessage = document.createElement('div');
                     botMessage.className = 'chatbot-message bot-message';
-                    botMessage.textContent = 'Obrigado pela sua mensagem. Como posso ajudar?';
+                    botMessage.textContent = translations.thankYou;
                     messages.appendChild(botMessage);
                     messages.scrollTop = messages.scrollHeight;
                 }, 500);

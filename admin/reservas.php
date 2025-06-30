@@ -51,7 +51,7 @@ $paginas = ceil($total_reservas / $por_pagina);
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <title>Gestão de Reservas</title>
     <style>
         .flash-message {

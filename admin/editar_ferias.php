@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <meta charset="UTF-8">
     <title>Editar Férias/Ausência</title>
     <style>

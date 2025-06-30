@@ -1,7 +1,80 @@
 <?php
 require '../conexao.php';
 
-// Lista predefinida de tipos e descrições
+if (isset($_GET['modal'])) {
+    // Só o formulário, sem HTML completo
+    $tipos_manutencao = [
+        "Canalizações (canos, torneiras, autoclismo)" => "Reparação ou substituição de canos, torneiras e autoclismos.",
+        "Instalações elétricas (lâmpadas, tomadas, quadro elétrico)" => "Substituição de lâmpadas, tomadas e verificação do quadro elétrico.",
+        "Eletrodomésticos (frigorífico, máquina de lavar, micro-ondas)" => "Revisão e reparação de eletrodomésticos essenciais.",
+        "Ar-condicionado e aquecimento" => "Limpeza de filtros, verificação de gás e funcionamento geral.",
+        "Fechaduras e chaves (portas e janelas)" => "Troca de fechaduras, cópia de chaves e lubrificação.",
+        "Pintura e retoques nas paredes" => "Pintura de paredes e retoques em áreas danificadas.",
+        "Mobiliário (reparação ou substituição de peças danificadas)" => "Reparação ou substituição de móveis danificados.",
+        "Jardinagem (relva, arbustos, rega)" => "Corte de relva, poda de arbustos e verificação do sistema de rega.",
+        "Piscina (tratamento da água, limpeza de filtros)" => "Tratamento químico da água e limpeza dos filtros da piscina.",
+        "Churrasqueira (limpeza e manutenção da estrutura)" => "Limpeza da estrutura e verificação da integridade da churrasqueira.",
+        "Iluminação exterior" => "Substituição de lâmpadas e manutenção de circuitos exteriores.",
+        "Extintores e detetores de fumo/gás" => "Verificação da validade e testes de funcionamento dos equipamentos.",
+        "Câmaras de segurança e sistemas de alarme" => "Testes e manutenção dos equipamentos de segurança.",
+        "Grades ou vedações de segurança" => "Verificação da integridade e reparações necessárias.",
+        "Verificações periódicas agendadas (mensais ou trimestrais)" => "Inspeções regulares de todos os sistemas e equipamentos.",
+        "Substituição de baterias (comando de portão, detetores de fumo, etc.)" => "Troca preventiva de baterias em dispositivos críticos.",
+        "Testes de funcionamento geral antes da chegada de hóspedes" => "Testes e ajustes finais de todos os sistemas para garantir conforto e segurança."
+    ];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id_casa = $_POST['id_casa'];
+        $tipo = $_POST['tipo'];
+        $data_inicio = $_POST['data_inicio'];
+        $data_fim = $_POST['data_fim'];
+        $custo = $_POST['custo'];
+        $stmt = $conexao->prepare("INSERT INTO manutencao (M_id_casa, M_tipo, M_data_inicio, M_data_fim, M_custo) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssd", $id_casa, $tipo, $data_inicio, $data_fim, $custo);
+        $stmt->execute();
+        echo 'OK';
+        exit;
+    }
+    $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
+    ?>
+    <form method="post">
+        <div>
+            <label>Casa:</label>
+            <select name="id_casa" required>
+                <option value="">Selecione...</option>
+                <?php while ($casa = $casas->fetch_assoc()): ?>
+                    <option value="<?= $casa['C_id_casa'] ?>"><?= htmlspecialchars($casa['C_nome']) ?></option>
+                <?php endwhile; ?>
+            </select><br><br>
+            <label>Tipo de Manutenção:</label>
+            <select name="tipo" id="tipo" onchange="atualizarDescricao()" required>
+                <option value="">Selecione...</option>
+                <?php foreach ($tipos_manutencao as $tipo => $desc): ?>
+                    <option value="<?= htmlspecialchars($tipo) ?>"><?= htmlspecialchars($tipo) ?></option>
+                <?php endforeach; ?>
+            </select><br><br>
+            <label>Descrição:</label>
+            <textarea id="descricao" readonly rows="4" style="width: 100%;"></textarea><br><br>
+            <label>Data Início:</label>
+            <input type="date" name="data_inicio" required><br><br>
+            <label>Data Fim:</label>
+            <input type="date" name="data_fim"><br><br>
+            <label>Custo :</label>
+            <input type="number" name="custo" step="0.01" required><br><br>
+            <button type="submit">Salvar</button>
+        </div>
+    </form>
+    <script>
+    function atualizarDescricao() {
+        const tipoSelect = document.getElementById("tipo");
+        const descricaoInput = document.getElementById("descricao");
+        const descricoes = <?= json_encode($tipos_manutencao) ?>;
+        descricaoInput.value = descricoes[tipoSelect.value] || "";
+    }
+    </script>
+    <?php
+    exit;
+}
+
 $tipos_manutencao = [
     "Canalizações (canos, torneiras, autoclismo)" => "Reparação ou substituição de canos, torneiras e autoclismos.",
     "Instalações elétricas (lâmpadas, tomadas, quadro elétrico)" => "Substituição de lâmpadas, tomadas e verificação do quadro elétrico.",
@@ -47,7 +120,7 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome FROM casas");
     <title>Adicionar Manutenção</title>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <script>
         function atualizarDescricao() {
             const tipoSelect = document.getElementById("tipo");

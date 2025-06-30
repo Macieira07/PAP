@@ -46,27 +46,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Atualizar Imagens</title>
-    <link rel="stylesheet" href="atualizar_index.css">
-
+    <link rel="stylesheet" href="global.css"/>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .message.success { color: green; }
-        .message.error { color: red; }
-        div.image-update { margin-bottom: 30px; }
-        img { display: block; margin-bottom: 10px; max-width: 300px; }
+        .image-update {
+            background: var(--cor-card);
+            border-radius: var(--raio-borda);
+            box-shadow: var(--sombra-suave);
+            padding: 18px 16px;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+        .image-update h3 {
+            margin-top: 0;
+            color: var(--cor-titulo);
+        }
+        .image-update img {
+            display: block;
+            margin-bottom: 10px;
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(46,80,144,0.10);
+        }
+        .image-update form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        hr {
+            border: none;
+            border-top: 1.5px solid var(--cor-borda);
+            margin: 24px 0;
+        }
     </style>
 </head>
 <body>
     <h1>Atualizar Imagens</h1>
-
     <?php if(isset($_SESSION['message'])): ?>
-        <p class="message <?= $_SESSION['message_type'] ?>"><?= htmlspecialchars($_SESSION['message']) ?></p>
+        <div class="message <?= $_SESSION['message_type'] ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
-
     <?php if(empty($aboutData)): ?>
         <p>Nenhuma imagem para mostrar.</p>
     <?php else: ?>
+        <div style="display: flex; flex-wrap: wrap; gap: 32px;">
         <?php foreach($aboutData as $key => $image): ?>
             <div class="image-update">
                 <h3><?= htmlspecialchars($key) ?></h3>
@@ -77,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
                     <button type="submit" name="update_image">Atualizar</button>
                 </form>
             </div>
-            <hr />
         <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </body>
 </html>

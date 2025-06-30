@@ -816,6 +816,7 @@ return [
 'country_region' => 'Pays/Région',
 'phone' => 'Téléphone',
 'digital_confirmation' => 'Souhaitez-vous recevoir une confirmation numérique ?',
+'digital_confirmation_notice' => 'Je comprends que je recevrai une confirmation numérique',
 'cancellation_policy' => 'Je comprends que je peux annuler jusqu’à 10 jours avant.',
 'additional_services' => 'Services Supplémentaires',
 'theme_decoration' => 'Décoration Thématique',

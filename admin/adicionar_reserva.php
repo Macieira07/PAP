@@ -17,7 +17,7 @@ while ($stmt->fetch()) {
 
     $checkin = new DateTime($data_checkin);
     $checkout = new DateTime($data_checkout);
-    while ($checkin < $checkout) { // checkout não incluso na reserva
+    while ($checkin < $checkout) { // checkout não incluido na reserva
         $ocupadas[$id_casa][] = $checkin->format('Y-m-d');
         $checkin->modify('+1 day');
     }
@@ -35,7 +35,7 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <title>Adicionar Reserva</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

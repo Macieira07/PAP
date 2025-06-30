@@ -20,7 +20,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
 <head>
     <meta charset="UTF-8">
     <title>Manutenções</title>
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <style>
@@ -47,7 +47,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
     </div>
 
     <a href="admin.php">← Voltar</a> | 
-    <a href="adicionar_manutencao.php">+ Adicionar Manutenção</a>
+    <a href="#" id="btnAdicionarManutencao">+ Adicionar Manutenção</a>
 
     <table border="1" cellpadding="10" style="margin-top: 20px;">
         <tr>
@@ -68,7 +68,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
                 <td><?= $manutencao['M_data_fim'] ? $manutencao['M_data_fim'] : 'Não definida' ?></td>
                 <td><?= number_format($manutencao['M_custo'], 2, ',', '.') ?>€</td>
                 <td>
-                    <a href="editar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>">Editar</a> |
+                    <a href="#" class="btnEditarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">Editar</a> |
                     <a href="eliminar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
                 </td>
             </tr>
@@ -81,5 +81,72 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
     <div style="margin-top: 20px;">
         <strong>Total Gasto em Manutenções: <?= number_format($total_gasto, 2, ',', '.') ?>€</strong>
     </div>
+
+    <!-- Modal para adicionar/editar manutenção -->
+    <div id="modalManutencao" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:#fff; padding:30px; border-radius:8px; min-width:350px; max-width:90vw; position:relative;">
+            <button onclick="fecharModal()" style="position:absolute; top:10px; right:10px; font-size:20px; background:none; border:none; cursor:pointer;">&times;</button>
+            <div id="modalConteudo"></div>
+        </div>
+    </div>
+
+    <script>
+    function abrirModal() {
+        document.getElementById('modalManutencao').style.display = 'flex';
+    }
+    function fecharModal() {
+        document.getElementById('modalManutencao').style.display = 'none';
+        document.getElementById('modalConteudo').innerHTML = '';
+    }
+    // Adicionar manutenção
+    document.getElementById('btnAdicionarManutencao').onclick = function(e) {
+        e.preventDefault();
+        fetch('adicionar_manutencao.php?modal=1')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('modalConteudo').innerHTML = html;
+                abrirModal();
+                bindFormAjax();
+            });
+    };
+    // Editar manutenção
+    document.querySelectorAll('.btnEditarManutencao').forEach(btn => {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+            fetch('editar_manutencao.php?id=' + id + '&modal=1')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('modalConteudo').innerHTML = html;
+                    abrirModal();
+                    bindFormAjax();
+                });
+        };
+    });
+    // Submissão AJAX do formulário
+    function bindFormAjax() {
+        const form = document.querySelector('#modalConteudo form');
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(r => r.text())
+                .then(resp => {
+                    // Se resposta for 'OK', recarrega a página
+                    if (resp.trim() === 'OK') {
+                        window.location.reload();
+                    } else {
+                        document.getElementById('modalConteudo').innerHTML = resp;
+                        bindFormAjax();
+                    }
+                });
+            };
+        }
+    }
+    </script>
 </body>
 </html>

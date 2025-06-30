@@ -816,6 +816,7 @@ return [
 'country_region' => 'Country/Region',
 'phone' => 'Phone',
 'digital_confirmation' => 'Would you like to receive a digital confirmation?',
+'digital_confirmation_notice' => 'I understand that I will receive a digital confirmation',
 'cancellation_policy' => 'I understand that I can cancel up to 10 days in advance.',
 'additional_services' => 'Additional Services',
 'theme_decoration' => 'Thematic Decoration',

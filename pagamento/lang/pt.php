@@ -781,6 +781,7 @@ return [
 'country_region' => 'País/Região',
 'phone' => 'Telefone',
 'digital_confirmation' => 'Gostaria de receber uma confirmação digital?',
+'digital_confirmation_notice' => 'Entendo que vou receber uma confirmação digital',
 'cancellation_policy' => 'Entendo que posso cancelar até 10 dias antes.',
 'additional_services' => 'Serviços Adicionais',
 'theme_decoration' => 'Decoração Temática',

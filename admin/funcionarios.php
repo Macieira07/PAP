@@ -65,7 +65,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 <head>
     <meta charset="UTF-8">
     <title>Funcionários</title>
-    <link rel="stylesheet" href="../public/css/admin.css">
+    <link rel="stylesheet" href="global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="../assets/logos/favicon-32x32.png" sizes="32x32">
     <style>
