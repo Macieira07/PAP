@@ -203,14 +203,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $query = "SELECT C_id_casa FROM casas 
                           WHERE C_id_casa NOT IN (
                               SELECT R_id_casa FROM reservas 
-                              WHERE (R_data_checkin < ? AND R_data_checkout > ?) 
-                              OR (R_data_checkin < ? AND R_data_checkout >= ?)
+                              WHERE (
+                                  (R_data_checkin < ? AND R_data_checkout > ?) 
+                                  OR (R_data_checkin < ? AND R_data_checkout >= ?)
+                              )
                               AND R_estado NOT IN ('cancelada', 'concluída')
                           ) 
                           AND C_estado = 'disponível'
                           LIMIT 1";
                 $stmt = $conexao->prepare($query);
-                $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkin'], $_SESSION['checkout']);
+                $stmt->bind_param("ssss", $_SESSION['checkout'], $_SESSION['checkin'], $_SESSION['checkout'], $_SESSION['checkin']);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 
@@ -218,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $casa = $resultado->fetch_assoc();
                     $id_casa = $casa['C_id_casa'];
                         
-                    // Define o estado da reserva - apenas UMA inserção
+                    // Define o estado da reserva
                     $status_reserva = ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') 
                                       ? 'pendente' : 'confirmada';
                     
@@ -232,6 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->bind_param("iissidsss", $_SESSION['id'], $id_casa, $_SESSION['checkin'], 
                                      $_SESSION['checkout'], $_SESSION['num_hospedes'], $preco_total, 
                                      $status_reserva, $metodo_pagamento, $dados_pagamento_json);
+                    
                     if ($stmt->execute()) {
                         $reserva_id = $conexao->insert_id;
                         $_SESSION['reserva_id'] = $reserva_id;
@@ -339,14 +342,14 @@ require_once 'header.php';
             <h3><i class="fas fa-credit-card"></i> <?= I18n::get('payment_method') ?></h3>
             
             <div class="metodos-pagamento">
-<div class="metodo-option">
-    <input type="radio" id="cartao_radio" name="pagamento" value="Cartão" required 
-           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Cartão') ? 'checked' : '' ?>>
-          <label for="cartao_radio">
-        <i class="fas fa-credit-card"></i>
-        <span><?= I18n::get('credit_card') ?></span>
-    </label>
-</div>
+                <div class="metodo-option">
+                    <input type="radio" id="cartao_radio" name="pagamento" value="Cartão" required 
+                           <?= (isset($_POST['pagamento']) && $_POST['pagamento'] === 'Cartão') ? 'checked' : '' ?>>
+                    <label for="cartao_radio">
+                        <i class="fas fa-credit-card"></i>
+                        <span><?= I18n::get('credit_card') ?></span>
+                    </label>
+                </div>
                 <div class="metodo-option">
                     <input type="radio" id="mbway_radio" name="pagamento" value="MB WAY" 
                            <?= (isset($_POST['pagamento'])) && $_POST['pagamento'] === 'MB WAY' ? 'checked' : '' ?>>
@@ -415,8 +418,7 @@ require_once 'header.php';
                 <div class="form-group">
                     <label for="numero_mbway"><?= I18n::get('phone_number') ?></label>
                     <input type="text" id="numero_mbway" name="numero_mbway" class="form-control" 
-value="<?= isset($_POST['numero_mbway']) ? htmlspecialchars($_POST['numero_mbway']) : (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : '') ?>"
-
+                           value="<?= isset($_POST['numero_mbway']) ? htmlspecialchars($_POST['numero_mbway']) : (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : '') ?>"
                            placeholder="912345678" maxlength="9">
                 </div>
                 

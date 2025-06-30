@@ -26,8 +26,9 @@ if (isset($_SESSION['codigo_oferta'])) {
     $oferta_info = isset($codigos_oferta[$codigo]) ? $codigos_oferta[$codigo] : $codigo;
 }
 
-if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION['checkout']) || !isset($_SESSION['num_hospedes'])) {
-    error_log("Erro: Dados da reserva não encontrados na sessão");
+// Verificar se o ID da reserva está na sessão
+if (!isset($_SESSION['reserva_id'])) {
+    error_log("Erro: ID da reserva não encontrado na sessão");
     die('<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
             <h2 style="color: #f44336;">Erro no Processamento</h2>
             <p>Dados da reserva não encontrados. Por favor, inicie o processo novamente.</p>
@@ -37,14 +38,35 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['checkin']) || !isset($_SESSION[
           </div>');
 }
 
-$checkin = filter_var($_SESSION['checkin'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$checkout = filter_var($_SESSION['checkout'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$num_hospedes = filter_var($_SESSION['num_hospedes'], FILTER_VALIDATE_INT);
+$reserva_id = $_SESSION['reserva_id'];
 
-if (!strtotime($checkin) || !strtotime($checkout)) {
-    error_log("Datas inválidas: Checkin=$checkin, Checkout=$checkout");
-    die("Datas inválidas.");
+// Buscar os dados da reserva no banco
+$query = "SELECT r.*, c.C_nome as casa_nome FROM reservas r LEFT JOIN casas c ON r.R_id_casa = c.C_id_casa WHERE r.R_id_reserva = ?";
+$stmt = $conexao->prepare($query);
+$stmt->bind_param('i', $reserva_id);
+$stmt->execute();
+$res = $stmt->get_result();
+if ($res->num_rows === 0) {
+    error_log("Erro: Reserva não encontrada no banco para ID $reserva_id");
+    die('<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
+            <h2 style="color: #f44336;">Erro no Processamento</h2>
+            <p>Reserva não encontrada. Por favor, inicie o processo novamente.</p>
+            <div style="margin-top: 20px;">
+                <a href="../index.php" style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar à nossa página inicial</a>
+            </div>
+          </div>');
 }
+$reserva = $res->fetch_assoc();
+
+// Agora use $reserva para preencher os dados da confirmação, PDF, e-mail, etc.
+// Exemplo de variáveis:
+$checkin = $reserva['R_data_checkin'];
+$checkout = $reserva['R_data_checkout'];
+$num_hospedes = $reserva['R_num_hospedes'];
+$preco_total = $reserva['R_preco_total'];
+$metodo_pagamento = $reserva['R_metodo_pagamento'];
+$servicos_texto = $reserva['R_servicos'] ?? '';
+$casa_nome = $reserva['casa_nome'] ?? 'Casa de Campo';
 
 $checkin_date = new DateTime($checkin);
 $checkout_date = new DateTime($checkout);
@@ -87,31 +109,7 @@ if (isset($_SESSION['codigo_oferta'])) {
             break;
     }
 }
-$query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, R_num_hospedes, R_preco_total, R_estado, R_servicos, R_metodo_pagamento)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conexao->prepare($query);
-$id_hospede = $_SESSION['id'];
-$id_casa = 1;
-$estado = 'confirmada';
-$servicos_texto = !empty($servicos_adicionais) ? implode(', ', $servicos_adicionais) : 'Nenhum serviço adicional';
-if (!empty($oferta_info)) {
-    $servicos_texto .= ($servicos_texto ? ', ' : '') . $oferta_info;
-}
-$metodo_pagamento = isset($_SESSION['metodo_pagamento']) ? $_SESSION['metodo_pagamento'] : 'Não especificado';
-$stmt->bind_param('iissidsss', $id_hospede, $id_casa, $checkin, $checkout, $num_hospedes, $preco_total, $estado, $servicos_texto, $metodo_pagamento);
 
-if (!$stmt->execute()) {
-    error_log("Erro ao salvar reserva: " . $stmt->error);
-    die('<div style="text-align: center; padding: 20px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 5px; max-width: 600px; margin: 20px auto;">
-            <h2 style="color: #f44336;">Erro no Processamento</h2>
-            <p>Ocorreu um erro ao processar sua reserva. Por favor, tente novamente.</p>
-            <div style="margin-top: 20px;">
-                <a href="../index.php style="background-color: #f0f0f0; color: #333; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; border: 1px solid #ddd;">Voltar ao Índice</a>
-            </div>
-          </div>');
-}
-$reserva_id = $conexao->insert_id;
-error_log("Nova reserva criada: ID=$reserva_id para {$_SESSION['email']}");
 // Gerar PDF
 require_once('tcpdf/tcpdf.php');
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
@@ -160,7 +158,7 @@ $pdf->SetFont('helvetica', '', 10);
 
 // Lista de detalhes
 $detalhes = [
-    'Alojamento' => 'Quinta Flores',
+    'Alojamento' => $casa_nome,
     'Check-in' => $checkin_date->format('d/m/Y') . ' (a partir das 15:00)',
     'Check-out' => $checkout_date->format('d/m/Y') . ' (até às 11:00)',
     'Nº de Noites' => $num_noites,
