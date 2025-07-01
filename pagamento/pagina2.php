@@ -21,9 +21,19 @@ if ($resultado_hospede->num_rows > 0) {
     // Define os valores padrão para o formulário
     $nome_padrao = $hospede['H_nome'];
     $email_padrao = $hospede['H_email'];
-    $telefone_padrao = $hospede['H_telefone'];
+    $telefone_completo_bd = $hospede['H_telefone'];
     $documento_padrao = $hospede['H_documento_ident'];
     $pais_padrao = $hospede['H_pais'] ?? 'PT';
+    
+    // Extrair apenas o número do telefone (remover código do país se existir)
+    $telefone_padrao = $telefone_completo_bd;
+    if (!empty($telefone_completo_bd) && isset($paises[$pais_padrao])) {
+        $codigo_pais = $paises[$pais_padrao]['codigo'];
+        // Remove o código do país do início da string se existir
+        if (strpos($telefone_completo_bd, $codigo_pais) === 0) {
+            $telefone_padrao = trim(substr($telefone_completo_bd, strlen($codigo_pais)));
+        }
+    }
 } else {
     header('Location: pagina1.php');
     exit();
@@ -94,6 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $erros[] = I18n::get('invalid_email');
     }
     $doc_regex = $documentos[$pais_regiao]['regex'] ?? $documentos['DEFAULT']['regex'];
+    // Debug: Log para verificar o que está sendo validado (REMOVER EM PRODUÇÃO)
+    error_log("Validando documento: '$documento' com regex: '$doc_regex' para país: '$pais_regiao'");
+    
     if (!preg_match($doc_regex, $documento)) {
         $doc_exemplo = $documentos[$pais_regiao]['exemplo'] ?? $documentos['DEFAULT']['exemplo'];
         $doc_descricao = $documentos[$pais_regiao]['descricao'] ?? $documentos['DEFAULT']['descricao'];
@@ -104,6 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (!empty($pais_regiao) && isset($paises[$pais_regiao])) {
         $regex = $paises[$pais_regiao]['regex'];
+        // Debug: Log para verificar o que está sendo validado (REMOVER EM PRODUÇÃO)
+        error_log("Validando telefone: '$telefone' com regex: '$regex' para país: '$pais_regiao'");
+        
         if (!preg_match($regex, $telefone)) {
             $tel_exemplo = $paises[$pais_regiao]['exemplo'];
             $erros[] = I18n::get('invalid_phone') . " " . I18n::get('expected_format') . ": <b>{$paises[$pais_regiao]['codigo']} $tel_exemplo</b>";
@@ -308,7 +324,7 @@ require_once 'header.php';
                 "<?= $codigo ?>": {
                     codigo: "<?= $dados['codigo'] ?>",
                     exemplo: "<?= $dados['exemplo'] ?? '' ?>",
-                    regex: "<?= str_replace(['/', '^', '$'], '', $dados['regex']) ?>"
+                    regex: "<?= addslashes(str_replace(['/', '^', '$'], '', $dados['regex'])) ?>"
                 },
                 <?php endforeach; ?>
             };
@@ -318,7 +334,7 @@ require_once 'header.php';
                 "<?= $codigo ?>": {
                     exemplo: "<?= $dados['exemplo'] ?>",
                     descricao: "<?= $dados['descricao'] ?>",
-                    regex: "<?= str_replace(['/', '^', '$'], '', $dados['regex']) ?>"
+                    regex: "<?= addslashes(str_replace(['/', '^', '$'], '', $dados['regex'])) ?>"
                 },
                 <?php endforeach; ?>
             };
@@ -389,15 +405,22 @@ require_once 'header.php';
             function validarDocumento() {
                 const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'DEFAULT';
                 const docInfo = documentos[pais] || documentos['DEFAULT'];
-                const documento = documentoInput.value;
+                const documento = documentoInput.value.trim();
                 const erroDoc = document.getElementById('erro-documento');
+                
                 if (!documento) {
                     erroDoc.style.display = 'none';
                     erroDoc.innerHTML = '';
                     return true;
                 }
+                
                 try {
-                    const regex = new RegExp('^' + docInfo.regex + '$');
+                    const regexPattern = docInfo.regex;
+                    const regex = new RegExp('^' + regexPattern + '$');
+                    
+                    // Debug: mostrar no console o que está sendo validado (REMOVER EM PRODUÇÃO)
+                    console.log('Validando documento:', documento, 'com regex:', regexPattern, 'para país:', pais);
+                    
                     if (!regex.test(documento)) {
                         erroDoc.style.display = 'block';
                         erroDoc.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + translations.invalidDocument + '. ' + translations.expectedFormat + ': ' + docInfo.descricao;
@@ -408,6 +431,7 @@ require_once 'header.php';
                         return true;
                     }
                 } catch (e) {
+                    console.error('Erro na regex do documento:', e);
                     erroDoc.style.display = 'none';
                     erroDoc.innerHTML = '';
                     return true;
@@ -419,16 +443,23 @@ require_once 'header.php';
             }
             function validarTelefone() {
                 const pais = paisRegiaoSelect ? paisRegiaoSelect.value : 'PT';
-                const telefone = telefoneInput.value;
+                const telefone = telefoneInput.value.trim();
                 const erroTel = document.getElementById('erro-telefone');
+                
                 if (!telefone) {
                     erroTel.style.display = 'none';
                     erroTel.innerHTML = '';
                     return true;
                 }
+                
                 if (paises[pais]) {
                     try {
-                        const regex = new RegExp('^' + paises[pais].regex + '$');
+                        const regexPattern = paises[pais].regex;
+                        const regex = new RegExp('^' + regexPattern + '$');
+                        
+                        // Debug: mostrar no console o que está sendo validado (REMOVER EM PRODUÇÃO)
+                        console.log('Validando telefone:', telefone, 'com regex:', regexPattern, 'para país:', pais);
+                        
                         if (!regex.test(telefone)) {
                             erroTel.style.display = 'block';
                             erroTel.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + translations.invalidPhone + '. ' + translations.expectedFormat + ': ' + paises[pais].codigo + ' ' + (paises[pais].exemplo || '');
@@ -439,6 +470,7 @@ require_once 'header.php';
                             return true;
                         }
                     } catch (e) {
+                        console.error('Erro na regex do telefone:', e);
                         erroTel.style.display = 'none';
                         erroTel.innerHTML = '';
                         return true;
