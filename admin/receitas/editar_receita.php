@@ -1,6 +1,28 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 require 'verificar_admin.php';
+
+// Verificar se o ID foi passado
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: listar_receitas.php");
+    exit();
+}
+
+$id = limparDados($_GET['id']);
+
+// Buscar a receita no banco de dados
+$query = "SELECT * FROM receitas WHERE R_id_receita = ?";
+$stmt = $conexao->prepare($query);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+if ($resultado->num_rows == 0) {
+    header("Location: listar_receitas.php");
+    exit();
+}
+
+$receita = $resultado->fetch_assoc();
 
 // Processar formulário quando enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -16,18 +38,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!is_numeric($valor) || $valor <= 0) {
         $erro = "O valor deve ser um número positivo.";
     } else {
-        // Inserir no banco de dados
-        $query = "INSERT INTO receitas (R_descricao, R_valor, R_data, R_tipo, R_observacoes, R_metodo_pagamento, R_comprovativo_entregue)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Atualizar no banco de dados
+        $query = "UPDATE receitas SET 
+                  R_descricao = ?,
+                  R_valor = ?,
+                  R_data = ?,
+                  R_tipo = ?,
+                  R_observacoes = ?,
+                  R_metodo_pagamento = ?,
+                  R_comprovativo_entregue = ?
+                  WHERE R_id_receita = ?";
         
         $stmt = $conexao->prepare($query);
-        $stmt->bind_param("sdssssi", $descricao, $valor, $data, $tipo, $observacoes, $metodo_pagamento, $comprovativo);
+        $stmt->bind_param("sdssssii", $descricao, $valor, $data, $tipo, $observacoes, $metodo_pagamento, $comprovativo, $id);
         
         if ($stmt->execute()) {
-            header("Location: listar_receitas.php?sucesso=1");
+            header("Location: listar_receitas.php?sucesso=2");
             exit();
         } else {
-            $erro = "Erro ao adicionar receita: " . $conexao->error;
+            $erro = "Erro ao atualizar receita: " . $conexao->error;
         }
     }
 }
@@ -38,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar Receita | Quinta Flores</title>
+    <title>Editar Receita | Quinta Flores</title>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -70,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         .form-header i {
             font-size: 1.5em;
-            color: #27ae60;
+            color: #3498db;
         }
         
         .form-group {
@@ -112,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .btn-submit {
-            background-color: #27ae60;
+            background-color: #3498db;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -123,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .btn-submit:hover {
-            background-color: #219653;
+            background-color: #2980b9;
         }
         
         .btn-cancel {
@@ -152,15 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 4px;
             border-left: 4px solid #e74c3c;
         }
-        
-        .success-message {
-            color: #27ae60;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #e8f5e9;
-            border-radius: 4px;
-            border-left: 4px solid #27ae60;
-        }
     </style>
 </head>
 <body>
@@ -168,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <div class="form-container">
         <div class="form-header">
-            <h1><i class="fas fa-plus-circle"></i> Adicionar Nova Receita</h1>
+            <h1><i class="fas fa-edit"></i> Editar Receita</h1>
         </div>
         
         <?php if (isset($erro)): ?>
@@ -180,54 +200,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" action="">
             <div class="form-group">
                 <label for="descricao">Descrição *</label>
-                <input type="text" id="descricao" name="descricao" required>
+                <input type="text" id="descricao" name="descricao" required value="<?php echo htmlspecialchars($receita['R_descricao']); ?>">
             </div>
             
             <div class="form-group">
                 <label for="valor">Valor (€) *</label>
-                <input type="number" id="valor" name="valor" step="0.01" min="0" required>
+                <input type="number" id="valor" name="valor" step="0.01" min="0" required value="<?php echo htmlspecialchars($receita['R_valor']); ?>">
             </div>
             
             <div class="form-group">
                 <label for="data">Data *</label>
-                <input type="date" id="data" name="data" required value="<?php echo date('Y-m-d'); ?>">
+                <input type="date" id="data" name="data" required value="<?php echo htmlspecialchars($receita['R_data']); ?>">
             </div>
             
             <div class="form-group">
                 <label for="tipo">Tipo de Receita *</label>
                 <select id="tipo" name="tipo" required>
-                    <option value="">Selecione...</option>
-                    <option value="Reserva">Reserva</option>
-                    <option value="Serviço">Serviço</option>
-                    <option value="Outro">Outro</option>
+                    <option value="Reserva" <?php echo $receita['R_tipo'] == 'Reserva' ? 'selected' : ''; ?>>Reserva</option>
+                    <option value="Serviço" <?php echo $receita['R_tipo'] == 'Serviço' ? 'selected' : ''; ?>>Serviço</option>
+                    <option value="Outro" <?php echo $receita['R_tipo'] == 'Outro' ? 'selected' : ''; ?>>Outro</option>
                 </select>
             </div>
             
             <div class="form-group">
                 <label for="metodo_pagamento">Método de Pagamento *</label>
                 <select id="metodo_pagamento" name="metodo_pagamento" required>
-                    <option value="">Selecione...</option>
-                    <option value="Cartão">Cartão</option>
-                    <option value="Transferência">Transferência</option>
-                    <option value="MB WAY">MB WAY</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Outro">Outro</option>
+                    <option value="Cartão" <?php echo $receita['R_metodo_pagamento'] == 'Cartão' ? 'selected' : ''; ?>>Cartão</option>
+                    <option value="Transferência" <?php echo $receita['R_metodo_pagamento'] == 'Transferência' ? 'selected' : ''; ?>>Transferência</option>
+                    <option value="MB WAY" <?php echo $receita['R_metodo_pagamento'] == 'MB WAY' ? 'selected' : ''; ?>>MB WAY</option>
+                    <option value="Dinheiro" <?php echo $receita['R_metodo_pagamento'] == 'Dinheiro' ? 'selected' : ''; ?>>Dinheiro</option>
+                    <option value="Outro" <?php echo $receita['R_metodo_pagamento'] == 'Outro' ? 'selected' : ''; ?>>Outro</option>
                 </select>
             </div>
             
             <div class="form-group">
                 <label for="observacoes">Observações</label>
-                <textarea id="observacoes" name="observacoes"></textarea>
+                <textarea id="observacoes" name="observacoes"><?php echo htmlspecialchars($receita['R_observacoes']); ?></textarea>
             </div>
             
             <div class="form-group checkbox-group">
-                <input type="checkbox" id="comprovativo" name="comprovativo" value="1">
+                <input type="checkbox" id="comprovativo" name="comprovativo" value="1" <?php echo $receita['R_comprovativo_entregue'] ? 'checked' : ''; ?>>
                 <label for="comprovativo">Comprovativo entregue</label>
             </div>
             
             <div class="form-group">
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-save"></i> Guardar Receita
+                    <i class="fas fa-save"></i> Atualizar Receita
                 </button>
                 <a href="listar_receitas.php" class="btn-cancel">
                     <i class="fas fa-times"></i> Cancelar

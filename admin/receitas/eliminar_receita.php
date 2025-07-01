@@ -1,6 +1,6 @@
 <?php
-require '../conexao.php';
-require 'verificar_admin.php';
+require '../../conexao.php';
+require '../verificar_admin.php';
 
 // Verificar se o ID foi passado
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
