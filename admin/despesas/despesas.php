@@ -1,5 +1,5 @@
 <?php
-include "../conexao.php";
+include "../../conexao.php";
 session_start();
 
 // Função flash
@@ -301,7 +301,7 @@ function obterHistoricoPagamentos($conexao, $despesa_id) {
 <head>
 <meta charset="UTF-8"/>
 <title>Despesas</title>
-<link rel="stylesheet" href="global.css"/>
+<link rel="stylesheet" href="../global.css"/>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <style>
 .flash { padding:10px; margin:15px 0; border-radius:4px; }
@@ -435,6 +435,7 @@ window.onload = function() {
 </script>
 </head>
 <body>
+<?php include __DIR__ . '/../saldo_widget.php'; ?>
 
 <div style="display: flex; align-items: center; gap: 10px;">
     <img src="https://img.icons8.com/?size=100&id=22462&format=png&color=000000" alt="Ícone Despesas " style="height: 50px;">

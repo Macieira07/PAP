@@ -1,7 +1,7 @@
 <?php
 session_start(); // Assegura que a sessão está ativa para $_SESSION['usuario_nome']
 
-require '../conexao.php';
+require '../../conexao.php';
 
 $id = $_GET['id'] ?? null;
 

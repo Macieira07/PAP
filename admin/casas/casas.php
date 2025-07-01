@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 // Pesquisa
 $pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 // Mensagem flash
@@ -33,7 +33,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../global.css">
     <meta charset="UTF-8">
     <title>Casas</title>
 </head>
@@ -59,7 +59,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
         <h1>Lista de Alojamentos</h1>
     </div>
 
-    <a href="admin.php">← Voltar</a> | 
+    <a href="../admin.php">← Voltar</a> | 
     <a href="#" id="btnAdicionarCasa">+ Adicionar Casa</a>
     <form method="get" action="casas.php" style="margin-top: 20px;">
         <input type="text" name="pesquisa" placeholder="Pesquisar por nome, estado ou capacidade" value="<?= isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '' ?>">
@@ -97,8 +97,8 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     </div>
 
     <!-- Modal para adicionar/editar casa -->
-    <div id="modalCasa" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-        <div style="background:#fff; padding:30px; border-radius:8px; min-width:350px; max-width:90vw; position:relative; max-height:90vh; overflow-y:auto;">
+    <div id="modalCasa" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width:420px; min-width:320px; position:relative;">
             <button onclick="fecharModalCasa()" style="position:absolute; top:10px; right:10px; font-size:20px; background:none; border:none; cursor:pointer;">&times;</button>
             <div id="modalConteudoCasa"></div>
         </div>
@@ -120,6 +120,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
             .then(html => {
                 document.getElementById('modalConteudoCasa').innerHTML = html;
                 abrirModalCasa();
+                initWizardCasa();
                 bindFormAjaxCasa();
             });
     };
@@ -133,6 +134,7 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
                 .then(html => {
                     document.getElementById('modalConteudoCasa').innerHTML = html;
                     abrirModalCasa();
+                    initWizardCasa();
                     bindFormAjaxCasa();
                 });
         };
@@ -144,23 +146,72 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
             form.onsubmit = function(e) {
                 e.preventDefault();
                 const formData = new FormData(form);
-                fetch(form.action || window.location.href, {
+                // Detectar se é edição ou adição pelo atributo data-id
+                let url = 'adicionar_casa.php?modal=1';
+                if (form.hasAttribute('data-id')) {
+                    const id = form.getAttribute('data-id');
+                    url = 'editar_casa.php?id=' + id + '&modal=1';
+                }
+                fetch(url, {
                     method: 'POST',
                     body: formData
                 })
                 .then(r => r.text())
                 .then(resp => {
                     if (resp.trim() === 'OK') {
+                        fecharModalCasa();
                         window.location.reload();
                     } else {
                         document.getElementById('modalConteudoCasa').innerHTML = resp;
+                        abrirModalCasa();
+                        initWizardCasa();
                         bindFormAjaxCasa();
                     }
+                })
+                .catch(function(err) {
+                    alert('Erro ao adicionar/editar casa: ' + err);
                 });
             };
         }
     }
+
+    function initWizardCasa() {
+        var btnProximo = document.getElementById('btnWizardProximoCasa');
+        var btnAnterior = document.getElementById('btnWizardAnteriorCasa');
+        if (btnProximo) {
+            btnProximo.onclick = function() {
+                var nome = document.querySelector('[name=nome]').value.trim();
+                var capacidade = document.querySelector('[name=capacidade]').value.trim();
+                if (!nome || !capacidade) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+                document.getElementById('wizardStep1').style.display = 'none';
+                document.getElementById('wizardStep2').style.display = 'block';
+            };
+        }
+        if (btnAnterior) {
+            btnAnterior.onclick = function() {
+                document.getElementById('wizardStep2').style.display = 'none';
+                document.getElementById('wizardStep1').style.display = 'block';
+            };
+        }
+        // Estado colorido
+        var estadoSelect = document.getElementById('estadoSelectCasa');
+        if (estadoSelect) {
+            function updateEstadoColor() {
+                var cor = '';
+                switch(estadoSelect.value) {
+                    case 'disponível': cor = '#28a745'; break;
+                    case 'ocupada': cor = '#ff9800'; break;
+                    case 'manutenção': cor = '#1976d2'; break;
+                }
+                estadoSelect.style.color = cor;
+            }
+            estadoSelect.addEventListener('change', updateEstadoColor);
+            updateEstadoColor();
+        }
+    }
     </script>
-    <script>document.body.classList.toggle("dark-mode");</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID do turno não fornecido.");

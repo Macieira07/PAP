@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "O valor deve ser um valor positivo.";
         exit;
     }
-
     $stmt = $conexao->prepare("INSERT INTO despesas (D_nome, D_valor, D_data, D_descricao, recorrente, periodicidade, data_fim_recorrencia) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sdssiss", $nome, $valor, $data, $descricao, $recorrente, $periodicidade, $data_fim_recorrencia);
     $stmt->execute();
@@ -30,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
 
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../global.css">
     <meta charset="UTF-8">
     <title>Adicionar Despesa</title>
 </head>

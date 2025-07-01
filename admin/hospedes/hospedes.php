@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 session_start();
 
 // Obter parâmetro de pesquisa (sem filtro verificado)
@@ -34,7 +34,7 @@ $resultado = $conexao->query($sql);
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../global.css">
     <link rel="stylesheet" href="hospedes.css">
     <meta charset="UTF-8">
     <title>Hóspedes</title>
@@ -86,7 +86,7 @@ $resultado = $conexao->query($sql);
         <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
         <h1>Todos os Hóspedes</h1>
     </div>
-    <a href="admin.php">← Voltar</a> | 
+    <a href="../admin.php">← Voltar</a> | 
     <a href="adicionar_hospede.php">+ Adicionar Hóspede</a>
     | <a href="hospedes.php?filtro=ativos">Ativos</a>
     | <a href="hospedes.php?filtro=bloqueados">Bloqueados</a>

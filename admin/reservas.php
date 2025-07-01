@@ -71,7 +71,8 @@ $paginas = ceil($total_reservas / $por_pagina);
     </style>
 </head>
 <body>
-        <div style="display: flex; align-items: center; gap: 10px;">
+<?php include __DIR__ . '/saldo_widget.php'; ?>
+    <div style="display: flex; align-items: center; gap: 10px;">
         <img src="https://img.icons8.com/?size=100&id=MCnPOwFJpCvG&format=png&color=000000" alt="Ícone Hóspedes" style="height: 50px;">
         <h1>Todos as Reservas</h1>
     </div>

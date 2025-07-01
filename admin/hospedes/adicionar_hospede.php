@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../conexao.php'; 
-require_once 'email.php';
+require '../../conexao.php'; 
+require_once '../email.php';
 
 function gerarCodigo() {
     return rand(100000, 999999);
@@ -202,7 +202,7 @@ $tempoRestanteCooldown = max(0, $cooldownSegundos - $tempoDesdeUltimoCodigo);
 <head>
 <meta charset="utf-8">
 <title>Adicionar Hóspede</title>
-<link rel="stylesheet" href="global.css">
+<link rel="stylesheet" href="../global.css">
 <style>
 .progress-bar {
   width: 100%;
@@ -316,7 +316,7 @@ window.onload = function() {
         });
         emailInput.addEventListener('blur', function() {
             if (validarEmail(this.value)) {
-                fetch('verificar_email.php?email=' + encodeURIComponent(this.value))
+                fetch('../verificar_email.php?email=' + encodeURIComponent(this.value))
                     .then(r => r.text())
                     .then(resp => {
                         if (resp === 'bloqueado') {

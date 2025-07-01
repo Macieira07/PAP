@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Certifica-te que este caminho está correto
+require '../../vendor/autoload.php'; // Certifica-te que este caminho está correto
 
 function enviarEmailCodigo($destinatarioEmail, $destinatarioNome, $codigo) {
     $mail = new PHPMailer(true);

@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 
 $id = $_GET['id'] ?? null;
 

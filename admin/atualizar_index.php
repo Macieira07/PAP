@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
 </head>
 <body>
     <h1>Atualizar Imagens</h1>
+    <a href="admin.php">← Voltar</a> 
     <?php if(isset($_SESSION['message'])): ?>
         <div class="message <?= $_SESSION['message_type'] ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
@@ -98,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
                     <input type="file" name="new_image" accept="image/*" required>
                     <button type="submit" name="update_image">Atualizar</button>
                 </form>
+                
             </div>
         <?php endforeach; ?>
         </div>

@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 
 if (isset($_GET['modal'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,21 +30,44 @@ if (isset($_GET['modal'])) {
         exit;
     }
     ?>
-    <form method="post">
-        <label>Nome:<input type="text" name="nome" required></label><br><br>
-        <label>Descrição:<textarea name="descricao"></textarea></label><br><br>
-        <label>Capacidade:<input type="number" name="capacidade" required></label><br><br>
-        <label>Preço por Noite (€):<input type="number" step="0.01" name="preco" required></label><br><br>
-        <label>Características:<textarea name="caracteristicas"></textarea></label><br><br>
-        <label>Estado:
-            <select name="estado">
-                <option value="disponível">Disponível</option>
-                <option value="ocupada">Ocupada</option>
-                <option value="manutenção">Manutenção</option>
-            </select>
-        </label><br><br>
-        <button type="submit">Salvar</button>
-    </form>
+    <div>
+        <h2 style="margin-top:0; margin-bottom:18px; text-align:center; color:#2e5090;">Adicionar Alojamento</h2>
+        <form method="post" id="formWizardCasa" style="display:flex; flex-direction:column; gap:10px;">
+            <!-- Etapa 1 -->
+            <div class="wizard-step" id="wizardStep1">
+                <label style="display:flex; flex-direction:column; gap:4px;">Nome:
+                    <input type="text" name="nome" required>
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">Descrição:
+                    <textarea name="descricao" style="resize:vertical; min-height:60px; max-width:100%;"></textarea>
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">Capacidade:
+                    <input type="number" name="capacidade" required>
+                </label>
+                <button type="button" id="btnWizardProximoCasa" class="atalho-btn" style="align-self:flex-end; margin-top:10px;">Próximo &rarr;</button>
+            </div>
+            <!-- Etapa 2 -->
+            <div class="wizard-step" id="wizardStep2" style="display:none;">
+                <label style="display:flex; flex-direction:column; gap:4px;">Preço por Noite (€):
+                    <input type="number" step="0.01" name="preco" required>
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">Características:
+                    <textarea name="caracteristicas" style="resize:vertical; min-height:60px; max-width:100%;"></textarea>
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">Estado:
+                    <select name="estado" id="estadoSelectCasa" style="font-weight:bold;">
+                        <option value="disponível" style="color:#28a745;">Disponível</option>
+                        <option value="ocupada" style="color:#ff9800;">Ocupada</option>
+                        <option value="manutenção" style="color:#1976d2;">Manutenção</option>
+                    </select>
+                </label>
+                <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                    <button type="button" id="btnWizardAnteriorCasa" class="atalho-btn">&larr; Anterior</button>
+                    <button type="submit" class="atalho-btn">Confirmar</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <?php
     exit;
 }
@@ -55,7 +78,7 @@ if (isset($_GET['modal'])) {
 <head>
         <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../global.css">
     <meta charset="UTF-8">
     <title>Adicionar Nova Casa</title>
 </head>

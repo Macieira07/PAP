@@ -8,7 +8,6 @@ if (!isset($_SESSION['id'])) {
     header('Location: ../login1/login.php');
     exit;
 }
-
 // Função para criar uma notificação de reserva
 function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, $dataCheckin) {
     $mensagem = "Nova reserva: $hospedeNome reservou $casaNome para " . date('d/m/Y', strtotime($dataCheckin));
@@ -18,7 +17,6 @@ function criarNotificacaoReserva($conexao, $reservaId, $hospedeNome, $casaNome, 
     $stmt->bind_param("ss", $tipo, $mensagem);
     $stmt->execute();
 }
-
 // Função para verificar novas reservas e criar notificações
 function verificarNovasReservas($conexao) {
     // Buscar a data da última notificação de reserva
@@ -340,35 +338,35 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             
             <!-- Menu de Opções -->
             <div class="menu-cards">
-                <a class="card-opcao" href="casas.php">
+                <a class="card-opcao" href="casas/casas.php">
                     <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Casas">
                     <h3>Gerir Casas</h3>
                 </a>
-                <a class="card-opcao" href="hospedes.php">
+                <a class="card-opcao" href="hospedes/hospedes.php">
                     <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="Hóspedes">
                     <h3>Gerir Hóspedes</h3>
                 </a>
-                <a class="card-opcao" href="funcionarios.php">
+                <a class="card-opcao" href="funcionarios/funcionarios.php">
                     <img src="https://img.icons8.com/?size=100&id=TDEKFc4RXwN_&format=png&color=000000" alt="Funcionários">
                     <h3>Gerir Funcionários</h3>
                 </a>
-                <a class="card-opcao" href="reservas.php">
+                <a class="card-opcao" href="reservas/reservas.php">
                     <img src="https://img.icons8.com/?size=100&id=MCnPOwFJpCvG&format=png&color=000000" alt="Reservas">
                     <h3>Gerir Reservas</h3>
                 </a>
-                <a class="card-opcao" href="servicos.php">
+                <a class="card-opcao" href="servicos/servicos.php">
                     <img src="https://img.icons8.com/?size=100&id=GtKvA4suLFWD&format=png&color=000000" alt="Serviços">
                     <h3>Gerir Serviços</h3>
                 </a>
-                <a class="card-opcao" href="despesas.php">
+                <a class="card-opcao" href="despesas/despesas.php">
                     <img src="https://img.icons8.com/?size=100&id=22462&format=png&color=000000" alt="Despesas">
                     <h3>Gerir Despesas</h3>
                 </a>
-                <a class="card-opcao" href="manutencao.php">
+                <a class="card-opcao" href="manutencao/manutencao.php">
                     <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Manutenções">
                     <h3>Gerir Manutenções</h3>
                 </a>
-                <a class="card-opcao" href="receitas.php">
+                <a class="card-opcao" href="receitas/receitas.php">
                     <img src="https://img.icons8.com/?size=100&id=p2scHNLP9nSb&format=png&color=000000" alt="Receitas">
                     <h3>Gerir Receitas</h3>
                 </a>
@@ -384,7 +382,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     <img src="https://img.icons8.com/?size=100&id=8ggStxqyboK5&format=png&color=000000" alt="Listar Avaliações">
                     <h3>Avaliações dos hóspedes</h3>
                 </a>
-                                    <a class="card-opcao" href="atualizar_index.php">
+                    <a class="card-opcao" href="atualizar_index.php">
                     <img src="https://img.icons8.com/?size=100&id=8ggStxqyboK5&format=png&color=000000" alt="Listar Avaliações">
                     <h3>Atualização do index</h3>
                 </a>
@@ -557,7 +555,10 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
         });
         function abrirModalReserva(e) {
             e.preventDefault();
+            atualizarDatasOcupadas(); // Garante que datasOcupadas está atualizado antes de mostrar
             document.getElementById('modalReserva').style.display = 'flex';
+            if (checkinPicker) checkinPicker.redraw();
+            if (checkoutPicker) checkoutPicker.redraw();
         }
         function fecharModalReserva() {
             document.getElementById('modalReserva').style.display = 'none';
@@ -602,6 +603,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             if (!idCasa) {
                 if (checkinPicker) checkinPicker.set('disable', []);
                 if (checkoutPicker) checkoutPicker.set('disable', []);
+                // Forçar redraw
+                if (checkinPicker) checkinPicker.redraw();
+                if (checkoutPicker) checkoutPicker.redraw();
                 return;
             }
             fetch('datas_ocupadas.php?id_casa=' + idCasa)
@@ -610,6 +614,9 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     datasOcupadas = datas;
                     if (checkinPicker) checkinPicker.set('disable', datasOcupadas);
                     if (checkoutPicker) checkoutPicker.set('disable', datasOcupadas);
+                    // Forçar redraw após atualizar datas
+                    if (checkinPicker) checkinPicker.redraw();
+                    if (checkoutPicker) checkoutPicker.redraw();
                 });
         }
 
@@ -621,13 +628,55 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 onOpen: atualizarDatasOcupadas,
                 onChange: function(selectedDates, dateStr, instance) {
                     if (checkoutPicker) checkoutPicker.set('minDate', dateStr);
+                },
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    // Adiciona bolinha vermelha nos dias ocupados
+                    if (datasOcupadas && datasOcupadas.length > 0) {
+                        const day = dayElem.dateObj;
+                        const dayISO = day.toISOString().slice(0, 10);
+                        if (datasOcupadas.includes(dayISO)) {
+                            const dot = document.createElement('span');
+                            dot.style.display = 'block';
+                            dot.style.width = '8px';
+                            dot.style.height = '8px';
+                            dot.style.background = 'red';
+                            dot.style.borderRadius = '50%';
+                            dot.style.position = 'absolute';
+                            dot.style.bottom = '4px';
+                            dot.style.left = '50%';
+                            dot.style.transform = 'translateX(-50%)';
+                            dayElem.style.position = 'relative';
+                            dayElem.appendChild(dot);
+                        }
+                    }
                 }
             });
             checkoutPicker = flatpickr("#data_checkout_modal", {
                 dateFormat: "Y-m-d",
                 minDate: "today",
                 disable: datasOcupadas,
-                onOpen: atualizarDatasOcupadas
+                onOpen: atualizarDatasOcupadas,
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    // Adiciona bolinha vermelha nos dias ocupados
+                    if (datasOcupadas && datasOcupadas.length > 0) {
+                        const day = dayElem.dateObj;
+                        const dayISO = day.toISOString().slice(0, 10);
+                        if (datasOcupadas.includes(dayISO)) {
+                            const dot = document.createElement('span');
+                            dot.style.display = 'block';
+                            dot.style.width = '8px';
+                            dot.style.height = '8px';
+                            dot.style.background = 'red';
+                            dot.style.borderRadius = '50%';
+                            dot.style.position = 'absolute';
+                            dot.style.bottom = '4px';
+                            dot.style.left = '50%';
+                            dot.style.transform = 'translateX(-50%)';
+                            dayElem.style.position = 'relative';
+                            dayElem.appendChild(dot);
+                        }
+                    }
+                }
             });
             document.getElementById('id_casa_modal').addEventListener('change', function() {
                 atualizarDatasOcupadas();
