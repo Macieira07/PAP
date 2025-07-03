@@ -9,8 +9,8 @@ function set_flash($msg, $type = 'success') {
 function show_flash() {
     if (!empty($_SESSION['flash'])) {
         $f = $_SESSION['flash'];
-        $cls = $f['type'] === 'error' ? 'flash-error' : 'flash-success';
-        echo "<div class='flash $cls'><i class='fas ".($f['type']==='error'?'fa-times-circle':'fa-check-circle')."'></i> {$f['msg']}</div>";
+        $cls = $f['type'] === 'error' ? 'flash-message error' : 'flash-message success';
+        echo "<div class='$cls'><i class='fas ".($f['type']==='error'?'fa-times-circle':'fa-check-circle')."'></i> {$f['msg']}</div>";
         unset($_SESSION['flash']);
     }
 }
@@ -39,7 +39,7 @@ if ($searchTerm!=='') {
 $whereSql = count($where)>0 ? 'WHERE '.implode(' AND ', $where) : '';
 
 // Paginação
-$itemsPerPage = 10;
+$itemsPerPage = 3;
 $page = max(1, intval($_GET['page'] ?? 1));
 $offset = ($page-1)*$itemsPerPage;
 
@@ -295,7 +295,6 @@ function obterHistoricoPagamentos($conexao, $despesa_id) {
     return $historico;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -304,19 +303,7 @@ function obterHistoricoPagamentos($conexao, $despesa_id) {
 <link rel="stylesheet" href="../global.css"/>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <style>
-.flash { padding:10px; margin:15px 0; border-radius:4px; }
-.flash-success { background:#e0f5e9; color:#2e7d32; }
-.flash-error { background:#fdecea; color:#c62828; }
-.modal { 
-    display:none; position:fixed; top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.5); justify-content:center;align-items:center;
-    z-index: 1000;
-}
-.modal .content { 
-    background:#fff; padding:20px; border-radius:5px; width:80%; max-width:600px;
-    max-height: 80vh; overflow-y: auto;
-}
-.totalizador { margin-top:10px; font-weight:bold; }
+/* Custom badges para recorrente/pausada */
 .badge-recorrente {
     background: #e3f2fd;
     color: #1565c0;
@@ -372,7 +359,7 @@ function abrirEliminar(id, nome) {
 }
 
 function abrirPrevisoes(id) {
-    fetch(`obter_previsoes.php?despesa_id=${id}`)
+    fetch(`../obter_previsoes.php?despesa_id=${id}`)
         .then(response => response.text())
         .then(html => {
             document.getElementById('previsoes-content').innerHTML = html;
@@ -381,7 +368,7 @@ function abrirPrevisoes(id) {
 }
 
 function abrirHistorico(id) {
-    fetch(`obter_historico.php?despesa_id=${id}`)
+    fetch(`../obter_historico.php?despesa_id=${id}`)
         .then(response => response.text())
         .then(html => {
             document.getElementById('historico-content').innerHTML = html;
@@ -435,221 +422,268 @@ window.onload = function() {
 </script>
 </head>
 <body>
-<?php include __DIR__ . '/../saldo_widget.php'; ?>
-
-<div style="display: flex; align-items: center; gap: 10px;">
-    <img src="https://img.icons8.com/?size=100&id=22462&format=png&color=000000" alt="Ícone Despesas " style="height: 50px;">
-    <h1>Todos as Despesas</h1>
-</div>
-
-<h2>Saldo atual: <strong><?= number_format($saldo,2) ?> €</strong></h2>
-<?php show_flash(); ?>
-
-<!-- Formulário de filtros -->
-<form method="get" action="despesas.php" style="margin-bottom:20px;">
-  <label>Origem:
-    <select name="origem">
-      <option value="">Todos</option>
-      <option value="manutencao" <?= $origemFilter==='manutencao'?'selected':''?>>Manutenção</option>
-      <option value="servico" <?= $origemFilter==='servico'?'selected':''?>>Serviço</option>
-      <option value="despesa" <?= $origemFilter==='despesa'?'selected':''?>>Despesa</option>
-    </select>
-  </label>
-  &nbsp;
-  <label>Estado:
-    <select name="estado">
-      <option value="">Todos</option>
-      <option value="pago" <?= $estadoFilter==='pago'?'selected':''?>>Pago</option>
-      <option value="por_pagar" <?= $estadoFilter==='por_pagar'?'selected':''?>>Por pagar</option>
-    </select>
-  </label>
-  &nbsp;
-  <label>Pesquisar:
-    <input type="text" name="search" value="<?= htmlspecialchars($searchTerm)?>" placeholder="Nome…">
-  </label>
-  &nbsp;
-  <button type="submit">Filtrar</button>
-</form>
-
-<!-- Formulário para adicionar nova despesa -->
-<h3>Adicionar Nova Despesa</h3>
-<form method="post" action="despesas.php" style="margin-bottom: 20px;">
-    <label>Nome: <input type="text" name="nome" required></label>
-    <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" required></label><br><br>
-    <label>Data: <input type="date" name="data" value="<?= date('Y-m-d') ?>"></label>
-    <label>Descrição: <input type="text" name="descricao"></label><br><br>
-    <label><input type="checkbox" name="recorrente" id="recorrente" value="1" onchange="toggleRecorrencia()"> Despesa Recorrente</label>
-    <div id="recorrencia-opts" style="display:none; margin-top:10px;">
-        <label>Periodicidade:
-            <select name="periodicidade">
-                <option value="mensal">Mensal</option>
-                <option value="semanal">Semanal</option>
-                <option value="anual">Anual</option>
-            </select>
-        </label>
-        <label>Data de término:
-            <input type="date" name="data_fim_recorrencia">
-        </label>
+<div class="admin-container">
+    <div class="top-bar" style="justify-content:center;">
+        <img src="https://img.icons8.com/?size=100&id=22462&format=png&color=000000" alt="Ícone Despesas " style="height: 50px;">
+        <h1 style="margin: 0;">Despesas</h1>
     </div>
-    <button type="submit" name="adicionar_despesa">Adicionar Despesa</button>
-</form>
-
-<h3>Lista de Despesas</h3>
-<table border="1" cellpadding="10" style="border-collapse:collapse; width:100%;">
-<thead style="background:#eee;">
-<tr>
-  <th>ID</th><th>Origem</th><th>Nome</th><th>Valor (€)</th><th>Estado</th><th>Data de Pagamento</th><th>Ação</th>
-</tr>
-</thead>
-<tbody>
-<?php if(empty($despesas)): ?>
-<tr><td colspan="7" style="text-align:center;">Nenhuma despesa encontrada.</td></tr>
-<?php else: foreach($despesas as $d): ?>
-<tr>
-  <td><?= htmlspecialchars($d['id']) ?></td>
-  <td>
-    <?= ucfirst(htmlspecialchars($d['origem'])) ?>
-    <?php if($d['recorrente']): ?>
-        <span class="badge-recorrente">Recorrente</span>
-        <?php if($d['pausada']): ?>
-            <span class="badge-pausada">Pausada</span>
-        <?php endif; ?>
-    <?php endif; ?>
-  </td>
-  <td><?= htmlspecialchars($d['nome']) ?></td>
-  <td class="valordesp"><?= number_format($d['valor'],2) ?></td>
-  <td><?= $d['pago'] ? '<span style="color:green;font-weight:bold">Pago</span>' : '<span style="color:red;font-weight:bold">Por pagar</span>' ?></td>
-  <td><?= $d['pago'] ? htmlspecialchars($d['data_pagamento']??'-') : '-' ?></td>
-  <td>
-    <button onclick="abrirDetalhes('<?= $d['id']?>','<?= addslashes($d['nome'])?>','<?= $d['valor']?>','<?= $d['origem']?>','<?= $d['pago']?>','<?= $d['data_pagamento']?>','<?= $d['recorrente']?>','<?= $d['pausada']?>')">Detalhes</button>
-    
-    <?php if($d['origem'] === 'despesa'): ?>
-        <button onclick="abrirEditar('<?= $d['id']?>','<?= addslashes($d['nome'])?>','<?= $d['valor']?>','<?= $d['D_data'] ?? date('Y-m-d')?>','<?= addslashes($d['D_descricao'] ?? '')?>','<?= $d['recorrente']?>','<?= $d['periodicidade']?>','<?= $d['data_fim_recorrencia']?>','<?= $d['pausada']?>')">Editar</button>
-        
-        <?php if(!$d['pago']): ?>
-            <button onclick="abrirEliminar('<?= $d['id']?>','<?= addslashes($d['nome'])?>')">Eliminar</button>
-        <?php endif; ?>
-        
+    <h3>Saldo atual: <span class="saldo-valor saldo-positivo">€<?= number_format($saldo,2,',','.') ?></span></h3>
+    <?php show_flash(); ?>
+    <!-- Formulário de filtros -->
+    <form method="get" action="despesas.php" class="flex" style="gap:16px; max-width:900px; margin-bottom:24px;">
+      <div class="form-group">
+        <label>Origem:
+          <select name="origem">
+            <option value="">Todos</option>
+            <option value="manutencao" <?= $origemFilter==='manutencao'?'selected':''?>>Manutenção</option>
+            <option value="servico" <?= $origemFilter==='servico'?'selected':''?>>Serviço</option>
+            <option value="despesa" <?= $origemFilter==='despesa'?'selected':''?>>Despesa</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Estado:
+          <select name="estado">
+            <option value="">Todos</option>
+            <option value="pago" <?= $estadoFilter==='pago'?'selected':''?>>Pago</option>
+            <option value="por_pagar" <?= $estadoFilter==='por_pagar'?'selected':''?>>Por pagar</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Pesquisar:
+          <input type="text" name="search" value="<?= htmlspecialchars($searchTerm)?>" placeholder="Nome…">
+        </label>
+      </div>
+      <div class="form-group" style="align-self:flex-end;">
+        <button type="submit" class="btn">Filtrar</button>
+      </div>
+    </form>
+    <!-- Formulário para adicionar nova despesa -->
+    <button class="btn btn-add" onclick="document.getElementById('modalAdicionar').classList.add('active')">+ Adicionar Nova Despesa</button>
+    <div class="table-responsive">
+    <table class="table table-hover table-striped">
+    <thead>
+    <tr>
+      <th>ID</th><th>Origem</th><th>Nome</th><th>Valor (€)</th><th>Estado</th><th>Data de Pagamento</th><th class="acao">Ação</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php if(empty($despesas)): ?>
+    <tr><td colspan="7" class="text-center">Nenhuma despesa encontrada.</td></tr>
+    <?php else: foreach($despesas as $d): ?>
+    <tr>
+      <td><?= htmlspecialchars($d['id']) ?></td>
+      <td>
+        <?= ucfirst(htmlspecialchars($d['origem'])) ?>
         <?php if($d['recorrente']): ?>
-            <button onclick="abrirPrevisoes('<?= $d['id']?>')">Previsões</button>
-            <button onclick="abrirHistorico('<?= $d['id']?>')">Histórico</button>
-            
-            <form method="post" style="display:inline;">
-                <input type="hidden" name="id" value="<?= $d['id'] ?>">
-                <input type="hidden" name="pausada" value="<?= $d['pausada'] ? 0 : 1 ?>">
-                <button type="submit" name="pausar_despesa"><?= $d['pausada'] ? 'Retomar' : 'Pausar' ?></button>
-            </form>
+            <span class="badge badge-info badge-recorrente">Recorrente</span>
+            <?php if($d['pausada']): ?>
+                <span class="badge badge-warning badge-pausada">Pausada</span>
+            <?php endif; ?>
         <?php endif; ?>
-    <?php endif; ?>
-    
-    <?php if(!$d['pago']): ?>
-      <?php if($saldo>=$d['valor']): ?>
-      <form method="post" style="display:inline;" onsubmit="return confirmarPagar('<?= $d['id']?>',<?= $d['valor']?>,'<?= $d['origem']?>');">
-        <input type="hidden" name="id" value="<?= $d['id'] ?>">
-        <input type="hidden" name="valor" value="<?= $d['valor'] ?>">
-        <input type="hidden" name="origem" value="<?= htmlspecialchars($d['origem']) ?>">
-        <button type="submit" name="pagar">Pagar</button>
-      </form>
-      <?php else: ?>
-        <span style="color:red;">Saldo insuficiente</span>
-      <?php endif; ?>
-    <?php else: ?>
-      <span style="color:green;">✔</span>
-    <?php endif; ?>
-  </td>
-</tr>
-<?php endforeach; endif; ?>
-</tbody>
-</table>
-
-<div class="totalizador">Total despesas visíveis: <span id="totalizador">0.00</span> €</div>
-
-<div style="margin-top:15px;">
-<?php for($p=1;$p<=$totalPages;$p++):
-    $u='despesas.php?'.http_build_query(array_merge($_GET,['page'=>$p]));
-?>
-  <a href="<?= $u ?>" style="margin-right:5px; <?= $p==$page?'font-weight:bold;text-decoration:underline':'' ?>"><?= $p ?></a>
-<?php endfor; ?>
-</div>
-
-<!-- Modal Detalhes -->
-<div id="modal-detalhes" class="modal">
-  <div class="content" onclick="event.stopPropagation()">
-    <h3>Detalhes da despesa</h3>
-    <p><strong>ID:</strong> <span id="det-id"></span></p>
-    <p><strong>Nome:</strong> <span id="det-nome"></span></p>
-    <p><strong>Valor:</strong> <span id="det-valor"></span> €</p>
-    <p><strong>Origem:</strong> <span id="det-origem"></span></p>
-    <p><strong>Estado:</strong> <span id="det-estado"></span></p>
-    <p><strong>Data de Pagamento:</strong> <span id="det-data"></span></p>
-    <p><strong>Recorrente:</strong> <span id="det-recorrente"></span></p>
-    <p><strong>Pausada:</strong> <span id="det-pausada"></span></p>
-    <button onclick="fecharModal('modal-detalhes')">Fechar</button>
-  </div>
-</div>
-
-<!-- Modal Editar -->
-<div id="modal-editar" class="modal">
-  <div class="content" onclick="event.stopPropagation()">
-    <h3>Editar Despesa</h3>
-    <form method="post" action="despesas.php">
-        <input type="hidden" name="id" id="edit-id">
-        <label>Nome: <input type="text" name="nome" id="edit-nome" required></label><br>
-        <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" id="edit-valor" required></label><br>
-        <label>Data: <input type="date" name="data" id="edit-data" required></label><br>
-        <label>Descrição: <input type="text" name="descricao" id="edit-descricao"></label><br>
-        <label><input type="checkbox" name="recorrente" id="edit-recorrente" value="1" onchange="toggleRecorrenciaEdit()"> Despesa Recorrente</label><br>
-        <div id="recorrencia-opts-edit" style="display:none; margin-top:10px;">
-            <label>Periodicidade:
-                <select name="periodicidade" id="edit-periodicidade">
-                    <option value="mensal">Mensal</option>
-                    <option value="semanal">Semanal</option>
-                    <option value="anual">Anual</option>
-                </select>
-            </label><br>
-            <label>Data de término:
-                <input type="date" name="data_fim_recorrencia" id="edit-data-fim">
-            </label><br>
-            <label><input type="checkbox" name="pausada" id="edit-pausada" value="1"> Pausar esta despesa recorrente</label><br>
+      </td>
+      <td><?= htmlspecialchars($d['nome']) ?></td>
+      <td class="valordesp"><?= number_format($d['valor'],2,',','.') ?></td>
+      <td><?= $d['pago'] ? '<span class="badge badge-success">Pago</span>' : '<span class="badge badge-error">Por pagar</span>' ?></td>
+      <td><?= $d['pago'] ? htmlspecialchars($d['data_pagamento']??'-') : '-' ?></td>
+      <td class="acao">
+        <div class="acao-btns">
+          <button class="btn btn-view btn-small" onclick="abrirDetalhes('<?= $d['id']?>','<?= addslashes($d['nome'])?>','<?= $d['valor']?>','<?= $d['origem']?>','<?= $d['pago']?>','<?= $d['data_pagamento']?>','<?= $d['recorrente']?>','<?= $d['pausada']?>')">Detalhes</button>
+          <?php if($d['origem'] === 'despesa'): ?>
+              <button class="btn btn-view btn-small" onclick="abrirEditar('<?= $d['id']?>','<?= addslashes($d['nome'])?>','<?= $d['valor']?>','<?= $d['D_data'] ?? date('Y-m-d')?>','<?= addslashes($d['D_descricao'] ?? '')?>','<?= $d['recorrente']?>','<?= $d['periodicidade']?>','<?= $d['data_fim_recorrencia']?>','<?= $d['pausada']?>')">Editar</button>
+              <?php if(!$d['pago']): ?>
+                  <button class="btn button-danger btn-small" onclick="abrirEliminar('<?= $d['id']?>','<?= addslashes($d['nome'])?>')">Eliminar</button>
+              <?php endif; ?>
+              <?php if($d['recorrente']): ?>
+                  <button class="btn btn-info btn-small" onclick="abrirPrevisoes('<?= $d['id']?>')">Previsões</button>
+                  <button class="btn btn-info btn-small" onclick="abrirHistorico('<?= $d['id']?>')">Histórico</button>
+                  <form method="post" style="display:inline;">
+                      <input type="hidden" name="id" value="<?= $d['id'] ?>">
+                      <input type="hidden" name="pausada" value="<?= $d['pausada'] ? 0 : 1 ?>">
+                      <button type="submit" name="pausar_despesa" class="btn btn-warning btn-small"><?= $d['pausada'] ? 'Retomar' : 'Pausar' ?></button>
+                  </form>
+              <?php endif; ?>
+          <?php endif; ?>
+          <?php if(!$d['pago']): ?>
+            <?php if($saldo>=$d['valor']): ?>
+            <form method="post" style="display:inline;" onsubmit="return confirmarPagar('<?= $d['id']?>',<?= $d['valor']?>,'<?= $d['origem']?>');">
+              <input type="hidden" name="id" value="<?= $d['id'] ?>">
+              <input type="hidden" name="valor" value="<?= $d['valor'] ?>">
+              <input type="hidden" name="origem" value="<?= htmlspecialchars($d['origem']) ?>">
+              <button type="submit" name="pagar" class="btn button-success btn-small">Pagar</button>
+            </form>
+            <?php else: ?>
+              <span class="badge badge-error">Saldo insuficiente</span>
+            <?php endif; ?>
+          <?php else: ?>
+            <span class="badge badge-success">✔</span>
+          <?php endif; ?>
         </div>
-        <button type="submit" name="editar_despesa">Guardar Alterações</button>
-        <button type="button" onclick="fecharModal('modal-editar')">Cancelar</button>
-    </form>
-  </div>
+      </td>
+    </tr>
+    <?php endforeach; endif; ?>
+    </tbody>
+    </table>
+    </div>
+    <div class="totalizador" style="margin-bottom:18px;">Total despesas visíveis: <span id="totalizador">0.00</span> €</div>
+    <div style="margin-bottom:24px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <?php if($page > 1): ?>
+          <a href="despesas.php?<?= http_build_query(array_merge($_GET, ['page'=>$page-1])) ?>">← Anterior</a>
+        <?php endif; ?>
+      </div>
+      <div>
+        <?php if($page < $totalPages): ?>
+          <a href="despesas.php?<?= http_build_query(array_merge($_GET, ['page'=>$page+1])) ?>">Próxima →</a>
+        <?php endif; ?>
+      </div>
+    </div>
+    <!-- Modal Adicionar Despesa -->
+    <div id="modalAdicionar" class="modal" onclick="if(event.target.id==='modalAdicionar')this.classList.remove('active')">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+            <h2>Adicionar Nova Despesa</h2>
+            <button class="modal-close close-btn" onclick="document.getElementById('modalAdicionar').classList.remove('active')">×</button>
+        </div>
+        <form method="post" action="despesas.php" style="margin-top: 15px;">
+            <div class="form-group">
+                <label>Nome: <input type="text" name="nome" required></label>
+            </div>
+            <div class="form-group">
+                <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" required></label>
+            </div>
+            <div class="form-group">
+                <label>Data: <input type="date" name="data" value="<?= date('Y-m-d') ?>"></label>
+            </div>
+            <div class="form-group">
+                <label>Descrição: <input type="text" name="descricao"></label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="recorrente" id="recorrente" value="1" onchange="toggleRecorrencia()"> Despesa Recorrente</label>
+            </div>
+            <div id="recorrencia-opts" style="display:none; margin-top:10px;">
+                <div class="form-group">
+                    <label>Periodicidade:
+                        <select name="periodicidade">
+                            <option value="mensal">Mensal</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="anual">Anual</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Data de término:
+                        <input type="date" name="data_fim_recorrencia">
+                    </label>
+                </div>
+            </div>
+            <button type="submit" name="adicionar_despesa" class="btn btn-view" style="width: 100%;">Adicionar Despesa</button>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Detalhes -->
+    <div id="modal-detalhes" class="modal">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+            <h2>Detalhes da despesa</h2>
+            <button class="modal-close close-btn" onclick="fecharModal('modal-detalhes')">×</button>
+        </div>
+        <div style="margin-top:10px;">
+            <p><strong>ID:</strong> <span id="det-id"></span></p>
+            <p><strong>Nome:</strong> <span id="det-nome"></span></p>
+            <p><strong>Valor:</strong> <span id="det-valor"></span> €</p>
+            <p><strong>Origem:</strong> <span id="det-origem"></span></p>
+            <p><strong>Estado:</strong> <span id="det-estado"></span></p>
+            <p><strong>Data de Pagamento:</strong> <span id="det-data"></span></p>
+            <p><strong>Recorrente:</strong> <span id="det-recorrente"></span></p>
+            <p><strong>Pausada:</strong> <span id="det-pausada"></span></p>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Editar -->
+    <div id="modal-editar" class="modal">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+            <h2>Editar Despesa</h2>
+            <button class="modal-close close-btn" onclick="fecharModal('modal-editar')">×</button>
+        </div>
+        <form method="post" action="despesas.php" id="formEditarDespesa">
+            <input type="hidden" name="id" id="edit-id">
+            <div class="form-group">
+                <label>Nome: <input type="text" name="nome" id="edit-nome" required></label>
+            </div>
+            <div class="form-group">
+                <label>Valor (€): <input type="number" step="0.01" min="0.01" name="valor" id="edit-valor" required></label>
+            </div>
+            <div class="form-group">
+                <label>Data: <input type="date" name="data" id="edit-data" required></label>
+            </div>
+            <div class="form-group">
+                <label>Descrição: <input type="text" name="descricao" id="edit-descricao"></label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="recorrente" id="edit-recorrente" value="1" onchange="toggleRecorrenciaEdit()"> Despesa Recorrente</label>
+            </div>
+            <div id="recorrencia-opts-edit" style="display:none; margin-top:10px;">
+                <div class="form-group">
+                    <label>Periodicidade:
+                        <select name="periodicidade" id="edit-periodicidade">
+                            <option value="mensal">Mensal</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="anual">Anual</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Data de término:
+                        <input type="date" name="data_fim_recorrencia" id="edit-data-fim">
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" name="pausada" id="edit-pausada" value="1"> Pausar esta despesa recorrente</label>
+                </div>
+            </div>
+            <button type="submit" name="editar_despesa" class="btn btn-view" style="width: 100%;">Guardar Alterações</button>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Eliminar -->
+    <div id="modal-eliminar" class="modal">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+            <h2>Confirmar Eliminação</h2>
+            <button class="modal-close close-btn" onclick="fecharModal('modal-eliminar')">×</button>
+        </div>
+        <form method="post" action="despesas.php">
+            <input type="hidden" name="id" id="delete-id">
+            <p>Tem a certeza que deseja eliminar a despesa "<span id="delete-nome"></span>"?</p>
+            <button type="submit" name="eliminar_despesa" class="btn button-danger" style="width: 100%;">Eliminar</button>
+            <button type="button" class="btn btn-outline" onclick="fecharModal('modal-eliminar')">Cancelar</button>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Previsões Futuras -->
+    <div id="modal-previsoes" class="modal" style="display:none;">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+          <h2>Previsões Futuras</h2>
+          <button class="modal-close close-btn" onclick="fecharModal('modal-previsoes')">×</button>
+        </div>
+        <div id="previsoes-content" style="margin-top:10px;"></div>
+      </div>
+    </div>
+    <!-- Modal Histórico de Pagamentos -->
+    <div id="modal-historico" class="modal" style="display:none;">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+          <h2>Histórico de Pagamentos</h2>
+          <button class="modal-close close-btn" onclick="fecharModal('modal-historico')">×</button>
+        </div>
+        <div id="historico-content" style="margin-top:10px;"></div>
+      </div>
+    </div>
+    <a href="../admin.php">← Voltar</a>
 </div>
-
-<!-- Modal Eliminar -->
-<div id="modal-eliminar" class="modal">
-  <div class="content" onclick="event.stopPropagation()">
-    <h3>Confirmar Eliminação</h3>
-    <p>Tem a certeza que deseja eliminar a despesa "<span id="delete-nome"></span>"?</p>
-    <form method="post" action="despesas.php">
-        <input type="hidden" name="id" id="delete-id">
-        <button type="submit" name="eliminar_despesa" class="button-danger">Eliminar</button>
-        <button type="button" onclick="fecharModal('modal-eliminar')">Cancelar</button>
-    </form>
-  </div>
-</div>
-
-<!-- Modal Previsões -->
-<div id="modal-previsoes" class="modal">
-  <div class="content" onclick="event.stopPropagation()">
-    <h3>Previsões Futuras</h3>
-    <div id="previsoes-content"></div>
-    <button onclick="fecharModal('modal-previsoes')">Fechar</button>
-  </div>
-</div>
-
-<!-- Modal Histórico -->
-<div id="modal-historico" class="modal">
-  <div class="content" onclick="event.stopPropagation()">
-    <h3>Histórico de Pagamentos</h3>
-    <div id="historico-content"></div>
-    <button onclick="fecharModal('modal-historico')">Fechar</button>
-  </div>
-</div>
-
-<a href="admin.php">← Voltar</a>
-
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require '../conexao.php';
+require '../../conexao.php';
 $id = $_GET['id'];
 if (isset($_GET['modal'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

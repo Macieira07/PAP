@@ -1,32 +1,235 @@
 <?php
-include('../conexao.php');
+include('../../conexao.php');
 
 // Buscar casas e hóspedes
 $casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHERE C_estado = 'disponível' ORDER BY C_nome");
 $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_telefone FROM hospedes ORDER BY H_nome");
 
-// Buscar datas ocupadas (organizadas por casa)
+// Buscar datas ocupadas (todas as casas)
 $ocupadas = [];
-$stmt = $conexao->prepare("SELECT R_id_casa, R_data_checkin, R_data_checkout FROM reservas WHERE R_estado != 'cancelada'");
-$stmt->execute();
-$stmt->bind_result($id_casa, $data_checkin, $data_checkout);
-while ($stmt->fetch()) {
-    if (!isset($ocupadas[$id_casa])) {
-        $ocupadas[$id_casa] = [];
-    }
-
-    $checkin = new DateTime($data_checkin);
-    $checkout = new DateTime($data_checkout);
-    while ($checkin < $checkout) { // checkout não incluido na reserva
-        $ocupadas[$id_casa][] = $checkin->format('Y-m-d');
+$res = $conexao->query("SELECT R_data_checkin, R_data_checkout FROM reservas WHERE R_estado != 'cancelada'");
+while ($row = $res->fetch_assoc()) {
+    $checkin = new DateTime($row['R_data_checkin']);
+    $checkout = new DateTime($row['R_data_checkout']);
+    while ($checkin < $checkout) {
+        $ocupadas[] = $checkin->format('Y-m-d');
         $checkin->modify('+1 day');
     }
 }
-$stmt->close();
+$ocupadas = array_unique($ocupadas);
 
 $ocupadas_json = json_encode($ocupadas);
 $hoje = date('Y-m-d');
 $amanha = date('Y-m-d', strtotime('+1 day'));
+
+if (isset($_GET['modal'])) {
+?>
+<div class="modal-content" style="max-width: 480px; min-width: 320px;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 10px;">
+        <h2 style="margin:0; color: var(--cor-titulo); font-size: 1.3rem;">Adicionar Reserva</h2>
+        <button class="modal-close close-btn" onclick="fecharModalReserva()">×</button>
+    </div>
+    <div id="wizardBar" class="flex" style="gap:8px; margin: 18px 0 24px 0; justify-content:center;">
+        <div id="wizardStep1Bar" class="badge badge-info" style="background: var(--cor-primaria); color: #fff;">1</div>
+        <div style="width: 32px; height: 3px; background: var(--cor-borda); align-self: center;"></div>
+        <div id="wizardStep2Bar" class="badge badge-info" style="background: var(--cor-borda); color: var(--cor-primaria);">2</div>
+    </div>
+    <form id="formAdicionarReserva" method="POST" class="mb-3">
+        <div id="wizardStep1">
+            <div class="form-group">
+                <label>Casa:</label>
+                <select name="id_casa" required aria-label="Selecionar casa">
+                    <option value="">Selecione</option>
+                    <?php while ($c = $casas->fetch_assoc()): ?>
+                        <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>">
+                            <?= htmlspecialchars($c['C_nome']) ?> (<?= number_format($c['C_preco_noite'], 2) ?>€/noite)
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label>Check-in:</label>
+                <input type="text" name="data_checkin" id="data_checkin" required autocomplete="off" placeholder="Escolha a data de entrada" aria-label="Data de check-in">
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label>Check-out:</label>
+                <input type="text" name="data_checkout" id="data_checkout" required autocomplete="off" placeholder="Escolha a data de saída" aria-label="Data de check-out">
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label>Nº Hóspedes:</label>
+                <input type="number" name="num_hospedes" id="num_hospedes" min="1" value="1" required aria-label="Número de hóspedes">
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label>Origem:</label>
+                <select name="origem" required aria-label="Origem da reserva">
+                    <option value="online">Online</option>
+                    <option value="presencial">Presencial</option>
+                    <option value="chamada">Chamada</option>
+                </select>
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-footer flex-center">
+                <button type="button" id="btnWizardProximoReserva" class="btn btn-primary" style="width: 100%;">Próximo</button>
+            </div>
+        </div>
+        <div id="wizardStep2" style="display:none;">
+            <div class="form-group">
+                <label>Status:</label>
+                <select name="estado" required aria-label="Status da reserva">
+                    <option value="pendente" class="badge badge-warning">Pendente</option>
+                    <option value="confirmada" class="badge badge-success">Confirmada</option>
+                </select>
+                <div class="error-message" style="display:none;">Campo obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label>Serviços:</label>
+                <input type="text" name="servicos" placeholder="Ex: Limpeza, Decoração..." aria-label="Serviços adicionais">
+            </div>
+            <div class="form-group">
+                <label>Valor Pago (€):</label>
+                <input type="number" step="0.01" name="valor_pago" min="0" value="0.00" aria-label="Valor pago">
+            </div>
+            <div class="form-group">
+                <label>Referência Pagamento:</label>
+                <input type="text" name="referencia_pagamento" maxlength="100" aria-label="Referência de pagamento" placeholder="Opcional">
+            </div>
+            <div class="oferta-container">
+                <h3 style="color: var(--cor-primaria);"><i class="fas fa-gift"></i> Código Promocional</h3>
+                <div class="form-group">
+                    <label for="codigo_oferta"><i class="fas fa-tag"></i> Tem código promocional?</label>
+                    <input type="text" id="codigo_oferta" name="codigo_oferta" class="form-control" placeholder="Digite o código" aria-label="Código promocional">
+                </div>
+                <div id="detalhes-oferta" style="display: none; margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                    <h4 id="titulo-oferta"></h4>
+                    <p id="descricao-oferta"></p>
+                    <p id="condicoes-oferta" style="font-weight: bold;"></p>
+                </div>
+            </div>
+            <div class="form-footer flex" style="justify-content: space-between;">
+                <button type="button" id="btnWizardAnteriorReserva" class="btn btn-secondary">Anterior</button>
+                <button type="submit" class="btn btn-primary">Salvar Reserva</button>
+            </div>
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-day.reserved, .flatpickr-day.reserved:hover {
+    background: #ffcccc !important;
+    color: #ff0000 !important;
+    border-radius: 50% !important;
+    position: relative;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+const datasOcupadas = <?php echo json_encode(array_values($ocupadas)); ?>;
+
+flatpickr("#data_checkin", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disable: datasOcupadas,
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+        if (datasOcupadas.includes(dateStr)) {
+            dayElem.classList.add('reserved');
+            dayElem.title = "Data já reservada";
+        }
+    }
+});
+flatpickr("#data_checkout", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disable: datasOcupadas,
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+        if (datasOcupadas.includes(dateStr)) {
+            dayElem.classList.add('reserved');
+            dayElem.title = "Data já reservada";
+        }
+    }
+});
+
+// Wizard controlado pelo JS do arquivo principal
+// Ofertas disponíveis (igual pagina1.php)
+const ofertas = {
+    'LOVE260': {
+        nome: 'Pacote Amor',
+        descricao: 'Desconto especial para casais apaixonados.',
+        condicoes: 'Válido para reservas de 2 noites e 2 hóspedes.',
+        noites: 2,
+        hospedes: 2,
+        preco: 260
+    },
+    'PARTY260': {
+        nome: 'Pacote Festa',
+        descricao: 'Ideal para grupos e celebrações.',
+        condicoes: 'Inclui decoração temática gratuita. 2 noites, até 10 hóspedes.',
+        noites: 2,
+        hospedes: 4,
+        max_hospedes: 10,
+        preco: 260
+    },
+    'RETIRO240': {
+        nome: 'Pacote Retiro',
+        descricao: 'Desconto para estadias tranquilas.',
+        condicoes: 'Válido apenas durante a semana. 4 noites, 10 hóspedes.',
+        noites: 4,
+        hospedes: 10,
+        preco: 240
+    }
+};
+
+const codigoOfertaInput = document.getElementById('codigo_oferta');
+const detalhesOferta = document.getElementById('detalhes-oferta');
+const tituloOferta = document.getElementById('titulo-oferta');
+const descricaoOferta = document.getElementById('descricao-oferta');
+const condicoesOferta = document.getElementById('condicoes-oferta');
+const numHospedesInput = document.getElementById('num_hospedes');
+const checkinInput = document.getElementById('data_checkin');
+const checkoutInput = document.getElementById('data_checkout');
+
+if (codigoOfertaInput) {
+    codigoOfertaInput.addEventListener('change', function() {
+        const codigo = this.value.toUpperCase();
+        if (ofertas[codigo]) {
+            const oferta = ofertas[codigo];
+            tituloOferta.textContent = oferta.nome;
+            descricaoOferta.textContent = oferta.descricao;
+            condicoesOferta.textContent = oferta.condicoes;
+            detalhesOferta.style.display = 'block';
+            // Bloquear nº de hóspedes e noites conforme oferta
+            numHospedesInput.value = oferta.hospedes;
+            numHospedesInput.min = oferta.hospedes;
+            numHospedesInput.max = oferta.max_hospedes || oferta.hospedes;
+            numHospedesInput.readOnly = (oferta.hospedes === (oferta.max_hospedes || oferta.hospedes));
+            // Bloquear datas
+            checkinInput.addEventListener('change', function() {
+                if (checkinInput.value) {
+                    const checkinDate = new Date(checkinInput.value);
+                    const checkoutDate = new Date(checkinDate);
+                    checkoutDate.setDate(checkinDate.getDate() + oferta.noites);
+                    checkoutInput.value = checkoutDate.toISOString().split('T')[0];
+                    checkoutInput.readOnly = true;
+                }
+            });
+        } else {
+            detalhesOferta.style.display = 'none';
+            numHospedesInput.readOnly = false;
+            numHospedesInput.min = 1;
+            numHospedesInput.max = 10;
+            checkoutInput.readOnly = false;
+        }
+    });
+}
+</script>
+<?php
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +238,7 @@ $amanha = date('Y-m-d', strtotime('+1 day'));
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="../global.css">
     <title>Adicionar Reserva</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

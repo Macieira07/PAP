@@ -8,8 +8,8 @@ define('CONTACT_EMAIL', 'quinta.flores2019@gmail.com');
 define('PROPERTY_ADDRESS', 'Travessa da Seara 265-Calheiros, Ponte de Lima');
 define('RNAL', 'AL123456'); // Número de registo de alojamento local
 
-require __DIR__ . '/../pagamento/tcpdf/tcpdf.php';
-require __DIR__ . '/../conexao.php';
+require '../../pagamento/tcpdf/tcpdf.php';
+require '../../conexao.php';
 
 if (!isset($_GET['id'])) die('Reserva não especificada.');
 $reserva_id = (int)$_GET['id'];

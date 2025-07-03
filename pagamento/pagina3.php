@@ -221,8 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $id_casa = $casa['C_id_casa'];
                         
                     // Define o estado da reserva
-                    $status_reserva = ($metodo_pagamento === 'Transferência' || $metodo_pagamento === 'Dinheiro') 
-                                      ? 'pendente' : 'confirmada';
+                    $status_reserva = 'confirmada';
                     
                     // Insere a reserva - APENAS UMA VEZ
                     $query = "INSERT INTO reservas (R_id_hospede, R_id_casa, R_data_checkin, R_data_checkout, 

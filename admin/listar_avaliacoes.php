@@ -1,4 +1,4 @@
-    <?php
+<?php
     require_once '../conexao.php';
 
     // Consultar médias gerais e totais
@@ -20,10 +20,10 @@
     $dados = $resultado_dados->fetch_assoc();
 
     // Calcular percentuais
-    $percent_recomendaria = $dados['total_avaliacoes'] > 0 ? round(($dados['total_recomendaria']) / $dados['total_avaliacoes']) * 100 : 0;
-    $percent_voltaria = $dados['total_avaliacoes'] > 0 ? round(($dados['total_voltaria']) / $dados['total_avaliacoes']) * 100 : 0;
-    $percent_bem_recebido = $dados['total_avaliacoes'] > 0 ? round(($dados['total_bem_recebido']) / $dados['total_avaliacoes']) * 100 : 0;
-    $percent_expectativas = $dados['total_avaliacoes'] > 0 ? round(($dados['total_expectativas']) / $dados['total_avaliacoes']) * 100 : 0;
+    $percent_recomendaria = $dados['total_avaliacoes'] > 0 ? round(($dados['total_recomendaria'] / $dados['total_avaliacoes']) * 100) : 0;
+    $percent_voltaria = $dados['total_avaliacoes'] > 0 ? round(($dados['total_voltaria'] / $dados['total_avaliacoes']) * 100) : 0;
+    $percent_bem_recebido = $dados['total_avaliacoes'] > 0 ? round(($dados['total_bem_recebido'] / $dados['total_avaliacoes']) * 100) : 0;
+    $percent_expectativas = $dados['total_avaliacoes'] > 0 ? round(($dados['total_expectativas'] / $dados['total_avaliacoes']) * 100) : 0;
 
     // Comentários para análise qualitativa
     $sql_comentarios = "SELECT 
@@ -64,7 +64,7 @@
     <!DOCTYPE html>
     <html lang="pt">
     <head>
-        <link rel="stylesheet" href="global..css">
+        <link rel="stylesheet" href="global.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard de Avaliações - Quinta Flores</title>
@@ -296,6 +296,15 @@
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 gap: 20px;
             }
+            
+            #graficoCategorias {
+                max-width: 600px;
+                max-height: 200px;
+                width: 100%;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+            }
         </style>
     </head>
     <body>
@@ -314,7 +323,13 @@
             
             <div class="metric-card">
                 <h3>Média Geral</h3>
-                <div class="metric-value"><?= round($dados['experiencia'], 1) ?>/5</div>
+                <div class="metric-value">
+                    <?php if ($dados['total_avaliacoes'] > 0): ?>
+                        <?= round($dados['experiencia'] ?? 0, 1) ?>/5
+                    <?php else: ?>
+                        Sem avaliações
+                    <?php endif; ?>
+                </div>
                 <div class="metric-detail">
                     <span>Experiência dos hóspedes</span>
                 </div>
@@ -322,7 +337,13 @@
             
             <div class="metric-card">
                 <h3>Recomendariam</h3>
-                <div class="metric-value"><?= $percent_recomendaria ?>%</div>
+                <div class="metric-value">
+                    <?php if ($dados['total_avaliacoes'] > 0): ?>
+                        <?= $percent_recomendaria ?>%
+                    <?php else: ?>
+                        Sem avaliações
+                    <?php endif; ?>
+                </div>
                 <div class="metric-detail">
                     <span>Taxa de recomendação</span>
                 </div>
@@ -330,7 +351,13 @@
             
             <div class="metric-card">
                 <h3>Voltariam</h3>
-                <div class="metric-value"><?= $percent_voltaria ?>%</div>
+                <div class="metric-value">
+                    <?php if ($dados['total_avaliacoes'] > 0): ?>
+                        <?= $percent_voltaria ?>%
+                    <?php else: ?>
+                        Sem avaliações
+                    <?php endif; ?>
+                </div>
                 <div class="metric-detail">
                     <span>Taxa de retorno</span>
                 </div>
@@ -339,15 +366,19 @@
         
         <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button active" onclick="openTab('analise')">Análise</button>
-                <button class="tab-button" onclick="openTab('comentarios')">Comentários</button>
-                <button class="tab-button" onclick="openTab('detalhes')">Detalhes</button>
+                <button class="tab-button active" onclick="openTab('analise', event)">Análise</button>
+                <button class="tab-button" onclick="openTab('comentarios', event)">Comentários</button>
+                <button class="tab-button" onclick="openTab('detalhes', event)">Detalhes</button>
             </div>
             
             <div id="analise" class="tab-content active">
                 <div class="chart-container">
                     <h2 class="chart-title">Médias por Categoria</h2>
-                    <canvas id="graficoCategorias" height="300"></canvas>
+                    <?php if ($dados['total_avaliacoes'] > 0): ?>
+                        <canvas id="graficoCategorias" width="250" height="180"></canvas>
+                    <?php else: ?>
+                        <p>Sem avaliações para exibir gráficos.</p>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -362,7 +393,7 @@
                                     <span class="comment-rating">
                                         <?= str_repeat('★', $comentario['classificacao_experiencia']) . str_repeat('☆', 5 - $comentario['classificacao_experiencia']) ?>
                                     </span>
-                                    <span><?= date('d/m/Y', strtotime($comentario['carimbo_data_hora'])) ?></span>
+                                    <!-- Data removida -->
                                 </div>
                                 
                                 <?php if (!empty($comentario['aspetos_a_melhorar'])): ?>
@@ -392,20 +423,19 @@
                     <table id="tabelaAvaliacoes">
                         <thead>
                             <tr>
-                                <th>Data</th>
                                 <th>Hóspede</th>
                                 <th>Classificação(0/5)</th>
                                 <th>Gostou (0/10)</th>
                                 <th>Recomendaria</th>
                                 <th>Voltaria</th>
                                 <th>Aspectos a Melhorar</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($resultado_formularios->num_rows > 0): ?>
                                 <?php while ($linha = $resultado_formularios->fetch_assoc()): ?>
                                     <tr>
-                                        <td><?= date('d/m/Y', strtotime($linha['carimbo_data_hora'])) ?></td>
                                         <td><?= htmlspecialchars($linha['nome_completo']) ?></td>
                                         <td class="star-rating">
                                             <?= str_repeat('★', $linha['classificacao_experiencia']) . str_repeat('☆', 5 - $linha['classificacao_experiencia']) ?>
@@ -418,6 +448,9 @@
                                         </td>
                                         <td><?= htmlspecialchars($linha['voltaria_reservar']) ?></td>
                                         <td><?= htmlspecialchars($linha['aspetos_a_melhorar']) ?></td>
+                                        <td>
+                                            <a href="eliminar_avaliacao.php?id=<?= $linha['id'] ?>" onclick="return confirm('Tem certeza que deseja eliminar esta avaliação?');" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>
@@ -434,7 +467,7 @@
 
     <script>
         // Função para abrir abas
-        function openTab(tabName) {
+        function openTab(tabName, event) {
             const tabContents = document.getElementsByClassName('tab-content');
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.remove('active');
@@ -451,11 +484,11 @@
         
         // Dados para os gráficos
         const medias = {
-            ambiente: <?= round($dados['ambiente'], 2) ?>,
-            conforto: <?= round($dados['conforto'], 2) ?>,
-            limpeza: <?= round($dados['limpeza'], 2) ?>,
-            localizacao: <?= round($dados['localizacao'], 2) ?>,
-            comodidades: <?= round($dados['comodidades'], 2) ?>
+            ambiente: <?= round($dados['ambiente'] ?? 0, 2) ?>,
+            conforto: <?= round($dados['conforto'] ?? 0, 2) ?>,
+            limpeza: <?= round($dados['limpeza'] ?? 0, 2) ?>,
+            localizacao: <?= round($dados['localizacao'] ?? 0, 2) ?>,
+            comodidades: <?= round($dados['comodidades'] ?? 0, 2) ?>
         };
         
         const satisfacao = {

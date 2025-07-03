@@ -48,32 +48,32 @@ Stack trace:
 [06-May-2025 10:16:21 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
 [06-May-2025 10:16:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
 Stack trace:
-#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'railway')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
 [07-May-2025 08:31:40 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 27
 [07-May-2025 08:31:40 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
 [07-May-2025 08:31:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
 Stack trace:
-#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'railway')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
 [09-May-2025 08:49:11 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 27
 [09-May-2025 08:49:11 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
 [09-May-2025 08:49:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
 Stack trace:
-#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'railway')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
 [09-May-2025 08:50:37 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /var/www/html/pagamento/confirmacao.php on line 28
 [09-May-2025 08:50:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:40
 Stack trace:
-#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#0 /var/www/html/pagamento/confirmacao.php(40): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'railway')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 40
 [09-May-2025 08:51:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /var/www/html/pagamento/confirmacao.php:41
 Stack trace:
-#0 /var/www/html/pagamento/confirmacao.php(41): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'basedados_pap')
+#0 /var/www/html/pagamento/confirmacao.php(41): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'railway')
 #1 {main}
   thrown in /var/www/html/pagamento/confirmacao.php on line 41
 [09-May-2025 08:51:41 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Field 'R_metodo_pagamento' doesn't have a default value in /var/www/html/pagamento/confirmacao.php:90
@@ -191,3 +191,16 @@ Stack trace:
 [27-Jun-2025 10:06:41 UTC] Nova reserva criada: ID=88 para davidfloresmacieira@gmail.com
 [27-Jun-2025 10:06:41 UTC] PHP Warning:  Undefined variable $telefone_formatado in /var/www/html/pagamento/confirmacao.php on line 152
 [27-Jun-2025 10:06:43 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[01-Jul-2025 10:46:04 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[01-Jul-2025 10:51:36 UTC] E-mail enviado com sucesso para macieiradavid0@gmail.com
+[01-Jul-2025 13:25:54 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[02-Jul-2025 08:50:08 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[02-Jul-2025 08:52:31 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[02-Jul-2025 09:01:24 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[02-Jul-2025 09:05:46 UTC] E-mail enviado com sucesso para davidfloresmacieira@gmail.com
+[02-Jul-2025 15:57:39 UTC] E-mail enviado com sucesso para joao.silva89@gmail.com
+[02-Jul-2025 16:00:26 UTC] E-mail enviado com sucesso para maria.fernandez@yahoo.es
+[02-Jul-2025 16:03:39 UTC] E-mail enviado com sucesso para luca.bianchi@mail.it
+[03-Jul-2025 08:08:27 UTC] E-mail enviado com sucesso para sofia.costa21@gmail.com
+[03-Jul-2025 08:10:46 UTC] E-mail enviado com sucesso para miguel.santos@mail.pt
+[03-Jul-2025 08:13:23 UTC] E-mail enviado com sucesso para carla.rodriguez@outlook.es

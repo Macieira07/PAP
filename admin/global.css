@@ -127,11 +127,14 @@ button:hover, .btn:hover, .button:hover, input[type="submit"]:hover, input[type=
 .button-danger:hover {
   background: #b71c1c;
 }
-.button-success {
-  background: var(--cor-sucesso);
+.button-success, .btn.button-success {
+  background: var(--cor-sucesso) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: var(--sombra-suave);
 }
-.button-success:hover {
-  background: #1e7e34;
+.button-success:hover, .btn.button-success:hover {
+  background: #1e7e34 !important;
 }
 .button-warning {
   background: var(--cor-aviso);
@@ -924,5 +927,21 @@ body {
   }
   .modal-content {
       padding: 24px 16px;
+  }
+}
+
+/* Organização dos botões de ação na tabela de despesas */
+.acao-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .acao-btns {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
   }
 }

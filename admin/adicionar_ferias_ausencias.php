@@ -6,10 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inicio = $_POST['inicio'];
     $fim = $_POST['fim'];
     $tipo = $_POST['tipo'];
-    $motivo = $_POST['motivo'];
 
-    $stmt = $conexao->prepare("INSERT INTO ferias_ausencias (F_id_funcionario, FA_inicio, FA_fim, FA_tipo, FA_motivo) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $funcionario_id, $inicio, $fim, $tipo, $motivo);
+    $stmt = $conexao->prepare("INSERT INTO ferias_ausencias (F_id_funcionario, tipo_ausencia, data_inicio, data_fim) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("isss", $funcionario_id, $tipo, $inicio, $fim);
     $stmt->execute();
     header("Location: ferias_ausencias.php");
     exit;
@@ -40,9 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Tipo:
         <select name="tipo">
             <option value="Férias">Férias</option>
-            <option value="Ausência">Ausência</option>
+            <option value="Falta">Falta</option>
         </select><br><br>
-        Motivo: <textarea name="motivo" required></textarea><br><br>
         <button type="submit">Salvar</button>
     </form>
 </body>

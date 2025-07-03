@@ -41,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
             $mail->addAddress($email);
 $mail->AddEmbeddedImage('../assets/logos/logotipo1.png', 'logotipo');
-
+$mail->CharSet = 'UTF-8';
+$mail->Encoding = 'base64';
 $mail->isHTML(true);
 $mail->Subject = '🎉 Bem-vindo à Quinta Flores!';
 $mail->Body = '

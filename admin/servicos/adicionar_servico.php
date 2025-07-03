@@ -14,9 +14,9 @@ if (isset($_GET['modal'])) {
             exit;
         }
 
-        // Processar upload de imagem
+        // Processar upload de imagem principal
         $imagemPath = '';
-        if (!empty($_FILES['imagem']['name'])) {
+        if (!empty($_FILES['imagem']['name']) && !empty($_FILES['imagem']['tmp_name'])) {
             $targetDir = "../../uploads/servicos/";
             if (!file_exists($targetDir)) {
                 mkdir($targetDir, 0777, true);
@@ -26,7 +26,6 @@ if (isset($_GET['modal'])) {
             $targetFile = $targetDir . uniqid() . '_' . $fileName;
             $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
             
-            // Verificar se é uma imagem real
             $check = getimagesize($_FILES['imagem']['tmp_name']);
             if ($check === false) {
                 echo "O arquivo não é uma imagem válida.";
@@ -53,10 +52,33 @@ if (isset($_GET['modal'])) {
             }
         }
 
-        $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id, S_imagem) 
-                                   VALUES (?, ?, ?, ?, ?)");
+        // Inserir serviço
+        $stmt = $conexao->prepare("INSERT INTO servicos (S_nome, S_descricao, S_preco, S_categoria_id, S_imagem) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("ssdis", $nome, $descricao, $preco, $categoria, $imagemPath);
         $stmt->execute();
+        $servico_id = $conexao->insert_id;
+
+        // Processar upload de imagens extras (galeria)
+        if (!empty($_FILES['galeria']['name'][0])) {
+            foreach ($_FILES['galeria']['name'] as $i => $galeriaName) {
+                if (empty($galeriaName) || empty($_FILES['galeria']['tmp_name'][$i])) continue;
+                $galeriaTmp = $_FILES['galeria']['tmp_name'][$i];
+                $galeriaSize = $_FILES['galeria']['size'][$i];
+                $galeriaType = strtolower(pathinfo($galeriaName, PATHINFO_EXTENSION));
+                $targetDir = "../../uploads/servicos/";
+                $galeriaFile = $targetDir . uniqid('gal_') . '_' . basename($galeriaName);
+                $check = getimagesize($galeriaTmp);
+                if ($check === false) continue;
+                if ($galeriaSize > 5000000) continue;
+                if (!in_array($galeriaType, ['jpg', 'jpeg', 'png', 'gif'])) continue;
+                if (move_uploaded_file($galeriaTmp, $galeriaFile)) {
+                    $galeriaPath = str_replace('../../', '', $galeriaFile);
+                    $stmtImg = $conexao->prepare("INSERT INTO servicos_imagens (servico_id, caminho_imagem) VALUES (?, ?)");
+                    $stmtImg->bind_param("is", $servico_id, $galeriaPath);
+                    $stmtImg->execute();
+                }
+            }
+        }
 
         echo 'OK';
         exit;
@@ -67,14 +89,14 @@ if (isset($_GET['modal'])) {
         <form method="post" id="formWizardServico" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:10px;">
             <!-- Etapa 1 -->
             <div class="wizard-step" id="wizardStep1">
-                <label style="display:flex; flex-direction:column; gap:4px;">Nome do Serviço:
-                    <input type="text" name="nome_servico" required>
+                <label for="nome_servico" style="display:flex; flex-direction:column; gap:4px;">Nome do Serviço:
+                    <input type="text" id="nome_servico" name="nome_servico" required>
                 </label>
-                <label style="display:flex; flex-direction:column; gap:4px;">Descrição:
-                    <textarea name="descricao" style="resize:vertical; min-height:60px; max-width:100%;" required></textarea>
+                <label for="descricao" style="display:flex; flex-direction:column; gap:4px;">Descrição:
+                    <textarea id="descricao" name="descricao" style="resize:vertical; min-height:60px; max-width:100%;" required></textarea>
                 </label>
-                <label style="display:flex; flex-direction:column; gap:4px;">Preço (€):
-                    <input type="number" step="0.01" name="preco" required>
+                <label for="preco" style="display:flex; flex-direction:column; gap:4px;">Preço (€):
+                    <input type="number" id="preco" step="0.01" name="preco" required>
                 </label>
                 <button type="button" id="btnWizardProximoServico" class="atalho-btn" style="align-self:flex-end; margin-top:10px;">Próximo &rarr;</button>
             </div>
@@ -83,15 +105,18 @@ if (isset($_GET['modal'])) {
                 <?php 
                 $categorias = $conexao->query("SELECT * FROM categorias_servico");
                 ?>
-                <label style="display:flex; flex-direction:column; gap:4px;">Categoria:
-                    <select name="categoria_servico" required>
+                <label for="categoria_servico" style="display:flex; flex-direction:column; gap:4px;">Categoria:
+                    <select id="categoria_servico" name="categoria_servico" required>
                         <?php while($cat = $categorias->fetch_assoc()): ?>
                             <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nome']) ?></option>
                         <?php endwhile; ?>
                     </select>
                 </label>
-                <label style="display:flex; flex-direction:column; gap:4px;">Imagem:
-                    <input type="file" name="imagem" accept="image/*">
+                <label for="imagem" style="display:flex; flex-direction:column; gap:4px;">Imagem principal:
+                    <input type="file" id="imagem" name="imagem" accept="image/*">
+                </label>
+                <label for="galeria" style="display:flex; flex-direction:column; gap:4px;">Imagens extras (galeria):
+                    <input type="file" id="galeria" name="galeria[]" accept="image/*" multiple>
                 </label>
                 <div style="display:flex; justify-content:space-between; margin-top:10px;">
                     <button type="button" id="btnWizardAnteriorServico" class="atalho-btn">&larr; Anterior</button>
@@ -100,6 +125,12 @@ if (isset($_GET['modal'])) {
             </div>
         </form>
     </div>
+    <?php if (isset($erroMsg)): ?>
+        <div style="background:#f44336;color:#fff;padding:10px;border-radius:5px;margin-bottom:10px;"> <?= $erroMsg ?> </div>
+    <?php endif; ?>
+    <?php if (isset($sucessoMsg)): ?>
+        <div style="background:#4CAF50;color:#fff;padding:10px;border-radius:5px;margin-bottom:10px;"> <?= $sucessoMsg ?> </div>
+    <?php endif; ?>
     <?php
     exit;
 }
@@ -151,6 +182,11 @@ if (isset($_GET['modal'])) {
     <label>
         Imagem:
         <input type="file" name="imagem" accept="image/*">
+    </label><br><br>
+
+    <label>
+        Galeria:
+        <input type="file" name="galeria[]" accept="image/*" multiple>
     </label><br><br>
 
     <button type="submit">Salvar</button>

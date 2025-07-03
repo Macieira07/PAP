@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
-require_once __DIR__ . '/../basedados_pap/conexao.php'; // Caminho absoluto mais seguro
+require_once __DIR__ . '/../railway/conexao.php'; // Caminho absoluto mais seguro
 
 $casaId = $_GET['casa_id'] ?? null;
 $date = $_GET['date'] ?? null;

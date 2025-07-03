@@ -3,7 +3,7 @@
     $porta = 57649;                 // PORTA Railway (muito importante!)
     $usuario = 'root';
     $senha = 'xCXZTSaCjuxzLagZNeraHBXNxechiiUp'; 
-    $banco = 'basedados_pap';
+    $banco = 'railway';
 
     // Cria conexão com tratamento de erros
     try {

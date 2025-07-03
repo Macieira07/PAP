@@ -58,6 +58,9 @@ if ($res->num_rows === 0) {
 }
 $reserva = $res->fetch_assoc();
 
+// Limpar reserva_id da sessão para evitar duplicidade
+unset($_SESSION['reserva_id']);
+
 // Agora use $reserva para preencher os dados da confirmação, PDF, e-mail, etc.
 // Exemplo de variáveis:
 $checkin = $reserva['R_data_checkin'];

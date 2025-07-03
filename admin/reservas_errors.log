@@ -1,54 +1,54 @@
 [23-May-2025 15:20:09 UTC] Erro: Dados da reserva não encontrados na sessão
 [23-May-2025 15:20:24 UTC] Erro: Dados da reserva não encontrados na sessão
-[23-May-2025 15:49:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:107
+[23-May-2025 15:49:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:107
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(107): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(70): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 107
-[23-May-2025 15:50:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:50:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:50:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:50:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:53:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:53:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:55:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:55:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()
 #2 {main}
   thrown in /var/www/html/admin/gerar_pdf_reserva.php on line 108
-[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`basedados_pap`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
+[23-May-2025 15:55:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`railway`.`reservas`, CONSTRAINT `fk_reserva_hospede` FOREIGN KEY (`R_id_hospede`) REFERENCES `hospedes` (`H_id_hospede`)) in /var/www/html/admin/gerar_pdf_reserva.php:108
 Stack trace:
 #0 /var/www/html/admin/gerar_pdf_reserva.php(108): mysqli_stmt->execute()
 #1 /var/www/html/admin/gerar_pdf_reserva.php(71): salvarReserva()

@@ -555,10 +555,7 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
         });
         function abrirModalReserva(e) {
             e.preventDefault();
-            atualizarDatasOcupadas(); // Garante que datasOcupadas está atualizado antes de mostrar
             document.getElementById('modalReserva').style.display = 'flex';
-            if (checkinPicker) checkinPicker.redraw();
-            if (checkoutPicker) checkoutPicker.redraw();
         }
         function fecharModalReserva() {
             document.getElementById('modalReserva').style.display = 'none';
@@ -603,9 +600,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
             if (!idCasa) {
                 if (checkinPicker) checkinPicker.set('disable', []);
                 if (checkoutPicker) checkoutPicker.set('disable', []);
-                // Forçar redraw
-                if (checkinPicker) checkinPicker.redraw();
-                if (checkoutPicker) checkoutPicker.redraw();
                 return;
             }
             fetch('datas_ocupadas.php?id_casa=' + idCasa)
@@ -614,9 +608,6 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                     datasOcupadas = datas;
                     if (checkinPicker) checkinPicker.set('disable', datasOcupadas);
                     if (checkoutPicker) checkoutPicker.set('disable', datasOcupadas);
-                    // Forçar redraw após atualizar datas
-                    if (checkinPicker) checkinPicker.redraw();
-                    if (checkoutPicker) checkoutPicker.redraw();
                 });
         }
 
@@ -628,55 +619,13 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 onOpen: atualizarDatasOcupadas,
                 onChange: function(selectedDates, dateStr, instance) {
                     if (checkoutPicker) checkoutPicker.set('minDate', dateStr);
-                },
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    // Adiciona bolinha vermelha nos dias ocupados
-                    if (datasOcupadas && datasOcupadas.length > 0) {
-                        const day = dayElem.dateObj;
-                        const dayISO = day.toISOString().slice(0, 10);
-                        if (datasOcupadas.includes(dayISO)) {
-                            const dot = document.createElement('span');
-                            dot.style.display = 'block';
-                            dot.style.width = '8px';
-                            dot.style.height = '8px';
-                            dot.style.background = 'red';
-                            dot.style.borderRadius = '50%';
-                            dot.style.position = 'absolute';
-                            dot.style.bottom = '4px';
-                            dot.style.left = '50%';
-                            dot.style.transform = 'translateX(-50%)';
-                            dayElem.style.position = 'relative';
-                            dayElem.appendChild(dot);
-                        }
-                    }
                 }
             });
             checkoutPicker = flatpickr("#data_checkout_modal", {
                 dateFormat: "Y-m-d",
                 minDate: "today",
                 disable: datasOcupadas,
-                onOpen: atualizarDatasOcupadas,
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    // Adiciona bolinha vermelha nos dias ocupados
-                    if (datasOcupadas && datasOcupadas.length > 0) {
-                        const day = dayElem.dateObj;
-                        const dayISO = day.toISOString().slice(0, 10);
-                        if (datasOcupadas.includes(dayISO)) {
-                            const dot = document.createElement('span');
-                            dot.style.display = 'block';
-                            dot.style.width = '8px';
-                            dot.style.height = '8px';
-                            dot.style.background = 'red';
-                            dot.style.borderRadius = '50%';
-                            dot.style.position = 'absolute';
-                            dot.style.bottom = '4px';
-                            dot.style.left = '50%';
-                            dot.style.transform = 'translateX(-50%)';
-                            dayElem.style.position = 'relative';
-                            dayElem.appendChild(dot);
-                        }
-                    }
-                }
+                onOpen: atualizarDatasOcupadas
             });
             document.getElementById('id_casa_modal').addEventListener('change', function() {
                 atualizarDatasOcupadas();

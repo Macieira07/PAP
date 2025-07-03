@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validação de valor
     if (!is_numeric($valor) || $valor <= 0) {
+        if (isset($_GET['modal'])) {
+            echo "O valor deve ser um valor positivo.";
+            exit;
+        }
         echo "O valor deve ser um valor positivo.";
         exit;
     }
@@ -19,6 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("sdssiss", $nome, $valor, $data, $descricao, $recorrente, $periodicidade, $data_fim_recorrencia);
     $stmt->execute();
 
+    if (isset($_GET['modal'])) {
+        echo 'OK';
+        exit;
+    }
     header("Location: despesas.php");
     exit;
 }
@@ -35,6 +43,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <h2>Adicionar Nova Despesa</h2>
+    <?php if (isset($_GET['modal'])): ?>
+        <form method="post">
+            Nome da Despesa: <input type="text" name="nome" required><br><br>
+            Valor (€): <input type="number" step="0.01" name="valor" required><br><br>
+            Data: <input type="date" name="data" required><br><br>
+            Descrição: <textarea name="descricao"></textarea><br><br>
+            <label>
+                <input type="checkbox" name="recorrente" value="1" id="recorrente_cb" onchange="document.getElementById('recorrencia_opts').style.display=this.checked?'block':'none'"> Despesa recorrente
+            </label>
+            <div id="recorrencia_opts" style="display:none; margin-top:10px;">
+                <label>Periodicidade:
+                    <select name="periodicidade">
+                        <option value="mensal">Mensal</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="anual">Anual</option>
+                    </select>
+                </label>
+                <label>Data de término:
+                    <input type="date" name="data_fim_recorrencia">
+                </label>
+            </div>
+            <button type="submit">Salvar</button>
+        </form>
+        <script>
+        document.getElementById('recorrente_cb').onchange = function() {
+            document.getElementById('recorrencia_opts').style.display = this.checked ? 'block' : 'none';
+        };
+        </script>
+    <?php else: ?>
     <form method="post">
         Nome da Despesa: <input type="text" name="nome" required><br><br>
         Valor (€): <input type="number" step="0.01" name="valor" required><br><br>
@@ -58,5 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Salvar</button>
     </form>
     <a href="despesas.php">← Voltar</a>
+    <?php endif; ?>
 </body>
 </html>

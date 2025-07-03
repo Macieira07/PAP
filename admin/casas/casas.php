@@ -31,12 +31,11 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
 <html lang="pt">
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../global.css">
     <meta charset="UTF-8">
     <title>Casas</title>
-</head>
     <style>
         .flash-message {
             position: fixed;
@@ -52,10 +51,40 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
         .flash-message.error { background-color: #f44336; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .estado-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #fff;
+            min-width: 90px;
+            text-align: center;
+        }
+        .badge-disponivel { background: #28a745; }
+        .badge-ocupada { background: #ff9800; }
+        .badge-manutencao { background: #1976d2; }
+        .header-casas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .header-casas img {
+            height: 56px;
+            margin-bottom: 8px;
+        }
+        .header-casas h1 {
+            margin: 0;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
     </style>
+</head>
 <body class="dark-mode">
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Ícone Casas" style="height: 50px;">
+    <div class="header-casas">
+        <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Ícone Casas">
         <h1>Lista de Alojamentos</h1>
     </div>
 
@@ -81,7 +110,21 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
                 <td><?= $casa['C_nome'] ?></td>
                 <td><?= $casa['C_capacidade'] ?></td>
                 <td><?= $casa['C_preco_noite'] ?>€</td>
-                <td><?= $casa['C_estado'] ?></td>
+                <td>
+                    <?php
+                        $estado = strtolower($casa['C_estado']);
+                        $badgeClass = '';
+                        switch ($estado) {
+                            case 'disponível': $badgeClass = 'badge-disponivel'; break;
+                            case 'ocupada': $badgeClass = 'badge-ocupada'; break;
+                            case 'manutenção': $badgeClass = 'badge-manutencao'; break;
+                            default: $badgeClass = 'badge-manutencao'; break;
+                        }
+                    ?>
+                    <span class="estado-badge <?= $badgeClass ?>">
+                        <?= ucfirst($casa['C_estado']) ?>
+                    </span>
+                </td>
                 <td>
                     <a href="#" class="btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">Editar</a> |
                     <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>

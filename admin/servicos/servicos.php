@@ -185,21 +185,132 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
         .sort-icon {
             margin-left: 5px;
         }
+        @media (max-width: 700px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr { display: none; }
+            td {
+                position: relative;
+                padding-left: 50%;
+                min-height: 40px;
+                border: none;
+                border-bottom: 1px solid #eee;
+            }
+            td:before {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 45%;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            td:nth-of-type(1):before { content: 'ID'; }
+            td:nth-of-type(2):before { content: 'Nome'; }
+            td:nth-of-type(3):before { content: 'Descrição'; }
+            td:nth-of-type(4):before { content: 'Preço (€)'; }
+            td:nth-of-type(5):before { content: 'Categoria'; }
+            td:nth-of-type(6):before { content: 'Imagem'; }
+            td:nth-of-type(7):before { content: 'Ações'; }
+        }
+        /* Imagem responsiva */
+        img.thumbnail {
+            max-width: 120px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 2px;
+            cursor: pointer;
+        }
+        .galeria-miniatura {
+            height: 40px;
+            width: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 2px 2px 0 0;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        /* Lightbox */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-content {
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .lightbox-img {
+            max-width: 80vw;
+            max-height: 70vh;
+            border-radius: 6px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            font-size: 32px;
+            color: #333;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 36px;
+            color: #333;
+            background: rgba(255,255,255,0.7);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .lightbox-nav.left { left: 10px; }
+        .lightbox-nav.right { right: 10px; }
     </style>
 </head>
 <body>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=GtKvA4suLFWD&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
-        <h1>Todos os Serviços</h1>
+    <!-- Bloco centralizado com ícone, título e links -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://img.icons8.com/?size=100&id=GtKvA4suLFWD&format=png&color=000000" alt="Ícone Serviços" style="height: 50px;">
+            <h1 style="margin: 0;">Todos os Serviços</h1>
+        </div>
+        <div style="margin-top: 5px;">
+            <a href="../admin.php">← Voltar</a> |
+            <a href="#" id="btnAdicionarServico">+ Adicionar Serviço</a>
+        </div>
     </div>
-    
-    <a href="../admin.php">← Voltar</a> | 
-    <a href="#" id="btnAdicionarServico">+ Adicionar Serviço</a>
-    
+
     <!-- Filtros -->
     <div class="filtros">
         <form method="get" action="servicos.php" style="margin-top: 20px;">
-            <input type="text" name="nome" placeholder="Pesquisar por nome" value="<?= isset($_GET['nome']) ? $_GET['nome'] : '' ?>">
+            <label for="filtro-nome">Pesquisar por nome</label>
+            <input type="text" id="filtro-nome" name="nome" placeholder="Pesquisar por nome" value="<?= isset($_GET['nome']) ? $_GET['nome'] : '' ?>">
             <button type="submit">Pesquisar</button>
         </form>
     </div>
@@ -223,15 +334,29 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
                     <td><?= number_format($servico['S_preco'], 2) ?></td>
                     <td><?= htmlspecialchars($servico['categoria_nome']) ?></td>
                     <td>
-                        <?php if (!empty($servico['S_imagem'])): ?>
-<img src="/fotos_servicos<?= $servico['S_imagem'] ?>" alt="Imagem Serviço" class="thumbnail" style="height: 150px; width: auto;">
-              <?php else: ?>
-                            (sem imagem)
+                        <?php
+                        $imagens = [];
+                        if (!empty($servico['S_imagem'])) {
+                            $imagens[] = ['src' => '/' . htmlspecialchars($servico['S_imagem']), 'alt' => 'Imagem do serviço ' . htmlspecialchars($servico['S_nome'])];
+                        }
+                        $galeria = $conexao->query("SELECT caminho_imagem FROM servicos_imagens WHERE servico_id = " . (int)$servico['S_id_servico']);
+                        while ($img = $galeria->fetch_assoc()) {
+                            $imagens[] = ['src' => '/' . htmlspecialchars($img['caminho_imagem']), 'alt' => 'Galeria de ' . htmlspecialchars($servico['S_nome'])];
+                        }
+                        ?>
+                        <?php if (count($imagens) > 0): ?>
+                            <button type="button" onclick="abrirLightbox(<?= $servico['S_id_servico'] ?>, 0)" style="background:#2e5090;color:#fff;padding:6px 18px;border:none;border-radius:4px;cursor:pointer;">Visualizar galeria</button>
+                            <script>
+                            window.lightboxImagens = window.lightboxImagens || {};
+                            window.lightboxImagens[<?= $servico['S_id_servico'] ?>] = <?= json_encode($imagens) ?>;
+                            </script>
+                        <?php else: ?>
+                            (sem imagens)
                         <?php endif; ?>
                     </td>
                     <td>
                         <a href="#" class="btnEditarServico" data-id="<?= $servico['S_id_servico'] ?>">Editar</a> |
-                        <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
+                        <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" class="btnExcluirServico" data-nome="<?= htmlspecialchars($servico['S_nome']) ?>">Eliminar</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -275,6 +400,16 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
         <div class="modal-content" style="max-width:420px; min-width:320px; position:relative;">
             <button onclick="fecharModalServico()" style="position:absolute; top:10px; right:10px; font-size:20px; background:none; border:none; cursor:pointer;">&times;</button>
             <div id="modalConteudoServico"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox HTML -->
+    <div id="lightboxOverlay" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="fecharLightbox()">&times;</button>
+            <button class="lightbox-nav left" onclick="navegarLightbox(-1)">&#8592;</button>
+            <img id="lightboxImg" class="lightbox-img" src="" alt="">
+            <button class="lightbox-nav right" onclick="navegarLightbox(1)">&#8594;</button>
         </div>
     </div>
 
@@ -377,6 +512,86 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
             };
         }
     }
+    
+    // Substituir confirmação de exclusão por modal/alerta customizado
+    document.querySelectorAll('.btnExcluirServico').forEach(btn => {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            const nome = this.getAttribute('data-nome');
+            if (confirm('Tem certeza que deseja eliminar o serviço "' + nome + '"?')) {
+                window.location.href = this.getAttribute('href');
+            }
+        };
+    });
+    
+    // Toast para feedback
+    function showToast(msg, type='success') {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.style.position = 'fixed';
+            toast.style.top = '30px';
+            toast.style.right = '30px';
+            toast.style.zIndex = 9999;
+            toast.style.padding = '16px 28px';
+            toast.style.borderRadius = '8px';
+            toast.style.fontWeight = 'bold';
+            toast.style.fontSize = '16px';
+            toast.style.boxShadow = '0 2px 12px rgba(0,0,0,0.15)';
+            toast.style.transition = 'all 0.4s';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.background = type === 'success' ? '#4CAF50' : '#f44336';
+        toast.style.color = '#fff';
+        toast.style.display = 'block';
+        toast.style.opacity = 1;
+        setTimeout(() => {
+            toast.style.opacity = 0;
+            setTimeout(() => toast.style.display = 'none', 400);
+        }, 2000);
+    }
+    
+    // Exibir toast se houver flash message
+    window.addEventListener('DOMContentLoaded', function() {
+        const flash = document.querySelector('.flash-message');
+        if (flash) {
+            showToast(flash.textContent, flash.classList.contains('success') ? 'success' : 'error');
+        }
+    });
+
+    let lightboxServicoId = null;
+    let lightboxIndex = 0;
+    function abrirLightbox(servicoId, index) {
+        lightboxServicoId = servicoId;
+        lightboxIndex = index;
+        atualizarLightbox();
+        document.getElementById('lightboxOverlay').style.display = 'flex';
+    }
+    function fecharLightbox() {
+        document.getElementById('lightboxOverlay').style.display = 'none';
+    }
+    function navegarLightbox(delta) {
+        const imagens = window.lightboxImagens[lightboxServicoId];
+        lightboxIndex += delta;
+        if (lightboxIndex < 0) lightboxIndex = imagens.length - 1;
+        if (lightboxIndex >= imagens.length) lightboxIndex = 0;
+        atualizarLightbox();
+    }
+    function atualizarLightbox() {
+        const imagens = window.lightboxImagens[lightboxServicoId];
+        const img = imagens[lightboxIndex];
+        document.getElementById('lightboxImg').src = img.src;
+        document.getElementById('lightboxImg').alt = img.alt;
+    }
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lightboxOverlay').style.display === 'flex') {
+            if (e.key === 'ArrowLeft') navegarLightbox(-1);
+            if (e.key === 'ArrowRight') navegarLightbox(1);
+            if (e.key === 'Escape') fecharLightbox();
+        }
+    });
     </script>
 </body>
 </html>

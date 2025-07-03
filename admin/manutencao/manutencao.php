@@ -62,14 +62,16 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
     </style>
 </head>
 <body>
-<?php include __DIR__ . '/../saldo_widget.php'; ?>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
-        <h1>Lista de Manutenções</h1>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
+            <h1 style="margin: 0;">Lista de Manutenções</h1>
+        </div>
+        <div style="margin-top: 10px;">
+            <a href="../admin.php">← Voltar</a> |
+            <a href="#" id="btnAdicionarManutencao">+ Adicionar Manutenção</a>
+        </div>
     </div>
-
-    <a href="admin.php">← Voltar</a> | 
-    <a href="#" id="btnAdicionarManutencao">+ Adicionar Manutenção</a>
 
     <table border="1" cellpadding="10" style="margin-top: 20px;">
         <tr>
@@ -257,8 +259,8 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
             var id = e.target.getAttribute('data-id');
             if (!id) return;
             if (!confirm('Tem a certeza que deseja pagar esta manutenção?')) return;
-            // Redireciona para o endpoint de pagamento (pode ser AJAX, mas aqui é simples)
-            window.location.href = '../admin/pagar_manutencao.php?id=' + id;
+            // Redireciona para o endpoint de pagamento (corrigido)
+            window.location.href = 'pagar_manutencao.php?id=' + id;
         }
     });
     </script>
