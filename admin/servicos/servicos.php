@@ -95,6 +95,8 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
     <link rel="stylesheet" href="../global.css">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .flash-message {
             position: fixed;
@@ -110,6 +112,105 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
         .flash-message.error { background-color: #f44336; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .acoes-servicos-container {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .link-voltar, .link-adicionar {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .link-voltar:hover, .link-adicionar:hover {
+            background: var(--cor-link-hover);
+            text-decoration: none;
+        }
+        .link-adicionar {
+            color: var(--cor-primaria);
+        }
+        .filtro-servicos-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 20px 0;
+        }
+        .filtro-servicos-form {
+            display: flex;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            padding: 18px 20px;
+            width: 100%;
+            max-width: 900px;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filtro-servicos-form .filtro-group {
+            flex: 1 1 180px;
+            min-width: 140px;
+        }
+        .filtro-servicos-form input,
+        .filtro-servicos-form select {
+            width: 100%;
+            border: 1.5px solid var(--cor-input-borda);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 15px;
+            background: #fff;
+            color: var(--cor-texto);
+            transition: var(--transicao);
+        }
+        .filtro-servicos-form button {
+            background: var(--cor-primaria);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--sombra-suave);
+            transition: var(--transicao);
+        }
+        .filtro-servicos-form button:hover {
+            background: var(--cor-primaria-escura);
+        }
+        .servicos-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .servicos-table th {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .servicos-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--cor-borda-clara);
+            vertical-align: middle;
+        }
+        .servicos-table tr:last-child td {
+            border-bottom: none;
+        }
+        .servicos-table tr:hover {
+            background: var(--cor-table-row-hover);
+        }
         
         /* Estilos do modal */
         .modal-overlay {
@@ -291,6 +392,13 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
         }
         .lightbox-nav.left { left: 10px; }
         .lightbox-nav.right { right: 10px; }
+        .button-info {
+            background: #17a2b8;
+            color: #fff;
+        }
+        .button-info:hover {
+            background: #138496;
+        }
     </style>
 </head>
 <body>
@@ -306,16 +414,34 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
         </div>
     </div>
 
-    <!-- Filtros -->
-    <div class="filtros">
-        <form method="get" action="servicos.php" style="margin-top: 20px;">
-            <label for="filtro-nome">Pesquisar por nome</label>
-            <input type="text" id="filtro-nome" name="nome" placeholder="Pesquisar por nome" value="<?= isset($_GET['nome']) ? $_GET['nome'] : '' ?>">
-            <button type="submit">Pesquisar</button>
-        </form>
+    <div class="acoes-servicos-container">
+      <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+      <a href="adicionar_servico.php" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Serviço</a>
+    </div>
+    <div class="filtro-servicos-container">
+      <form method="get" action="servicos.php" class="filtro-servicos-form">
+        <div class="filtro-group">
+          <input type="text" name="nome" placeholder="Pesquisar por nome" value="<?= htmlspecialchars($filtro_nome) ?>">
+        </div>
+        <div class="filtro-group">
+          <select name="categoria">
+            <option value="">Todas as categorias</option>
+            <?php while($cat = $categorias->fetch_assoc()): ?>
+              <option value="<?= $cat['id'] ?>" <?= $filtro_categoria == $cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['nome']) ?></option>
+            <?php endwhile; ?>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <input type="number" name="preco_min" placeholder="Preço mínimo" value="<?= htmlspecialchars($filtro_preco_min) ?>">
+        </div>
+        <div class="filtro-group">
+          <input type="number" name="preco_max" placeholder="Preço máximo" value="<?= htmlspecialchars($filtro_preco_max) ?>">
+        </div>
+        <button type="submit"><i class="fa fa-search"></i> Filtrar</button>
+      </form>
     </div>
 
-    <table border="1" cellpadding="10" style="margin-top: 20px;">
+    <table class="servicos-table">
         <tr>
             <th>ID</th>
             <th>Nome</th>
@@ -355,8 +481,14 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="#" class="btnEditarServico" data-id="<?= $servico['S_id_servico'] ?>">Editar</a> |
-                        <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" class="btnExcluirServico" data-nome="<?= htmlspecialchars($servico['S_nome']) ?>">Eliminar</a>
+                        <div class="acao-btns">
+                            <a href="#" class="button button-warning btnEditarServico" data-id="<?= $servico['S_id_servico'] ?>">
+                                <i class="fa fa-pen"></i> Editar
+                            </a>
+                            <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" class="button button-danger btnExcluirServico" data-nome="<?= htmlspecialchars($servico['S_nome']) ?>" onclick="return confirm('Tem certeza?')">
+                                <i class="fa fa-times"></i> Eliminar
+                            </a>
+                        </div>
                     </td>
                 </tr>
             <?php endwhile; ?>

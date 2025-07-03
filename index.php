@@ -132,36 +132,48 @@ function showFlashMessage(message, type = 'success', duration = 4000) {
   // Cria o elemento da flash message
   const flash = document.createElement('div');
   flash.classList.add('flash-message', `flash-${type}`);
+  flash.setAttribute('role', 'alert');
+  flash.setAttribute('aria-live', 'assertive');
+  flash.setAttribute('tabindex', '0');
   flash.innerHTML = `
     <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
       <i class="fa-solid ${getIconForType(type)}" style="font-size: 18px;"></i>
       <span>${message}</span>
     </div>
-    <button class="close-btn" aria-label="Fechar">&times;</button>
+    <button class="close-btn" aria-label="Fechar" tabindex="0">&times;</button>
   `;
 
   // Adiciona ao corpo do documento
   document.body.appendChild(flash);
 
+  // Foco automático para acessibilidade
+  flash.focus();
+
   // Evento para fechar manualmente ao clicar no botão "×"
-  flash.querySelector('.close-btn').addEventListener('click', () => {
+  const closeBtn = flash.querySelector('.close-btn');
+  closeBtn.addEventListener('click', () => {
     flash.classList.add('fade-out');
     setTimeout(() => flash.remove(), 400);
   });
+  // Fechar com tecla ESC
+  flash.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      flash.classList.add('fade-out');
+      setTimeout(() => flash.remove(), 400);
+    }
+  });
   // Animação para mostrar a mensagem (entra da direita)
-// Mostrar animação de entrada
-setTimeout(() => {
-  flash.classList.add('show');
-}, 10);
-// Remover após duração definida
-setTimeout(() => {
-  flash.classList.remove('show');
-  flash.classList.add('fade-out');
   setTimeout(() => {
-    if (flash.parentNode) flash.remove();
-  }, 500);
-}, duration);
-
+    flash.classList.add('show');
+  }, 10);
+  // Remover após duração definida
+  setTimeout(() => {
+    flash.classList.remove('show');
+    flash.classList.add('fade-out');
+    setTimeout(() => {
+      if (flash.parentNode) flash.remove();
+    }, 500);
+  }, duration);
 }
 // Função que verifica a disponibilidade ao clicar no botão
 function checkAvailability() {
@@ -269,7 +281,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     <div class="room__card">
       <div class="room__image">
         <img src="<?= htmlspecialchars(getImage('room_party', 'party.avif')) ?>" alt="Oferta Festa com Amigos">
-        <div class="room__badge">1 a 2 noites</div>
+        <div class="room__badge">2 noites</div>
       </div>
       <div class="room__content">
         <h3 class="room__title"><?= I18n::get('room_title_party', 'Diversão em Grupo') ?></h3>
@@ -282,7 +294,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     <div class="room__card">
       <div class="room__image">
         <img src="<?= htmlspecialchars(getImage('room_religious', 'religious.avif')) ?>" alt="Oferta Retiro de Catequese">
-        <div class="room__badge">3 noites</div>
+        <div class="room__badge">4 noites</div>
       </div>
       <div class="room__content">
         <h3 class="room__title"><?= I18n::get('room_title_religious', 'Retiro Espiritual') ?></h3>
@@ -533,41 +545,6 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         </div>
       </div>
     </section>
-<script>
-// Esta função devolve um ícone diferente conforme o tipo de mensagem (sucesso, erro, info)
-function getIconForType(type) {
-  switch (type) {
-    case 'sucesso': return 'fa-check-circle'; //icone de sucesso
-    case 'erro': return 'fa-exclamation-triangle'; //icone para erro
-    case 'info': return 'fa-info-circle';   //icone para informação
-    default: return 'fa-info-circle'; //icone padrao
-  }
-}
-// Mostrar a flash message
-function showFlashMessage(message, tipo = 'sucesso', duration = 4000) {
-  // Remover anteriores
-  document.querySelectorAll('.flash-message').forEach(el => el.remove());
-  const flash = document.createElement('div');
-  flash.classList.add('flash-message', `flash-${tipo}`);
-  flash.innerHTML = `
-    <i class="fa-solid ${getIconForType(tipo)}"></i>
-    <span>${message}</span>
-  `;
-  document.body.appendChild(flash);
-
-  // Mostrar animação
-  setTimeout(() => {
-    flash.style.opacity = '1';
-    flash.style.transform = 'translateX(0)';
-  }, 10);
-
-  // Ocultar automaticamente
-  setTimeout(() => {
-    flash.classList.add('fade-out');
-    setTimeout(() => flash.remove(), 400);
-  }, duration);
-}
-</script>
 <?php include 'components/footer.php'; ?>
 <div id="toast" class="toast"></div>
     <script src="assets/i18n/translator.js"></script>
@@ -577,5 +554,27 @@ function showFlashMessage(message, tipo = 'sucesso', duration = 4000) {
 <script src="chatbot/chatbot.js"></script>
 <?php include 'chatbot/chatbot_config.php'; ?>
 <?php include 'chatbot/chatbot.php'; ?>
+    <script>
+    (function() {
+      const root = document.documentElement;
+      const btn = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-toggle-icon');
+      // Função para aplicar tema
+      function setTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+      // Detectar preferência salva ou do sistema
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(saved ? saved : (prefersDark ? 'dark' : 'light'));
+      // Alternar ao clicar
+      btn.addEventListener('click', function() {
+        const current = root.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    })();
+    </script>
     </body>
     </html>

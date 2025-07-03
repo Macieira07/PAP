@@ -52,6 +52,7 @@ $total_paginas = ceil($total / $por_pagina);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Hóspedes</title>
     <link rel="stylesheet" href="../global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .hospedes-container {
             max-width: 1200px;
@@ -62,79 +63,114 @@ $total_paginas = ceil($total / $por_pagina);
             text-align: center;
             margin-bottom: 30px;
         }
-        .filtros-bar {
+        .acoes-hospedes-container {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            width: 100%;
+            gap: 18px;
+            margin-bottom: 10px;
+            align-items: center;
         }
-        .filtros-container {
-            flex: 1 1 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .filtros-container input, .filtros-container select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .btn-adicionar-hospede {
-            background: linear-gradient(90deg, #2e5090 60%, #4e8cff 100%);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 24px;
+        .link-voltar, .link-adicionar {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            text-decoration: none;
             font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(46,80,144,0.08);
-            transition: background 0.2s, transform 0.2s;
-            margin-left: auto;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.15s;
         }
-        .btn-adicionar-hospede:hover {
-            background: linear-gradient(90deg, #4e8cff 60%, #2e5090 100%);
-            transform: translateY(-2px) scale(1.03);
+        .link-voltar:hover, .link-adicionar:hover {
+            background: var(--cor-link-hover);
+            text-decoration: none;
         }
-        .table-responsive {
-            overflow-x: auto;
+        .link-adicionar {
+            color: var(--cor-primaria);
         }
-        .paginacao {
+        .filtro-hospedes-container {
             display: flex;
             justify-content: center;
-            gap: 5px;
+            margin: 30px 0 20px 0;
+        }
+        .filtro-hospedes-form {
+            display: flex;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            padding: 18px 20px;
+            width: 100%;
+            max-width: 900px;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filtro-hospedes-form input,
+        .filtro-hospedes-form select {
+            flex: 1 1 120px;
+            border: 1.5px solid var(--cor-input-borda);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 15px;
+            background: #fff;
+            color: var(--cor-texto);
+            transition: var(--transicao);
+        }
+        .filtro-hospedes-form button {
+            background: var(--cor-primaria);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--sombra-suave);
+            transition: var(--transicao);
+        }
+        .filtro-hospedes-form button:hover {
+            background: var(--cor-primaria-escura);
+        }
+        .hospedes-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             margin-top: 20px;
         }
-        .paginacao a, .paginacao span {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .paginacao span.current {
-            background: #2e5090;
+        .hospedes-table th {
+            background: var(--cor-primaria);
             color: white;
-            border-color: #2e5090;
-        }
-        .badge {
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 12px;
+            padding: 12px 15px;
+            text-align: left;
             font-weight: 500;
         }
-        .badge-ativo {
-            background: #d4edda;
-            color: #155724;
+        .hospedes-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--cor-borda-clara);
+            vertical-align: middle;
         }
-        .badge-bloqueado {
-            background: #f8d7da;
-            color: #721c24;
+        .hospedes-table tr:last-child td {
+            border-bottom: none;
         }
-        .acoes-cell {
-            white-space: nowrap;
+        .hospedes-table tr:hover {
+            background: var(--cor-table-row-hover);
+        }
+        .acao-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+        .button-info {
+            background: #17a2b8;
+            color: #fff;
+        }
+        .button-info:hover {
+            background: #138496;
         }
     </style>
 </head>
@@ -142,8 +178,12 @@ $total_paginas = ceil($total / $por_pagina);
     <div class="hospedes-container">
         <h1>Gestão de Hóspedes</h1>
         
-        <div class="filtros-bar">
-            <form method="get" class="filtros-container">
+        <div class="acoes-hospedes-container">
+            <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+            <a href="#" id="btnAdicionarHospede" class="link-adicionar"><i class="fa fa-user-plus"></i> Adicionar Hóspede</a>
+        </div>
+        <div class="filtro-hospedes-container">
+            <form method="get" class="filtro-hospedes-form">
                 <input type="text" name="pesquisa" placeholder="Pesquisar..." value="<?= htmlspecialchars($pesquisa) ?>">
                 <select name="filtro">
                     <option value="">Todos</option>
@@ -159,14 +199,12 @@ $total_paginas = ceil($total / $por_pagina);
                     <option value="asc" <?= $ordem === 'asc' ? 'selected' : '' ?>>Ascendente</option>
                     <option value="desc" <?= $ordem === 'desc' ? 'selected' : '' ?>>Descendente</option>
                 </select>
-                <button type="submit">Aplicar</button>
-                <a href="hospedes.php" class="btn">Limpar</a>
+                <button type="submit"><i class="fa fa-filter"></i> Aplicar</button>
+                <a href="hospedes.php" class="button button-outline">Limpar</a>
             </form>
-            <button id="btnAdicionarHospede" class="btn-adicionar-hospede">+ Adicionar Hóspede</button>
         </div>
-
         <div class="table-responsive">
-            <table class="table">
+            <table class="hospedes-table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -187,16 +225,16 @@ $total_paginas = ceil($total / $por_pagina);
                         <td><?= htmlspecialchars($hospede['H_telefone'] ?? '') ?></td>
                         <td><?= htmlspecialchars($hospede['H_documento_ident']) ?></td>
                         <td>
-                            <span class="badge <?= $hospede['H_bloqueado'] ? 'badge-bloqueado' : 'badge-ativo' ?>">
-                                <?= $hospede['H_bloqueado'] ? 'Bloqueado' : 'Ativo' ?>
-                            </span>
+                            <span class="badge <?= $hospede['H_bloqueado'] ? 'badge-error' : 'badge-success' ?>"> <?= $hospede['H_bloqueado'] ? 'Bloqueado' : 'Ativo' ?> </span>
                         </td>
                         <td class="acoes-cell">
-                            <button class="btn btn-sm btn-editar" data-id="<?= $hospede['H_id_hospede'] ?>">Editar</button>
-                            <button class="btn btn-sm btn-bloquear" data-id="<?= $hospede['H_id_hospede'] ?>" data-acao="<?= $hospede['H_bloqueado'] ? 'desbloquear' : 'bloquear' ?>">
-                                <?= $hospede['H_bloqueado'] ? 'Desbloquear' : 'Bloquear' ?>
-                            </button>
-                            <a href="eliminar_hospede.php?id=<?= $hospede['H_id_hospede'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja eliminar este hóspede?')">Eliminar</a>
+                            <div class="acao-btns">
+                                <button class="button button-warning btn-editar" data-id="<?= $hospede['H_id_hospede'] ?>"><i class="fa fa-pen"></i> Editar</button>
+                                <button class="button button-info btn-bloquear" data-id="<?= $hospede['H_id_hospede'] ?>" data-acao="<?= $hospede['H_bloqueado'] ? 'desbloquear' : 'bloquear' ?>">
+                                    <i class="fa fa-ban"></i> <?= $hospede['H_bloqueado'] ? 'Desbloquear' : 'Bloquear' ?>
+                                </button>
+                                <a href="eliminar_hospede.php?id=<?= $hospede['H_id_hospede'] ?>" class="button button-danger" onclick="return confirm('Tem certeza que deseja eliminar este hóspede?')"><i class="fa fa-times"></i> Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -270,6 +308,5 @@ $total_paginas = ceil($total / $por_pagina);
         });
     });
     </script>
-        <a href="../admin.php">← Voltar</a>
 </body>
 </html>

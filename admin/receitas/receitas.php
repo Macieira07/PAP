@@ -196,6 +196,35 @@ foreach ($hospedes as $h) {
     <meta charset="UTF-8" />
     <title>Receitas e Reservas</title>
     <link rel="stylesheet" href="../global.css" />
+    <style>
+        .receitas-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .receitas-table th {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .receitas-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--cor-borda-clara);
+            vertical-align: middle;
+        }
+        .receitas-table tr:last-child td {
+            border-bottom: none;
+        }
+        .receitas-table tr:hover {
+            background: var(--cor-table-row-hover);
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -212,7 +241,7 @@ foreach ($hospedes as $h) {
         <button class="btn btn-view btn-add" onclick="abrirModalAdicionar()">+ Adicionar Receita Manual</button>
         <!-- Tabela de Receitas e Reservas -->
         <div class="table-responsive">
-        <table class="table">
+        <table class="receitas-table">
             <thead>
                 <tr>
                     <th>ID</th>

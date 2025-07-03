@@ -23,6 +23,8 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
     <link rel="stylesheet" href="../global.css">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .flash-message {
             position: fixed;
@@ -38,26 +40,71 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
         .flash-message.error { background-color: #f44336; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
+        .acoes-manutencao-container {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 10px;
             align-items: center;
-            justify-content: center;
         }
-        .modal-content {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            min-width: 350px;
-            max-width: 90vw;
-            position: relative;
+        .link-voltar, .link-adicionar {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .link-voltar:hover, .link-adicionar:hover {
+            background: var(--cor-link-hover);
+            text-decoration: none;
+        }
+        .link-adicionar {
+            color: var(--cor-primaria);
+        }
+        .manutencao-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .manutencao-table th {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .manutencao-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--cor-borda-clara);
+            vertical-align: middle;
+        }
+        .manutencao-table tr:last-child td {
+            border-bottom: none;
+        }
+        .manutencao-table tr:hover {
+            background: var(--cor-table-row-hover);
+        }
+        .acao-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+        .button-info {
+            background: #17a2b8;
+            color: #fff;
+        }
+        .button-info:hover {
+            background: #138496;
         }
     </style>
 </head>
@@ -67,13 +114,13 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
             <img src="https://img.icons8.com/?size=100&id=11151&format=png&color=000000" alt="Ícone Manutencao" style="height: 50px;">
             <h1 style="margin: 0;">Lista de Manutenções</h1>
         </div>
-        <div style="margin-top: 10px;">
-            <a href="../admin.php">← Voltar</a> |
-            <a href="#" id="btnAdicionarManutencao">+ Adicionar Manutenção</a>
+        <div class="acoes-manutencao-container">
+            <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+            <a href="#" id="btnAdicionarManutencao" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Manutenção</a>
         </div>
     </div>
 
-    <table border="1" cellpadding="10" style="margin-top: 20px;">
+    <table class="manutencao-table">
         <tr>
             <th>ID</th>
             <th>Casa</th>
@@ -94,17 +141,25 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
                 <td><?= number_format($manutencao['M_custo'], 2, ',', '.') ?>€</td>
                 <td>
                     <?php if ($manutencao['M_pago']): ?>
-                        <span style="background:#4CAF50;color:#fff;padding:3px 8px;border-radius:8px;font-size:0.95em;">Pago</span>
+                        <span class="badge badge-success">Pago</span>
                     <?php else: ?>
-                        <span style="background:#f44336;color:#fff;padding:3px 8px;border-radius:8px;font-size:0.95em;">Por pagar</span>
+                        <span class="badge badge-error">Por pagar</span>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="#" class="btnEditarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">Editar</a> |
-                    <a href="eliminar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
-                    <?php if (!$manutencao['M_pago']): ?>
-                        | <button class="btnPagarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>" style="background:#2e5090;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Pagar</button>
-                    <?php endif; ?>
+                    <div class="acao-btns">
+                        <a href="#" class="button button-warning btnEditarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
+                            <i class="fa fa-pen"></i> Editar
+                        </a>
+                        <a href="eliminar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
+                            <i class="fa fa-times"></i> Eliminar
+                        </a>
+                        <?php if (!$manutencao['M_pago']): ?>
+                            <button class="button button-info btnPagarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
+                                <i class="fa fa-euro-sign"></i> Pagar
+                            </button>
+                        <?php endif; ?>
+                    </div>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -116,7 +171,7 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
     </div>
 
     <!-- Modal para adicionar/editar manutenção -->
-    <div id="modalManutencao" class="modal-overlay">
+    <div id="modalManutencao" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <button onclick="fecharModalManutencao()" style="position:absolute; top:10px; right:10px; font-size:20px; background:none; border:none; cursor:pointer;">&times;</button>
             <div id="modalConteudoManutencao"></div>

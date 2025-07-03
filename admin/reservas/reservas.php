@@ -773,5 +773,6 @@ if (isset($_SESSION['flash'])) {
         if (flashMsg) flashMsg.remove();
     }, 3000);
     </script>
+     <a href="../admin.php">← Voltar</a>
 </body>
 </html>

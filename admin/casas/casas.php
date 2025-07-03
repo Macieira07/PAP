@@ -1,4 +1,4 @@
-<?php
+    <?php
 require '../../conexao.php';
 // Pesquisa
 $pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
@@ -34,6 +34,8 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../global.css">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <meta charset="UTF-8">
     <title>Casas</title>
     <style>
@@ -51,19 +53,6 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
         .flash-message.error { background-color: #f44336; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        .estado-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.95em;
-            font-weight: 600;
-            color: #fff;
-            min-width: 90px;
-            text-align: center;
-        }
-        .badge-disponivel { background: #28a745; }
-        .badge-ocupada { background: #ff9800; }
-        .badge-manutencao { background: #1976d2; }
         .header-casas {
             display: flex;
             flex-direction: column;
@@ -80,6 +69,100 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
             font-size: 2.1em;
             font-weight: 700;
         }
+        /* Tabela com visual igual ao das reservas */
+        .casas-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .casas-table th {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .casas-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--cor-borda-clara);
+            vertical-align: middle;
+        }
+        .casas-table tr:last-child td {
+            border-bottom: none;
+        }
+        .casas-table tr:hover {
+            background: var(--cor-table-row-hover);
+        }
+        .filtro-casas-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 20px 0;
+        }
+        .filtro-casas-form {
+            display: flex;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            padding: 18px 20px;
+            width: 100%;
+            max-width: 700px;
+            gap: 12px;
+            align-items: center;
+        }
+        .filtro-casas-form input[type="text"] {
+            flex: 1;
+            border: 1.5px solid var(--cor-input-borda);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 16px;
+            background: #fff;
+            color: var(--cor-texto);
+            transition: var(--transicao);
+        }
+        .filtro-casas-form button {
+            background: var(--cor-primaria);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--sombra-suave);
+            transition: var(--transicao);
+        }
+        .filtro-casas-form button:hover {
+            background: var(--cor-primaria-escura);
+        }
+        .acoes-casas-container {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .link-voltar, .link-adicionar {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .link-voltar:hover, .link-adicionar:hover {
+            background: var(--cor-link-hover);
+            text-decoration: none;
+        }
+        .link-adicionar {
+            color: var(--cor-primaria);
+        }
     </style>
 </head>
 <body class="dark-mode">
@@ -88,14 +171,18 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
         <h1>Lista de Alojamentos</h1>
     </div>
 
-    <a href="../admin.php">← Voltar</a> | 
-    <a href="#" id="btnAdicionarCasa">+ Adicionar Casa</a>
-    <form method="get" action="casas.php" style="margin-top: 20px;">
+    <div class="acoes-casas-container">
+      <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+      <a href="#" id="btnAdicionarCasa" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Casa</a>
+    </div>
+    <div class="filtro-casas-container">
+      <form method="get" action="casas.php" class="filtro-casas-form">
         <input type="text" name="pesquisa" placeholder="Pesquisar por nome, estado ou capacidade" value="<?= isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '' ?>">
         <button type="submit">Pesquisar</button>
-    </form>
+      </form>
+    </div>
 
-    <table border="1" cellpadding="10" style="margin-top: 20px;">
+    <table class="casas-table">
         <tr>
             <th>ID</th>
             <th>Nome</th>
@@ -115,19 +202,23 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
                         $estado = strtolower($casa['C_estado']);
                         $badgeClass = '';
                         switch ($estado) {
-                            case 'disponível': $badgeClass = 'badge-disponivel'; break;
-                            case 'ocupada': $badgeClass = 'badge-ocupada'; break;
-                            case 'manutenção': $badgeClass = 'badge-manutencao'; break;
-                            default: $badgeClass = 'badge-manutencao'; break;
+                            case 'disponível': $badgeClass = 'badge-success'; break;
+                            case 'ocupada': $badgeClass = 'badge-warning'; break;
+                            case 'manutenção': $badgeClass = 'badge-error'; break;
+                            default: $badgeClass = 'badge-error'; break;
                         }
                     ?>
-                    <span class="estado-badge <?= $badgeClass ?>">
+                    <span class="badge <?= $badgeClass ?>">
                         <?= ucfirst($casa['C_estado']) ?>
                     </span>
                 </td>
                 <td>
-                    <a href="#" class="btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">Editar</a> |
-                    <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" onclick="return confirm('Tem certeza?')">Eliminar</a>
+                    <a href="#" class="button button-warning btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">
+                        <i class="fa fa-edit"></i> Editar
+                    </a>
+                    <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
+                        <i class="fa fa-trash"></i> Eliminar
+                    </a>
                 </td>
             </tr>
         <?php endwhile; ?>

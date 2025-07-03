@@ -41,27 +41,6 @@ include '../components/header.php';
     <link rel="stylesheet" href="../components/header.css">
 </head>
 <body>
-    <div class="nav__container">
-        <div class="logo">
-            <a href="../index.php?lang=<?= $lang ?>"><img src="../assets/logos/logotipo1.png" alt="Quinta Flores"></a>
-        </div>
-        
-        <ul class="nav__links" id="navLinks">
-            <?php foreach ($nav_links as $link): ?>
-                <li>
-                    <a href="<?php echo $link['href']; ?>" <?php if(isset($link['class'])) echo 'class="' . $link['class'] . '"'; ?>>
-                        <?php echo $link['text']; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-
-        <button class="hamburger" id="hamburger">
-            <i class="ri-menu-line"></i>
-        </button>
-    </div>
-            </section>  
-
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">

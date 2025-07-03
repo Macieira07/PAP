@@ -1,3 +1,8 @@
+<?php
+if (!isset($nav_links) || !is_array($nav_links)) {
+    $nav_links = [];
+}
+?>
 <header class="header" id="header">
   <div class="nav__container">
     <!-- Logo -->
