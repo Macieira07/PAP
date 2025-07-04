@@ -129,99 +129,31 @@ include '../components/header.php';
 
 <!-- Scripts -->
      <script>
-    // Configura os event listeners para os botões de idioma
-    function setupLanguageButtons() {
-        // Para botões desktop
-        document.querySelectorAll('.language-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+    // Remove todo o código relacionado ao Google Translate e mantenha apenas a função de troca de idioma para recarregar a página
+    // Função para trocar o idioma
+    function changeLanguage(lang) {
+        // Redireciona para a mesma página com o parâmetro lang
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', lang);
+        url.hash = '';
+        window.location.href = url.toString();
+    }
+    // Adiciona o evento aos botões de idioma (caso não esteja no header)
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentLang = (new URL(window.location.href)).searchParams.get('lang') || 'pt';
+        const buttons = document.querySelectorAll('.language-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
                 const lang = this.getAttribute('data-lang');
                 changeLanguage(lang);
             });
-        });
-    
-        // Configuração do dropdown para mobile
-        const dropdownBtn = document.getElementById('langDropdownBtn');
-        if (dropdownBtn) {
-            dropdownBtn.addEventListener('click', function() {
-                document.getElementById('langDropdown').classList.toggle('show');
-            });
-        }
-        // Fecha o dropdown ao clicar fora
-        window.addEventListener('click', function(e) {
-            if (!e.target.matches('.language-dropdown-btn') && !e.target.matches('.language-dropdown-btn *')) {
-                const dropdown = document.getElementById('langDropdown');
-                if (dropdown && dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                }
+            if (button.dataset.lang === currentLang) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
             }
         });
-    }
-    // Função para trocar o idioma
-    function changeLanguage(lang) {
-        console.log('Changing language to: ' + lang);
-        
-        // Atualiza os botões ativos
-        document.querySelectorAll('.language-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-lang') === lang) {
-                btn.classList.add('active');
-            }
-        });
-        // Atualiza a bandeira no menu dropdown
-        const currentFlag = document.getElementById('currentLangFlag');
-        if (currentFlag) {
-            switch(lang) {
-                case 'pt':
-                    currentFlag.src = 'https://flagcdn.com/w20/pt.png';
-                    break;
-                case 'en':
-                    currentFlag.src = 'https://flagcdn.com/w20/gb.png';
-                    break;
-                case 'es':
-                    currentFlag.src = 'https://flagcdn.com/w20/es.png';
-                    break;
-                case 'fr':
-                    currentFlag.src = 'https://flagcdn.com/w20/fr.png';
-                    break;
-            }
-        }
-        // Tenta encontrar e alterar o seletor do Google Translate
-        try {
-            // Espera o elemento estar disponível - múltiplas tentativas
-            const selectGoogleElement = () => {
-                // O seletor pode estar em vários locais dependendo da versão do Google Translate
-                const select = document.querySelector('.goog-te-combo') || 
-                              document.querySelector('.VIpgJd-ZVi9od-xl07Ob-lTBxed');
-                
-                if (select) {
-                    select.value = lang;
-                    // Aciona o evento change para o Google Translate detectar a mudança
-                    const event = new Event('change', { bubbles: true });
-                    select.dispatchEvent(event);
-                    
-                    // Salva a preferência
-                    localStorage.setItem('preferredLanguage', lang);
-                    console.log('Language changed successfully to: ' + lang);
-                } else {
-                    console.log('Google Translate element not found, retrying...');
-                    // Tenta novamente após um curto intervalo
-                    setTimeout(selectGoogleElement, 500);
-                }
-            };
-            
-            // Inicia a busca pelo elemento
-            selectGoogleElement();
-            
-        } catch (error) {
-            console.error('Error changing language:', error);
-        }
-    
-        // Fecha o dropdown se estiver aberto
-        const dropdown = document.getElementById('langDropdown');
-        if (dropdown && dropdown.classList.contains('show')) {
-            dropdown.classList.remove('show');
-        }
-    }
+    });
 </script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>

@@ -744,288 +744,141 @@ img {
 /* ===== FLASH MESSAGES MELHORADAS ===== */
 .flash-message {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000; /* Reduzido de 9999 para evitar sobreposição excessiva */
-  min-width: 300px;
-  max-width: 90%;
-  padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
+  top: 32px;
+  right: 32px;
+  z-index: 1000;
+  min-width: 320px;
+  max-width: 95vw;
+  padding: 1.3rem 2.2rem 1.3rem 1.5rem;
+  border-radius: 1.1rem;
   background: var(--color-bg-card);
   color: var(--color-text);
-  box-shadow: var(--color-shadow);
-  border-left: 4px solid;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  border-left: 6px solid;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.1rem;
   opacity: 0;
-  transform: translateX(120%);
-  transition: all 0.3s ease;
+  transform: translateX(120%) scale(0.98);
+  transition: all 0.45s cubic-bezier(0.4,0,0.2,1);
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
-
 .flash-message.show {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) scale(1);
 }
-
 .flash-message.fade-out {
   opacity: 0;
-  transform: translateX(120%);
+  transform: translateX(120%) scale(0.98);
 }
-
-/* Tipos de mensagem */
 .flash-success {
-  border-left-color: var(--color-primary);
-  background: var(--color-primary);
+  border-left-color: #10b981;
+  background: #10b981;
   color: #fff;
 }
-.flash-success::before {
-  content: '\2714'; /* checkmark */
+.flash-success i {
   color: #fff;
-  font-size: 1.3em;
-  margin-right: 0.7em;
+  background: rgba(0,0,0,0.10);
+  border-radius: 50%;
+  font-size: 2.1rem;
+  padding: 0.18em;
+  margin-right: 0.2em;
 }
-
 .flash-error {
   border-left-color: #ef4444;
   background: #ef4444;
   color: #fff;
 }
-.flash-error::before {
-  content: '\26A0'; /* warning sign */
+.flash-error i {
   color: #fff;
-  font-size: 1.3em;
-  margin-right: 0.7em;
+  background: rgba(0,0,0,0.10);
+  border-radius: 50%;
+  font-size: 2.1rem;
+  padding: 0.18em;
+  margin-right: 0.2em;
 }
-
 .flash-info {
   border-left-color: #3b82f6;
+  background: #3b82f6;
+  color: #fff;
 }
-
-/* Mantém o layout dos ícones alinhado */
-.flash-message::before {
-  display: inline-block;
-  vertical-align: middle;
+.flash-info i {
+  color: #fff;
+  background: rgba(0,0,0,0.10);
+  border-radius: 50%;
+  font-size: 2.1rem;
+  padding: 0.18em;
+  margin-right: 0.2em;
 }
-
-/* ===== NEWSLETTER ===== */
-.newsletter h4 {
-  font-size: 20px;
-  margin-bottom: 15px;
-  color: white;
-}
-
-#newsletterForm input[type="email"] {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  width: 250px;
+.flash-message .close-btn {
+  margin-left: 1.2rem;
+  background: rgba(0,0,0,0.07);
   border: none;
-}
-
-#newsletterForm button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: var(--primary-color-dark);
-  color: white;
-  border: none;
-  border-radius: 5px;
+  color: #222;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.2s, color 0.2s;
 }
-
-#newsletterForm button:hover {
-  background-color: var(--primary-color);
+.flash-message .close-btn:hover {
+  background: #e0e0e0;
+  color: #ef4444;
 }
-
-
-/* ===== SELETOR DE IDIOMA ===== */
-.lang-btn, .lang-select, .lang-flag, .language-selector button, .language-selector span {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0.1em 0.3em;
+.flash-message .close-btn:focus {
+  outline: 2px solid #3b82f6;
 }
-
-
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0) translateX(-50%);
-  }
-  40% {
-    transform: translateY(-10px) translateX(-50%);
-  }
-  60% {
-    transform: translateY(-5px) translateX(-50%);
-  }
-}
-
-@keyframes slideInBounce {
-  0% {
-    transform: translateX(100%) scale(0.9);
-    opacity: 0;
-  }
-  60% {
-    transform: translateX(-10px) scale(1.05);
-    opacity: 0.9;
-  }
-  80% {
-    transform: translateX(5px) scale(0.98);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes galleryReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 992px) {
-  .language-selector {
-    display: none;
-  }
-}
-@media (max-width: 768px) {
-  .nav__container {
-    grid-template-columns: auto 1fr auto;
-  }
-  
-  .booking__form {
-    grid-template-columns: 1fr;
-  }
-
-@media (min-width: 640px) {
-    .booking__form {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (min-width: 1024px) {
-    .booking__form {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-  
-  .flash-message {
-    left: 10px;
-    right: 10px;
-    min-width: auto;
-  }
-  
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-auto-rows: 180px;
-  }
-}
-
-@media (max-width: 500px) {
-  .hero__title {
-    font-size: 2rem;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
-  .section {
-    padding: 4rem 1rem;
-  }
-}
-
-/* ===== BOTÕES RESPONSIVOS ===== */
-.btn, .hero__cta, .gallery-reveal-btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-}
-
-@media (min-width: 640px) {
-    .btn, .hero__cta, .gallery-reveal-btn {
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-}
-
-
-/* ===== AJUSTES PARA TELAS MUITO PEQUENAS ===== */
-@media (max-width: 400px) {
-    .hero__content {
-        padding: 0 1rem;
-    }
-    
-    .section__container, .rooms__container, .gallery-section, 
-    .comodidades, .testimonials, .location {
-        padding: 2rem 1rem;
-    }
-    
-    .room__card, .testimonial__card {
-        padding: 1rem;
-    }
-}
-
-@media (max-width: 900px) {
-  .rooms__grid { grid-template-columns: 1fr; }
+.flash-message span {
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: inherit;
 }
 @media (max-width: 600px) {
-  .rooms__grid { gap: 1rem; }
-  .room__image img { height: 120px; }
+  .flash-message {
+    left: 5vw;
+    right: 5vw;
+    min-width: unset;
+    max-width: 98vw;
+    padding: 1rem 1.2rem 1rem 1rem;
+    font-size: 0.98rem;
+  }
+  .flash-message .close-btn {
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 1.2rem;
+  }
 }
-
-@media (prefers-color-scheme: dark) {
-  .rooms__grid {
-    background: transparent;
-  }
-  .room__card {
-    background: #181c1f;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.45);
-    border: 1px solid #23272b;
-  }
-  .room__image img {
-    filter: brightness(0.85) contrast(1.08);
-  }
-  .room__badge {
-    background: #3ddc97;
-    color: #181c1f;
-    box-shadow: 0 2px 8px rgba(61,220,151,0.10);
-  }
-  .room__title {
-    color: #3ddc97;
-  }
-  .room__price {
-    color: #a3e635;
-  }
-  .room__description {
-    color: #e0e0e0;
-  }
-  .room__link {
-    background: #3ddc97;
-    color: #181c1f;
-  }
-  .room__link:hover {
-    background: #23a36a;
-    color: #fff;
-  }
+[data-theme="dark"] .flash-message {
+  background: #23272b;
+  color: #e0e0e0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.18);
+}
+[data-theme="dark"] .flash-success {
+  background: #10b981;
+  color: #fff;
+}
+[data-theme="dark"] .flash-error {
+  background: #ef4444;
+  color: #fff;
+}
+[data-theme="dark"] .flash-info {
+  background: #3b82f6;
+  color: #fff;
+}
+[data-theme="dark"] .flash-message .close-btn {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+[data-theme="dark"] .flash-message .close-btn:hover {
+  background: #444;
+  color: #ef4444;
 }
 
 /* === APLICAÇÃO GLOBAL === */
@@ -1082,12 +935,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   border-color: var(--color-primary);
 }
-.flash-message {
-  background: var(--color-bg-card);
-  color: var(--color-text);
-  border-left: 5px solid var(--color-primary);
-  box-shadow: var(--color-shadow);
-}
+
 /* Header/Navigation */
 .header__nav a {
   color: var(--color-primary);

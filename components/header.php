@@ -16,16 +16,16 @@ if (!isset($nav_links) || !is_array($nav_links)) {
     <ul class="nav__links" id="navLinks">
       <div class="language-selector">
         <!-- Botões de idioma -->
-        <button onclick="changeLanguage('pt')" class="language-btn" data-lang="pt">
+        <button class="language-btn" data-lang="pt">
           <img src="../assets/flags/portugal.png" alt="Português"> PT
         </button>
-        <button onclick="changeLanguage('en')" class="language-btn" data-lang="en">
+        <button class="language-btn" data-lang="en">
           <img src="../assets/flags/reino-unido.png" alt="English"> EN
         </button>
-        <button onclick="changeLanguage('es')" class="language-btn" data-lang="es">
+        <button class="language-btn" data-lang="es">
           <img src="../assets/flags/espanha.png" alt="Español"> ES
         </button>
-        <button onclick="changeLanguage('fr')" class="language-btn" data-lang="fr">
+        <button class="language-btn" data-lang="fr">
           <img src="../assets/flags/franca.png" alt="Français"> FR
         </button>
       </div>
@@ -47,10 +47,8 @@ if (!isset($nav_links) || !is_array($nav_links)) {
 </header>
 
 <script>
+// Função para trocar o idioma
 function changeLanguage(lang) {
-  // Guarda o idioma no localStorage
-  localStorage.setItem('language', lang);
-
   // Redireciona para a mesma página com o parâmetro lang
   const url = new URL(window.location.href);
   url.searchParams.set('lang', lang);
@@ -58,12 +56,16 @@ function changeLanguage(lang) {
   window.location.href = url.toString();
 }
 
-// Quando a página carregar, atualiza o botão ativo
+// Adiciona o evento aos botões de idioma
+// (garante que funciona mesmo se o HTML mudar)
 document.addEventListener('DOMContentLoaded', () => {
-  const currentLang = localStorage.getItem('language') || 'pt';
+  const currentLang = (new URL(window.location.href)).searchParams.get('lang') || 'pt';
   const buttons = document.querySelectorAll('.language-btn');
-  
   buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      const lang = this.getAttribute('data-lang');
+      changeLanguage(lang);
+    });
     if (button.dataset.lang === currentLang) {
       button.classList.add('active');
     } else {

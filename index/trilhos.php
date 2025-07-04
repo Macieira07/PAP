@@ -13,8 +13,15 @@ if (isset($_GET['lang'])) {
 }
 include '../components/header.php'; ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="light">
+<html lang="pt">
 <head>
+    <script>
+      // Aplica o tema salvo ANTES de carregar o CSS, evitando flash e bugs
+      (function() {
+        var savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
     <meta charset="UTF-8">
         <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
@@ -298,79 +305,18 @@ include '../components/header.php'; ?>
         </div>
     </section>
 </div>
-        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-        <script>
-            // Inicializar AOS (Animate On Scroll)
-            AOS.init({
-                duration: 800,
-                once: true
-            });
-        
-            // Menu móvel
-            document.addEventListener('DOMContentLoaded', () => {
-                const hamburger = document.getElementById('hamburger');
-                const navLinks = document.getElementById('navLinks');
-                const header = document.getElementById('header');
-                const navItems = document.querySelectorAll('.nav__link');
-        
-                // Função para controlar o menu
-                hamburger.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                    hamburger.innerHTML = navLinks.classList.contains('active') 
-                        ? '<i class="ri-close-line"></i>' 
-                        : '<i class="ri-menu-line"></i>';
-                });
-        
-                // Fechar menu ao clicar em um link
-                navItems.forEach(item => {
-                    item.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        hamburger.innerHTML = '<i class="ri-menu-line"></i>';
-                    });
-                });
-        
-                // Mudar estilo do header ao rolar
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 100) {
-                        header.classList.add('scrolled');
-                    } else {
-                        header.classList.remove('scrolled');
-                    }
-                });
-        
-                // Função para alternar o tema
-                function toggleTheme() {
-                    const html = document.documentElement;
-                    const themeToggle = document.getElementById('themeToggle');
-                    const currentTheme = html.getAttribute('data-theme');
-                    const icon = themeToggle.querySelector('i');
-                    
-                    if (currentTheme === 'light') {
-                        html.setAttribute('data-theme', 'dark');
-                        icon.className = 'ri-moon-line';
-                        localStorage.setItem('theme', 'dark');
-                    } else {
-                        html.setAttribute('data-theme', 'light');
-                        icon.className = 'ri-sun-line';
-                        localStorage.setItem('theme', 'light');
-                    }
-                }
-        
-                // Inicializar tema baseado na preferência salva
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                const themeToggle = document.getElementById('themeToggle');
-                const icon = themeToggle.querySelector('i');
-                
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
-                
-                themeToggle.addEventListener('click', toggleTheme);
-            });
-        </script>
-        <?php include '../components/footer.php'; ?>
-        <link rel="stylesheet" href="../chatbot/chatbot.css">
-<script src="../chatbot/chatbot.js"></script>
-<?php include '../chatbot/chatbot_config.php'; ?>
-<?php include '../chatbot/chatbot.php'; ?>
-        </body>
-        </html>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+    <?php include '../components/footer.php'; ?>
+    <link rel="stylesheet" href="../chatbot/chatbot.css">
+    <script src="../chatbot/chatbot.js"></script>
+    <?php include '../chatbot/chatbot_config.php'; ?>
+    <?php include '../chatbot/chatbot.php'; ?>
+</body>
+</html>

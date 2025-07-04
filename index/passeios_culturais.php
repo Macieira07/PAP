@@ -10,8 +10,15 @@ $translations = require_once "../translations/passeios_culturais_{$lang}.php";
 $nav_links = $translations['nav_links'];
 include '../components/header.php'; ?>
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>" data-theme="light">
+<html lang="<?php echo $lang; ?>">
 <head>
+    <script>
+      // Aplica o tema salvo ANTES de carregar o CSS, evitando flash e bugs
+      (function() {
+        var savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
     <meta charset="UTF-8">
         <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png">
@@ -715,88 +722,6 @@ include '../components/header.php'; ?>
             duration: 800,
             once: true
         });
-
-        // Menu móvel
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.getElementById('hamburger');
-            const navLinks = document.getElementById('navLinks');
-            const header = document.getElementById('header');
-            const navItems = document.querySelectorAll('.nav__link');
-
-            // Função para controlar o menu
-            hamburger.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                hamburger.innerHTML = navLinks.classList.contains('active') 
-                    ? '<i class="ri-close-line"></i>' 
-                    : '<i class="ri-menu-line"></i>';
-            });
-
-            // Fechar menu ao clicar em um link
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    hamburger.innerHTML = '<i class="ri-menu-line"></i>';
-                });
-            });
-
-            // Mudar estilo do header ao rolar
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 100) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-
-            // Função para alternar o tema
-            function toggleTheme() {
-                const html = document.documentElement;
-                const themeToggle = document.getElementById('themeToggle');
-                const currentTheme = html.getAttribute('data-theme');
-                const icon = themeToggle.querySelector('i');
-                
-                if (currentTheme === 'light') {
-                    html.setAttribute('data-theme', 'dark');
-                    icon.className = 'ri-moon-line';
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    html.setAttribute('data-theme', 'light');
-                    icon.className = 'ri-sun-line';
-                    localStorage.setItem('theme', 'light');
-                }
-            }
-
-            // Inicializar tema baseado na preferência salva
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            const themeToggle = document.getElementById('themeToggle');
-            const icon = themeToggle.querySelector('i');
-            
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            icon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
-            
-            themeToggle.addEventListener('click', toggleTheme);
-        });
-
-        function changeLanguage(lang) {
-            // Atualiza a sessão via AJAX
-            fetch('change_language.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'lang=' + lang
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Recarrega a página com o novo idioma
-                    window.location.href = window.location.pathname + '?lang=' + lang;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
     </script>
     <?php include '../components/footer.php'; ?>
 <link rel="stylesheet" href="../chatbot/chatbot.css">

@@ -10,7 +10,6 @@ $nav_links = [
     ['href' => '#amenities', 'text' => 'Comodidades'],
     ['href' => '#testimonials', 'text' => 'Comentários'],
     ['href' => '#location', 'text' => 'Localização'],
-    ['href' => '#contactos', 'text' => 'Contactos'],
 ];
 include 'components/header.php'; 
 $aboutData = json_decode(file_get_contents(__DIR__ . '/data/about.json'), true);
