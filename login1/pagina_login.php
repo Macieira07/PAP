@@ -39,9 +39,11 @@ $csrf_token = $_SESSION['csrf_token'];
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Senha</label>
-                    <i class="fas fa-lock left-icon"></i>
                     <input type="password" id="loginPassword" name="senha" class="form-control" placeholder="••••••••" required>
-                    <span class="toggle-password" data-target="loginPassword"><i class="fas fa-eye"></i></span>
+                    <i class="fas fa-lock left-icon"></i>
+                    <span class="toggle-password" data-target="loginPassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
 
                 <a href="recuperar_senha.php" class="extra-link">Esqueceu sua senha?</a>
@@ -72,11 +74,13 @@ $csrf_token = $_SESSION['csrf_token'];
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">Senha</label>
-                    <i class="fas fa-lock left-icon"></i>
                     <input type="password" id="registerPassword" name="password" class="form-control" placeholder="••••••••" required
                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                            title="Deve conter pelo menos 8 caracteres, incluindo uma maiúscula, uma minúscula e um número">
-                    <span class="toggle-password" data-target="registerPassword"><i class="fas fa-eye"></i></span>
+                    <i class="fas fa-lock left-icon"></i>
+                    <span class="toggle-password" data-target="registerPassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
 
                 <div class="form-group">
@@ -142,20 +146,31 @@ if (registerForm) {
 // Função para mostrar/ocultar senha
 const togglePasswordIcons = document.querySelectorAll('.toggle-password');
 togglePasswordIcons.forEach(function(icon) {
-    icon.addEventListener('click', function() {
+    icon.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const targetId = icon.getAttribute('data-target');
         const input = document.getElementById(targetId);
         const iTag = icon.querySelector('i');
-        if (input.type === 'password') {
-            input.type = 'text';
-            iTag.classList.remove('fa-eye');
-            iTag.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            iTag.classList.remove('fa-eye-slash');
-            iTag.classList.add('fa-eye');
+        
+        if (input && iTag) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                iTag.classList.remove('fa-eye');
+                iTag.classList.add('fa-eye-slash');
+                icon.setAttribute('title', 'Ocultar senha');
+            } else {
+                input.type = 'password';
+                iTag.classList.remove('fa-eye-slash');
+                iTag.classList.add('fa-eye');
+                icon.setAttribute('title', 'Mostrar senha');
+            }
         }
     });
+    
+    // Adicionar título inicial
+    icon.setAttribute('title', 'Mostrar senha');
 });
 </script>
 </body>
