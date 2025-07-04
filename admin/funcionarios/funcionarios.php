@@ -201,8 +201,8 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 </div>
 <div class="filtro-funcionarios-container">
     <form method="get" action="funcionarios.php" class="filtro-funcionarios-form">
-        <input type="text" name="nome" placeholder="Filtrar por nome" value="<?= $nomeFiltro ?>">
-        <input type="text" name="cargo" placeholder="Filtrar por cargo" value="<?= $cargoFiltro ?>">
+        <input type="text" name="nome" placeholder="Filtrar por nome" value="<?= $nomeFiltro ?>" maxlength="50" style="max-width:180px;">
+        <input type="text" name="cargo" placeholder="Filtrar por cargo" value="<?= $cargoFiltro ?>" maxlength="30" style="max-width:140px;">
         <button type="submit"><i class="fa fa-filter"></i> Filtrar</button>
     </form>
 </div>
@@ -210,23 +210,29 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 <table class="funcionarios-table">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Cargo</th>
-        <th>Telefone</th>
-        <th>Data de Contratação</th>
-        <th>Turno</th>
-        <th>Ações</th>
+        <th style="max-width:40px;">ID</th>
+        <th style="max-width:160px;">Nome</th>
+        <th style="max-width:180px;">Email</th>
+        <th style="max-width:120px;">Cargo</th>
+        <th style="max-width:120px;">Telefone</th>
+        <th style="max-width:120px;">Data de Contratação</th>
+        <th style="max-width:160px;">Turno</th>
+        <th style="max-width:120px;">Ações</th>
     </tr>
     </thead>
     <tbody>
     <?php while ($f = $resultado->fetch_assoc()): ?>
     <tr>
         <td><?= $f['F_id_funcionario'] ?></td>
-        <td><?= htmlspecialchars($f['F_nome']) ?></td>
-        <td><?= htmlspecialchars($f['F_email']) ?></td>
-        <td><span class="badge badge-info"><?= htmlspecialchars($f['F_cargo']) ?></span></td>
+        <td title="<?= htmlspecialchars($f['F_nome']) ?>">
+            <?= strlen($f['F_nome']) > 25 ? htmlspecialchars(mb_substr($f['F_nome'],0,25)).'…' : htmlspecialchars($f['F_nome']) ?>
+        </td>
+        <td title="<?= htmlspecialchars($f['F_email']) ?>">
+            <?= strlen($f['F_email']) > 28 ? htmlspecialchars(mb_substr($f['F_email'],0,28)).'…' : htmlspecialchars($f['F_email']) ?>
+        </td>
+        <td><span class="badge badge-info" title="<?= htmlspecialchars($f['F_cargo']) ?>">
+            <?= strlen($f['F_cargo']) > 18 ? htmlspecialchars(mb_substr($f['F_cargo'],0,18)).'…' : htmlspecialchars($f['F_cargo']) ?>
+        </span></td>
         <td><?= htmlspecialchars($f['F_telefone']) ?></td>
         <td><?= date('d/m/Y', strtotime($f['F_data_contratacao'])) ?></td>
         <td>
@@ -237,7 +243,9 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
             $turno = $stmt_turno->get_result()->fetch_assoc();
             ?>
             <?php if ($turno): ?>
-                <span class="badge badge-success">Turno: <?= htmlspecialchars($turno['turno']) ?></span><br>
+                <span class="badge badge-success" title="Turno: <?= htmlspecialchars($turno['turno']) ?>">
+                    <?= strlen($turno['turno']) > 12 ? htmlspecialchars(mb_substr($turno['turno'],0,12)).'…' : htmlspecialchars($turno['turno']) ?>
+                </span><br>
                 <span class="badge badge-info">Início: <?= date('d/m/Y', strtotime($turno['data_inicio'])) ?></span>
                 <span class="badge badge-warning">Fim: <?= date('d/m/Y', strtotime($turno['data_fim'])) ?></span>
                 <br><button class="button button-warning btnEditarTurno" data-id="<?= $turno['T_id_turno'] ?>"><i class="fa fa-pen"></i> Editar Turno</button>
@@ -256,6 +264,21 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     </tbody>
 </table>
 </div>
+<?php if ($totalPaginas > 1): ?>
+<nav aria-label="Navegação de página" style="margin:18px 0; text-align:center;">
+    <ul class="pagination" style="display:inline-flex;gap:4px;list-style:none;padding:0;">
+        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+            <li>
+                <a href="?pagina=<?= $i ?>&nome=<?= urlencode($nomeFiltro) ?>&cargo=<?= urlencode($cargoFiltro) ?>"
+                   class="<?= $i == $paginaAtual ? 'active' : '' ?>"
+                   style="padding:6px 12px;border-radius:4px;border:1px solid #ccc;background:<?= $i==$paginaAtual?'#176b87':'#fff' ?>;color:<?= $i==$paginaAtual?'#fff':'#176b87' ?>;font-weight:600;text-decoration:none;transition:background .2s;">
+                    <?= $i ?>
+                </a>
+            </li>
+        <?php endfor; ?>
+    </ul>
+</nav>
+<?php endif; ?>
 
 <!-- Botão adicionar férias/falta -->
 <div style="margin-bottom: 12px;">
@@ -472,5 +495,29 @@ if (document.getElementById('formFeriasFalta')) {
   };
 }
 </script>
+<style>
+@media (max-width: 900px) {
+    .funcionarios-table th, .funcionarios-table td { font-size: 13px; padding: 8px 6px; }
+    .funcionarios-table th, .funcionarios-table td { max-width: 90px; overflow-x: auto; }
+}
+@media (max-width: 600px) {
+    .funcionarios-table, .funcionarios-table thead, .funcionarios-table tbody, .funcionarios-table th, .funcionarios-table td, .funcionarios-table tr {
+        display: block;
+    }
+    .funcionarios-table thead tr { display: none; }
+    .funcionarios-table tr { margin-bottom: 18px; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+    .funcionarios-table td { position: relative; padding-left: 50%; min-height: 36px; }
+    .funcionarios-table td:before {
+        position: absolute;
+        top: 8px; left: 12px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+        color: #176b87;
+        content: attr(data-label);
+    }
+}
+.pagination .active { background: #176b87 !important; color: #fff !important; }
+</style>
 </body>
 </html>

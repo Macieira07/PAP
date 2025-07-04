@@ -138,6 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verifica se é hóspede
         $usuario = verificarUsuario($conexao, $email, $senha, 'hospedes', 'H_email', 'H_senha', 'H_id_hospede', 'H_nome');
         if ($usuario) {
+            if (isset($usuario['H_bloqueado']) && $usuario['H_bloqueado']) {
+                debug_log("Conta de hóspede bloqueada", ['id' => $usuario['H_id_hospede']]);
+                echo json_encode(['error' => 'Sua conta está bloqueada e não pode entrar.']);
+                exit;
+            }
             debug_log("Login de hóspede bem-sucedido", ['id' => $usuario['H_id_hospede'], 'nome' => $usuario['H_nome']]);
             $_SESSION['id'] = $usuario['H_id_hospede'];
             $_SESSION['nome'] = $usuario['H_nome'];
