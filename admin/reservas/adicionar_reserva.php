@@ -1,23 +1,147 @@
 <?php
 include('../../conexao.php');
 
+// Processamento do POST para adicionar reserva
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Receber e validar os dados do formulário
+    $id_casa = $_POST['id_casa'] ?? '';
+    $id_hospede = $_POST['id_hospede'] ?? '';
+    $data_checkin = $_POST['data_checkin'] ?? '';
+    $data_checkout = $_POST['data_checkout'] ?? '';
+    $num_hospedes = $_POST['num_hospedes'] ?? 1;
+    $origem = $_POST['origem'] ?? '';
+    $codigo_oferta = $_POST['codigo_oferta'] ?? '';
+    $decoracao_tematica = $_POST['decoracao_tematica'] ?? '';
+    $limpeza_diaria = isset($_POST['limpeza_diaria']) ? 1 : 0;
+    $cesto_boas_vindas = isset($_POST['cesto_boas_vindas']) ? 1 : 0;
+    $estado = $_POST['estado'] ?? 'pendente';
+    $valor_pago = $_POST['valor_pago'] ?? 0;
+    $referencia_pagamento = $_POST['referencia_pagamento'] ?? '';
+
+    $erros = [];
+    if (!$id_casa) $erros[] = "Selecione uma casa.";
+    if (!$id_hospede) $erros[] = "Selecione um hóspede.";
+    if (!$data_checkin) $erros[] = "Informe a data de check-in.";
+    if (!$data_checkout) $erros[] = "Informe a data de check-out.";
+    if (strtotime($data_checkout) <= strtotime($data_checkin)) $erros[] = "Check-out deve ser após o check-in.";
+
+    // Verificar conflito de datas (simples)
+    if ($id_casa && $data_checkin && $data_checkout) {
+        $stmt = $conexao->prepare("SELECT COUNT(*) as total FROM reservas WHERE R_id_casa = ? AND R_estado != 'cancelada' AND ((? < R_data_checkout) AND (? > R_data_checkin))");
+        $stmt->bind_param("iss", $id_casa, $data_checkout, $data_checkin);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        if ($res['total'] > 0) {
+            $erros[] = "As datas selecionadas conflitam com outra reserva.";
+        }
+        $stmt->close();
+    }
+
+    if ($erros) {
+        echo '<div class="error-message">'.implode('<br>', $erros).'</div>';
+        exit;
+    }
+
+    // Buscar preço da casa
+    $stmt = $conexao->prepare("SELECT C_preco_noite FROM casas WHERE C_id_casa = ?");
+    $stmt->bind_param("i", $id_casa);
+    $stmt->execute();
+    $res = $stmt->get_result()->fetch_assoc();
+    $preco_noite = $res ? floatval($res['C_preco_noite']) : 0;
+    $stmt->close();
+
+    // Calcular número de noites
+    $dtCheckin = new DateTime($data_checkin);
+    $dtCheckout = new DateTime($data_checkout);
+    $diffDays = $dtCheckout->diff($dtCheckin)->days;
+
+    // Ofertas disponíveis
+    $ofertas = [
+        'LOVE260' => [ 'noites' => 2, 'hospedes' => 2, 'max_hospedes' => 2, 'preco' => 260 ],
+        'PARTY260' => [ 'noites' => 2, 'hospedes' => 4, 'max_hospedes' => 10, 'preco' => 260 ],
+        'RETIRO240' => [ 'noites' => 4, 'hospedes' => 10, 'max_hospedes' => 10, 'preco' => 240 ]
+    ];
+
+    // Calcular serviços adicionais
+    $servicos = [];
+    $servicos_valor = 0;
+    if ($decoracao_tematica) {
+        $servicos[] = "Decoração: $decoracao_tematica (€130)";
+        $servicos_valor += 130;
+    }
+    if ($limpeza_diaria) {
+        $servicos[] = "Limpeza diária (€15/noite)";
+        $servicos_valor += 15 * $diffDays;
+    }
+    if ($cesto_boas_vindas) {
+        $servicos[] = "Cesto de boas-vindas (€10)";
+        $servicos_valor += 10;
+    }
+    if ($codigo_oferta) {
+        $servicos[] = $codigo_oferta;
+    }
+    $servicos_str = implode(', ', $servicos);
+
+    // Calcular preço total
+    $preco_total = 0;
+    $codigo_oferta_up = strtoupper($codigo_oferta);
+    if ($codigo_oferta_up && isset($ofertas[$codigo_oferta_up])) {
+        $oferta = $ofertas[$codigo_oferta_up];
+        if (
+            $diffDays >= $oferta['noites'] &&
+            $num_hospedes >= $oferta['hospedes'] &&
+            $num_hospedes <= ($oferta['max_hospedes'] ?? $oferta['hospedes'])
+        ) {
+            $preco_total = $oferta['preco'];
+        } else {
+            $preco_total = ($preco_noite * $diffDays) + $servicos_valor;
+        }
+    } else {
+        $preco_total = ($preco_noite * $diffDays) + $servicos_valor;
+    }
+
+    // Inserir no banco
+    $stmt = $conexao->prepare("INSERT INTO reservas \
+        (R_id_casa, R_id_hospede, R_data_checkin, R_data_checkout, R_num_hospedes, R_origem, R_estado, R_servicos, R_preco_total, R_valor_pago, R_referencia_pagamento) \
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iississsdds", $id_casa, $id_hospede, $data_checkin, $data_checkout, $num_hospedes, $origem, $estado, $servicos_str, $preco_total, $valor_pago, $referencia_pagamento);
+
+    if ($stmt->execute()) {
+        echo "OK";
+    } else {
+        echo '<div class="error-message">Erro ao salvar reserva: '.$stmt->error.'</div>';
+    }
+    $stmt->close();
+    exit;
+}
+
 // Buscar casas e hóspedes
 $casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHERE C_estado = 'disponível' ORDER BY C_nome");
 $hospedes = $conexao->query("SELECT H_id_hospede, H_nome, H_telefone FROM hospedes ORDER BY H_nome");
 
-// Buscar datas ocupadas (todas as casas)
+// Buscar datas ocupadas (por casa)
 $ocupadas = [];
-$res = $conexao->query("SELECT R_data_checkin, R_data_checkout FROM reservas WHERE R_estado != 'cancelada'");
+$res = $conexao->query("
+    SELECT R_id_casa, R_data_checkin, R_data_checkout 
+    FROM reservas 
+    WHERE R_estado != 'cancelada'
+    AND (R_data_checkout > CURDATE() OR R_data_checkin > CURDATE())
+");
 while ($row = $res->fetch_assoc()) {
+    $id_casa = $row['R_id_casa'];
     $checkin = new DateTime($row['R_data_checkin']);
     $checkout = new DateTime($row['R_data_checkout']);
     while ($checkin < $checkout) {
-        $ocupadas[] = $checkin->format('Y-m-d');
+        $ocupadas[$id_casa][] = $checkin->format('Y-m-d');
         $checkin->modify('+1 day');
     }
 }
-$ocupadas = array_unique($ocupadas);
-
+// Remover duplicados
+foreach ($ocupadas as &$datas) {
+    $datas = array_unique($datas);
+    sort($datas); // Ordenar as datas
+}
+unset($datas);
 $ocupadas_json = json_encode($ocupadas);
 $hoje = date('Y-m-d');
 $amanha = date('Y-m-d', strtotime('+1 day'));
@@ -38,7 +162,7 @@ if (isset($_GET['modal'])) {
         <div id="wizardStep1">
             <div class="form-group">
                 <label>Casa:</label>
-                <select name="id_casa" required aria-label="Selecionar casa">
+                <select name="id_casa" id="id_casa" required aria-label="Selecionar casa">
                     <option value="">Selecione</option>
                     <?php while ($c = $casas->fetch_assoc()): ?>
                         <option value="<?= $c['C_id_casa'] ?>" data-preco="<?= $c['C_preco_noite'] ?>">
@@ -127,32 +251,73 @@ if (isset($_GET['modal'])) {
 </style>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-const datasOcupadas = <?php echo json_encode(array_values($ocupadas)); ?>;
+const casasOcupadas = <?= $ocupadas_json ?>;
 
-flatpickr("#data_checkin", {
+const checkinPicker = flatpickr("#data_checkin", {
     dateFormat: "Y-m-d",
-    minDate: "today",
-    disable: datasOcupadas,
+    minDate: "<?= $hoje ?>",
+    disable: [],
+    onChange: function(selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+            checkoutPicker.set('minDate', new Date(selectedDates[0].getTime() + 86400000));
+            atualizarDatas();
+            calcularTotal();
+        }
+    },
     onDayCreate: function(dObj, dStr, fp, dayElem) {
-        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
-        if (datasOcupadas.includes(dateStr)) {
-            dayElem.classList.add('reserved');
-            dayElem.title = "Data já reservada";
+        const casaId = document.getElementById('id_casa').value;
+        if (casaId && casasOcupadas[casaId]) {
+            const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+            if (casasOcupadas[casaId].includes(dateStr)) {
+                dayElem.classList.add('flatpickr-disabled', 'ocupada');
+                dayElem.innerHTML += "<span class='event busy'></span>";
+            }
         }
     }
 });
-flatpickr("#data_checkout", {
+
+const checkoutPicker = flatpickr("#data_checkout", {
     dateFormat: "Y-m-d",
-    minDate: "today",
-    disable: datasOcupadas,
+    minDate: "<?= $amanha ?>",
+    disable: [],
+    onChange: function(selectedDates, dateStr, instance) {
+        calcularTotal();
+    },
     onDayCreate: function(dObj, dStr, fp, dayElem) {
-        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
-        if (datasOcupadas.includes(dateStr)) {
-            dayElem.classList.add('reserved');
-            dayElem.title = "Data já reservada";
+        const casaId = document.getElementById('id_casa').value;
+        if (casaId && casasOcupadas[casaId]) {
+            const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+            if (casasOcupadas[casaId].includes(dateStr)) {
+                dayElem.classList.add('flatpickr-disabled', 'ocupada');
+                dayElem.innerHTML += "<span class='event busy'></span>";
+            }
         }
     }
 });
+
+function atualizarDatas() {
+    const casaId = document.getElementById('id_casa').value;
+    if (casaId && casasOcupadas[casaId]) {
+        checkinPicker.set('disable', casasOcupadas[casaId]);
+        checkoutPicker.set('disable', casasOcupadas[casaId]);
+    } else {
+        checkinPicker.set('disable', []);
+        checkoutPicker.set('disable', []);
+    }
+}
+    const datasOcupadasCasa = casasOcupadas[idCasa];
+    console.log('Datas ocupadas para esta casa:', datasOcupadasCasa);
+    checkinPicker.set('disable', datasOcupadasCasa);
+    checkoutPicker.set('disable', datasOcupadasCasa);
+    setTimeout(() => {
+        document.querySelectorAll('.flatpickr-day.flatpickr-disabled').forEach(dayEl => {
+            const dateStr = dayEl.dateObj.toISOString().slice(0,10);
+            if (datasOcupadasCasa.includes(dateStr)) {
+                dayEl.classList.add('ocupada');
+            }
+        });
+    }, 50);
+}
 
 // Wizard controlado pelo JS do arquivo principal
 // Ofertas disponíveis (igual pagina1.php)
@@ -243,6 +408,27 @@ if (codigoOfertaInput) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        .flatpickr-day.ocupada {
+    background-color: #ffcccc !important;
+    color: #ff0000 !important;
+    text-decoration: line-through;
+    border-color: #ff0000 !important;
+}
+
+.flatpickr-day.ocupada:hover {
+    background-color: #ffaaaa !important;
+}
+
+.event.busy {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #ff0000;
+    border-radius: 50%;
+}
         /* Personalização para datas reservadas */
         .flatpickr-day.flatpickr-disabled.ocupada {
             background-color: #ffcccc;

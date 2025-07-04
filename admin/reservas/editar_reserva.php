@@ -25,19 +25,30 @@ $casas = $conexao->query("SELECT C_id_casa, C_nome, C_preco_noite FROM casas WHE
 $hospedes = $conexao->query("SELECT H_id_hospede, H_nome FROM hospedes");
 
 // Buscar datas ocupadas
+// Substituir a consulta atual por esta:
 $ocupadas = [];
-$stmt = $conexao->prepare("SELECT R_data_checkin, R_data_checkout FROM reservas WHERE R_estado != 'cancelada'");
-$stmt->execute();
-$stmt->bind_result($data_checkin, $data_checkout);
-while ($stmt->fetch()) {
-    $checkin = new DateTime($data_checkin);
-    $checkout = new DateTime($data_checkout);
-    while ($checkin <= $checkout) {
-        $ocupadas[] = $checkin->format('Y-m-d');
+$res = $conexao->query("
+    SELECT R_id_casa, R_data_checkin, R_data_checkout 
+    FROM reservas 
+    WHERE R_estado != 'cancelada'
+    AND (R_data_checkout > CURDATE() OR R_data_checkin > CURDATE())
+");
+while ($row = $res->fetch_assoc()) {
+    $id_casa = $row['R_id_casa'];
+    $checkin = new DateTime($row['R_data_checkin']);
+    $checkout = new DateTime($row['R_data_checkout']);
+    while ($checkin < $checkout) {
+        $ocupadas[$id_casa][] = $checkin->format('Y-m-d');
         $checkin->modify('+1 day');
     }
 }
-$stmt->close();
+// Remover duplicados
+foreach ($ocupadas as &$datas) {
+    $datas = array_unique($datas);
+    sort($datas); // Ordenar as datas
+}
+unset($datas);
+$ocupadas_json = json_encode($ocupadas);
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +61,27 @@ $stmt->close();
   <link rel="stylesheet" href="../global.css">
   <title>Editar Reserva</title>
   <style>
+    .flatpickr-day.ocupada {
+    background-color: #ffcccc !important;
+    color: #ff0000 !important;
+    text-decoration: line-through;
+    border-color: #ff0000 !important;
+}
+
+.flatpickr-day.ocupada:hover {
+    background-color: #ffaaaa !important;
+}
+
+.event.busy {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #ff0000;
+    border-radius: 50%;
+}
     .ocupada {
       background-color: red !important;
       color: white;

@@ -39,8 +39,9 @@ $csrf_token = $_SESSION['csrf_token'];
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Senha</label>
-                    <i class="fas fa-lock"></i>
+                    <i class="fas fa-lock left-icon"></i>
                     <input type="password" id="loginPassword" name="senha" class="form-control" placeholder="••••••••" required>
+                    <span class="toggle-password" data-target="loginPassword"><i class="fas fa-eye"></i></span>
                 </div>
 
                 <a href="recuperar_senha.php" class="extra-link">Esqueceu sua senha?</a>
@@ -71,10 +72,11 @@ $csrf_token = $_SESSION['csrf_token'];
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">Senha</label>
-                    <i class="fas fa-lock"></i>
+                    <i class="fas fa-lock left-icon"></i>
                     <input type="password" id="registerPassword" name="password" class="form-control" placeholder="••••••••" required
                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                            title="Deve conter pelo menos 8 caracteres, incluindo uma maiúscula, uma minúscula e um número">
+                    <span class="toggle-password" data-target="registerPassword"><i class="fas fa-eye"></i></span>
                 </div>
 
                 <div class="form-group">
@@ -114,6 +116,47 @@ $csrf_token = $_SESSION['csrf_token'];
         </div>
     </div>
 <script src="login.js"></script>
-
+<script>
+// Desabilita o botão de submit ao enviar o formulário de login
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', function(e) {
+        const btn = loginForm.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aguarde...';
+        }
+    });
+}
+// Desabilita o botão de submit ao enviar o formulário de registro
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+    registerForm.addEventListener('submit', function(e) {
+        const btn = registerForm.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aguarde...';
+        }
+    });
+}
+// Função para mostrar/ocultar senha
+const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+togglePasswordIcons.forEach(function(icon) {
+    icon.addEventListener('click', function() {
+        const targetId = icon.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const iTag = icon.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            iTag.classList.remove('fa-eye');
+            iTag.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            iTag.classList.remove('fa-eye-slash');
+            iTag.classList.add('fa-eye');
+        }
+    });
+});
+</script>
 </body>
 </html>

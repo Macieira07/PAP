@@ -77,18 +77,15 @@ if ($resultado_ferias->num_rows > 0) {
     $data_inicio_ausencia = "";
     $data_fim_ausencia = "";
 }
-
 // Buscar o turno atual do funcionário
 $stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario = ?");
 $stmt_turno->bind_param("i", $id);
 $stmt_turno->execute();
 $resultado_turno = $stmt_turno->get_result();
 $turno = $resultado_turno->fetch_assoc();
-
 // Garantir que os valores de horário estejam definidos
 $horario_inicio = $turno['T_inicio'] ?? '';
 $horario_fim = $turno['T_fim'] ?? '';
-
 // Verificar se o formulário de férias foi enviado
 if (isset($_POST['atualizar_ferias'])) {
     $tipo_ausencia = $_POST['tipo_ausencia'];
@@ -103,7 +100,6 @@ if (isset($_POST['atualizar_ferias'])) {
     header("Location: funcionarios.php"); // Redireciona após a atualização
     exit;
 }
-
 if (isset($_GET['modal'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ... lógica de validação e atualização ...

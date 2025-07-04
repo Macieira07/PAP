@@ -169,12 +169,12 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
     <div class="header-casas">
         <img src="https://img.icons8.com/?size=100&id=9ECnYpBa4VDd&format=png&color=000000" alt="Ícone Casas">
         <h1>Lista de Alojamentos</h1>
+        <div class="acoes-casas-container">
+          <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+          <a href="#" id="btnAdicionarCasa" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Casa</a>
+        </div>
     </div>
 
-    <div class="acoes-casas-container">
-      <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
-      <a href="#" id="btnAdicionarCasa" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Casa</a>
-    </div>
     <div class="filtro-casas-container">
       <form method="get" action="casas.php" class="filtro-casas-form">
         <input type="text" name="pesquisa" placeholder="Pesquisar por nome, estado ou capacidade" value="<?= isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '' ?>">
@@ -182,47 +182,49 @@ $total_páginas = ceil($total_resultados / $casas_por_pagina);
       </form>
     </div>
 
-    <table class="casas-table">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Capacidade</th>
-            <th>Preço/Noite</th>
-            <th>Estado</th>
-            <th>Ações</th>
-        </tr>
-        <?php while ($casa = $resultado->fetch_assoc()): ?>
+    <div class="admin-container">
+        <table class="casas-table">
             <tr>
-                <td><?= $casa['C_id_casa'] ?></td>
-                <td><?= $casa['C_nome'] ?></td>
-                <td><?= $casa['C_capacidade'] ?></td>
-                <td><?= $casa['C_preco_noite'] ?>€</td>
-                <td>
-                    <?php
-                        $estado = strtolower($casa['C_estado']);
-                        $badgeClass = '';
-                        switch ($estado) {
-                            case 'disponível': $badgeClass = 'badge-success'; break;
-                            case 'ocupada': $badgeClass = 'badge-warning'; break;
-                            case 'manutenção': $badgeClass = 'badge-error'; break;
-                            default: $badgeClass = 'badge-error'; break;
-                        }
-                    ?>
-                    <span class="badge <?= $badgeClass ?>">
-                        <?= ucfirst($casa['C_estado']) ?>
-                    </span>
-                </td>
-                <td>
-                    <a href="#" class="button button-warning btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">
-                        <i class="fa fa-edit"></i> Editar
-                    </a>
-                    <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
-                        <i class="fa fa-trash"></i> Eliminar
-                    </a>
-                </td>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Capacidade</th>
+                <th>Preço/Noite</th>
+                <th>Estado</th>
+                <th>Ações</th>
             </tr>
-        <?php endwhile; ?>
-    </table>
+            <?php while ($casa = $resultado->fetch_assoc()): ?>
+                <tr>
+                    <td><?= $casa['C_id_casa'] ?></td>
+                    <td><?= $casa['C_nome'] ?></td>
+                    <td><?= $casa['C_capacidade'] ?></td>
+                    <td><?= $casa['C_preco_noite'] ?>€</td>
+                    <td>
+                        <?php
+                            $estado = strtolower($casa['C_estado']);
+                            $badgeClass = '';
+                            switch ($estado) {
+                                case 'disponível': $badgeClass = 'badge-success'; break;
+                                case 'ocupada': $badgeClass = 'badge-warning'; break;
+                                case 'manutenção': $badgeClass = 'badge-error'; break;
+                                default: $badgeClass = 'badge-error'; break;
+                            }
+                        ?>
+                        <span class="badge <?= $badgeClass ?>">
+                            <?= ucfirst($casa['C_estado']) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <a href="#" class="button button-warning btnEditarCasa" data-id="<?= $casa['C_id_casa'] ?>">
+                            <i class="fa fa-edit"></i> Editar
+                        </a>
+                        <a href="eliminar_casa.php?id=<?= $casa['C_id_casa'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
+                            <i class="fa fa-trash"></i> Eliminar
+                        </a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
 
     <div class="paginacao" style="margin-top: 20px;">
         <?php for ($i = 1; $i <= $total_páginas; $i++): ?>

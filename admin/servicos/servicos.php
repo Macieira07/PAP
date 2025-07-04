@@ -413,15 +413,11 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
             <a href="#" id="btnAdicionarServico">+ Adicionar Serviço</a>
         </div>
     </div>
-
-    <div class="acoes-servicos-container">
-      <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
-      <a href="adicionar_servico.php" class="link-adicionar"><i class="fa fa-plus"></i> Adicionar Serviço</a>
-    </div>
     <div class="filtro-servicos-container">
       <form method="get" action="servicos.php" class="filtro-servicos-form">
         <div class="filtro-group">
-          <input type="text" name="nome" placeholder="Pesquisar por nome" value="<?= htmlspecialchars($filtro_nome) ?>">
+          <input type="text" name="nome" placeholder="Pesquisar por nome" value="<?= htmlspecialchars(
+            $filtro_nome) ?>">
         </div>
         <div class="filtro-group">
           <select name="categoria">
@@ -441,61 +437,63 @@ $categorias = $conexao->query("SELECT * FROM categorias_servico");
       </form>
     </div>
 
-    <table class="servicos-table">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Preço (€)</th>
-            <th>Categoria</th>
-            <th>Imagem</th>
-            <th>Ações</th>
-        </tr>
-        <?php if ($resultado->num_rows > 0): ?>
-            <?php while($servico = $resultado->fetch_assoc()): ?>
-                <tr>
-                    <td><?= $servico['S_id_servico'] ?></td>
-                    <td><?= htmlspecialchars($servico['S_nome']) ?></td>
-                    <td><?= nl2br(htmlspecialchars($servico['S_descricao'])) ?></td>
-                    <td><?= number_format($servico['S_preco'], 2) ?></td>
-                    <td><?= htmlspecialchars($servico['categoria_nome']) ?></td>
-                    <td>
-                        <?php
-                        $imagens = [];
-                        if (!empty($servico['S_imagem'])) {
-                            $imagens[] = ['src' => '/' . htmlspecialchars($servico['S_imagem']), 'alt' => 'Imagem do serviço ' . htmlspecialchars($servico['S_nome'])];
-                        }
-                        $galeria = $conexao->query("SELECT caminho_imagem FROM servicos_imagens WHERE servico_id = " . (int)$servico['S_id_servico']);
-                        while ($img = $galeria->fetch_assoc()) {
-                            $imagens[] = ['src' => '/' . htmlspecialchars($img['caminho_imagem']), 'alt' => 'Galeria de ' . htmlspecialchars($servico['S_nome'])];
-                        }
-                        ?>
-                        <?php if (count($imagens) > 0): ?>
-                            <button type="button" onclick="abrirLightbox(<?= $servico['S_id_servico'] ?>, 0)" style="background:#2e5090;color:#fff;padding:6px 18px;border:none;border-radius:4px;cursor:pointer;">Visualizar galeria</button>
-                            <script>
-                            window.lightboxImagens = window.lightboxImagens || {};
-                            window.lightboxImagens[<?= $servico['S_id_servico'] ?>] = <?= json_encode($imagens) ?>;
-                            </script>
-                        <?php else: ?>
-                            (sem imagens)
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <div class="acao-btns">
-                            <a href="#" class="button button-warning btnEditarServico" data-id="<?= $servico['S_id_servico'] ?>">
-                                <i class="fa fa-pen"></i> Editar
-                            </a>
-                            <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" class="button button-danger btnExcluirServico" data-nome="<?= htmlspecialchars($servico['S_nome']) ?>" onclick="return confirm('Tem certeza?')">
-                                <i class="fa fa-times"></i> Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr><td colspan="7">Não existem serviços registados com os filtros atuais.</td></tr>
-        <?php endif; ?>
-    </table>
+    <div class="admin-container">
+        <table class="servicos-table">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Preço (€)</th>
+                <th>Categoria</th>
+                <th>Imagem</th>
+                <th>Ações</th>
+            </tr>
+            <?php if ($resultado->num_rows > 0): ?>
+                <?php while($servico = $resultado->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= $servico['S_id_servico'] ?></td>
+                        <td><?= htmlspecialchars($servico['S_nome']) ?></td>
+                        <td><?= nl2br(htmlspecialchars($servico['S_descricao'])) ?></td>
+                        <td><?= number_format($servico['S_preco'], 2) ?></td>
+                        <td><?= htmlspecialchars($servico['categoria_nome']) ?></td>
+                        <td>
+                            <?php
+                            $imagens = [];
+                            if (!empty($servico['S_imagem'])) {
+                                $imagens[] = ['src' => '/' . htmlspecialchars($servico['S_imagem']), 'alt' => 'Imagem do serviço ' . htmlspecialchars($servico['S_nome'])];
+                            }
+                            $galeria = $conexao->query("SELECT caminho_imagem FROM servicos_imagens WHERE servico_id = " . (int)$servico['S_id_servico']);
+                            while ($img = $galeria->fetch_assoc()) {
+                                $imagens[] = ['src' => '/' . htmlspecialchars($img['caminho_imagem']), 'alt' => 'Galeria de ' . htmlspecialchars($servico['S_nome'])];
+                            }
+                            ?>
+                            <?php if (count($imagens) > 0): ?>
+                                <button type="button" onclick="abrirLightbox(<?= $servico['S_id_servico'] ?>, 0)" style="background:#2e5090;color:#fff;padding:6px 18px;border:none;border-radius:4px;cursor:pointer;">Visualizar galeria</button>
+                                <script>
+                                window.lightboxImagens = window.lightboxImagens || {};
+                                window.lightboxImagens[<?= $servico['S_id_servico'] ?>] = <?= json_encode($imagens) ?>;
+                                </script>
+                            <?php else: ?>
+                                (sem imagens)
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div class="acao-btns">
+                                <a href="#" class="button button-warning btnEditarServico" data-id="<?= $servico['S_id_servico'] ?>">
+                                    <i class="fa fa-pen"></i> Editar
+                                </a>
+                                <a href="eliminar_servico.php?id=<?= $servico['S_id_servico'] ?>" class="button button-danger btnExcluirServico" data-nome="<?= htmlspecialchars($servico['S_nome']) ?>" onclick="return confirm('Tem certeza?')">
+                                    <i class="fa fa-times"></i> Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="7">Não existem serviços registados com os filtros atuais.</td></tr>
+            <?php endif; ?>
+        </table>
+    </div>
 
     <!-- Paginação -->
     <?php if ($total_paginas > 1): ?>

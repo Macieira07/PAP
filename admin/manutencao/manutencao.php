@@ -120,50 +120,52 @@ $total_gasto = $resultado_total->fetch_assoc()['total_gasto'] ?? 0.0;
         </div>
     </div>
 
-    <table class="manutencao-table">
-        <tr>
-            <th>ID</th>
-            <th>Casa</th>
-            <th>Tipo de Manutenção</th>
-            <th>Data Início</th>
-            <th>Data Fim</th>
-            <th>Custo (€)</th>
-            <th>Pago</th>
-            <th>Ações</th>
-        </tr>
-        <?php while ($manutencao = $resultado->fetch_assoc()): ?>
+    <div class="admin-container">
+        <table class="manutencao-table">
             <tr>
-                <td><?= $manutencao['M_id_manutencao'] ?></td>
-                <td><?= htmlspecialchars($manutencao['C_nome']) ?></td>
-                <td><?= htmlspecialchars($manutencao['M_tipo']) ?></td>
-                <td><?= $manutencao['M_data_inicio'] ?></td>
-                <td><?= $manutencao['M_data_fim'] ? $manutencao['M_data_fim'] : 'Não definida' ?></td>
-                <td><?= number_format($manutencao['M_custo'], 2, ',', '.') ?>€</td>
-                <td>
-                    <?php if ($manutencao['M_pago']): ?>
-                        <span class="badge badge-success">Pago</span>
-                    <?php else: ?>
-                        <span class="badge badge-error">Por pagar</span>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <div class="acao-btns">
-                        <a href="#" class="button button-warning btnEditarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
-                            <i class="fa fa-pen"></i> Editar
-                        </a>
-                        <a href="eliminar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
-                            <i class="fa fa-times"></i> Eliminar
-                        </a>
-                        <?php if (!$manutencao['M_pago']): ?>
-                            <button class="button button-info btnPagarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
-                                <i class="fa fa-euro-sign"></i> Pagar
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                </td>
+                <th>ID</th>
+                <th>Casa</th>
+                <th>Tipo de Manutenção</th>
+                <th>Data Início</th>
+                <th>Data Fim</th>
+                <th>Custo (€)</th>
+                <th>Pago</th>
+                <th>Ações</th>
             </tr>
-        <?php endwhile; ?>
-    </table>
+            <?php while ($manutencao = $resultado->fetch_assoc()): ?>
+                <tr>
+                    <td><?= $manutencao['M_id_manutencao'] ?></td>
+                    <td><?= htmlspecialchars($manutencao['C_nome']) ?></td>
+                    <td><?= htmlspecialchars($manutencao['M_tipo']) ?></td>
+                    <td><?= $manutencao['M_data_inicio'] ?></td>
+                    <td><?= $manutencao['M_data_fim'] ? $manutencao['M_data_fim'] : 'Não definida' ?></td>
+                    <td><?= number_format($manutencao['M_custo'], 2, ',', '.') ?>€</td>
+                    <td>
+                        <?php if ($manutencao['M_pago']): ?>
+                            <span class="badge badge-success">Pago</span>
+                        <?php else: ?>
+                            <span class="badge badge-error">Por pagar</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <div class="acao-btns">
+                            <a href="#" class="button button-warning btnEditarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
+                                <i class="fa fa-pen"></i> Editar
+                            </a>
+                            <a href="eliminar_manutencao.php?id=<?= $manutencao['M_id_manutencao'] ?>" class="button button-danger" onclick="return confirm('Tem certeza?')">
+                                <i class="fa fa-times"></i> Eliminar
+                            </a>
+                            <?php if (!$manutencao['M_pago']): ?>
+                                <button class="button button-info btnPagarManutencao" data-id="<?= $manutencao['M_id_manutencao'] ?>">
+                                    <i class="fa fa-euro-sign"></i> Pagar
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
 
     <!-- Exibe o total gasto -->
     <div style="margin-top: 20px;">

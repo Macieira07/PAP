@@ -59,7 +59,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enviar_newsletter']))
     }
 }
 
-$resultado = $conexao->query("SELECT * FROM newsletter ORDER BY N_id DESC");
+// Paginação para newsletter
+$por_pagina = 5;
+$pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$offset = ($pagina_atual - 1) * $por_pagina;
+
+$total_result = $conexao->query("SELECT COUNT(*) as total FROM newsletter");
+$total_rows = $total_result->fetch_assoc()['total'];
+$total_paginas = ceil($total_rows / $por_pagina);
+
+$resultado = $conexao->query("SELECT * FROM newsletter ORDER BY N_id DESC LIMIT $offset, $por_pagina");
 if (!$resultado) {
     die("Erro na consulta: " . $conexao->error);
 }
@@ -115,66 +124,73 @@ if (!$resultado) {
             border-radius: 5px;
             max-width: 700px;
         }
+        /* Garantir cor azul escuro no cabeçalho da tabela de subscritos */
+        .casas-table th {
+            background: var(--cor-primaria) !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
-    <h2 style="display: flex; align-items: center; gap: 10px;">
-  <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="ícone hospedes" style="width: 60px; height: 60px;">
-  Hóspedes Subscritos
-</h2>
-
-    <a href="admin.php">← Voltar</a>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Data Subscrição</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $resultado->fetch_assoc()): ?>
-            <tr>
-                <td><?= htmlspecialchars($row['N_id']) ?></td>
-                <td><?= htmlspecialchars($row['N_email']) ?></td>
-                <td><?= htmlspecialchars($row['N_data_subscricao']) ?></td>
-            </tr>
+    <div class="admin-container">
+        <h2 style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="ícone hospedes" style="width: 60px; height: 60px;">
+            Hóspedes Subscritos
+        </h2>
+        <a href="admin.php" class="link-voltar" style="margin-bottom: 18px; display: inline-block;"><i class="fa fa-arrow-left"></i> Voltar</a>
+        <table class="casas-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Data Subscrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $resultado->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['N_id']) ?></td>
+                    <td><?= htmlspecialchars($row['N_email']) ?></td>
+                    <td><?= htmlspecialchars($row['N_data_subscricao']) ?></td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+        <div class="paginacao" style="margin-top: 20px; text-align:center;">
+            <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                <a href="?pagina=<?= $i ?>" class="btn" style="margin: 0 2px;<?= $i == $pagina_atual ? 'background: var(--cor-primaria-escura); color: #fff;' : '' ?>"><?= $i ?></a>
+            <?php endfor; ?>
+        </div>
+        <button id="btn-toggle-form" class="btn" style="margin-bottom: 18px;"><i class="fa fa-paper-plane"></i> Enviar Newsletter</button>
+        <h3 style="margin-top: 32px;">Modelos de Newsletter (Arraste para o formulário para carregar)</h3>
+        <div id="modelos-newsletter">
+            <?php while ($modelo = $modelos_result->fetch_assoc()): ?>
+                <div class="modelo" draggable="true"
+                    data-assunto="<?= htmlspecialchars($modelo['MN_titulo']) ?>"
+                    data-mensagem="<?= htmlspecialchars($modelo['MN_conteudo']) ?>"
+                    title="<?= htmlspecialchars($modelo['MN_descricao']) ?>">
+                    <strong><?= htmlspecialchars($modelo['MN_titulo']) ?></strong>
+                    <small><?= htmlspecialchars($modelo['MN_descricao']) ?></small>
+                </div>
             <?php endwhile; ?>
-        </tbody>
-    </table>
-
-    <button id="btn-toggle-form">Enviar Newsletter</button>
-
-    <h3>Modelos de Newsletter (Arraste para o formulário para carregar)</h3>
-    <div id="modelos-newsletter">
-        <?php while ($modelo = $modelos_result->fetch_assoc()): ?>
-            <div class="modelo" draggable="true"
-                data-assunto="<?= htmlspecialchars($modelo['MN_titulo']) ?>"
-                data-mensagem="<?= htmlspecialchars($modelo['MN_conteudo']) ?>"
-                title="<?= htmlspecialchars($modelo['MN_descricao']) ?>">
-                <strong><?= htmlspecialchars($modelo['MN_titulo']) ?></strong>
-                <small><?= htmlspecialchars($modelo['MN_descricao']) ?></small>
-            </div>
-        <?php endwhile; ?>
-    </div>
-
-    <div id="form-newsletter" style="display:none;">
-        <?= $mensagem_envio ?>
-        <form method="POST" action="">
-            <div class="form-group input-icon">
-                <label for="assunto"><i class="fa-solid fa-envelope"></i> Assunto</label>
-                <input type="text" id="assunto" name="assunto" required placeholder="Assunto da newsletter" />
-                <i class="fa-solid fa-envelope"></i>
-            </div>
-            <div class="form-group">
-                <label for="mensagem"><i class="fa-solid fa-message"></i> Mensagem</label>
-                <!-- REMOVIDO required daqui para evitar erro de validação -->
-                <textarea id="mensagem" name="mensagem"></textarea>
-            </div>
-            <button type="submit" name="enviar_newsletter" value="1">
-                <i class="fa-solid fa-paper-plane"></i> Enviar
-            </button>
-        </form>
+        </div>
+        <div id="form-newsletter" style="display:none; margin-top: 24px;">
+            <?= $mensagem_envio ?>
+            <form method="POST" action="">
+                <div class="form-group input-icon">
+                    <label for="assunto"><i class="fa-solid fa-envelope"></i> Assunto</label>
+                    <input type="text" id="assunto" name="assunto" required placeholder="Assunto da newsletter" />
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <label for="mensagem"><i class="fa-solid fa-message"></i> Mensagem</label>
+                    <textarea id="mensagem" name="mensagem"></textarea>
+                </div>
+                <button type="submit" name="enviar_newsletter" value="1" class="btn button-success">
+                    <i class="fa-solid fa-paper-plane"></i> Enviar
+                </button>
+            </form>
+        </div>
     </div>
 
     <script>

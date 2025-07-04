@@ -177,7 +177,6 @@ $total_paginas = ceil($total / $por_pagina);
 <body>
     <div class="hospedes-container">
         <h1>Gestão de Hóspedes</h1>
-        
         <div class="acoes-hospedes-container">
             <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
             <a href="#" id="btnAdicionarHospede" class="link-adicionar"><i class="fa fa-user-plus"></i> Adicionar Hóspede</a>

@@ -1,6 +1,5 @@
 <?php
 require '../../conexao.php';
-
 if (isset($_GET['mensagem'])) {
     $mensagem = $_GET['mensagem'];
     $tipo = $_GET['tipo'];
@@ -69,6 +68,14 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="../assets/logos/favicon-32x32.png" sizes="32x32">
     <style>
+        .admin-container {
+            max-width: 1100px;
+            margin: 30px auto 30px auto;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 32px 24px 32px 24px;
+        }
         .flash-message {
             position: fixed;
             top: 20px;
@@ -191,177 +198,177 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <a href="admin.php">← Voltar</a>
-</div>
+<div class="admin-container">
+    <div class="top-bar">
+        <a href="admin.php">← Voltar</a>
+    </div>
 
-<div class="acoes-funcionarios-container">
-    <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
-    <a href="#" id="btnAdicionarFuncionario" class="link-adicionar"><i class="fa fa-user-plus"></i> Adicionar Funcionário</a>
-</div>
-<div class="filtro-funcionarios-container">
-    <form method="get" action="funcionarios.php" class="filtro-funcionarios-form">
-        <input type="text" name="nome" placeholder="Filtrar por nome" value="<?= $nomeFiltro ?>" maxlength="50" style="max-width:180px;">
-        <input type="text" name="cargo" placeholder="Filtrar por cargo" value="<?= $cargoFiltro ?>" maxlength="30" style="max-width:140px;">
-        <button type="submit"><i class="fa fa-filter"></i> Filtrar</button>
-    </form>
-</div>
-<div class="table-responsive">
-<table class="funcionarios-table">
-    <thead>
-    <tr>
-        <th style="max-width:40px;">ID</th>
-        <th style="max-width:160px;">Nome</th>
-        <th style="max-width:180px;">Email</th>
-        <th style="max-width:120px;">Cargo</th>
-        <th style="max-width:120px;">Telefone</th>
-        <th style="max-width:120px;">Data de Contratação</th>
-        <th style="max-width:160px;">Turno</th>
-        <th style="max-width:120px;">Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php while ($f = $resultado->fetch_assoc()): ?>
-    <tr>
-        <td><?= $f['F_id_funcionario'] ?></td>
-        <td title="<?= htmlspecialchars($f['F_nome']) ?>">
-            <?= strlen($f['F_nome']) > 25 ? htmlspecialchars(mb_substr($f['F_nome'],0,25)).'…' : htmlspecialchars($f['F_nome']) ?>
-        </td>
-        <td title="<?= htmlspecialchars($f['F_email']) ?>">
-            <?= strlen($f['F_email']) > 28 ? htmlspecialchars(mb_substr($f['F_email'],0,28)).'…' : htmlspecialchars($f['F_email']) ?>
-        </td>
-        <td><span class="badge badge-info" title="<?= htmlspecialchars($f['F_cargo']) ?>">
-            <?= strlen($f['F_cargo']) > 18 ? htmlspecialchars(mb_substr($f['F_cargo'],0,18)).'…' : htmlspecialchars($f['F_cargo']) ?>
-        </span></td>
-        <td><?= htmlspecialchars($f['F_telefone']) ?></td>
-        <td><?= date('d/m/Y', strtotime($f['F_data_contratacao'])) ?></td>
-        <td>
-            <?php
-            $stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario=?");
-            $stmt_turno->bind_param("i", $f['F_id_funcionario']);
-            $stmt_turno->execute();
-            $turno = $stmt_turno->get_result()->fetch_assoc();
-            ?>
-            <?php if ($turno): ?>
-                <span class="badge badge-success" title="Turno: <?= htmlspecialchars($turno['turno']) ?>">
-                    <?= strlen($turno['turno']) > 12 ? htmlspecialchars(mb_substr($turno['turno'],0,12)).'…' : htmlspecialchars($turno['turno']) ?>
-                </span><br>
-                <span class="badge badge-info">Início: <?= date('d/m/Y', strtotime($turno['data_inicio'])) ?></span>
-                <span class="badge badge-warning">Fim: <?= date('d/m/Y', strtotime($turno['data_fim'])) ?></span>
-                <br><button class="button button-warning btnEditarTurno" data-id="<?= $turno['T_id_turno'] ?>"><i class="fa fa-pen"></i> Editar Turno</button>
-            <?php else: ?>
-                <span class="badge badge-error">Nenhum turno registrado</span>
-            <?php endif; ?>
-        </td>
+    <div class="acoes-funcionarios-container">
+        <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
+        <a href="#" id="btnAdicionarFuncionario" class="link-adicionar"><i class="fa fa-user-plus"></i> Adicionar Funcionário</a>
+    </div>
+    <div class="filtro-funcionarios-container">
+        <form method="get" action="funcionarios.php" class="filtro-funcionarios-form">
+            <input type="text" name="nome" placeholder="Filtrar por nome" value="<?= $nomeFiltro ?>" maxlength="50" style="max-width:180px;">
+            <input type="text" name="cargo" placeholder="Filtrar por cargo" value="<?= $cargoFiltro ?>" maxlength="30" style="max-width:140px;">
+            <button type="submit"><i class="fa fa-filter"></i> Filtrar</button>
+        </form>
+    </div>
+    <div class="table-responsive">
+    <table class="funcionarios-table">
+        <thead>
+        <tr>
+            <th style="max-width:40px;">ID</th>
+            <th style="max-width:160px;">Nome</th>
+            <th style="max-width:180px;">Email</th>
+            <th style="max-width:120px;">Cargo</th>
+            <th style="max-width:120px;">Telefone</th>
+            <th style="max-width:120px;">Data de Contratação</th>
+            <th style="max-width:160px;">Turno</th>
+            <th style="max-width:120px;">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php while ($f = $resultado->fetch_assoc()): ?>
+        <tr>
+            <td><?= $f['F_id_funcionario'] ?></td>
+            <td title="<?= htmlspecialchars($f['F_nome']) ?>">
+                <?= strlen($f['F_nome']) > 25 ? htmlspecialchars(mb_substr($f['F_nome'],0,25)).'…' : htmlspecialchars($f['F_nome']) ?>
+            </td>
+            <td title="<?= htmlspecialchars($f['F_email']) ?>">
+                <?= strlen($f['F_email']) > 28 ? htmlspecialchars(mb_substr($f['F_email'],0,28)).'…' : htmlspecialchars($f['F_email']) ?>
+            </td>
+            <td><span class="badge badge-info" title="<?= htmlspecialchars($f['F_cargo']) ?>">
+                <?= strlen($f['F_cargo']) > 18 ? htmlspecialchars(mb_substr($f['F_cargo'],0,18)).'…' : htmlspecialchars($f['F_cargo']) ?>
+            </span></td>
+            <td><?= htmlspecialchars($f['F_telefone']) ?></td>
+            <td><?= date('d/m/Y', strtotime($f['F_data_contratacao'])) ?></td>
+            <td>
+                <?php
+                $stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario=?");
+                $stmt_turno->bind_param("i", $f['F_id_funcionario']);
+                $stmt_turno->execute();
+                $turno = $stmt_turno->get_result()->fetch_assoc();
+                ?>
+                <?php if ($turno): ?>
+                    <span class="badge badge-success" title="Turno: <?= htmlspecialchars($turno['turno']) ?>">
+                        <?= strlen($turno['turno']) > 12 ? htmlspecialchars(mb_substr($turno['turno'],0,12)).'…' : htmlspecialchars($turno['turno']) ?>
+                    </span><br>
+                    <span class="badge badge-info">Início: <?= date('d/m/Y', strtotime($turno['data_inicio'])) ?></span>
+                    <span class="badge badge-warning">Fim: <?= date('d/m/Y', strtotime($turno['data_fim'])) ?></span>
+                    <br><button class="button button-warning btnEditarTurno" data-id="<?= $turno['T_id_turno'] ?>"><i class="fa fa-pen"></i> Editar Turno</button>
+                <?php else: ?>
+                    <span class="badge badge-error">Nenhum turno registrado</span>
+                <?php endif; ?>
+            </td>
+            <td class="acao">
+                <div class="acao-btns">
+                    <button class="button button-warning btnEditarFuncionario" data-id="<?= $f['F_id_funcionario'] ?>"><i class="fa fa-pen"></i> Editar</button>
+                    <a href="eliminar_funcionario.php?id=<?= $f['F_id_funcionario'] ?>" class="button button-danger" onclick="return confirm('Tem a certeza que quer eliminar?')"><i class="fa fa-times"></i> Eliminar</a>
+                </div>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+        </tbody>
+    </table>
+    </div>
+    <?php if ($totalPaginas > 1): ?>
+    <nav aria-label="Navegação de página" style="margin:18px 0; text-align:center;">
+        <ul class="pagination" style="display:inline-flex;gap:4px;list-style:none;padding:0;">
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <li>
+                    <a href="?pagina=<?= $i ?>&nome=<?= urlencode($nomeFiltro) ?>&cargo=<?= urlencode($cargoFiltro) ?>"
+                       class="<?= $i == $paginaAtual ? 'active' : '' ?>"
+                       style="padding:6px 12px;border-radius:4px;border:1px solid #ccc;background:<?= $i==$paginaAtual?'#176b87':'#fff' ?>;color:<?= $i==$paginaAtual?'#fff':'#176b87' ?>;font-weight:600;text-decoration:none;transition:background .2s;">
+                        <?= $i ?>
+                    </a>
+                </li>
+            <?php endfor; ?>
+        </ul>
+    </nav>
+    <?php endif; ?>
+    <!-- Botão adicionar férias/falta -->
+    <div style="margin-bottom: 12px;">
+      <button class="btn btn-info" id="btnAdicionarFeriasFalta"><i class="fa-solid fa-plus"></i> Adicionar Férias/Falta</button>
+    </div>
+    <!-- Modal Férias/Faltas -->
+    <div id="modalFeriasFalta" class="modal" style="display:none;">
+      <div class="modal-content" id="modalFeriasFaltaContent" style="min-width:340px; max-width:98vw;" onclick="event.stopPropagation()">
+        <button class="modal-close close-btn" style="position:absolute;top:10px;right:16px;font-size:24px;" onclick="fecharModalFeriasFalta()">×</button>
+        <form id="formFeriasFalta" style="display:flex;flex-direction:column;gap:10px;">
+          <h2 style="margin:0 0 10px 0; color:#176b87;">Adicionar Férias/Falta</h2>
+          <label>Funcionário:
+            <select name="funcionario_id" required>
+              <?php $result = $conexao->query("SELECT F_id_funcionario, F_nome FROM funcionarios");
+              while ($row = $result->fetch_assoc()) {
+                echo "<option value='{$row['F_id_funcionario']}'>{$row['F_nome']}</option>";
+              } ?>
+            </select>
+          </label>
+          <label>Início: <input type="date" name="inicio" required></label>
+          <label>Fim: <input type="date" name="fim" required></label>
+          <label>Tipo:
+            <select name="tipo" required>
+              <option value="Férias">Férias</option>
+              <option value="Falta">Falta</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-info">Salvar</button>
+          <div id="feriasFaltaMsg" style="margin-top:8px;"></div>
+        </form>
+      </div>
+    </div>
+    <!-- Filtros férias/faltas -->
+    <div class="flex" style="gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+      <form method="get" style="display:flex;gap:8px;align-items:center;">
+        <span class="badge badge-info">Filtrar:</span>
+        <select name="tipo_ausencia" class="badge badge-info" style="font-weight:600;">
+          <option value="">Todos</option>
+          <option value="Férias" <?= (($_GET['tipo_ausencia']??'')==='Férias'?'selected':'') ?>>Férias</option>
+          <option value="Falta" <?= (($_GET['tipo_ausencia']??'')==='Falta'?'selected':'') ?>>Falta</option>
+        </select>
+        <input type="text" name="funcionario" placeholder="Funcionário" value="<?= htmlspecialchars($_GET['funcionario']??'') ?>" class="badge badge-info" style="font-weight:600;">
+        <button type="submit" class="btn btn-info btn-small"><i class="fa-solid fa-filter"></i> Filtrar</button>
+      </form>
+    </div>
+    <!-- Tabela Férias/Faltas -->
+    <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Funcionário</th>
+          <th>Tipo</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Motivo</th>
+          <th class="acao">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php
+        $tipoFiltro = $_GET['tipo_ausencia'] ?? '';
+        $funcFiltro = $_GET['funcionario'] ?? '';
+        $sql = "SELECT fa.*, f.F_nome FROM ferias_ausencias fa JOIN funcionarios f ON fa.F_id_funcionario = f.F_id_funcionario WHERE 1=1";
+        if ($tipoFiltro) $sql .= " AND fa.tipo_ausencia='".$conexao->real_escape_string($tipoFiltro)."'";
+        if ($funcFiltro) $sql .= " AND f.F_nome LIKE '%".$conexao->real_escape_string($funcFiltro)."%'";
+        $sql .= " ORDER BY fa.data_inicio DESC";
+        $result = $conexao->query($sql);
+        while ($fa = $result->fetch_assoc()): ?>
+      <tr>
+        <td><?= htmlspecialchars($fa['F_nome']) ?></td>
+        <td><span class="badge badge-info"><?= htmlspecialchars($fa['tipo_ausencia']) ?></span></td>
+        <td><span class="badge badge-info"><?= date('d/m/Y', strtotime($fa['data_inicio'])) ?></span></td>
+        <td><span class="badge badge-info"><?= date('d/m/Y', strtotime($fa['data_fim'])) ?></span></td>
+        <td><?= htmlspecialchars($fa['motivo'] ?? ($fa['FA_motivo'] ?? '')) ?></td>
         <td class="acao">
-            <div class="acao-btns">
-                <button class="button button-warning btnEditarFuncionario" data-id="<?= $f['F_id_funcionario'] ?>"><i class="fa fa-pen"></i> Editar</button>
-                <a href="eliminar_funcionario.php?id=<?= $f['F_id_funcionario'] ?>" class="button button-danger" onclick="return confirm('Tem a certeza que quer eliminar?')"><i class="fa fa-times"></i> Eliminar</a>
-            </div>
+          <button class="btn btn-view btn-small btnEditarFerias" data-id="<?= $fa['F_id_ausencia'] ?>"><i class="fa-solid fa-pen-to-square"></i></button>
+          <a href="eliminar_ferias.php?id=<?= $fa['F_id_ausencia'] ?>" class="btn button-danger btn-small" onclick="return confirm('Tem a certeza que quer eliminar este registro?')"><i class="fa-solid fa-trash"></i></a>
         </td>
-    </tr>
+      </tr>
     <?php endwhile; ?>
-    </tbody>
-</table>
-</div>
-<?php if ($totalPaginas > 1): ?>
-<nav aria-label="Navegação de página" style="margin:18px 0; text-align:center;">
-    <ul class="pagination" style="display:inline-flex;gap:4px;list-style:none;padding:0;">
-        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-            <li>
-                <a href="?pagina=<?= $i ?>&nome=<?= urlencode($nomeFiltro) ?>&cargo=<?= urlencode($cargoFiltro) ?>"
-                   class="<?= $i == $paginaAtual ? 'active' : '' ?>"
-                   style="padding:6px 12px;border-radius:4px;border:1px solid #ccc;background:<?= $i==$paginaAtual?'#176b87':'#fff' ?>;color:<?= $i==$paginaAtual?'#fff':'#176b87' ?>;font-weight:600;text-decoration:none;transition:background .2s;">
-                    <?= $i ?>
-                </a>
-            </li>
-        <?php endfor; ?>
-    </ul>
-</nav>
-<?php endif; ?>
-
-<!-- Botão adicionar férias/falta -->
-<div style="margin-bottom: 12px;">
-  <button class="btn btn-info" id="btnAdicionarFeriasFalta"><i class="fa-solid fa-plus"></i> Adicionar Férias/Falta</button>
-</div>
-<!-- Modal Férias/Faltas -->
-<div id="modalFeriasFalta" class="modal" style="display:none;">
-  <div class="modal-content" id="modalFeriasFaltaContent" style="min-width:340px; max-width:98vw;" onclick="event.stopPropagation()">
-    <button class="modal-close close-btn" style="position:absolute;top:10px;right:16px;font-size:24px;" onclick="fecharModalFeriasFalta()">×</button>
-    <form id="formFeriasFalta" style="display:flex;flex-direction:column;gap:10px;">
-      <h2 style="margin:0 0 10px 0; color:#176b87;">Adicionar Férias/Falta</h2>
-      <label>Funcionário:
-        <select name="funcionario_id" required>
-          <?php $result = $conexao->query("SELECT F_id_funcionario, F_nome FROM funcionarios");
-          while ($row = $result->fetch_assoc()) {
-            echo "<option value='{$row['F_id_funcionario']}'>{$row['F_nome']}</option>";
-          } ?>
-        </select>
-      </label>
-      <label>Início: <input type="date" name="inicio" required></label>
-      <label>Fim: <input type="date" name="fim" required></label>
-      <label>Tipo:
-        <select name="tipo" required>
-          <option value="Férias">Férias</option>
-          <option value="Falta">Falta</option>
-        </select>
-      </label>
-      <button type="submit" class="btn btn-info">Salvar</button>
-      <div id="feriasFaltaMsg" style="margin-top:8px;"></div>
-    </form>
-  </div>
-</div>
-
-<!-- Filtros férias/faltas -->
-<div class="flex" style="gap:10px; margin-bottom:12px; flex-wrap:wrap;">
-  <form method="get" style="display:flex;gap:8px;align-items:center;">
-    <span class="badge badge-info">Filtrar:</span>
-    <select name="tipo_ausencia" class="badge badge-info" style="font-weight:600;">
-      <option value="">Todos</option>
-      <option value="Férias" <?= (($_GET['tipo_ausencia']??'')==='Férias'?'selected':'') ?>>Férias</option>
-      <option value="Falta" <?= (($_GET['tipo_ausencia']??'')==='Falta'?'selected':'') ?>>Falta</option>
-    </select>
-    <input type="text" name="funcionario" placeholder="Funcionário" value="<?= htmlspecialchars($_GET['funcionario']??'') ?>" class="badge badge-info" style="font-weight:600;">
-    <button type="submit" class="btn btn-info btn-small"><i class="fa-solid fa-filter"></i> Filtrar</button>
-  </form>
-</div>
-<!-- Tabela Férias/Faltas -->
-<div class="table-responsive">
-<table class="table table-hover table-striped">
-  <thead>
-    <tr>
-      <th>Funcionário</th>
-      <th>Tipo</th>
-      <th>Início</th>
-      <th>Fim</th>
-      <th>Motivo</th>
-      <th class="acao">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php
-    $tipoFiltro = $_GET['tipo_ausencia'] ?? '';
-    $funcFiltro = $_GET['funcionario'] ?? '';
-    $sql = "SELECT fa.*, f.F_nome FROM ferias_ausencias fa JOIN funcionarios f ON fa.F_id_funcionario = f.F_id_funcionario WHERE 1=1";
-    if ($tipoFiltro) $sql .= " AND fa.tipo_ausencia='".$conexao->real_escape_string($tipoFiltro)."'";
-    if ($funcFiltro) $sql .= " AND f.F_nome LIKE '%".$conexao->real_escape_string($funcFiltro)."%'";
-    $sql .= " ORDER BY fa.data_inicio DESC";
-    $result = $conexao->query($sql);
-    while ($fa = $result->fetch_assoc()): ?>
-  <tr>
-    <td><?= htmlspecialchars($fa['F_nome']) ?></td>
-    <td><span class="badge badge-info"><?= htmlspecialchars($fa['tipo_ausencia']) ?></span></td>
-    <td><span class="badge badge-info"><?= date('d/m/Y', strtotime($fa['data_inicio'])) ?></span></td>
-    <td><span class="badge badge-info"><?= date('d/m/Y', strtotime($fa['data_fim'])) ?></span></td>
-    <td><?= htmlspecialchars($fa['motivo'] ?? ($fa['FA_motivo'] ?? '')) ?></td>
-    <td class="acao">
-      <button class="btn btn-view btn-small btnEditarFerias" data-id="<?= $fa['F_id_ausencia'] ?>"><i class="fa-solid fa-pen-to-square"></i></button>
-      <a href="eliminar_ferias.php?id=<?= $fa['F_id_ausencia'] ?>" class="btn button-danger btn-small" onclick="return confirm('Tem a certeza que quer eliminar este registro?')"><i class="fa-solid fa-trash"></i></a>
-    </td>
-  </tr>
-<?php endwhile; ?>
-  </tbody>
-</table>
+      </tbody>
+    </table>
+    </div>
 </div>
 
 <script>
@@ -374,7 +381,15 @@ function abrirModalFuncionario(url) {
     .then(r => r.text())
     .then(html => {
       content.innerHTML = html;
-      setTimeout(initWizardFuncionario, 50); // Garante que o JS do wizard é reexecutado
+      // Substituir chamadas a setTimeout(initWizardFuncionario, 50);
+      // Nova versão:
+      setTimeout(function() {
+          if (typeof atribuirEventosWizardFuncionario === 'function') {
+              atribuirEventosWizardFuncionario();
+          } else if (typeof initWizardFuncionario === 'function') {
+              initWizardFuncionario();
+          }
+      }, 50);
     });
 }
 function fecharModalFuncionario() {
@@ -519,5 +534,11 @@ if (document.getElementById('formFeriasFalta')) {
 }
 .pagination .active { background: #176b87 !important; color: #fff !important; }
 </style>
+<!-- Modal Funcionário -->
+<div id="modalFuncionario" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+  <div class="modal-content" id="modalFuncionarioContent" style="background:#fff; border-radius:8px; min-width:340px; max-width:98vw; min-height:80px; position:relative; box-shadow:0 2px 16px rgba(0,0,0,0.18);" onclick="event.stopPropagation()">
+    <button class="modal-close close-btn" style="position:absolute;top:10px;right:16px;font-size:24px;" onclick="fecharModalFuncionario()">×</button>
+  </div>
+</div>
 </body>
 </html>

@@ -99,6 +99,27 @@ if (isset($_SESSION['flash'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Gestão de Reservas</title>
     <style>
+        .flatpickr-day.ocupada {
+    background-color: #ffcccc !important;
+    color: #ff0000 !important;
+    text-decoration: line-through;
+    border-color: #ff0000 !important;
+}
+
+.flatpickr-day.ocupada:hover {
+    background-color: #ffaaaa !important;
+}
+
+.event.busy {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #ff0000;
+    border-radius: 50%;
+}
         /* Estilos específicos para a página de reservas */
         .reservas-container {
             max-width: 1400px;
@@ -677,42 +698,55 @@ if (isset($_SESSION['flash'])) {
         };
     });
     
-    // Configurar o envio do formulário via AJAX
     function bindFormAjaxReserva() {
-        const form = document.querySelector('#modalConteudoReserva form');
-        if (form) {
-            form.onsubmit = function(e) {
-                e.preventDefault();
-                const formData = new FormData(form);
-                let url = 'adicionar_reserva.php?modal=1';
-                if (form.hasAttribute('data-id')) {
-                    const id = form.getAttribute('data-id');
-                    url = 'editar_reserva.php?id=' + id + '&modal=1';
+    const form = document.querySelector('#modalConteudoReserva form');
+    if (form) {
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            
+            // Determinar a URL correta
+            let url = form.action;
+            if (!url) {
+                url = form.id === 'formEditarReserva' ? 
+                    'editar_reserva.php?id=' + document.querySelector('input[name="reserva_id"]').value : 
+                    'adicionar_reserva.php';
+            }
+            
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.text();
                 }
-                
-                fetch(url, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(r => r.text())
-                .then(resp => {
-                    if (resp.trim() === 'OK') {
-                        // Recarregar a página para ver as mudanças
-                        window.location.reload();
-                    } else {
-                        // Mostrar erros de validação
-                        document.getElementById('modalConteudoReserva').innerHTML = resp;
-                        abrirModalReserva();
-                        initWizardReserva();
-                        bindFormAjaxReserva();
+            })
+            .then(resp => {
+                if (resp && resp.trim() === 'OK') {
+                    window.location.reload();
+                } else if (resp) {
+                    // Atualizar apenas o conteúdo do modal se houver erros
+                    document.getElementById('modalConteudoReserva').innerHTML = resp;
+                    // Re-inicializar os componentes
+                    if (typeof initFlatpickrEditarReserva === 'function') {
+                        initFlatpickrEditarReserva();
                     }
-                })
-                .catch(err => {
-                    alert('Erro ao processar a reserva: ' + err);
-                });
-            };
-        }
+                    if (typeof initWizardReserva === 'function') {
+                        initWizardReserva();
+                    }
+                    bindFormAjaxReserva();
+                }
+            })
+            .catch(err => {
+                console.error('Erro:', err);
+                alert('Ocorreu um erro ao processar a reserva.');
+            });
+        };
     }
+}
     
     // Configurar o wizard de 2 passos
     function initWizardReserva() {

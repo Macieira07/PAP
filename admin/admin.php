@@ -99,6 +99,26 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
         <!-- Flatpickr CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" href="global.css">
+        <style>
+        /* Bola vermelha para datas ocupadas no flatpickr */
+        .flatpickr-day.ocupada {
+            position: relative;
+            background: #ffeaea !important;
+            color: #d32f2f !important;
+        }
+        .flatpickr-day.ocupada::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #d32f2f;
+            border-radius: 50%;
+            box-shadow: 0 0 2px #fff;
+        }
+        </style>
     </head>
     <body>
         <div class="admin-container">
@@ -606,8 +626,14 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 .then(r => r.json())
                 .then(datas => {
                     datasOcupadas = datas;
-                    if (checkinPicker) checkinPicker.set('disable', datasOcupadas);
-                    if (checkoutPicker) checkoutPicker.set('disable', datasOcupadas);
+                    if (checkinPicker) {
+                        checkinPicker.set('disable', datasOcupadas);
+                        checkinPicker.redraw();
+                    }
+                    if (checkoutPicker) {
+                        checkoutPicker.set('disable', datasOcupadas);
+                        checkoutPicker.redraw();
+                    }
                 });
         }
 
@@ -619,13 +645,29 @@ $total_notificacoes = $conexao->query("SELECT COUNT(*) as total FROM notificacoe
                 onOpen: atualizarDatasOcupadas,
                 onChange: function(selectedDates, dateStr, instance) {
                     if (checkoutPicker) checkoutPicker.set('minDate', dateStr);
+                },
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    if (!Array.isArray(datasOcupadas)) return;
+                    const date = dayElem.dateObj;
+                    const ymd = date.toISOString().slice(0,10);
+                    if (datasOcupadas.includes(ymd)) {
+                        dayElem.classList.add('ocupada');
+                    }
                 }
             });
             checkoutPicker = flatpickr("#data_checkout_modal", {
                 dateFormat: "Y-m-d",
                 minDate: "today",
                 disable: datasOcupadas,
-                onOpen: atualizarDatasOcupadas
+                onOpen: atualizarDatasOcupadas,
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    if (!Array.isArray(datasOcupadas)) return;
+                    const date = dayElem.dateObj;
+                    const ymd = date.toISOString().slice(0,10);
+                    if (datasOcupadas.includes(ymd)) {
+                        dayElem.classList.add('ocupada');
+                    }
+                }
             });
             document.getElementById('id_casa_modal').addEventListener('change', function() {
                 atualizarDatasOcupadas();
