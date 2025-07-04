@@ -1,4 +1,34 @@
 <?php
+/*
+ * ============================================================
+ *   Página Tempo de Namorar - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, tema)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero/Oferta Section (destaque da oferta)
+ *     4. O que está incluído (lista de benefícios)
+ *     5. Call to Action (reserva)
+ *     6. Scripts finais (tema, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 session_start();
 require_once 'i18n.php'; // ajusta o caminho conforme localização do i18n.php
 

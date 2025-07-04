@@ -1,11 +1,39 @@
 <?php
-include '../conexao.php';   
-use PHPMailer\PHPMailer\PHPMailer;
+/*
+ * ============================================================
+ *   API Newsletter Submeter - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e conexão)
+ *     - JSON (comunicação com frontend)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *     - MySQLi (acesso à base de dados)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, headers)
+ *     2. Receção e validação dos dados do frontend
+ *     3. Verificação de duplicados
+ *     4. Inserção na base de dados
+ *     5. Envio de email de agradecimento
+ *     6. Resposta JSON para o frontend
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
+include '../conexao.php';
+
 use PHPMailer\PHPMailer\Exception;
-require '../vendor/autoload.php'; // Ajusta o caminho se necessário
+use PHPMailer\PHPMailer\PHPMailer;
+
+require '../vendor/autoload.php';  // Ajusta o caminho se necessário
 
 header('Content-Type: application/json');
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     // Validação
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -13,8 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
     // Verificar duplicado
-    $stmt = $conexao->prepare("SELECT 1 FROM newsletter WHERE N_email = ?");
-    $stmt->bind_param("s", $email);
+    $stmt = $conexao->prepare('SELECT 1 FROM newsletter WHERE N_email = ?');
+    $stmt->bind_param('s', $email);
     $stmt->execute();
     $stmt->store_result();
 
@@ -23,29 +51,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
     // Inserir
-    $stmt = $conexao->prepare("INSERT INTO newsletter (N_email) VALUES (?)");
-    $stmt->bind_param("s", $email);
+    $stmt = $conexao->prepare('INSERT INTO newsletter (N_email) VALUES (?)');
+    $stmt->bind_param('s', $email);
 
     if ($stmt->execute()) {
         // Enviar email de agradecimento
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'quinta.flores2019@gmail.com';
-            $mail->Password   = 'cbra fjzb nizo lilw';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'quinta.flores2019@gmail.com';
+            $mail->Password = 'cbra fjzb nizo lilw';
             $mail->SMTPSecure = 'tls';
-            $mail->Port       = 587;
+            $mail->Port = 587;
 
             $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
             $mail->addAddress($email);
-$mail->AddEmbeddedImage('../assets/logos/logotipo1.png', 'logotipo');
-$mail->CharSet = 'UTF-8';
-$mail->Encoding = 'base64';
-$mail->isHTML(true);
-$mail->Subject = '🎉 Bem-vindo à Quinta Flores!';
-$mail->Body = '
+            $mail->AddEmbeddedImage('../assets/logos/logotipo1.png', 'logotipo');
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
+            $mail->isHTML(true);
+            $mail->Subject = '🎉 Bem-vindo à Quinta Flores!';
+            $mail->Body = '
     <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
         <div style="text-align: center;">
             <img src="cid:logotipo" alt="Quinta Flores" style="max-width: 200px; margin-bottom: 20px;">
@@ -75,7 +103,7 @@ $mail->Body = '
         } catch (Exception $e) {
             echo json_encode([
                 'mensagem' => "Subscreveste, mas erro ao enviar email: {$mail->ErrorInfo}",
-                'tipo'     => 'erro'
+                'tipo' => 'erro'
             ]);
         }
     } else {

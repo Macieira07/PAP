@@ -1,10 +1,39 @@
 <?php
+
+/*
+ * ============================================================
+ *   Página de Registo de Utilizador - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica de registo)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, validação)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, sessão)
+ *     2. <head> com meta tags, fontes, CSS
+ *     3. Formulário de registo
+ *     4. Mensagens de erro/sucesso
+ *     5. Scripts finais (JS)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 // Configuração de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('error_log', __DIR__ . '/registro_errors.log');
-error_log("Início do processamento de registro");
+error_log('Início do processamento de registro');
 // Configurações de sessão
 session_set_cookie_params([
     'lifetime' => 86400,
@@ -28,8 +57,8 @@ if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    error_log("POST recebido: " . print_r($_POST, true));
-    
+    error_log('POST recebido: ' . print_r($_POST, true));
+
     // Validação CSRF
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die(json_encode(['error' => 'Token CSRF inválido']));
@@ -38,13 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $requiredFields = ['nome', 'email', 'password', 'documento'];
 
     $missingFields = [];
-    
+
     foreach ($requiredFields as $field) {
         if (!isset($_POST[$field]) || empty($_POST[$field])) {
             $missingFields[] = $field;
         }
     }
-    
+
     if (!empty($missingFields)) {
         die(json_encode(['error' => 'Por favor, preencha todos os campos obrigatórios: ' . implode(', ', $missingFields)]));
     }
@@ -71,15 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Verifica se email já existe
-    $sql_check = "SELECT H_id_hospede FROM hospedes WHERE H_email = ?";
+    $sql_check = 'SELECT H_id_hospede FROM hospedes WHERE H_email = ?';
     $stmt_check = $conexao->prepare($sql_check);
 
     if (!$stmt_check) {
-        error_log("Erro ao preparar consulta de verificação: " . $conexao->error);
+        error_log('Erro ao preparar consulta de verificação: ' . $conexao->error);
         die(json_encode(['error' => 'Erro no sistema. Por favor, tente novamente mais tarde.']));
     }
 
-    $stmt_check->bind_param("s", $email);
+    $stmt_check->bind_param('s', $email);
     $stmt_check->execute();
 
     if ($stmt_check->get_result()->num_rows > 0) {
@@ -92,30 +121,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conexao->begin_transaction();
 
-$sql = "INSERT INTO hospedes (
+        $sql = 'INSERT INTO hospedes (
     H_nome, H_email, H_senha, 
     H_documento_ident, H_token_verificacao, H_token_expira,
     H_verificado_email, H_aceitou_termos_uso
-) VALUES (?, ?, ?, ?, ?, ?, 0, 1)";
+) VALUES (?, ?, ?, ?, ?, ?, 0, 1)';
 
-$stmt = $conexao->prepare($sql);
-if (!$stmt) {
-    throw new Exception("Erro ao preparar a consulta: " . $conexao->error);
-}
+        $stmt = $conexao->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Erro ao preparar a consulta: ' . $conexao->error);
+        }
 
-$stmt->bind_param(
-    "ssssss", 
-    $nome, $email, $senha_hash, 
-    $documento, $token, $token_expira
-);
-
+        $stmt->bind_param(
+            'ssssss',
+            $nome, $email, $senha_hash,
+            $documento, $token, $token_expira
+        );
 
         if (!$stmt->execute()) {
-            throw new Exception("Erro ao executar a consulta: " . $stmt->error);
+            throw new Exception('Erro ao executar a consulta: ' . $stmt->error);
         }
-$subject = " Verifique o seu email - Quinta Flores";
+        $subject = ' Verifique o seu email - Quinta Flores';
 
-$body = '
+        $body = '
 <div style="font-family: Arial, sans-serif; background-color: #f0f8ff; padding: 30px; color: #333;">
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 35px; text-align: center;">
     <img src="cid:logotipo_cid" alt="Logotipo Quinta Flores" style="max-width: 140px; margin-bottom: 25px;">
@@ -139,10 +167,10 @@ $body = '
         }
     } catch (Exception $e) {
         $conexao->rollback();
-        error_log("Erro no registro: " . $e->getMessage());
+        error_log('Erro no registro: ' . $e->getMessage());
         die(json_encode(['error' => 'Ocorreu um erro durante o registro: ' . $e->getMessage()]));
     }
 } else {
-    header("Location: pagina_login.php");
+    header('Location: pagina_login.php');
     exit();
 }

@@ -1,4 +1,24 @@
 <?php
+/*
+ * ============================================================
+ *   Configuração de Email (PHPMailer) - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, configuração)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *
+ *   Estrutura da Página:
+ *     1. Definições de email (host, user, senha)
+ *     2. Funções utilitárias para envio
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Definições de Email =====================
 // Verifica se é uma requisição POST (login)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Configura o cabeçalho para resposta JSON
@@ -27,15 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => 'Email inválido.']);
         exit;
     }
+
     // Função para verificar usuário
-    function verificarUsuario($conexao, $email, $senha, $tabela, $emailCol, $senhaCol, $idCol, $nomeCol) {
+    function verificarUsuario($conexao, $email, $senha, $tabela, $emailCol, $senhaCol, $idCol, $nomeCol)
+    {
         $sql_code = "SELECT * FROM $tabela WHERE $emailCol = ?";
         $stmt = $conexao->prepare($sql_code);
         if (!$stmt) {
-            error_log("Erro ao preparar consulta: " . $conexao->error);
+            error_log('Erro ao preparar consulta: ' . $conexao->error);
             return false;
         }
-        $stmt->bind_param("s", $email);
+        $stmt->bind_param('s', $email);
         $stmt->execute();
         $sql_query = $stmt->get_result();
 
@@ -47,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         return false;
     }
+
     // Verifica se é funcionário
     $usuario = verificarUsuario($conexao, $email, $senha, 'funcionarios', 'F_email', 'F_senha', 'F_id_funcionario', 'F_nome');
     if ($usuario) {
@@ -63,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Log de login
         $log_sql = "INSERT INTO logs_acesso (usuario_id, tipo_usuario, acao, data) VALUES (?, 'funcionario', 'login', NOW())";
         $log_stmt = $conexao->prepare($log_sql);
-        $log_stmt->bind_param("i", $usuario['F_id_funcionario']);
+        $log_stmt->bind_param('i', $usuario['F_id_funcionario']);
         $log_stmt->execute();
 
         echo json_encode(['redirect' => '../admin/admin.php']);
@@ -80,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $log_sql = "INSERT INTO logs_acesso (usuario_id, tipo_usuario, acao, data) VALUES (?, 'hospede', 'login', NOW())";
         $log_stmt = $conexao->prepare($log_sql);
-        $log_stmt->bind_param("i", $usuario['H_id_hospede']);
+        $log_stmt->bind_param('i', $usuario['H_id_hospede']);
         $log_stmt->execute();
 
         echo json_encode(['redirect' => '../pagamento/pagina1.php']);
@@ -94,10 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = 'tentativa_login';
     $log_sql = "INSERT INTO logs_acesso (email, tipo_usuario, acao, data, status) VALUES (?, ?, ?, NOW(), 'falha')";
     $log_stmt = $conexao->prepare($log_sql);
-    $log_stmt->bind_param("sss", $email, $tipo, $acao);
+    $log_stmt->bind_param('sss', $email, $tipo, $acao);
     $log_stmt->execute();
 
-    sleep(min($_SESSION['login_attempts'], 5)); // antiflood com limite máximo
+    sleep(min($_SESSION['login_attempts'], 5));  // antiflood com limite máximo
 
     echo json_encode(['error' => 'Credenciais inválidas.']);
     exit;
@@ -105,4 +128,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Se não for POST, mostra o formulário normal
 $csrf_token = $_SESSION['csrf_token'] ?? bin2hex(random_bytes(32));
 $_SESSION['csrf_token'] = $csrf_token;
-include('pagina_login.php');
+include ('pagina_login.php');

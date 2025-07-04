@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../conexao.php';
-
 // Configurações globais
 define('SITE_NAME', 'Quinta Flores');
 define('PRIMARY_COLOR', '#4a8f29');
@@ -10,10 +9,8 @@ define('CONTACT_PHONE', '+351 912 418 976');
 define('CONTACT_EMAIL', 'quinta.flores2019@gmail.com');
 define('PROPERTY_ADDRESS', 'Travessa da Seara 265-Calheiros, Ponte de Lima');
 define('RNAL', 'AL123456'); // Número de registo de alojamento local
-
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__.'/reservas_errors.log');
-
 // Verificar oferta
 $oferta_info = '';
 if (isset($_SESSION['codigo_oferta'])) {
@@ -25,7 +22,6 @@ if (isset($_SESSION['codigo_oferta'])) {
     $codigo = $_SESSION['codigo_oferta'];
     $oferta_info = isset($codigos_oferta[$codigo]) ? $codigos_oferta[$codigo] : $codigo;
 }
-
 // Verificar se o ID da reserva está na sessão
 if (!isset($_SESSION['reserva_id'])) {
     error_log("Erro: ID da reserva não encontrado na sessão");
@@ -37,9 +33,7 @@ if (!isset($_SESSION['reserva_id'])) {
             </div>
           </div>');
 }
-
 $reserva_id = $_SESSION['reserva_id'];
-
 // Buscar os dados da reserva no banco
 $query = "SELECT r.*, c.C_nome as casa_nome FROM reservas r LEFT JOIN casas c ON r.R_id_casa = c.C_id_casa WHERE r.R_id_reserva = ?";
 $stmt = $conexao->prepare($query);
@@ -57,7 +51,6 @@ if ($res->num_rows === 0) {
           </div>');
 }
 $reserva = $res->fetch_assoc();
-
 // Limpar reserva_id da sessão para evitar duplicidade
 unset($_SESSION['reserva_id']);
 
@@ -70,17 +63,14 @@ $preco_total = $reserva['R_preco_total'];
 $metodo_pagamento = $reserva['R_metodo_pagamento'];
 $servicos_texto = $reserva['R_servicos'] ?? '';
 $casa_nome = $reserva['casa_nome'] ?? 'Casa de Campo';
-
 $checkin_date = new DateTime($checkin);
 $checkout_date = new DateTime($checkout);
 $diferenca = $checkin_date->diff($checkout_date);
 $num_noites = $diferenca->days;
 $preco_por_noite = 120;
 $preco_total = $num_noites * $preco_por_noite;
-
 $servicos_adicionais = [];
 $descricao_servicos = '';
-
 if (isset($_SESSION['servicos'])) {
     foreach ($_SESSION['servicos'] as $servico) {
         switch ($servico) {
@@ -112,7 +102,6 @@ if (isset($_SESSION['codigo_oferta'])) {
             break;
     }
 }
-
 // Gerar PDF
 require_once('tcpdf/tcpdf.php');
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
@@ -123,20 +112,17 @@ $pdf->SetSubject('Fatura de Alojamento Local');
 $pdf->SetMargins(15, 15, 15);
 $pdf->SetAutoPageBreak(TRUE, 15);
 $pdf->AddPage();
-
 // Cabeçalho
 $pdf->SetFont('helvetica', 'B', 16);
 $pdf->Cell(0, 8, SITE_NAME, 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 10);
 $pdf->Cell(0, 5, 'Alojamento Local • RNAL: ' . RNAL, 0, 1, 'L');
 $pdf->Cell(0, 5, 'Telefone: ' . CONTACT_PHONE . ' • Email: ' . CONTACT_EMAIL, 0, 1, 'L');
-
 // Linha divisória
 $pdf->SetDrawColor(74, 143, 41);
 $pdf->SetLineWidth(0.5);
 $pdf->Line(15, $pdf->GetY()+3, 195, $pdf->GetY()+3);
 $pdf->Ln(8);
-
 // Título
 $pdf->SetFont('helvetica', 'B', 14);
 $pdf->Cell(0, 8, 'FATURA/RECIBO', 0, 1, 'L');
@@ -144,7 +130,6 @@ $pdf->SetFont('helvetica', '', 10);
 $pdf->Cell(100, 5, 'Número: ' . str_pad($reserva_id, 5, '0', STR_PAD_LEFT), 0, 0, 'L');
 $pdf->Cell(0, 5, 'Data: ' . date('d/m/Y'), 0, 1, 'R');
 $pdf->Ln(5);
-
 // Dados do cliente
 $pdf->SetFont('helvetica', 'B', 11);
 $pdf->Cell(0, 6, 'Cliente:', 0, 1, 'L');
@@ -153,12 +138,10 @@ $pdf->Cell(0, 5, $_SESSION['nome'], 0, 1, 'L');
 $pdf->Cell(0, 5, 'Contacto: ' . (isset($_SESSION['telefone']) ? $_SESSION['telefone'] : 'Não informado'), 0, 1, 'L');
 $pdf->Cell(0, 5, 'Email: ' . $_SESSION['email'], 0, 1, 'L');
 $pdf->Ln(8);
-
 // Detalhes da reserva - Lista no lado esquerdo
 $pdf->SetFont('helvetica', 'B', 11);
 $pdf->Cell(0, 6, 'Detalhes da Estadia:', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 10);
-
 // Lista de detalhes
 $detalhes = [
     'Alojamento' => $casa_nome,
@@ -168,28 +151,22 @@ $detalhes = [
     'Nº de Hóspedes' => $num_hospedes,
     'Método de Pagamento' => $metodo_pagamento
 ];
-
 foreach ($detalhes as $label => $value) {
     $pdf->Cell(50, 5, $label . ':', 0, 0, 'L');
     $pdf->Cell(0, 5, $value, 0, 1, 'L');
 }
-
 // Adicionar oferta se existir
 if (!empty($oferta_info)) {
     $pdf->Cell(50, 5, 'Oferta Especial:', 0, 0, 'L');
     $pdf->Cell(0, 5, $oferta_info, 0, 1, 'L');
 }
-
 $pdf->Ln(5);
-
 // Tabela de valores
 $pdf->SetFont('helvetica', 'B', 10);
 $pdf->Cell(120, 7, 'Descrição', 1, 0, 'L');
 $pdf->Cell(30, 7, 'Qtd', 1, 0, 'C');
 $pdf->Cell(30, 7, 'Valor', 1, 1, 'R');
-
 $pdf->SetFont('helvetica', '', 10);
-
 // Mostrar oferta ou hospedagem normal
 if (!empty($oferta_info)) {
     $pdf->Cell(120, 7, 'Pacote Promocional (' . $oferta_info . ')', 1, 0, 'L');
@@ -200,7 +177,6 @@ if (!empty($oferta_info)) {
     $pdf->Cell(30, 7, $num_noites . ' noite' . ($num_noites > 1 ? 's' : ''), 1, 0, 'C');
     $pdf->Cell(30, 7, '€' . number_format($preco_por_noite * $num_noites, 2, ',', '.'), 1, 1, 'R');
 }
-
 // Serviços adicionais (se existirem)
 if (!empty($servicos_adicionais)) {
     foreach ($servicos_adicionais as $servico) {
@@ -339,7 +315,6 @@ try {
     ';
     $mail->AltBody = "Olá {$_SESSION['nome']},\n\nSua reserva na ".SITE_NAME." foi confirmada.\n\nDetalhes:\nCheck-in: {$checkin}\nCheck-out: {$checkout}\nHóspedes: {$num_hospedes}\nNoites: {$num_noites}\n\nServiços Adicionais:\n".implode("\n", $servicos_adicionais)."\n\nOferta: {$oferta_info}\n\nMétodo de Pagamento: {$metodo_pagamento}\n\nTotal: {$preco_total} €\n\nLocal: ".PROPERTY_ADDRESS."\n\nAtenciosamente,\nQuinta Flores";
     $mail->addStringAttachment($pdfContent, 'Fatura_Reserva_'.str_pad($reserva_id, 5, '0', STR_PAD_LEFT).'.pdf');
-    
     $ical = "BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//".SITE_NAME."//Reserva//PT

@@ -1,8 +1,25 @@
 <?php
+/*
+ * ============================================================
+ *   Inicialização de Sessão/Login - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, sessão, includes)
+ *
+ *   Estrutura da Página:
+ *     1. Inicialização de sessão
+ *     2. Inclusão de ficheiros essenciais
+ *     3. Definições globais
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Inicialização de Sessão =====================
 if (session_status() === PHP_SESSION_NONE) {
     $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
     $domain = $_SERVER['HTTP_HOST'];
-
     if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
         session_set_cookie_params([
             'lifetime' => 86400,
@@ -23,11 +40,9 @@ if (session_status() === PHP_SESSION_NONE) {
     }
     session_start();
 }
-
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
 // Debug para ver o token
 header('Content-Type: application/json');
 echo json_encode([

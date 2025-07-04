@@ -1,11 +1,40 @@
 <?php
+
+/*
+ * ============================================================
+ *   Página de Login - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica de autenticação)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, validação)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, sessão)
+ *     2. <head> com meta tags, fontes, CSS
+ *     3. Formulário de login
+ *     4. Mensagens de erro/sucesso
+ *     5. Scripts finais (JS)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-$csrf_token = $_SESSION['csrf_token']; 
+$csrf_token = $_SESSION['csrf_token'];
 
 ?>
 <!DOCTYPE html>

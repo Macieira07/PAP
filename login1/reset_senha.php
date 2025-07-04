@@ -1,4 +1,33 @@
 <?php
+
+/*
+ * ============================================================
+ *   Página de Redefinição de Senha - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica de redefinição)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, validação)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, sessão)
+ *     2. <head> com meta tags, fontes, CSS
+ *     3. Formulário de redefinição de senha
+ *     4. Mensagens de erro/sucesso
+ *     5. Scripts finais (JS)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 session_start();
 require_once '../conexao.php';
 require_once 'email_functions.php';
@@ -7,7 +36,7 @@ require_once 'email_functions.php';
 $token = $_GET['token'] ?? '';
 
 if (empty($token)) {
-    die("Token inválido ou expirado.");
+    die('Token inválido ou expirado.');
 }
 
 // Mensagens de status
@@ -21,16 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nova_senha'])) {
 
     // Validações
     if (empty($nova_senha) || empty($confirmar_senha)) {
-        $message = "Por favor, preencha todos os campos.";
+        $message = 'Por favor, preencha todos os campos.';
     } elseif ($nova_senha !== $confirmar_senha) {
-        $message = "As senhas não coincidem.";
+        $message = 'As senhas não coincidem.';
     } elseif (strlen($nova_senha) < 8) {
-        $message = "A senha deve ter pelo menos 8 caracteres.";
+        $message = 'A senha deve ter pelo menos 8 caracteres.';
     } else {
         try {
             // Verifica se o token é válido e não expirou
-            $stmt = $conexao->prepare("SELECT H_id_hospede FROM hospedes WHERE H_reset_token = ? AND H_reset_expires > NOW()");
-            $stmt->bind_param("s", $token);
+            $stmt = $conexao->prepare('SELECT H_id_hospede FROM hospedes WHERE H_reset_token = ? AND H_reset_expires > NOW()');
+            $stmt->bind_param('s', $token);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -39,28 +68,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nova_senha'])) {
                 $senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
 
                 // Atualiza a senha e limpa o token
-                $update = $conexao->prepare("UPDATE hospedes SET H_senha = ?, H_reset_token = NULL, H_reset_expires = NULL WHERE H_id_hospede = ?");
-                $update->bind_param("si", $senha_hash, $hospede['H_id_hospede']);
-                
+                $update = $conexao->prepare('UPDATE hospedes SET H_senha = ?, H_reset_token = NULL, H_reset_expires = NULL WHERE H_id_hospede = ?');
+                $update->bind_param('si', $senha_hash, $hospede['H_id_hospede']);
+
                 if ($update->execute()) {
-                    $message = "Senha redefinida com sucesso! Você já pode fazer login com a nova senha.";
-                    $message_type = "success";
+                    $message = 'Senha redefinida com sucesso! Você já pode fazer login com a nova senha.';
+                    $message_type = 'success';
                 } else {
-                    throw new Exception("Erro ao atualizar a senha.");
+                    throw new Exception('Erro ao atualizar a senha.');
                 }
             } else {
-                $message = "Token inválido ou expirado. Solicite um novo link de recuperação.";
+                $message = 'Token inválido ou expirado. Solicite um novo link de recuperação.';
             }
         } catch (Exception $e) {
-            error_log("Erro ao redefinir senha: " . $e->getMessage());
-            $message = "Ocorreu um erro ao redefinir sua senha. Por favor, tente novamente.";
+            error_log('Erro ao redefinir senha: ' . $e->getMessage());
+            $message = 'Ocorreu um erro ao redefinir sua senha. Por favor, tente novamente.';
         }
     }
 }
 
 // Verifica se o token é válido (para mostrar o formulário)
-$stmt = $conexao->prepare("SELECT H_email FROM hospedes WHERE H_reset_token = ? AND H_reset_expires > NOW()");
-$stmt->bind_param("s", $token);
+$stmt = $conexao->prepare('SELECT H_email FROM hospedes WHERE H_reset_token = ? AND H_reset_expires > NOW()');
+$stmt->bind_param('s', $token);
 $stmt->execute();
 $result = $stmt->get_result();
 $token_valido = $result->num_rows === 1;

@@ -3,7 +3,6 @@ session_start();
 require_once '../conexao.php';
 require_once 'header.php';
 $page_title = I18n::get('my_reservations');
-
 $id_hospede = $_SESSION['id'];
 
 // Consulta as reservas do hóspede
@@ -19,11 +18,9 @@ $resultado = $stmt->get_result();
 $reservas = $resultado->fetch_all(MYSQLI_ASSOC);
 ?>
 <link rel="stylesheet" href="global.css">
-
 <div class="page-title">
     <h1><i class="fas fa-calendar-alt"></i> <?= I18n::get('my_reservations') ?></h1>
 </div>
-
 <?php if (empty($reservas)): ?>
     <div class="no-results">
         <i class="fas fa-calendar-times"></i>
@@ -40,20 +37,17 @@ $reservas = $resultado->fetch_all(MYSQLI_ASSOC);
                         <?= I18n::get($reserva['R_estado']) ?>
                     </span>
                 </div>
-                
                 <div class="reserva-details">
                     <div class="detail">
                         <i class="fas fa-calendar-day"></i>
                         <span><?= I18n::get('check_in') ?>:</span>
                         <strong><?= date(I18n::get('date_format'), strtotime($reserva['R_data_checkin'])) ?></strong>
                     </div>
-                    
                     <div class="detail">
                         <i class="fas fa-calendar-day"></i>
                         <span><?= I18n::get('check_out') ?>:</span>
                         <strong><?= date(I18n::get('date_format'), strtotime($reserva['R_data_checkout'])) ?></strong>
                     </div>
-                    
                     <div class="detail">
                         <i class="fas fa-users"></i>
                         <span><?= I18n::get('guests') ?>:</span>
@@ -66,26 +60,22 @@ $reservas = $resultado->fetch_all(MYSQLI_ASSOC);
                         <strong><?= I18n::get('currency') ?><?= number_format($reserva['R_preco_total'], 2, ',', '.') ?></strong>
                     </div>
                 </div>
-                
                 <?php if (!empty($reserva['R_servicos'])): ?>
                 <div class="reserva-servicos">
                     <h4><i class="fas fa-concierge-bell"></i> <?= I18n::get('additional_services') ?></h4>
                     <p><?= htmlspecialchars($reserva['R_servicos']) ?></p>
                 </div>
                 <?php endif; ?>
-                
                 <div class="reserva-actions">
                     <?php if ($reserva['R_estado'] == 'pendente'): ?>
                         <a href="pagina3.php?reserva=<?= $reserva['R_id_reserva'] ?>" class="btn btn-primary">
                             <i class="fas fa-credit-card"></i> <?= I18n::get('payment') ?>
                         </a>
                     <?php endif; ?>
-                    
                     <?php 
                     $hoje = new DateTime();
                     $checkin = new DateTime($reserva['R_data_checkin']);
                     $diferenca = $hoje->diff($checkin)->days;
-                    
                     if ($diferenca > 10 && $reserva['R_estado'] != 'cancelada'): ?>
                         <a href="cancelar_reserva.php?id=<?= $reserva['R_id_reserva'] ?>" class="btn btn-secondary">
                             <i class="fas fa-times"></i> <?= I18n::get('cancel') ?>
@@ -96,5 +86,4 @@ $reservas = $resultado->fetch_all(MYSQLI_ASSOC);
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
-
 <?php require_once 'footer.php'; ?>

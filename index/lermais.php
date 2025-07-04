@@ -1,4 +1,41 @@
-<?php 
+<?php
+
+/*
+ * ============================================================
+ *   Página Ler Mais - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, navegação, tema)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero Section (destaque)
+ *     4. Sobre Section (história, missão, valores)
+ *     5. Alojamento Section (detalhes do espaço)
+ *     6. Atividades Section (experiências)
+ *     7. Galeria Section (fotos)
+ *     8. Testemunhos Section
+ *     9. FAQ Section
+ *    10. Localização Section
+ *    11. Contacto Section
+ *    12. Footer e scripts finais (tema, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 require_once '../i18n.php';
 if (isset($_GET['lang'])) {
     I18n::setLanguage($_GET['lang']);
@@ -12,7 +49,8 @@ $nav_links = [
     ['href' => '#localizacao', 'text' => 'Localização'],
     ['href' => '../login1/pagina_login.php', 'text' => 'Reservar', 'class' => 'nav__cta'],
 ];
-include '../components/header.php'; ?>
+include '../components/header.php';
+?>
 <!DOCTYPE html>
 <html lang="<?= I18n::getCurrentLanguage() ?>" data-theme="light">
 <head>
@@ -580,12 +618,10 @@ include '../components/header.php'; ?>
     });
   });
 </script>
-
                 </div>
             </div>
         </div>
     </section>
-
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>

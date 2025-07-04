@@ -3,12 +3,10 @@
 class I18n {
     private static $language = 'pt';
     private static $translations = [];
-
     public static function init() {
         if (!isset($_SESSION)) {
             session_start();
         }
-
         if (isset($_SESSION['language'])) {
             self::setLanguage($_SESSION['language']);
         } elseif (isset($_COOKIE['language'])) {
@@ -17,7 +15,6 @@ class I18n {
             self::setLanguage('pt');
         }
     }
-
     private static function loadTranslations() {
         // Detecta o nome da página (sem .php)
         $page = basename($_SERVER['SCRIPT_NAME'], '.php');
@@ -34,14 +31,12 @@ class I18n {
             }
         }
     }
-
     public static function setLanguage($lang) {
         self::$language = $lang;
         $_SESSION['language'] = $lang;
         setcookie('language', $lang, time() + (86400 * 30), "/"); // 30 dias
         self::loadTranslations();
     }
-
     public static function get($key, $default = '') {
         return self::$translations[$key] ?? $default;
     }
@@ -50,7 +45,6 @@ class I18n {
         return self::$language;
     }
 }
-
 // Inicializa o sistema de internacionalização
 I18n::init();
 ?>

@@ -3,7 +3,6 @@ session_start();
 require_once '../conexao.php';
 require_once 'i18n.php';
 $page_title = I18n::get('make_reservation');
-
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
@@ -14,9 +13,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr','es'])) {
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
     exit();
 }
-
 $id_hospede = $_SESSION['id'];
-
 // Consulta os períodos já reservados
 $query = "SELECT R_data_checkin, R_data_checkout FROM reservas";
 $resultado = $conexao->query($query);
@@ -28,7 +25,6 @@ while ($row = $resultado->fetch_assoc()) {
         'to' => $row['R_data_checkout']
     ];
 }
-
 function gerarDatasEntre($start, $end) {
     $dates = [];
     $current = strtotime($start);
@@ -39,14 +35,12 @@ function gerarDatasEntre($start, $end) {
     }
     return $dates;
 }
-
 $todasDatasOcupadas = [];
 foreach ($periodosOcupados as $periodo) {
     $todasDatasOcupadas = array_merge($todasDatasOcupadas, gerarDatasEntre($periodo['from'], $periodo['to']));
 }
 $todasDatasOcupadas = array_unique($todasDatasOcupadas);
 sort($todasDatasOcupadas);
-
 // PROCESSAMENTO DO FORMULÁRIO
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $checkin = $_POST['checkin'] ?? '';
@@ -86,14 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
 $num_noites = 0;
 if (!empty($_POST['checkin']) && !empty($_POST['checkout'])) {
     $checkin_date = new DateTime($_POST['checkin']);
     $checkout_date = new DateTime($_POST['checkout']);
     $num_noites = $checkin_date->diff($checkout_date)->days;
 }
-
 require_once 'header.php';
 ?>
 <!DOCTYPE html>

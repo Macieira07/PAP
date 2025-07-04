@@ -1,10 +1,12 @@
 <?php
 // i18n.php
-class I18n {
+class I18n
+{
     private static $language = 'pt';
     private static $translations = [];
 
-    public static function init() {
+    public static function init()
+    {
         if (!isset($_SESSION)) {
             session_start();
         }
@@ -18,7 +20,8 @@ class I18n {
         }
     }
 
-    private static function loadTranslations() {
+    private static function loadTranslations()
+    {
         $langFile = __DIR__ . '/lang/' . self::$language . '.php';
         if (file_exists($langFile)) {
             self::$translations = include $langFile;
@@ -28,18 +31,21 @@ class I18n {
         }
     }
 
-    public static function setLanguage($lang) {
+    public static function setLanguage($lang)
+    {
         self::$language = $lang;
         $_SESSION['language'] = $lang;
-        setcookie('language', $lang, time() + (86400 * 30), "/"); // 30 dias
+        setcookie('language', $lang, time() + (86400 * 30), '/');  // 30 dias
         self::loadTranslations();
     }
 
-    public static function get($key, $default = '') {
+    public static function get($key, $default = '')
+    {
         return self::$translations[$key] ?? $default;
     }
 
-    public static function getCurrentLanguage() {
+    public static function getCurrentLanguage()
+    {
         return self::$language;
     }
 }

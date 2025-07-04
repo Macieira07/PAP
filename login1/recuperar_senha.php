@@ -1,4 +1,32 @@
 <?php
+/*
+ * ============================================================
+ *   Página de Recuperação de Senha - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica de recuperação)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, validação)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, sessão)
+ *     2. <head> com meta tags, fontes, CSS
+ *     3. Formulário de recuperação de senha
+ *     4. Mensagens de erro/sucesso
+ *     5. Scripts finais (JS)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);

@@ -14,4 +14,4 @@ if (isset($_POST['lang'])) {
     }
 } else {
     echo json_encode(['success' => false, 'error' => 'No language specified']);
-} 
+}

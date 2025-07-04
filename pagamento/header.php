@@ -5,12 +5,10 @@ require_once 'i18n.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-
 if (!isset($_SESSION['id'])) {
     header('Location: ../login1/login.php');
     exit();
 }
-
 define('SITE_NAME', I18n::get('site_name'));
 define('PRIMARY_COLOR', '#10B981');
 define('SECONDARY_COLOR', '#047857');
@@ -25,7 +23,6 @@ define('SECONDARY_COLOR', '#047857');
     <link rel="stylesheet" href="global.css" />
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/logos/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/logos/favicon-16x16.png" />
-
     <style>
         /* Estilos para o dropdown */
         .user-dropdown, .language-selector {
@@ -167,7 +164,6 @@ define('SECONDARY_COLOR', '#047857');
         </div>
     </header>
     <main>
-
     <script>
         // Mostrar/ocultar dropdowns
         document.querySelector('.user-btn').addEventListener('click', function() {

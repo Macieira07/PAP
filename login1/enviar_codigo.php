@@ -1,4 +1,27 @@
 <?php
+/*
+ * ============================================================
+ *   API Enviar Código de Verificação - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica de envio)
+ *     - JSON (comunicação com frontend)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, headers)
+ *     2. Receção e validação dos dados do frontend
+ *     3. Geração e envio do código
+ *     4. Resposta JSON para o frontend
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 require_once '../conexao.php';
 require_once 'email_functions.php';
 

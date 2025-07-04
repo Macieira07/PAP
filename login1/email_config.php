@@ -1,4 +1,22 @@
 <?php
+
+/*
+ * ============================================================
+ *   Configuração de Email (Constantes) - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, configuração)
+ *
+ *   Estrutura da Página:
+ *     1. Definição de constantes de email
+ *     2. Inclusão em outros scripts
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Definição de Constantes =====================
 // Configurações básicas de email
 $mail_config = [
     'host' => 'smtp.gmail.com',

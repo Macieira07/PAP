@@ -1,4 +1,35 @@
 <?php 
+/*
+ * ============================================================
+ *   Página Gastronomia - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, animações, AOS)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - AOS (animações on scroll)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes, funções)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero Section (destaque)
+ *     4. Sobre Section (informações gastronómicas)
+ *     5. Galeria Section (galeria de fotos)
+ *     6. Scripts finais (AOS, tema, navegação, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 require_once '../i18n.php';
 if (isset($_GET['lang'])) {
     I18n::setLanguage($_GET['lang']);

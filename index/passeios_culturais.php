@@ -1,4 +1,36 @@
-<?php 
+<?php
+/*
+ * ============================================================
+ *   Página Passeios Culturais - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, navegação, tema)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes, traduções)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero Section (destaque)
+ *     4. Passeios Section (lista de passeios)
+ *     5. Paço de Calheiros Section
+ *     6. Galeria Section
+ *     7. Localização/Mapa Section
+ *     8. Footer e scripts finais (tema, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 // Get language from session or default to Portuguese
 session_start();
 $lang = isset($_GET['lang']) ? $_GET['lang'] : (isset($_SESSION['lang']) ? $_SESSION['lang'] : 'pt');
@@ -8,7 +40,8 @@ $_SESSION['lang'] = $lang;
 $translations = require_once "../translations/passeios_culturais_{$lang}.php";
 
 $nav_links = $translations['nav_links'];
-include '../components/header.php'; ?>
+include '../components/header.php';
+?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
@@ -472,8 +505,6 @@ include '../components/header.php'; ?>
     </style>
 </head>
 <body>
-
-
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">
@@ -485,7 +516,6 @@ include '../components/header.php'; ?>
             <i class="ri-arrow-down-s-line"></i>
         </a>
     </section>
-
     <!-- Passeios Section -->
     <section class="section" id="passeios">
         <div class="section__container">
@@ -627,7 +657,6 @@ include '../components/header.php'; ?>
             </div>
         </div>
     </section>
-
     <!-- Paço de Calheiros Section -->
     <section class="section" id="PacoCalheiros" style="background-color: var(--gray-light);">
         <div class="section__container">
@@ -650,7 +679,6 @@ include '../components/header.php'; ?>
             </div>
         </div>
     </section>
-
     <!-- Gallery Section -->
     <section class="section gallery-section" id="galeria">
         <div class="section__container">
@@ -693,7 +721,6 @@ include '../components/header.php'; ?>
             </div>
         </div>
     </section>
-
     <!-- Map Section -->
     <section class="section" id="localizacao">
         <div class="section__container">
@@ -713,7 +740,6 @@ include '../components/header.php'; ?>
             </div>
         </div>
     </section>
-
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>

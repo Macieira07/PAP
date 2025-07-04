@@ -1,4 +1,34 @@
 <?php
+/*
+ * ============================================================
+ *   Página Retiro de Catequese - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, tema)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero/Oferta Section (destaque da oferta)
+ *     4. O que está incluído (lista de benefícios)
+ *     5. Call to Action (reserva)
+ *     6. Scripts finais (tema, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 session_start();
 require_once '../conexao.php';
 require_once 'i18n.php'; // caminho correto para o i18n.php
@@ -13,8 +43,6 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr', 'es'])) {
 $page_title = I18n::get('catechism_retreat_title');
 include '../components/header.php';
 ?>
-
-
 <!DOCTYPE html>
 <html lang="<?= I18n::getCurrentLanguage() ?>" data-theme="light">
 <head>
@@ -33,7 +61,6 @@ include '../components/header.php';
     <link rel="stylesheet" href="../components/header.css">
     <link rel="stylesheet" href="../components/footer.css">
 </head>
-
 <body>
     <main class="main-content" id="sobre">
         <section class="section">
@@ -116,7 +143,6 @@ include '../components/header.php';
             </div>
         </section>
     </main>
-
     <script>
         function toggleTheme() {
             const html = document.documentElement;
@@ -148,7 +174,6 @@ include '../components/header.php';
         window.location.href = url.toString();
     }
     </script>
-
     <?php include '../components/footer.php'; ?>
     <link rel="stylesheet" href="../chatbot/chatbot.css">
 <script src="../chatbot/chatbot.js"></script>

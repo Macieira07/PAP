@@ -2,15 +2,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 session_start();
 require_once '../conexao.php';
-
-
 $success = false;
-$message = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Dados do formulário
     $nome = $_POST['nome'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -18,27 +14,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $documento = $_POST['documento'] ?? '';
 
     // Verifica se o email já está registado
-    $verifica = $conexao->prepare("SELECT H_id_hospede FROM hospedes WHERE H_email = ?");
-    $verifica->bind_param("s", $email);
+    $verifica = $conexao->prepare('SELECT H_id_hospede FROM hospedes WHERE H_email = ?');
+    $verifica->bind_param('s', $email);
     $verifica->execute();
     $resultado = $verifica->get_result();
 
     if ($resultado->num_rows > 0) {
-        $message = "Este email já está registado.";
+        $message = 'Este email já está registado.';
     } else {
         // Geração do token
         $token = bin2hex(random_bytes(16));
         $expira = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
         // Inserção do hóspede na base de dados
-        $stmt = $conexao->prepare("INSERT INTO hospedes (H_nome, H_email, H_telefone, H_documento_ident, H_token_verificacao, H_token_expira, H_verificado_email) 
-                                   VALUES (?, ?, ?, ?, ?, ?, 0)");
-        $stmt->bind_param("ssssss", $nome, $email, $telefone, $documento, $token, $expira);
+        $stmt = $conexao->prepare('INSERT INTO hospedes (H_nome, H_email, H_telefone, H_documento_ident, H_token_verificacao, H_token_expira, H_verificado_email) 
+                                   VALUES (?, ?, ?, ?, ?, ?, 0)');
+        $stmt->bind_param('ssssss', $nome, $email, $telefone, $documento, $token, $expira);
 
         if ($stmt->execute()) {
             $link = "http://localhost/PAP/login1/verify.php?token=$token";
 
-            $subject = "Verifique seu email - Quinta Flores";
+            $subject = 'Verifique seu email - Quinta Flores';
             $body = "<h2>Bem-vindo à Quinta Flores!</h2>
                      <p>A sua conta foi criada com sucesso! Obrigado por se registar. Por favor, clique no link abaixo para verificar o seu email:</p>
                      <p><a href='$link'>Verificar Email</a></p>";
@@ -49,33 +45,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (mail($email, $subject, $body, $headers)) {
                 $success = true;
-                $message = "Registo efetuado com sucesso! Verifique o seu email para ativar a conta.";
+                $message = 'Registo efetuado com sucesso! Verifique o seu email para ativar a conta.';
             } else {
-                $message = "Erro ao enviar email de verificação.";
+                $message = 'Erro ao enviar email de verificação.';
             }
         } else {
-            $message = "Erro ao registar hóspede.";
+            $message = 'Erro ao registar hóspede.';
         }
     }
 } elseif (isset($_GET['token'])) {
     $token = $_GET['token'];
 
-    $verificaToken = $conexao->prepare("SELECT H_id_hospede FROM hospedes WHERE H_token_verificacao = ? AND H_token_expira > NOW()");
-    $verificaToken->bind_param("s", $token);
+    $verificaToken = $conexao->prepare('SELECT H_id_hospede FROM hospedes WHERE H_token_verificacao = ? AND H_token_expira > NOW()');
+    $verificaToken->bind_param('s', $token);
     $verificaToken->execute();
     $resultado = $verificaToken->get_result();
 
     if ($resultado->num_rows > 0) {
-        $atualiza = $conexao->prepare("UPDATE hospedes SET H_verificado_email = 1 WHERE H_token_verificacao = ?");
-        $atualiza->bind_param("s", $token);
+        $atualiza = $conexao->prepare('UPDATE hospedes SET H_verificado_email = 1 WHERE H_token_verificacao = ?');
+        $atualiza->bind_param('s', $token);
         $atualiza->execute();
         $success = true;
-        $message = "Email verificado com sucesso!";
+        $message = 'Email verificado com sucesso!';
     } else {
-        $message = "Token inválido ou expirado.";
+        $message = 'Token inválido ou expirado.';
     }
 } else {
-    $message = "Acesso inválido.";
+    $message = 'Acesso inválido.';
 }
 ?>
 <!DOCTYPE html>

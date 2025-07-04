@@ -19,12 +19,10 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr','es'])) {
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
     exit();
 }
-
 // Configurações
 define('BACKGROUND_COLOR', '#f8f9fa');
 define('TEXT_COLOR', '#333333');
 define('LIGHT_COLOR', '#f8f8ff');
-
 // Dados de transferência bancária por país
 $dados_bancarios = [
     'PT' => [
@@ -70,7 +68,6 @@ $dados_bancarios = [
         'titular' => 'Quinta dei Fiori SRL'
     ]
 ];
-
 // Verificar dados essenciais da sessão
 $required_session_vars = ['checkin', 'checkout', 'num_hospedes', 'nome', 'email', 'pais_regiao'];
 foreach ($required_session_vars as $var) {
@@ -79,17 +76,14 @@ foreach ($required_session_vars as $var) {
         exit();
     }
 }
-
 // Conectar à base de dados
 if ($conexao->connect_error) {
     die('<div class="error-container" style="padding: 20px; color: red;">'.I18n::get('error_message').'</div>');
 }
-
 // Cálculo do número de noites
 $checkin = new DateTime($_SESSION['checkin']);
 $checkout = new DateTime($_SESSION['checkout']);
 $num_noites = $checkin->diff($checkout)->days;
-
 // Cálculo do preço total
 $preco_total = 120 * $num_noites; // Preço base por noite
 if (isset($_SESSION['servicos'])) {
@@ -113,9 +107,7 @@ if (isset($_SESSION['servicos'])) {
         }
     }
 }
-
 $mensagem_erro = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $metodo_pagamento = $_POST['pagamento'] ?? '';
     $dados_pagamento = [];
@@ -259,7 +251,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensagem_erro = implode("<br>", $erros);
     }
 }
-
 // Obtém os dados bancários para o país selecionado
 $pais = $_SESSION['pais_regiao'] ?? 'PT';
 $info_bancaria = $dados_bancarios[$pais] ?? $dados_bancarios['PT'];

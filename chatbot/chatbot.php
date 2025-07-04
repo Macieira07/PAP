@@ -1,3 +1,32 @@
+<!--
+============================================================
+  Componente Chatbot (HTML) - Quinta Flores
+============================================================
+
+  Linguagens Utilizadas:
+    - HTML5 (estrutura)
+    - PHP (i18n, includes)
+    - CSS3 (estilos externos)
+    - JavaScript (interatividade, chatbot.js)
+
+  Bibliotecas e Frameworks:
+    - Font Awesome & Remixicon (ícones)
+    - Google Fonts (fontes personalizadas)
+    - i18n (internacionalização, multi-idioma)
+
+  Estrutura do Componente:
+    1. Container principal do chatbot
+    2. Cabeçalho com título e botões
+    3. Área de mensagens
+    4. Input e botões rápidos
+    5. Botão flutuante de toggle
+
+  Autor: [Seu Nome ou Equipa]
+  Última atualização: [Data]
+============================================================
+-->
+// ===================== 1. Container Principal =====================
+
 <div id="chatbot-container" class="chatbot-hidden">
     <div class="chatbot-header">
         <h3><i class="fa-solid fa-leaf" style="margin-right:8px;"></i><?= I18n::get('chatbot_title', 'Assistente Virtual') ?></h3>

@@ -1,4 +1,30 @@
-document.addEventListener('DOMContentLoaded', function() {
+/*
+============================================================
+  Chatbot Interativo - Quinta Flores
+============================================================
+
+  Linguagens Utilizadas:
+    - JavaScript (ES6+)
+    - HTML5 (DOM)
+    - CSS3 (estilos externos)
+
+  Bibliotecas e Frameworks:
+    - Nenhuma dependência externa obrigatória
+    - Font Awesome & Remixicon (ícones)
+
+  Estrutura do Script:
+    1. Inicialização e eventos principais
+    2. Funções de envio e resposta
+    3. Respostas multilíngues e personalizadas
+    4. Armazenamento local da conversa
+    5. Efeitos visuais e sonoros
+
+  Autor: [Seu Nome ou Equipa]
+  Última atualização: [Data]
+============================================================
+*/
+// ===================== 1. Inicialização e Eventos =====================
+document.addEventListener('DOMContentLoaded', function () {
     const chatbotContainer = document.getElementById('chatbot-container');
     const chatbotToggle = document.getElementById('chatbot-toggle');
     const chatbotClose = document.getElementById('chatbot-close');
@@ -28,17 +54,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     //limpar o chat
     document.getElementById('chatbot-clear').addEventListener('click', () => {
-  if (confirm('Tem certeza que deseja limpar a conversa?')) {
-    chatbotMessages.innerHTML = '';
-    // Se usares armazenamento local:
-    localStorage.removeItem('chatbotConversation');
-  }
-});
+        if (confirm('Tem certeza que deseja limpar a conversa?')) {
+            chatbotMessages.innerHTML = '';
+            // Se usares armazenamento local:
+            localStorage.removeItem('chatbotConversation');
+        }
+    });
 
 
     // Enviar mensagem ao clicar no botão ou pressionar Enter
     chatbotSend.addEventListener('click', sendMessage);
-    chatbotInput.addEventListener('keypress', function(e) {
+    chatbotInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             sendMessage();
         }
@@ -46,26 +72,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Botões rápidos
     quickButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const query = this.getAttribute('data-query');
             sendQuickQuery(query);
         });
     });
     //Quando o bot "está a pensar", mostra um balão com "Digitando..." antes da resposta aparecer.
     function showTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.classList.add('message', 'bot-message', 'typing');
-    typingDiv.textContent = 'Digitando...';
-    chatbotMessages.appendChild(typingDiv);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    return typingDiv;
+        const typingDiv = document.createElement('div');
+        typingDiv.classList.add('message', 'bot-message', 'typing');
+        typingDiv.textContent = 'Digitando...';
+        chatbotMessages.appendChild(typingDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        return typingDiv;
     }
 
     // Efeitos sonoros sutis
     const sndSend = new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae7b2.mp3'); // som leve de envio
     const sndReceive = new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae7b2.mp3'); // som leve de recebimento (pode trocar por outro)
-    function playSendSound() { try { sndSend.currentTime = 0; sndSend.play(); } catch(e){} }
-    function playReceiveSound() { try { sndReceive.currentTime = 0; sndReceive.play(); } catch(e){} }
+    function playSendSound() { try { sndSend.currentTime = 0; sndSend.play(); } catch (e) { } }
+    function playReceiveSound() { try { sndReceive.currentTime = 0; sndReceive.play(); } catch (e) { } }
 
     function sendMessage() {
         const message = chatbotInput.value.trim();
@@ -82,54 +108,54 @@ document.addEventListener('DOMContentLoaded', function() {
         processUserMessage(query);
     }
     function addUserMessage(text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'user-message');
-    messageDiv.innerHTML = `<span class='avatar user-avatar'></span><span class='msg-text'>${text}</span>`;
-    chatbotMessages.appendChild(messageDiv);
-    scrollToBottom();
-    saveConversation();
-}
-function addBotMessage(text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'bot-message');
-    messageDiv.innerHTML = `<span class='avatar bot-avatar'></span><span class='msg-text'>${text}</span>`;
-    chatbotMessages.appendChild(messageDiv);
-    scrollToBottom();
-    saveConversation();
-}
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'user-message');
+        messageDiv.innerHTML = `<span class='avatar user-avatar'></span><span class='msg-text'>${text}</span>`;
+        chatbotMessages.appendChild(messageDiv);
+        scrollToBottom();
+        saveConversation();
+    }
+    function addBotMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'bot-message');
+        messageDiv.innerHTML = `<span class='avatar bot-avatar'></span><span class='msg-text'>${text}</span>`;
+        chatbotMessages.appendChild(messageDiv);
+        scrollToBottom();
+        saveConversation();
+    }
     function scrollToBottom() {
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-function processUserMessage(message) {
-    // Mostrar indicador de digitação
-    const typingIndicator = document.createElement('div');
-    typingIndicator.classList.add('message', 'bot-message', 'typing-indicator');
-    typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-    chatbotMessages.appendChild(typingIndicator);
-    scrollToBottom();
+    function processUserMessage(message) {
+        // Mostrar indicador de digitação
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('message', 'bot-message', 'typing-indicator');
+        typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+        chatbotMessages.appendChild(typingIndicator);
+        scrollToBottom();
 
-    setTimeout(() => {
-        // Remove o indicador de digitação
-        typingIndicator.remove();
+        setTimeout(() => {
+            // Remove o indicador de digitação
+            typingIndicator.remove();
 
-        // Obter resposta do bot e mostrar com animação
-        const response = getBotResponse(message.toLowerCase());
-        addBotMessage(response);
-        playReceiveSound();
-    }, 1200); // duração do "typing" em ms
-}
+            // Obter resposta do bot e mostrar com animação
+            const response = getBotResponse(message.toLowerCase());
+            addBotMessage(response);
+            playReceiveSound();
+        }, 1200); // duração do "typing" em ms
+    }
 
-function getQuickQueryText(query) {
-    const texts = {
-        'reservas': 'Gostaria de informações sobre reservas',
-        'preços': 'Quero saber sobre preços',
-        'localização': 'Como chegar à Quinta Flores?',
-        'contato': 'Quero entrar em contato',
-        'valiacao': 'Gostaria de deixar uma avaliação'
-    };
-    return texts[query] || query;
-}
+    function getQuickQueryText(query) {
+        const texts = {
+            'reservas': 'Gostaria de informações sobre reservas',
+            'preços': 'Quero saber sobre preços',
+            'localização': 'Como chegar à Quinta Flores?',
+            'contato': 'Quero entrar em contato',
+            'valiacao': 'Gostaria de deixar uma avaliação'
+        };
+        return texts[query] || query;
+    }
 
     function getQuickQueryText(query) {
         const texts = {
@@ -142,14 +168,14 @@ function getQuickQueryText(query) {
     }
     //Desativar input e botão "Enviar" enquanto o bot responde
     function disableInput() {
-  chatbotInput.disabled = true;
-  chatbotSend.disabled = true;
-}
+        chatbotInput.disabled = true;
+        chatbotSend.disabled = true;
+    }
 
-function enableInput() {
-  chatbotInput.disabled = false;
-  chatbotSend.disabled = false;
-}
+    function enableInput() {
+        chatbotInput.disabled = false;
+        chatbotSend.disabled = false;
+    }
 
 
     // 3. Estrutura multilíngue (exemplo, pode expandir depois)

@@ -1,4 +1,35 @@
 <?php
+
+/*
+ * ============================================================
+ *   Página Trilhos e Natureza - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, navegação, tema)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero Section (destaque)
+ *     4. Trilhos Section (lista de trilhos)
+ *     5. Mapa/Localização Section
+ *     6. Footer e scripts finais (tema, chatbot)
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 require_once '../i18n.php';
 // Initialize the translation system
 I18n::init();
@@ -6,12 +37,13 @@ $nav_links = [
     ['href' => '#trilhos', 'text' => I18n::get('nav_trilhos', 'Trilhos')],
     ['href' => '#Localizacao', 'text' => I18n::get('nav_localizacao', 'Localização')],
     ['href' => '../login1/pagina_login.php', 'text' => I18n::get('nav_reservar', 'Reservar'), 'class' => 'nav__cta'],
-]; 
+];
 // Set the language based on the URL parameter if provided
 if (isset($_GET['lang'])) {
     I18n::setLanguage($_GET['lang']);
 }
-include '../components/header.php'; ?>
+include '../components/header.php';
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>

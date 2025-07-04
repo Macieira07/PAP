@@ -8,7 +8,6 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr','es'])) {
 }
 require_once 'header.php';
 $page_title = I18n::get('profile');
-
 $query = "SELECT * FROM hospedes WHERE H_id_hospede = ?";
 $stmt = $conexao->prepare($query);
 $stmt->bind_param("i", $_SESSION['id']);
@@ -79,7 +78,6 @@ $usuario = $resultado->fetch_assoc();
         </div>
     </div>
 </div>
-
 <script>
 document.getElementById('editProfileBtn').addEventListener('click', function() {
     document.querySelector('.profile-info').style.display = 'none';

@@ -8,13 +8,11 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['pt', 'en', 'fr','es'])) {
 }
 require_once 'header.php';
 $page_title = I18n::get('change_password');
-
 if (isset($_SESSION['senha_erro'])) {
     $erro = $_SESSION['senha_erro'];
     unset($_SESSION['senha_erro']);
 }
 ?>
-
 <div class="profile-container">
     <h1><i class="fas fa-key"></i> <?= I18n::get('change_password') ?></h1>
     
@@ -60,5 +58,4 @@ if (isset($_SESSION['senha_erro'])) {
         </div>
     </form>
 </div>
-
 <?php require_once 'footer.php'; ?>

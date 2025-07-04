@@ -1,9 +1,32 @@
 <?php
+/*
+ * ============================================================
+ *   API Enviar Mensagem de Contacto - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e conexão)
+ *     - JSON (comunicação com frontend)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - PHPMailer (envio de emails)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (includes, headers)
+ *     2. Receção e validação dos dados do frontend
+ *     3. Envio de email para administração
+ *     4. Resposta JSON para o frontend
+ *
+ *   Autor: [Seu Nome ou Equipa]
+ *   Última atualização: [Data]
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
 header('Content-Type: application/json');
 session_start();
 
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 require '../vendor/autoload.php';  // Ajusta caminho se necessário
 
@@ -35,12 +58,12 @@ $mail = new PHPMailer(true);
 try {
     // Configuração SMTP (mantenha suas configurações atuais)
     $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'quinta.flores2019@gmail.com';
-    $mail->Password   = 'cbra fjzb nizo lilw';
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'quinta.flores2019@gmail.com';
+    $mail->Password = 'cbra fjzb nizo lilw';
     $mail->SMTPSecure = 'tls';
-    $mail->Port       = 587;
+    $mail->Port = 587;
 
     // Remetente e destinatário
     $mail->setFrom('quinta.flores2019@gmail.com', 'Quinta Flores');
@@ -50,16 +73,16 @@ try {
     // Conteúdo do email
     $mail->isHTML(true);
     $mail->Subject = 'Novo Contacto: ' . $subject;
-    $mail->Body    = "
+    $mail->Body = '
         <h2>Novo Contacto Recebido</h2>
-        <p><strong>Nome:</strong> {$name}</p>
-        <p><strong>Email:</strong> {$email}</p>
-        <p><strong>Assunto:</strong> {$subject}</p>
+        <p><strong>Nome:</strong> ' . htmlspecialchars($name) . '</p>
+        <p><strong>Email:</strong> ' . htmlspecialchars($email) . '</p>
+        <p><strong>Assunto:</strong> ' . htmlspecialchars($subject) . '</p>
         <p><strong>Mensagem:</strong></p>
-        <div>" . nl2br(htmlspecialchars($message)) . "</div>
+        <div>' . nl2br(htmlspecialchars($message)) . '</div>
         <hr>
         <p>Este email foi enviado através do formulário de contacto do website.</p>
-    ";
+    ';
     $mail->AltBody = "Nome: {$name}\nEmail: {$email}\nAssunto: {$subject}\n\nMensagem:\n{$message}";
 
     $mail->send();

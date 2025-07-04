@@ -2,7 +2,7 @@
 .hero {
     height: 100vh;
     width: 100%;
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../assets/images/trilhos_e_natureza.avif');
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../assets/images/trilhos_e_natureza.avif');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -195,19 +195,39 @@
 [data-theme="dark"] .hero__title,
 [data-theme="dark"] .hero__subtitle,
 [data-theme="dark"] .hero__cta {
-  color: #fff !important;
+    color: #fff !important;
 }
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
-    40% { transform: translateY(-20px) translateX(-50%); }
-    60% { transform: translateY(-10px) translateX(-50%); }
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0) translateX(-50%);
+    }
+
+    40% {
+        transform: translateY(-20px) translateX(-50%);
+    }
+
+    60% {
+        transform: translateY(-10px) translateX(-50%);
+    }
 }
 
 /* Responsive Design */
@@ -243,10 +263,11 @@
     --white: #F9FAFB;
     --gray-light: #F3F4F6;
     --transition: all 0.3s ease-in-out;
-    --shadow: 0 4px 20px rgba(0,0,0,0.1);
-    --shadow-hover: 0 10px 25px rgba(0,0,0,0.15);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
     --border-radius: 12px;
 }
+
 [data-theme="dark"] {
     --bg-main: #181818;
     --card-bg: #232323;
@@ -257,36 +278,44 @@
 }
 
 [data-theme="dark"] .header {
-  background: rgba(24,24,24,0.98) !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  border-bottom: 1px solid #222;
+    background: rgba(24, 24, 24, 0.98) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid #222;
 }
+
 [data-theme="dark"] .nav__link {
-  color: #fff !important;
+    color: #fff !important;
 }
+
 [data-theme="dark"] .nav__link:hover {
-  color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
 }
+
 [data-theme="dark"] .theme-toggle {
-  background: var(--primary-color) !important;
-  color: #fff !important;
+    background: var(--primary-color) !important;
+    color: #fff !important;
 }
+
 [data-theme="dark"] .logo img {
-  filter: none !important;
+    filter: none !important;
 }
+
 [data-theme="dark"] .language-btn {
-  background: transparent;
-  border: 2px solid transparent;
-  color: #fff;
-  transition: background 0.2s, border 0.2s;
+    background: transparent;
+    border: 2px solid transparent;
+    color: #fff;
+    transition: background 0.2s, border 0.2s;
 }
-[data-theme="dark"] .language-btn:hover, [data-theme="dark"] .language-btn.active {
-  background: #fff;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
+
+[data-theme="dark"] .language-btn:hover,
+[data-theme="dark"] .language-btn.active {
+    background: #fff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
+
 [data-theme="dark"] .language-btn img {
-  filter: none;
+    filter: none;
 }
 
 [data-theme="dark"] .footer,
@@ -298,8 +327,9 @@
 [data-theme="dark"] .newsletter h4,
 [data-theme="dark"] .newsletter input,
 [data-theme="dark"] .newsletter button {
-  color: #fff !important;
+    color: #fff !important;
 }
+
 [data-theme="dark"] .footer__link a:hover {
-  color: var(--primary-color) !important;
-} 
+    color: var(--primary-color) !important;
+}

@@ -1,17 +1,55 @@
-<?php 
+<?php
+
+/*
+ * ============================================================
+ *   Página Inicial - Quinta Flores
+ * ============================================================
+ *
+ *   Linguagens Utilizadas:
+ *     - PHP (backend, lógica e includes)
+ *     - HTML5 (estrutura)
+ *     - CSS3 (estilos, arquivos externos)
+ *     - JavaScript (interatividade, validação, AJAX)
+ *
+ *   Bibliotecas e Frameworks:
+ *     - Font Awesome & Remixicon (ícones)
+ *     - Google Fonts (fontes personalizadas)
+ *     - TinyMCE (editor rich text, incluído em outras páginas)
+ *     - PHPMailer (envio de emails, backend)
+ *     - TCPDF/FPDF (geração de PDFs, backend)
+ *     - i18n (internacionalização, multi-idioma)
+ *     - Chatbot customizado (JS/PHP)
+ *
+ *   Estrutura da Página:
+ *     1. Configuração inicial PHP (i18n, includes, funções)
+ *     2. <head> com meta tags, fontes, ícones, CSS
+ *     3. Hero Section (destaque)
+ *     4. Booking Section (formulário de reserva)
+ *     5. About Section (sobre o alojamento)
+ *     6. Ofertas Section (promoções)
+ *     7. Gallery Section (galeria de fotos)
+ *     8. Amenities Section (comodidades)
+ *     9. Testimonials Section (depoimentos)
+ *    10. Location Section (localização e mapa)
+ *    11. Footer e scripts finais (tradução, chatbot, tema)
+ *
+ * ============================================================
+ */
+// ===================== 1. Configuração Inicial PHP =====================
+// Carrega sistema de internacionalização, links de navegação, includes e funções utilitárias
 require_once 'i18n.php';
 if (isset($_GET['lang'])) {
-    I18n::setLanguage($_GET['lang']);
+  I18n::setLanguage($_GET['lang']);
 }
 $nav_links = [
-    ['href' => '#about', 'text' => 'Sobre'],
-    ['href' => '#rooms', 'text' => 'Ofertas'],
-    ['href' => '#gallery', 'text' => 'Galeria'],
-    ['href' => '#amenities', 'text' => 'Comodidades'],
-    ['href' => '#testimonials', 'text' => 'Comentários'],
-    ['href' => '#location', 'text' => 'Localização'],
+  ['href' => '#about', 'text' => 'Sobre'],
+  ['href' => '#rooms', 'text' => 'Ofertas'],
+  ['href' => '#gallery', 'text' => 'Galeria'],
+  ['href' => '#amenities', 'text' => 'Comodidades'],
+  ['href' => '#testimonials', 'text' => 'Comentários'],
+  ['href' => '#location', 'text' => 'Localização'],
 ];
-include 'components/header.php'; 
+include 'components/header.php';
 $aboutData = json_decode(file_get_contents(__DIR__ . '/data/about.json'), true);
 
 // Carregar todas as configurações de imagens
@@ -19,14 +57,16 @@ $settingsFile = __DIR__ . '/data/about.json';
 $settings = file_exists($settingsFile) ? json_decode(file_get_contents($settingsFile), true) : [];
 
 // Função para obter imagem, com fallback para uma imagem padrão
-function getImage($key, $default) {
-    global $settings;
-    return 'assets/images/' . ($settings[$key] ?? $default);
+function getImage($key, $default)
+{
+  global $settings;
+  return 'assets/images/' . ($settings[$key] ?? $default);
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
 <head>
+    <!-- ===================== 2. <head>: meta tags, fontes, ícones, CSS ===================== -->
     <!-- Meta tags otimizadas para mobile -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -51,7 +91,7 @@ function getImage($key, $default) {
     <link rel="icon" type="image/png" href="../assets/logos/logotipo1.png" sizes="1000x1000">
 </head>
   <body>
-    <!-- Hero Section -->
+    <!-- ===================== 3. Hero Section: destaque inicial ===================== -->
     <section class="hero">
         <div class="hero__content">
             <h1 class="hero__title"><?= I18n::get('hero_title', 'Bem-vindo à Quinta Flores') ?></h1>
@@ -62,7 +102,7 @@ function getImage($key, $default) {
             <i class="ri-arrow-down-s-line"></i>
         </a>
     </section>
- <!-- Boking Section -->
+ <!-- ===================== 4. Booking Section: formulário de reserva ===================== -->
  <section class="booking__container" id="booking">
   <form class="booking__form" id="bookingForm">
     <div class="input__group">
@@ -93,6 +133,7 @@ function getImage($key, $default) {
   <div id="availabilityResult" class="availability__message"></div>
 </section>
 <script>
+// ===================== JS: Validação e feedback do formulário de reserva =====================
 // Função para obter o ícone de acordo com o tipo de mensagem
 function getIconForType(type) {
   switch (type) {
@@ -238,8 +279,8 @@ function checkAvailability() {
 }
 </script>
 
-    <!-- About Section -->
-    <section class="section__container about__container" id="about">
+    <!-- ===================== 5. About Section: informações institucionais ===================== -->
+      <section class="section__container about__container" id="about">
 <div class="about__image">
   <img src="<?= htmlspecialchars(getImage('imagem', 'foto_principal_2.jpeg')) ?>" alt="sobre nós">
 </div>
@@ -257,7 +298,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         </div>
       </div>
     </section>
-<!-- Ofertas Section -->
+<!-- ===================== 6. Ofertas Section: promoções e experiências ===================== -->
 <section class="section__container rooms__container" id="rooms">
   <p class="section__subheader"><?= I18n::get('rooms_subheader', 'Momentos inesquecíveis com condições especiais') ?></p>
   <h2 class="section__header"><?= I18n::get('rooms_header', 'Descobre as Nossas Ofertas Especiais') ?></h2>
@@ -276,7 +317,6 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         <a href="index/tempo_namorar.php" class="room__link"><?= I18n::get('room_link_amor', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
-
     <div class="room__card">
       <div class="room__image">
         <img src="<?= htmlspecialchars(getImage('room_party', 'party.avif')) ?>" alt="Oferta Festa com Amigos">
@@ -302,9 +342,9 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         <a href="index/retiro_catequese.php" class="room__link"><?= I18n::get('room_link_religious', 'Planeie a sua experiência') ?></a>
       </div>
     </div>
-
   </div>
 </section>
+<!-- ===================== 7. Gallery Section: galeria de fotos ===================== -->
 <section class="gallery-section" id="gallery">
   <p class="section__subheader"><?= I18n::get('gallery_subheader', 'Algumas fotos do Alojamento') ?></p>
   <h2 class="section__header"><?= I18n::get('gallery_header', 'Galeria') ?></h2>
@@ -378,9 +418,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     });
   </script>
 </section>
-
-
-<!--Comodidades -->
+<!-- ===================== 8. Amenities Section: lista de comodidades ===================== -->
 <section class="section__container comodidades" id="amenities">
   <p class="section__subheader"><?= I18n::get('amenities_subheader', 'O que este espaço oferece') ?></p>
   <h2 class="section__header"><?= I18n::get('amenities_header', 'Comodidades') ?></h2>
@@ -437,7 +475,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
     </ul>
   </div>
 </section>
-    <!-- Testimonials Section -->
+    <!-- ===================== 9. Testimonials Section: depoimentos ===================== -->
     <section class="testimonials" id="testimonials">
       <p class="section__subheader"><?= I18n::get('testimonials_subheader', 'Comentários') ?></p>
       <h2 class="section__header"><?= I18n::get('testimonials_header', 'O Que Dizem os Nossos Hóspedes') ?></h2>
@@ -509,9 +547,8 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
   <span><?= I18n::get('testimonials_btn', 'Avalie nos') ?></span>
   <i class="ri-arrow-down-s-line"></i>
 </button>
-
-    </section>
-    <!-- Location Section -->
+</section>
+    <!-- ===================== 10. Location Section: localização e mapa ===================== -->
     <section class="section__container location" id="location">
       <p class="section__subheader"><?= I18n::get('location_subheader', 'Como chegar') ?></p>
       <h2 class="section__header"><?= I18n::get('location_header', 'Localização') ?></h2>
@@ -544,6 +581,7 @@ Venha descobrir um lugar onde a natureza e o bem-estar se encontram, e crie mem�
         </div>
       </div>
     </section>
+<!-- ===================== 11. Footer e scripts finais: tradução, chatbot, tema ===================== -->
 <?php include 'components/footer.php'; ?>
 <div id="toast" class="toast"></div>
     <script src="assets/i18n/translator.js"></script>
