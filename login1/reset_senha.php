@@ -227,7 +227,7 @@ $email = $token_valido ? $result->fetch_assoc()['H_email'] : '';
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                 <button type="submit">Redefinir Senha</button>
             </form>
-        <?php elseif (!$token_valido): ?>
+        <?php elseif (!$token_valido && $message_type !== 'success'): ?>
             <div class="alert alert-error">
                 Token inválido ou expirado. Por favor, solicite um novo link de recuperação.
             </div>

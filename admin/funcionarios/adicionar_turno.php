@@ -2,34 +2,8 @@
 require '../../conexao.php';
 session_start();
 
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    $_SESSION['mensagem'] = "ID do turno não fornecido.";
-    $_SESSION['tipo_mensagem'] = "erro";
-    header("Location: funcionarios.php");
-    exit;
-}
-
-$id = $_GET['id'];
-
-// Buscar dados do turno
-$stmt = $conexao->prepare("SELECT t.*, f.F_nome 
-                          FROM turnos t
-                          JOIN funcionarios f ON t.F_id_funcionario = f.F_id_funcionario
-                          WHERE t.T_id_turno = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-if ($resultado->num_rows === 0) {
-    $_SESSION['mensagem'] = "Turno não encontrado.";
-    $_SESSION['tipo_mensagem'] = "erro";
-    header("Location: funcionarios.php");
-    exit;
-}
-
-$turno = $resultado->fetch_assoc();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $funcionario_id = $_POST['funcionario_id'];
     $tipo_turno = $_POST['tipo_turno'];
     $horario_inicio = $_POST['horario_inicio'];
     $horario_fim = $_POST['horario_fim'];
@@ -38,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $erros = [];
     
+    if (empty($funcionario_id)) $erros[] = "Selecione um funcionário";
     if (empty($tipo_turno)) $erros[] = "Selecione o tipo de turno";
     if (empty($horario_inicio)) $erros[] = "Horário de início é obrigatório";
     if (empty($horario_fim)) $erros[] = "Horário de fim é obrigatório";
@@ -62,10 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (empty($erros)) {
-        $stmt = $conexao->prepare("UPDATE turnos 
-                                  SET turno = ?, data_inicio = ?, data_fim = ?, T_inicio = ?, T_fim = ?
-                                  WHERE T_id_turno = ?");
-        $stmt->bind_param("sssssi", $tipo_turno, $data_inicio, $data_fim, $horario_inicio, $horario_fim, $id);
+        $stmt = $conexao->prepare("INSERT INTO turnos (F_id_funcionario, turno, data_inicio, data_fim, T_inicio, T_fim) 
+                                  VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssss", $funcionario_id, $tipo_turno, $data_inicio, $data_fim, $horario_inicio, $horario_fim);
         
         if ($stmt->execute()) {
             if (isset($_GET['modal'])) {
@@ -73,12 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             
-            $_SESSION['mensagem'] = "Turno atualizado com sucesso!";
+            $_SESSION['mensagem'] = "Turno adicionado com sucesso!";
             $_SESSION['tipo_mensagem'] = "sucesso";
             header("Location: funcionarios.php");
             exit;
         } else {
-            $erros[] = "Erro ao atualizar turno: " . $conexao->error;
+            $erros[] = "Erro ao adicionar turno: " . $conexao->error;
         }
     }
     
@@ -95,50 +69,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['modal'])) {
     ?>
     <h2 style="margin-top:0; margin-bottom:18px; text-align:center; color:#2e5090;">
-        <i class="fas fa-clock"></i> Editar Turno
+        <i class="fas fa-clock"></i> Adicionar Turno
     </h2>
     
     <form method="post" id="formTurno" style="display:flex; flex-direction:column; gap:16px;">
         <div class="form-group">
-            <label>Funcionário</label>
-            <input type="text" value="<?= htmlspecialchars($turno['F_nome']) ?>" readonly>
+            <label for="funcionario_id">Funcionário*</label>
+            <select id="funcionario_id" name="funcionario_id" required>
+                <option value="">Selecione...</option>
+                <?php
+                $result = $conexao->query("SELECT F_id_funcionario, F_nome FROM funcionarios ORDER BY F_nome");
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='{$row['F_id_funcionario']}'>{$row['F_nome']}</option>";
+                }
+                ?>
+            </select>
         </div>
         
         <div class="form-group">
             <label for="tipo_turno">Tipo de Turno*</label>
             <select id="tipo_turno" name="tipo_turno" required onchange="definirHorarioPadrao()">
-                <option value="Manhã" <?= $turno['turno'] === 'Manhã' ? 'selected' : '' ?>>Manhã (08:00 - 16:00)</option>
-                <option value="Tarde" <?= $turno['turno'] === 'Tarde' ? 'selected' : '' ?>>Tarde (16:00 - 00:00)</option>
-                <option value="Noite" <?= $turno['turno'] === 'Noite' ? 'selected' : '' ?>>Noite (00:00 - 08:00)</option>
+                <option value="">Selecione...</option>
+                <option value="Manhã">Manhã (08:00 - 16:00)</option>
+                <option value="Tarde">Tarde (16:00 - 00:00)</option>
+                <option value="Noite">Noite (00:00 - 08:00)</option>
             </select>
         </div>
         
         <div class="form-group">
             <label for="horario_inicio">Horário de Início*</label>
-            <input type="time" id="horario_inicio" name="horario_inicio" required 
-                   value="<?= htmlspecialchars($turno['T_inicio']) ?>" onchange="calcularHorarioFim()">
+            <input type="time" id="horario_inicio" name="horario_inicio" required onchange="calcularHorarioFim()">
         </div>
         
         <div class="form-group">
             <label for="horario_fim">Horário de Fim*</label>
-            <input type="time" id="horario_fim" name="horario_fim" required 
-                   value="<?= htmlspecialchars($turno['T_fim']) ?>" readonly>
+            <input type="time" id="horario_fim" name="horario_fim" required readonly>
         </div>
         
         <div class="form-group">
             <label for="data_inicio">Data de Início*</label>
-            <input type="date" id="data_inicio" name="data_inicio" required 
-                   value="<?= htmlspecialchars($turno['data_inicio']) ?>">
+            <input type="date" id="data_inicio" name="data_inicio" required>
         </div>
         
         <div class="form-group">
             <label for="data_fim">Data de Fim</label>
-            <input type="date" id="data_fim" name="data_fim" 
-                   value="<?= htmlspecialchars($turno['data_fim']) ?>">
+            <input type="date" id="data_fim" name="data_fim">
         </div>
         
         <button type="submit" class="button button-success">
-            <i class="fas fa-save"></i> Atualizar
+            <i class="fas fa-save"></i> Salvar
         </button>
     </form>
     
@@ -169,12 +148,10 @@ if (isset($_GET['modal'])) {
         }
     }
     
-    // Inicializa campos ao carregar
+    // Preenche a data atual como padrão
     document.addEventListener('DOMContentLoaded', function() {
-        const tipoSelect = document.getElementById('tipo_turno');
-        if (tipoSelect.value) {
-            calcularHorarioFim();
-        }
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('data_inicio').value = hoje;
     });
     </script>
     <?php

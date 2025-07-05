@@ -1,163 +1,261 @@
 <?php
 require '../../conexao.php';
+session_start();
 
-// Verificar se o ID foi passado pela URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    die("ID do funcionário não fornecido.");
+    $_SESSION['mensagem'] = "ID do funcionário não fornecido.";
+    $_SESSION['tipo_mensagem'] = "erro";
+    header("Location: funcionarios.php");
+    exit;
 }
 
 $id = $_GET['id'];
 
-// Variáveis para os dados do formulário
-$nome = $email = $cargo = $telefone = $senha = "";
-$erro = "";
-
-// Verificar se o formulário de edição do funcionário foi enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['atualizar_ferias'])) {
-    $nome = $_POST['nome'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $cargo = $_POST['cargo'] ?? '';
-    $telefone = $_POST['telefone'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = htmlspecialchars($_POST['nome'] ?? '');
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
     $senha = $_POST['senha'] ?? '';
-
-    // Verificar se o e-mail já existe para outro funcionário
-    $sql_check_email = "SELECT COUNT(*) FROM funcionarios WHERE F_email = ? AND F_id_funcionario != ?";
-    $stmt_check = $conexao->prepare($sql_check_email);
-    $stmt_check->bind_param("si", $email, $id);
-    $stmt_check->execute();
-    $stmt_check->bind_result($email_count);
-    $stmt_check->fetch();
-    $stmt_check->close();
-
-    // Se o e-mail já estiver registado para outro funcionário, mostrar um erro
-    if ($email_count > 0) {
-        $erro = "Este e-mail já está registado para outro funcionário. Tente outro.";
-    } else {
-        // Se a senha foi informada, validar e atualizar
-        if (!empty($senha)) {
-            // Validação da senha (mínimo de 8 caracteres, pelo menos uma letra maiúscula)
-            if (strlen($senha) < 8 || !preg_match('/[A-Z]/', $senha)) {
-                $erro = "A senha deve ter pelo menos 8 caracteres e uma letra maiúscula!";
-            } else {
+    $cargo = htmlspecialchars($_POST['cargo'] ?? '');
+    $telefone = htmlspecialchars($_POST['telefone'] ?? '');
+    
+    $erros = [];
+    
+    if (empty($nome)) $erros[] = "Nome é obrigatório";
+    if (empty($email)) $erros[] = "Email é obrigatório";
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $erros[] = "Email inválido";
+    
+    if (!empty($senha) && (strlen($senha) < 8 || !preg_match('/[A-Z]/', $senha))) {
+        $erros[] = "Senha deve ter pelo menos 8 caracteres e uma letra maiúscula";
+    }
+    
+    // Verificar se email já existe para outro funcionário
+    $stmt = $conexao->prepare("SELECT F_id_funcionario FROM funcionarios WHERE F_email = ? AND F_id_funcionario != ?");
+    $stmt->bind_param("si", $email, $id);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        $erros[] = "Email já está em uso por outro funcionário";
+    }
+    
+    if (empty($erros)) {
+        try {
+            if (!empty($senha)) {
                 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
                 $stmt = $conexao->prepare("UPDATE funcionarios SET F_nome=?, F_email=?, F_senha=?, F_cargo=?, F_telefone=? WHERE F_id_funcionario=?");
                 $stmt->bind_param("sssssi", $nome, $email, $senha_hash, $cargo, $telefone, $id);
-                $stmt->execute();
+            } else {
+                $stmt = $conexao->prepare("UPDATE funcionarios SET F_nome=?, F_email=?, F_cargo=?, F_telefone=? WHERE F_id_funcionario=?");
+                $stmt->bind_param("ssssi", $nome, $email, $cargo, $telefone, $id);
             }
-        } else {
-            // Atualizar sem mudar a senha
-            $stmt = $conexao->prepare("UPDATE funcionarios SET F_nome=?, F_email=?, F_cargo=?, F_telefone=? WHERE F_id_funcionario=?");
-            $stmt->bind_param("ssssi", $nome, $email, $cargo, $telefone, $id);
-            $stmt->execute();
+            
+            if ($stmt->execute()) {
+                if (isset($_GET['modal'])) {
+                    echo 'OK';
+                    exit;
+                }
+                
+                $_SESSION['mensagem'] = "Funcionário atualizado com sucesso!";
+                $_SESSION['tipo_mensagem'] = "sucesso";
+                header("Location: funcionarios.php");
+                exit;
+            }
+        } catch (Exception $e) {
+            $erros[] = "Erro ao atualizar funcionário: " . $e->getMessage();
         }
+    }
+    
+    if (isset($_GET['modal'])) {
+        echo '<div class="mensagem erro">' . implode('<br>', $erros) . '</div>';
+    } else {
+        $_SESSION['mensagem'] = implode('<br>', $erros);
+        $_SESSION['tipo_mensagem'] = "erro";
+        header("Location: funcionarios.php");
+        exit;
     }
 }
 
-// Buscar o funcionário atual
-$stmt = $conexao->prepare("SELECT * FROM funcionarios WHERE F_id_funcionario=?");
+// Buscar dados do funcionário
+$stmt = $conexao->prepare("SELECT * FROM funcionarios WHERE F_id_funcionario = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
-$f = $resultado->fetch_assoc();
 
-// Buscar férias/ausências do funcionário
-$stmt_ferias = $conexao->prepare("SELECT * FROM ferias_ausencias WHERE F_id_funcionario = ? ORDER BY data_inicio DESC LIMIT 1");
-$stmt_ferias->bind_param("i", $id);
-$stmt_ferias->execute();
-$resultado_ferias = $stmt_ferias->get_result();
-
-// Verificar se existem registros de férias/ausências
-if ($resultado_ferias->num_rows > 0) {
-    $ferias = $resultado_ferias->fetch_assoc();
-    $tipo_ausencia = $ferias['tipo_ausencia'];
-    $data_inicio_ausencia = $ferias['data_inicio'];
-    $data_fim_ausencia = $ferias['data_fim'];
-} else {
-    $tipo_ausencia = "Nenhuma";
-    $data_inicio_ausencia = "";
-    $data_fim_ausencia = "";
-}
-// Buscar o turno atual do funcionário
-$stmt_turno = $conexao->prepare("SELECT * FROM turnos WHERE F_id_funcionario = ?");
-$stmt_turno->bind_param("i", $id);
-$stmt_turno->execute();
-$resultado_turno = $stmt_turno->get_result();
-$turno = $resultado_turno->fetch_assoc();
-// Garantir que os valores de horário estejam definidos
-$horario_inicio = $turno['T_inicio'] ?? '';
-$horario_fim = $turno['T_fim'] ?? '';
-// Verificar se o formulário de férias foi enviado
-if (isset($_POST['atualizar_ferias'])) {
-    $tipo_ausencia = $_POST['tipo_ausencia'];
-    $data_inicio_ausencia = $_POST['data_inicio_ausencia'];
-    $data_fim_ausencia = $_POST['data_fim_ausencia'];
-
-    // Atualizar as férias/ausência
-    $stmt_ferias_update = $conexao->prepare("INSERT INTO ferias_ausencias (F_id_funcionario, tipo_ausencia, data_inicio, data_fim) VALUES (?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE tipo_ausencia=?, data_inicio=?, data_fim=?");
-    $stmt_ferias_update->bind_param("issssss", $id, $tipo_ausencia, $data_inicio_ausencia, $data_fim_ausencia, $tipo_ausencia, $data_inicio_ausencia, $data_fim_ausencia);
-    $stmt_ferias_update->execute();
-    header("Location: funcionarios.php"); // Redireciona após a atualização
+if ($resultado->num_rows === 0) {
+    $_SESSION['mensagem'] = "Funcionário não encontrado.";
+    $_SESSION['tipo_mensagem'] = "erro";
+    header("Location: funcionarios.php");
     exit;
 }
+
+$funcionario = $resultado->fetch_assoc();
+
 if (isset($_GET['modal'])) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // ... lógica de validação e atualização ...
-        if (empty($erro)) {
-            echo 'OK';
-            exit;
-        }
-        // Se erro, mostra o formulário novamente
-    }
     ?>
-    <div>
-        <h2 style="margin-top:0; margin-bottom:18px; text-align:center; color:#2e5090;">Editar Funcionário</h2>
-        <?php if (!empty($erro)): ?>
-            <div class="mensagem erro" style="margin-bottom:10px;"> <?= $erro ?> </div>
-        <?php endif; ?>
-        <form method="post" id="formFuncionario" data-id="<?= $f['F_id_funcionario'] ?>" style="display:flex; flex-direction:column; gap:10px;">
-            <!-- Passo 1 -->
-            <div class="wizard-step" id="wizardStep1Funcionario">
-                <label>Nome:<input type="text" name="nome" value="<?= htmlspecialchars($f['F_nome']) ?>" required></label>
-                <label>Email:<input type="email" name="email" value="<?= htmlspecialchars($f['F_email']) ?>" required></label>
-                <label>Senha:<input type="password" name="senha"></label>
-                <label>Cargo:
-                    <select name="cargo" required>
-                        <option value="gerente" <?= $f['F_cargo'] == 'gerente' ? 'selected' : '' ?>>Gerente</option>
-                        <option value="administrador" <?= $f['F_cargo'] == 'administrador' ? 'selected' : '' ?>>Administrador</option>
-                        <option value="recepcionista" <?= $f['F_cargo'] == 'recepcionista' ? 'selected' : '' ?>>Recepcionista</option>
-                        <option value="governanta" <?= $f['F_cargo'] == 'governanta' ? 'selected' : '' ?>>Governanta</option>
-                        <option value="contabilista" <?= $f['F_cargo'] == 'contabilista' ? 'selected' : '' ?>>Contabilista</option>
-                    </select>
-                </label>
-                <label>Telefone:<input type="text" name="telefone" value="<?= htmlspecialchars($f['F_telefone']) ?>"></label>
-                <button type="button" id="btnWizardProximoFuncionario" class="atalho-btn" style="align-self:flex-end; margin-top:10px;">Próximo &rarr;</button>
+    <h2 style="margin-top:0; margin-bottom:18px; text-align:center; color:#2e5090;">
+        <i class="fas fa-user-edit"></i> Editar Funcionário
+    </h2>
+    
+    <form method="post" id="formFuncionario" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Passo 1 - Dados Básicos -->
+        <div class="wizard-step active" id="passo1">
+            <h3>Dados Básicos</h3>
+            
+            <div class="form-group">
+                <label for="nome">Nome Completo*</label>
+                <input type="text" id="nome" name="nome" required value="<?= htmlspecialchars($funcionario['F_nome']) ?>">
             </div>
-            <!-- Passo 2 -->
-            <div class="wizard-step" id="wizardStep2Funcionario" style="display:none;">
-                <h3>Turno</h3>
-                <label>Horário de Início:<input type="time" name="horario_inicio" value="<?= $horario_inicio ?>" required></label>
-                <label>Horário de Fim:<input type="time" name="horario_fim" value="<?= $horario_fim ?>" required></label>
-                <h3>Férias/Ausência</h3>
-                <label>Data de Início:<input type="date" name="data_inicio_ausencia" value="<?= $data_inicio_ausencia ?>"></label>
-                <label>Data de Fim:<input type="date" name="data_fim_ausencia" value="<?= $data_fim_ausencia ?>"></label>
-                <label>Tipo de Ausência:
-                    <select name="tipo_ausencia">
-                        <option value="Férias" <?= $tipo_ausencia == 'Férias' ? 'selected' : '' ?>>Férias</option>
-                        <option value="Falta" <?= $tipo_ausencia == 'Falta' ? 'selected' : '' ?>>Falta</option>
-                    </select>
-                </label>
-                <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                    <button type="button" id="btnWizardAnteriorFuncionario" class="atalho-btn">&larr; Anterior</button>
-                    <button type="submit" class="atalho-btn">Atualizar Funcionário</button>
-                </div>
+            
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" required value="<?= htmlspecialchars($funcionario['F_email']) ?>">
             </div>
-        </form>
-    </div>
-    <style>
-        .mensagem.erro { background: #f44336; color: #fff; padding: 8px; border-radius: 4px; }
-    </style>
+            
+            <div class="form-group">
+                <label for="senha">Nova Senha (deixe em branco para manter a atual)</label>
+                <input type="password" id="senha" name="senha">
+                <small>Mínimo 8 caracteres, 1 letra maiúscula</small>
+            </div>
+            
+            <div class="wizard-nav">
+                <button type="button" id="btnProximo" class="button">Próximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+        
+        <!-- Passo 2 - Dados Profissionais -->
+        <div class="wizard-step" id="passo2">
+            <h3>Dados Profissionais</h3>
+            
+            <div class="form-group">
+                <label for="cargo">Cargo*</label>
+                <select id="cargo" name="cargo" required>
+                    <option value="">Selecione...</option>
+                    <option value="gerente" <?= $funcionario['F_cargo'] === 'gerente' ? 'selected' : '' ?>>Gerente</option>
+                    <option value="administrador" <?= $funcionario['F_cargo'] === 'administrador' ? 'selected' : '' ?>>Administrador</option>
+                    <option value="recepcionista" <?= $funcionario['F_cargo'] === 'recepcionista' ? 'selected' : '' ?>>Recepcionista</option>
+                    <option value="governanta" <?= $funcionario['F_cargo'] === 'governanta' ? 'selected' : '' ?>>Governanta</option>
+                    <option value="contabilista" <?= $funcionario['F_cargo'] === 'contabilista' ? 'selected' : '' ?>>Contabilista</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="telefone" name="telefone" value="<?= htmlspecialchars($funcionario['F_telefone']) ?>">
+            </div>
+            
+            <div class="wizard-nav">
+                <button type="button" id="btnAnterior" class="button"><i class="fas fa-arrow-left"></i> Anterior</button>
+                <button type="button" id="btnAtualizar" class="button button-success">Atualizar <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </form>
+    
+    <script>
+    function initWizardFuncionario() {
+        const steps = document.querySelectorAll('.wizard-step');
+        let currentStep = 0;
+        
+        document.getElementById('btnProximo')?.addEventListener('click', function() {
+            const inputs = steps[currentStep].querySelectorAll('[required]');
+            let valido = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = 'red';
+                    valido = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            if (valido) {
+                steps[currentStep].classList.remove('active');
+                currentStep++;
+                steps[currentStep].classList.add('active');
+                atualizarBotoes();
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        });
+        
+        document.getElementById('btnAnterior')?.addEventListener('click', function() {
+            steps[currentStep].classList.remove('active');
+            currentStep--;
+            steps[currentStep].classList.add('active');
+            atualizarBotoes();
+        });
+        
+        function atualizarBotoes() {
+            const btnAnterior = document.getElementById('btnAnterior');
+            const btnProximo = document.getElementById('btnProximo');
+            const btnAtualizar = document.getElementById('btnAtualizar');
+            
+            if (btnAnterior) btnAnterior.style.display = currentStep === 0 ? 'none' : 'block';
+            if (btnProximo) btnProximo.style.display = currentStep === steps.length - 1 ? 'none' : 'block';
+            if (btnAtualizar) btnAtualizar.style.display = currentStep === steps.length - 1 ? 'block' : 'none';
+        }
+        
+        atualizarBotoes();
+
+        // Impede o submit tradicional do formulário
+        const form = document.getElementById('formFuncionario');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        // AJAX para o botão Atualizar
+        const btnAtualizar = document.getElementById('btnAtualizar');
+        if (btnAtualizar && form) {
+            btnAtualizar.addEventListener('click', function() {
+                // Valida todos os campos obrigatórios
+                const allRequiredInputs = form.querySelectorAll('[required]');
+                let valido = true;
+                allRequiredInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        input.style.borderColor = 'red';
+                        valido = false;
+                    } else {
+                        input.style.borderColor = '';
+                    }
+                });
+                if (!valido) {
+                    alert('Preencha todos os campos obrigatórios!');
+                    return;
+                }
+                // Envia via AJAX
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(response => {
+                    if (response === 'OK') {
+                        window.parent.fecharModal('modalFuncionario');
+                        window.parent.location.reload();
+                    } else {
+                        document.getElementById('conteudoModalFuncionario').innerHTML = response;
+                        initWizardFuncionario();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao atualizar funcionário.');
+                });
+            });
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        initWizardFuncionario();
+    });
+    </script>
     <?php
     exit;
 }
+
+header("Location: funcionarios.php");
+exit;
 ?>

@@ -554,26 +554,40 @@ if (isset($_SESSION['flash'])) {
                                 <td class="reserva-valor"><?= number_format($r['R_preco_total'], 2) ?>€</td>
                                 <td>
                                     <?php 
-                                        $badgeClass = 'badge-status ';
-                                        switch ($r['R_estado']) {
-                                            case 'pendente': 
-                                                $badgeClass .= 'badge-pendente';
-                                                break;
-                                            case 'confirmada': 
-                                                $badgeClass .= $is_checkin_today ? 'badge-checkin-hoje' : 'badge-confirmada';
-                                                break;
-                                            case 'cancelada': 
-                                                $badgeClass .= 'badge-cancelada';
-                                                break;
-                                            case 'concluída': 
-                                                $badgeClass .= 'badge-concluida';
-                                                break;
-                                        }
-                                    ?>
-                                    <span class="<?= $badgeClass ?>">
-                                        <?= ucfirst($r['R_estado']) ?>
-                                        <?= $is_checkin_today && $r['R_estado'] == 'confirmada' ? ' (Hoje)' : '' ?>
-                                    </span>
+    $badgeClass = 'badge-status ';
+    $hoje = date('Y-m-d');
+    $is_checkout_passed = $hoje > $r['R_data_checkout'];
+    $is_concluida_visual = $is_checkout_passed && $r['R_estado'] != 'cancelada';
+
+    if ($is_concluida_visual) {
+        $badgeClass .= 'badge-concluida';
+    } else {
+        switch ($r['R_estado']) {
+            case 'pendente': 
+                $badgeClass .= 'badge-pendente';
+                break;
+            case 'confirmada': 
+                $badgeClass .= $is_checkin_today ? 'badge-checkin-hoje' : 'badge-confirmada';
+                break;
+            case 'cancelada': 
+                $badgeClass .= 'badge-cancelada';
+                break;
+            case 'concluída': 
+                $badgeClass .= 'badge-concluida';
+                break;
+        }
+    }
+?>
+<span class="<?= $badgeClass ?>">
+    <?php 
+        if ($is_concluida_visual) {
+            echo 'Concluída <i class="fas fa-check-circle" style="color:green"></i>';
+        } else {
+            echo ucfirst($r['R_estado']);
+            echo $is_checkin_today && $r['R_estado'] == 'confirmada' ? ' (Hoje)' : '';
+        }
+    ?>
+</span>
                                 </td>
                                 <td>
                                     <div class="action-buttons">

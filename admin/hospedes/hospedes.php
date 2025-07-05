@@ -176,10 +176,16 @@ $total_paginas = ceil($total / $por_pagina);
 </head>
 <body>
     <div class="hospedes-container">
-        <h1>Gestão de Hóspedes</h1>
-        <div class="acoes-hospedes-container">
-            <a href="../admin.php" class="link-voltar"><i class="fa fa-arrow-left"></i> Voltar</a>
-            <a href="#" id="btnAdicionarHospede" class="link-adicionar"><i class="fa fa-user-plus"></i> Adicionar Hóspede</a>
+        <h1 style="text-align:center; margin-bottom:30px; color:#2e5090; display:flex; align-items:center; justify-content:center; gap:12px; font-size:2.2rem;">
+            <img src="https://img.icons8.com/?size=100&id=3Lghg94mD5Gd&format=png&color=000000" alt="Hóspedes" style="height:38px; width:38px; vertical-align:middle;"> Gestão de Hóspedes
+        </h1>
+        <div class="acoes-hospedes-container" style="display:flex; gap:18px; margin-bottom:10px; align-items:center; justify-content:center;">
+            <a href="../admin.php" class="link-voltar" style="color: var(--cor-primaria); font-weight:600; text-decoration:none; font-size:16px; display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:6px; transition:background 0.15s;">
+                <i class="fa fa-arrow-left"></i> Voltar
+            </a>
+            <a href="#" id="btnAdicionarHospede" class="link-adicionar" style="color: var(--cor-primaria); font-weight:600; text-decoration:none; font-size:16px; display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:6px; transition:background 0.15s;">
+                <i class="fa fa-user-plus"></i> Adicionar Hóspede
+            </a>
         </div>
         <div class="filtro-hospedes-container">
             <form method="get" class="filtro-hospedes-form">

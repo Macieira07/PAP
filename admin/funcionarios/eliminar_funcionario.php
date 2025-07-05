@@ -1,35 +1,45 @@
 <?php
 require '../../conexao.php';
+session_start();
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    // Excluindo registros dependentes na tabela turnos
-    $stmt_turnos = $conexao->prepare("DELETE FROM turnos WHERE F_id_funcionario=?");
-    $stmt_turnos->bind_param("i", $id);
-    $stmt_turnos->execute();
-
-    // Excluindo registros dependentes na tabela ferias_ausencias
-    $stmt_ferias = $conexao->prepare("DELETE FROM ferias_ausencias WHERE F_id_funcionario=?");
-    $stmt_ferias->bind_param("i", $id);
-    $stmt_ferias->execute();
-
-    // Preparando a consulta para excluir o funcionário
-    $stmt_funcionario = $conexao->prepare("DELETE FROM funcionarios WHERE F_id_funcionario=?");
-    $stmt_funcionario->bind_param("i", $id);
-    
-    if ($stmt_funcionario->execute()) {
-        // Mensagem de sucesso
-        $mensagem = "Funcionário excluído com sucesso!";
-        $tipo = "sucesso";  // Sucesso
-    } else {
-        // Mensagem de erro
-        $mensagem = "Erro ao excluir o funcionário. Tente novamente.";
-        $tipo = "erro";  // Erro
-    }
-
-    // Redirecionando para a página de funcionários com a mensagem
-    header("Location: funcionarios.php?mensagem=$mensagem&tipo=$tipo");
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    $_SESSION['mensagem'] = "ID do funcionário não fornecido.";
+    $_SESSION['tipo_mensagem'] = "erro";
+    header("Location: funcionarios.php");
     exit;
 }
+
+$id = $_GET['id'];
+
+// Iniciar transação para garantir a integridade dos dados
+$conexao->begin_transaction();
+
+try {
+    // Excluir registros dependentes
+    $stmt = $conexao->prepare("DELETE FROM ferias_ausencias WHERE F_id_funcionario = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    
+    $stmt = $conexao->prepare("DELETE FROM turnos WHERE F_id_funcionario = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    
+    // Excluir o funcionário
+    $stmt = $conexao->prepare("DELETE FROM funcionarios WHERE F_id_funcionario = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    
+    $conexao->commit();
+    
+    $_SESSION['mensagem'] = "Funcionário eliminado com sucesso!";
+    $_SESSION['tipo_mensagem'] = "sucesso";
+} catch (Exception $e) {
+    $conexao->rollback();
+    
+    $_SESSION['mensagem'] = "Erro ao eliminar funcionário: " . $e->getMessage();
+    $_SESSION['tipo_mensagem'] = "erro";
+}
+
+header("Location: funcionarios.php");
+exit;
 ?>

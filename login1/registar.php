@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 35px; text-align: center;">
     <img src="cid:logotipo_cid" alt="Logotipo Quinta Flores" style="max-width: 140px; margin-bottom: 25px;">
     <h2 style="color: #28a745; font-weight: 700; margin-bottom: 15px;">Bem-vindo à Quinta Flores 🥳!</h2>
-    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">sim 
+    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
       A sua conta foi criada com sucesso. 😊<br>
       Muito obrigado por se registar! 💚
     </p>
